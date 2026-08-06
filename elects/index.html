@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TSR Elects — Live Results</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css">
+<style>
+  body { background: var(--paper); }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 20px 0 24px;
+  }
+  .stat-box {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    padding: 12px 14px;
+  }
+  .stat-box .label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .stat-box .value { font-family: var(--font-mono); font-size: 20px; font-weight: 700; }
+
+  .call-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .call-badge.called { background: var(--green); color: #fff; }
+  .call-badge.uncalled { background: var(--paper-dim); color: var(--muted); border: 1px solid var(--line); }
+
+  /* NBC-style chart */
+  .nbc-chart { margin: 18px 0 8px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #fff; }
+  .nbc-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--line); }
+  .nbc-row:last-child { border-bottom: none; }
+  .nbc-avatar { width: 64px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--paper-dim); }
+  .nbc-avatar img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--ink); }
+  .nbc-bar-wrap { flex: 1; position: relative; display: flex; align-items: center; min-height: 58px; }
+  .nbc-bar-fill { height: 100%; position: absolute; left: 0; top: 0; bottom: 0; display: flex; align-items: center; padding-left: 12px; color: #fff; font-weight: 800; }
+  .nbc-bar-fill .win-tag { background: rgba(255,255,255,0.25); border-radius: 3px; padding: 1px 6px; font-size: 10px; margin-left: 8px; }
+  .nbc-name { position: relative; z-index: 2; }
+  .nbc-meta { width: 150px; flex-shrink: 0; text-align: right; padding: 0 14px; font-family: var(--font-mono); }
+  .nbc-meta .votes { font-weight: 700; font-size: 15px; }
+  .nbc-meta .pct { font-size: 12px; color: var(--muted); }
+
+  .map-section { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin: 24px 0 40px; }
+  #map { height: 460px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .district-panel { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 14px; font-size: 13px; }
+  .district-panel .dtitle { font-family: var(--font-display); font-size: 16px; margin-bottom: 10px; }
+  .district-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .district-row .swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .district-row .n { flex: 1; }
+  .district-row .v { font-family: var(--font-mono); }
+  @media (max-width: 760px) {
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .map-section { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="utility-bar">
+  <div class="wrap">
+    <span><span class="brand-tag">wikiElections</span> · TSR Elects</span>
+    <span><a href="../admin/index.html">Admin</a></span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="../index.html">
+      <div class="wheel"></div>
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+  <nav class="main-nav">
+    <div class="wrap">
+      <a href="../index.html">Main Page</a>
+      <a href="../activities.html">Decision Desk TSR</a>
+      <a href="../polls.html">Spinner Insights Polls</a>
+      <a href="index.html" class="current">TSR Elects — Live</a>
+    </div>
+  </nav>
+</header>
+
+<div id="dynamicBanner"></div>
+
+<main class="wrap">
+  <section class="hero" style="text-align:left; padding-top:26px;">
+    <div class="kicker" id="raceMethod">TSR Elects</div>
+    <h1 id="raceTitle" style="font-size:30px;">Loading race…</h1>
+    <div id="callBadgeSlot"></div>
+  </section>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="label">Turnout</div><div class="value" id="statTurnout">—</div></div>
+    <div class="stat-box"><div class="label">% Reporting</div><div class="value" id="statReporting">—</div></div>
+    <div class="stat-box"><div class="label">Est. Votes In</div><div class="value" id="statVotesIn">—</div></div>
+    <div class="stat-box"><div class="label">Est. Total Votes</div><div class="value" id="statVotesTotal">—</div></div>
+  </div>
+
+  <div class="nbc-chart" id="nbcChart"></div>
+
+  <div class="map-section">
+    <div id="map"></div>
+    <div class="district-panel" id="districtPanel">
+      <div class="dtitle">Overview</div>
+      <div class="small-muted">Click a group on the map to see its local tally.</div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
+    <span><a href="../index.html">Main Page</a> · <a href="../admin/index.html">Admin</a></span>
+  </div>
+</footer>
+
+<script>window.SITE_BASE = '../';</script>
+<script src="../assets/js/overrides.js"></script>
+<script src="../assets/js/main.js"></script>
+<script src="../assets/vendor/leaflet/leaflet.js"></script>
+<script>
+initSiteChrome();
+
+const params = new URLSearchParams(location.search);
+const electionId = params.get('race') || 'class6';
+let selectedGroup = null;
+let geoLayer, resultsGroups, candidates, election;
+
+async function load() {
+  let [electionRaw, resultsRaw, geojson] = await Promise.all([
+    fetch(`../data/elections/${electionId}.json`).then(r => r.json()),
+    fetch(`../data/results/${electionId}.json`).then(r => r.json()),
+    fetch(`../data/geo/${electionId}.geojson`).then(r => r.json())
+  ]);
+
+  election = OVR_getElection(electionRaw, electionId);
+  const resultsFile = OVR_getResults(resultsRaw, electionId);
+  resultsGroups = resultsFile.groups;
+
+  candidates = {};
+  await Promise.all(election.candidateIds.map(async id => {
+    candidates[id] = await fetch(`../candidates/${electionId}/${id}.json`).then(r => r.json());
+  }));
+
+  renderHeader();
+  renderStats();
+  renderChart();
+  renderMap(geojson);
+}
+
+function totals() {
+  const t = {};
+  election.candidateIds.forEach(id => t[id] = 0);
+  Object.values(resultsGroups).forEach(g => {
+    Object.entries(g).forEach(([id, v]) => { if (t[id] !== undefined) t[id] += v; });
+  });
+  return t;
+}
+
+function renderHeader() {
+  document.getElementById('raceTitle').textContent = election.title;
+  document.getElementById('raceMethod').textContent = `TSR Elects · ${election.subtitle} · ${election.method}`;
+
+  const badgeSlot = document.getElementById('callBadgeSlot');
+  if (election.call && election.call.called) {
+    const winner = candidates[election.call.winnerId];
+    const methodLabel = election.call.method === 'autorunoff' ? 'Auto-Runoff Projection' : 'Called Outright';
+    badgeSlot.innerHTML = `<span class="call-badge called">✓ ${winner ? winner.name : 'Winner'} — ${methodLabel}</span>`;
+  } else {
+    badgeSlot.innerHTML = `<span class="call-badge uncalled">Race not yet called</span>`;
+  }
+}
+
+function renderStats() {
+  document.getElementById('statTurnout').textContent = (election.turnout ?? '—') + '%';
+  document.getElementById('statReporting').textContent = (election.reporting ?? '—') + '%';
+  document.getElementById('statVotesIn').textContent = (election.estVotesIn ?? '—').toLocaleString ? election.estVotesIn.toLocaleString() : election.estVotesIn;
+  document.getElementById('statVotesTotal').textContent = (election.estVotesTotal ?? '—').toLocaleString ? election.estVotesTotal.toLocaleString() : election.estVotesTotal;
+}
+
+function renderChart() {
+  const t = totals();
+  const sorted = Object.entries(t).sort((a,b) => b[1]-a[1]);
+  const totalVotes = sorted.reduce((a,[,v]) => a+v, 0) || 1;
+  const maxVotes = sorted[0][1] || 1;
+  const winnerId = election.call && election.call.called ? election.call.winnerId : null;
+
+  let html = '';
+  sorted.forEach(([id, v]) => {
+    const c = candidates[id];
+    const pct = (v / totalVotes) * 100;
+    const widthPct = (v / maxVotes) * 100;
+    html += `
+      <div class="nbc-row">
+        <div class="nbc-avatar"><img src="../candidates/${electionId}/${c.image}" alt="${c.name}"></div>
+        <div class="nbc-bar-wrap">
+          <div class="nbc-bar-fill" style="width:${widthPct}%; background:${c.color};">
+            <span class="nbc-name">${c.name}${id===winnerId ? '<span class="win-tag">WINNER</span>' : ''}</span>
+          </div>
+        </div>
+        <div class="nbc-meta">
+          <div class="votes">${v.toLocaleString()}</div>
+          <div class="pct">${pct.toFixed(1)}%</div>
+        </div>
+      </div>`;
+  });
+  document.getElementById('nbcChart').innerHTML = html;
+}
+
+function darkenHex(hex, t) {
+  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  r = Math.round(r*(1-t)); g = Math.round(g*(1-t)); b = Math.round(b*(1-t));
+  return `rgb(${r},${g},${b})`;
+}
+function lightenHex(hex, t) {
+  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  r = Math.round(r + (255-r)*t); g = Math.round(g + (255-g)*t); b = Math.round(b + (255-b)*t);
+  return `rgb(${r},${g},${b})`;
+}
+
+function marginColor(data) {
+  if (!data) return '#e5e4dc';
+  const entries = Object.entries(data);
+  const total = entries.reduce((a,[,v]) => a+v, 0);
+  if (total === 0) return '#e5e4dc';
+  const sorted = entries.sort((a,b) => b[1]-a[1]);
+  const [firstKey, firstVal] = sorted[0];
+  const secondVal = sorted[1] ? sorted[1][1] : 0;
+  const margin = (firstVal - secondVal) / total;
+  const base = candidates[firstKey] ? candidates[firstKey].color : '#aaaaaa';
+  const MID = 0.35;
+  if (margin < MID) {
+    return lightenHex(base, (1 - margin/MID) * 0.45);
+  } else {
+    return darkenHex(base, ((margin-MID)/(1-MID)) * 0.30);
+  }
+}
+
+function styleFeature(feature) {
+  const id = String(feature.properties.id);
+  const isSelected = id === selectedGroup;
+  const data = resultsGroups[id];
+  return {
+    fillColor: marginColor(data),
+    fillOpacity: isSelected ? 0.95 : 0.78,
+    color: isSelected ? '#111' : 'rgba(0,0,0,0.35)',
+    weight: isSelected ? 2.5 : 1
+  };
+}
+
+function renderMap(geojson) {
+  const map = L.map('map', { zoomControl: false }).setView([40,-95], 4);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19
+  }).addTo(map);
+
+  geoLayer = L.geoJSON(geojson, {
+    style: styleFeature,
+    onEachFeature: (feature, layer) => {
+      layer.on({
+        click: () => { selectedGroup = String(feature.properties.id); showDistrict(selectedGroup); geoLayer.setStyle(styleFeature); },
+        mouseover: e => e.target.setStyle({ weight: 2.5, fillOpacity: 0.95 }),
+        mouseout: e => geoLayer.resetStyle(e.target)
+      });
+      layer.bindTooltip(`Group ${feature.properties.id}`, { sticky: true });
+    }
+  }).addTo(map);
+
+  map.fitBounds(geoLayer.getBounds(), { padding: [20,20] });
+}
+
+function showDistrict(id) {
+  const data = resultsGroups[id];
+  const panel = document.getElementById('districtPanel');
+  if (!data) { panel.innerHTML = `<div class="dtitle">Group ${id}</div><div class="small-muted">No data reported yet.</div>`; return; }
+  const sorted = Object.entries(data).sort((a,b) => b[1]-a[1]);
+  const total = sorted.reduce((a,[,v]) => a+v, 0) || 1;
+  let html = `<div class="dtitle">Group ${id}</div>`;
+  sorted.forEach(([cid, v]) => {
+    const c = candidates[cid];
+    const pct = ((v/total)*100).toFixed(1);
+    html += `<div class="district-row"><div class="swatch" style="background:${c.color}"></div>
+      <div class="n">${c.name}</div><div class="v">${v.toLocaleString()} · ${pct}%</div></div>`;
+  });
+  html += `<div class="small-muted" style="margin-top:8px;">Total: ${total.toLocaleString()} votes</div>`;
+  panel.innerHTML = html;
+}
+
+load();
+</script>
+</body>
+</html>

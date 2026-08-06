@@ -1,0 +1,54 @@
+{
+  "_comment": "Each poll has raw candidate shares (0-1, need not sum to 1 -- remainder is undecided/other), a sample size, and a weight. BaseCalc = sample/weight-weighted average of shares. ProbCalc turns that same weighting into Gamma(alpha,1) shape parameters (beta fixed at 1) and Monte Carlo simulates the race. Edit this file directly, or use /admin/ to add polls to an existing election.",
+  "electionId": "class6",
+  "polls": [
+    {
+      "id": "p1",
+      "pollster": "Spinner Insights",
+      "date": "2026-07-18",
+      "sample": 96,
+      "weight": 0.8,
+      "shares": { "brg": 0.30, "nlk": 0.34, "ssv": 0.21, "fzp": 0.10 }
+    },
+    {
+      "id": "p2",
+      "pollster": "TSR Wiki Straw Poll",
+      "date": "2026-07-21",
+      "sample": 74,
+      "weight": 0.6,
+      "shares": { "brg": 0.33, "nlk": 0.30, "ssv": 0.22, "fzp": 0.11 }
+    },
+    {
+      "id": "p3",
+      "pollster": "Spinner Insights",
+      "date": "2026-07-26",
+      "sample": 112,
+      "weight": 1.0,
+      "shares": { "brg": 0.35, "nlk": 0.29, "ssv": 0.23, "fzp": 0.09 }
+    },
+    {
+      "id": "p4",
+      "pollster": "r/thespinroom Sidebar Poll",
+      "date": "2026-07-29",
+      "sample": 61,
+      "weight": 0.5,
+      "shares": { "brg": 0.31, "nlk": 0.33, "ssv": 0.20, "fzp": 0.12 }
+    },
+    {
+      "id": "p5",
+      "pollster": "Spinner Insights",
+      "date": "2026-08-02",
+      "sample": 130,
+      "weight": 1.1,
+      "shares": { "brg": 0.37, "nlk": 0.28, "ssv": 0.22, "fzp": 0.09 }
+    },
+    {
+      "id": "p6",
+      "pollster": "PickleArtGeek Tracker",
+      "date": "2026-08-04",
+      "sample": 88,
+      "weight": 0.9,
+      "shares": { "brg": 0.36, "nlk": 0.30, "ssv": 0.21, "fzp": 0.10 }
+    }
+  ]
+}

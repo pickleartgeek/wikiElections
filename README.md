@@ -13,7 +13,6 @@ HTML/CSS/JS and can be served as-is from the repo root.
 | `activities.html` | Decision Desk TSR "about us" page (the team, how calls are made). |
 | `polls.html?race=<id>` | Spinner Insights polls: RealClearPolling-style bar chart, **BaseCalc** (poll average) panel, **ProbCalc** (win probability) panel, and the raw poll table. |
 | `elects/index.html?race=<id>` | TSR Elects, trimmed to an NBC-style candidate chart + turnout/reporting/est.-votes stat row + call badge + interactive map, wired to one race at a time. |
-| `admin/index.html` | Admin panel — see below. |
 
 ## The two calculation engines
 

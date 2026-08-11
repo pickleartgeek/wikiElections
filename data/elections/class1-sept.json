@@ -1,0 +1,13 @@
+{
+  "id": "class1-sept",
+  "title": "Class 1 September 2025 Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "ip",
+    "hkf",
+    "dvwb",
+    "rf"
+  ],
+  "candidatesDir": "../candidates/registry/",
+  "electionDate": "2025-10-02"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "class5-june",
+  "title": "Class 5 June 2026 Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "gsx",
+    "dvwb",
+    "fw",
+    "rf",
+    "abagel"
+  ],
+  "candidatesDir": "../candidates/registry/",
+  "electionDate": "2026-06-15",
+  "_electionDateNote": "No exact election-day record exists for this race in tsrelects-results.json; inferred as a few days after the last tracked poll (2026-06-12)."
+}

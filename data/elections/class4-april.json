@@ -1,0 +1,11 @@
+{
+  "id": "class4-april",
+  "title": "Class 4 April 2026 Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "qtw",
+    "wc"
+  ],
+  "candidatesDir": "../candidates/registry/",
+  "electionDate": "2026-04-11"
+}

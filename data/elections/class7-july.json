@@ -1,0 +1,18 @@
+{
+  "id": "class7-july",
+  "title": "Class 7 July 2025 Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "tmf1",
+    "pag",
+    "qtw1",
+    "mf",
+    "rf"
+  ],
+  "candidatesDir": "../candidates/registry/",
+  "writeInIds": [
+    "mf"
+  ],
+  "_writeInNote": "MaxFlares ran as a write-in for this race (source table literally tagged the column 'MaxFlares (write-in)'). Write-in support is well-documented in real-world polling to run hotter in a poll than at the ballot box -- respondents will happily tell a pollster they're writing someone in, then don't bother at the actual ballot. DDTSR's composite (activities.html) applies a discount to writeInIds before averaging; Spinner Insights' raw poll releases (polls.html) are left untouched since those are a historical record of what was actually reported.",
+  "electionDate": "2025-08-03"
+}

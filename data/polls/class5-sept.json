@@ -1,0 +1,69 @@
+{
+  "electionId": "class5-sept",
+  "polls": [
+    {
+      "id": "c5s-5",
+      "pollster": "u/Impressive_Plant4418",
+      "date": "2025-09-14",
+      "sample": 22,
+      "weight": 0.8,
+      "shares": {
+        "gsx": 0.4545,
+        "rf": 0.1364,
+        "mf": 0.4091
+      }
+    },
+    {
+      "id": "c5s-4",
+      "pollster": "GSX (self-poll)",
+      "date": "2025-09-21",
+      "sample": 19,
+      "weight": 0.5,
+      "shares": {
+        "gsx": 0.5789,
+        "rf": 0.1053,
+        "fw": 0.2632,
+        "snjj": 0.0526
+      }
+    },
+    {
+      "id": "c5s-2",
+      "pollster": "Representative-Fee65 (self-poll)",
+      "date": "2025-09-22",
+      "sample": 16,
+      "weight": 0.5,
+      "shares": {
+        "gsx": 0.5,
+        "rf": 0.0625,
+        "fw": 0.3125,
+        "snjj": 0.0625
+      }
+    },
+    {
+      "id": "c5s-3",
+      "pollster": "EggPolls",
+      "date": "2025-09-22",
+      "sample": 24,
+      "weight": 1.0,
+      "shares": {
+        "gsx": 0.5,
+        "rf": 0.0416,
+        "fw": 0.25,
+        "snjj": 0.2083
+      }
+    },
+    {
+      "id": "c5s-1",
+      "pollster": "Spinner Insights",
+      "date": "2025-09-30",
+      "sample": 19,
+      "weight": 1.0,
+      "shares": {
+        "gsx": 0.4211,
+        "rf": 0.0526,
+        "fw": 0.3584,
+        "snjj": 0.158
+      }
+    }
+  ]
+}

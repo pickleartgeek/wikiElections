@@ -1,0 +1,44 @@
+{
+  "electionId": "class5-june",
+  "polls": [
+    {
+      "id": "c5j-1",
+      "pollster": "Spinner Insights",
+      "date": "2026-06-12",
+      "sample": 21,
+      "weight": 1.0,
+      "shares": {
+        "gsx": 0.1905,
+        "dvwb": 0.1428,
+        "fw": 0.1905,
+        "rf": 0.1428,
+        "abagel": 0.3333
+      }
+    },
+    {
+      "id": "c5j-2",
+      "pollster": "u/Arkansas-Bagel H2H Poll",
+      "date": "2026-06-12",
+      "sample": 16,
+      "weight": 0.5,
+      "shares": {
+        "gsx": 0.4375,
+        "abagel": 0.5625
+      }
+    },
+    {
+      "id": "c5j-3",
+      "pollster": "Spinner Insights",
+      "date": "2026-06-12",
+      "sample": 16,
+      "weight": 1.0,
+      "shares": {
+        "gsx": 0.375,
+        "dvwb": 0.125,
+        "fw": 0.125,
+        "rf": 0.125,
+        "abagel": 0.25
+      }
+    }
+  ]
+}

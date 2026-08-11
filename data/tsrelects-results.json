@@ -5,7 +5,7 @@
     "date": "2026-07-31",
     "party": "Regular",
     "turnout": 35,
-    "precincts_reporting": 95,
+    "precincts_reporting": 100,
     "precincts_total": 100,
     "first_round": {
       "races": {
@@ -29,7 +29,7 @@
             "hkf": 0
           },
           "3": {
-            "wip": 2,
+            "wip": 3,
             "dvwb": 1,
             "jc17": 0,
             "nzb": 1,

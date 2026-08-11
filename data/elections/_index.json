@@ -1,4 +1,0 @@
-{
-  "_comment": "List every election id here after adding its files (data/elections/<id>.json, data/polls/<id>.json, data/results/<id>.json, data/geo/<id>.geojson, candidates/<id>/*.json). The admin panel reads this to know which elections it can edit.",
-  "elections": ["class6"]
-}

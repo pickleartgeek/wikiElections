@@ -135,7 +135,7 @@ function loadMod(key) {
   // poll is to today, the more it counts, same recency model as everywhere
   // else on the site.
   const asOf = todayUTCString();
-  const points = BaseCalc_rollingAverage(mod.polls, ['approve', 'disapprove'], asOf, 90);
+  const points = BaseCalc_rollingAverage(   mod.polls,   ['approve', 'disapprove'],   asOf,   90 ).map(point => {   const raw = BaseCalc_aggregate(     mod.polls.filter(p => p.date === point.date),     ['approve', 'disapprove'],     asOf   );    return {     ...point,     averages: {       approve: raw.alphas.approve,       disapprove: raw.alphas.disapprove     }   }; });
   const latest = points[points.length - 1]?.averages || {};
   const approve = latest.approve || 0, disapprove = latest.disapprove || 0;
   const photo = photoFor(mod.candidateKey || key);

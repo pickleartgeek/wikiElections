@@ -3,11 +3,11 @@
 A static, GitHub-Pages-ready site that merges the **wikiElections** front end
 (Decision Desk TSR + Spinner Insights branding) with a trimmed, redesigned
 version of the **TSRElects** live-results app.
-## Site map
+## Site map   
 
 | Page | What it is |
 |---|---|
-| `index.html` | wikiElections main page. Shows the flashing red breaking-news banner + "LIVE" box in **active** mode, or a quiet off-cycle strip/card in **off-cycle** mode. |
+| `index.html` | wikiElections main page. Shows the flashing red breaking-news banner + "LIVE" box in **active** nmode, or a quiet off-cycle strip/card in **off-cycle** mode. |
 | `activities.html` | Decision Desk TSR "about us" page (the team, how calls are made). |
 | `polls.html?race=<id>` | Spinner Insights polls: RealClearPolling-style bar chart, **BaseCalc** (poll average) panel, **ProbCalc** (win probability) panel, and the raw poll table. |
 | `elects/index.html?race=<id>` | TSR Elects, trimmed to an NBC-style candidate chart + turnout/reporting/est.-votes stat row + call badge + interactive map, wired to one race at a time. |

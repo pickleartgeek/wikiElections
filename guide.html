@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Understanding ProbCalc — wikiElections</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="utility-bar">
+  <div class="wrap">
+    <span><span class="brand-tag">wikiElections</span> · Decision Desk TSR &amp; Spinner Insights</span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="index.html">
+      <img class="mark" src="assets/img/wikielections-logo.svg" alt="wikiElections">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+  <nav class="main-nav">
+    <div class="wrap">
+      <a href="index.html">Main Page</a>
+      <a href="activities.html">Decision Desk TSR</a>
+      <a href="polls.html">Spinner Insights Polls</a>
+      <a href="elects/index.html"><img src="assets/img/brand/tsr-elects-brandmark.png" alt="" style="height:14px; width:14px; vertical-align:-2px; margin-right:5px; border-radius:3px;">TSR Elects — Live</a>
+    </div>
+  </nav>
+</header>
+
+<div id="dynamicBanner"></div>
+
+<main class="wrap">
+  <section class="hero" style="text-align:left; padding-top:30px;">
+    <div class="kicker">Guide · by PickleArtGeek</div>
+    <h1 style="font-size:32px;">Understanding ProbCalc</h1>
+    <p class="lede" style="margin:4px 0 0;">
+      The original guidebook behind DDTSR's BaseCalc &amp; ProbCalc — how PickleArtGeek
+      builds a polling average and a Monte Carlo win-probability model from a plain Wikipedia
+      polling table, in Google Sheets.
+    </p>
+  </section>
+
+  <h2 class="section-title" style="margin-top:24px;">Synopsis</h2>
+  <p style="font-size:14px; line-height:1.7;">
+    ProbCalc started as a one-off Google Sheets election predictor in November 2025 and has
+    since grown to cover sports, First-Past-the-Post constituencies, and a more structured
+    winner-identification system. The guide walks through it in three parts.
+  </p>
+  <p style="font-size:14px; line-height:1.7;">
+    <strong>Part I</strong> introduces the inverse gamma distribution ProbCalc is built on —
+    its shape (α), scale (β), and position (p) parameters — and how a bigger α tightens the
+    distribution around a result while β simply rescales the axis.
+    <strong>Part II</strong> covers "Simple ProbCalc": <em>BaseCalc</em> first, where polls are
+    copied from Wikipedia, cleaned up, and combined into a single α per candidate via
+    <code>(poll result × sample size) ÷ (days until election)</code> — so bigger, more recent
+    polls count for more — then normalized into a percentage; then <em>ProbCalc</em> itself,
+    which feeds those same α values into <code>GAMMA.INV(RAND(), α, β)</code> to simulate
+    an election outcome, repeated hundreds of times and tallied with
+    <code>INDEX</code>/<code>MATCH</code>/<code>COUNTIF</code> to get a win probability per
+    candidate. <strong>Part III</strong> gets more advanced: classifying a simulated win as a
+    plurality, majority, or supermajority; extrapolating results for a subgroup (like a
+    demographic or constituency) that lacks its own local polling by adjusting the topline
+    α by that group's historical lean; and converting simulated percentages back into a
+    feasible raw vote count.
+  </p>
+  <p style="font-size:13px; color:var(--muted);">
+    This is the same core method DDTSR's <a href="activities.html#probcalc">BaseCalc &amp;
+    ProbCalc</a> tool runs on this site — α is computed directly from polling data this way,
+    and β is fixed at 1.
+  </p>
+
+  <div class="guide-download-bar">
+    <div class="info">Understanding ProbCalc.pdf · 11 pages · by PickleArtGeek</div>
+    <a class="btn" href="assets/guide/understanding-probcalc.pdf" download>Download PDF</a>
+  </div>
+
+  <h2 class="section-title">Read it here</h2>
+  <iframe class="guide-pdf-frame" src="assets/guide/understanding-probcalc.pdf" title="Understanding ProbCalc PDF"></iframe>
+  <p class="small-muted" style="margin-top:8px;">
+    If the viewer above doesn't load (some mobile browsers don't embed PDFs), use the
+    download button instead.
+  </p>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
+    <span><a href="index.html">Main Page</a></span>
+  </div>
+</footer>
+
+<script>window.SITE_BASE = './';</script>
+<script src="assets/js/overrides.js"></script>
+<script src="assets/js/main.js"></script>
+<script>initSiteChrome();</script>
+</body>
+</html>

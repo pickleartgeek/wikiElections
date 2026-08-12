@@ -1,0 +1,13 @@
+{
+  "id": "class5-april",
+  "title": "Class 5 April 2026 Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "dvwb",
+    "gsx",
+    "rf"
+  ],
+  "candidatesDir": "../candidates/registry/",
+  "electionDate": "2026-04-11",
+  "anticipatedTurnout": 14
+}

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moderator Approval — wikiElections</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&family=Archivo+Black&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  body { font-family: var(--font-spinner-body), var(--font-body); }
+  .appr-hero { display: flex; align-items: center; gap: 18px; margin: 20px 0; }
+  .appr-hero-photo {
+    width: 84px; height: 84px; border-radius: 50%; background: var(--ink);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
+  }
+  .appr-hero-photo img { width: 60%; height: 60%; object-fit: contain; }
+  .appr-picker { max-width: 320px; margin: 10px 0 20px; }
+</style>
+</head>
+<body>
+
+<div class="utility-bar">
+  <div class="wrap">
+    <span><span class="brand-tag">wikiElections</span> · Decision Desk TSR &amp; Spinner Insights</span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="index.html">
+      <img class="mark" src="assets/img/wikielections-logo.svg" alt="wikiElections">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+  <nav class="main-nav">
+    <div class="wrap">
+      <a href="index.html">Main Page</a>
+      <a href="activities.html">Decision Desk TSR</a>
+      <a href="polls.html">Spinner Insights Polls</a>
+      <a href="elects/index.html"><img src="assets/img/brand/tsr-elects-brandmark.png" alt="" style="height:14px; width:14px; vertical-align:-2px; margin-right:5px; border-radius:3px;">TSR Elects — Live</a>
+    </div>
+  </nav>
+</header>
+
+<div id="dynamicBanner"></div>
+
+<main class="wrap">
+  <section class="hero" style="text-align:left; padding-top:30px;">
+    <div class="kicker">Moderator Approval</div>
+    <h1 class="rcp-page-title" id="pageTitle">Loading…</h1>
+    <p class="lede" style="margin:4px 0 0;">
+      Job-approval tracking, RCP-style — Approve vs. Disapprove, 90-day rolling average.
+    </p>
+  </section>
+
+  <div class="appr-picker">
+    <label style="display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:4px;">Moderator</label>
+    <select id="modSelect" style="width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:4px; font-size:13px;"></select>
+  </div>
+
+  <div id="modContent"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
+    <span><a href="index.html">Main Page</a></span>
+  </div>
+</footer>
+
+<script>window.SITE_BASE = './';</script>
+<script src="assets/js/overrides.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/tsrelects.js"></script>
+<script src="assets/js/basecalc.js"></script>
+<script src="assets/js/rcp-chart.js"></script>
+<script src="assets/js/photo-filter.js"></script>
+<script>
+initSiteChrome();
+
+const params = new URLSearchParams(location.search);
+let approvalData = { moderators: {} };
+let registry = { candidates: {} };
+
+async function boot() {
+  const [regData, appr] = await Promise.all([
+    fetch('data/registries.json').then(r => r.json()),
+    fetch('data/approval-polls.json').then(r => r.json())
+  ]);
+  registry = regData;
+  approvalData = appr;
+
+  const keys = Object.keys(approvalData.moderators || {});
+  const sel = document.getElementById('modSelect');
+
+  if (!keys.length) {
+    document.getElementById('pageTitle').textContent = 'No approval polling yet';
+    sel.style.display = 'none';
+    document.getElementById('modContent').innerHTML = `
+      <div class="calc-panel">
+        <p class="desc" style="margin:0;">No moderator job-approval polling has been logged in
+        <code>data/approval-polls.json</code> yet. Once a moderator has real Approve/Disapprove
+        numbers, they'll show up here with their own bar chart, trend line, and expandable poll
+        spreadsheet — same engine as everything else on this site.</p>
+      </div>`;
+    return;
+  }
+
+  sel.innerHTML = keys.map(k => `<option value="${k}">${approvalData.moderators[k].name}</option>`).join('');
+  sel.onchange = () => loadMod(sel.value);
+  const requested = params.get('mod');
+  const startKey = (requested && keys.includes(requested)) ? requested : keys[0];
+  sel.value = startKey;
+  loadMod(startKey);
+}
+
+function photoFor(key) {
+  const c = registry.candidates && registry.candidates[key];
+  return c && c.photo ? `candidates/registry/${c.photo}` : 'assets/img/bust-silhouette.svg';
+}
+
+function todayUTCString() {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString().slice(0, 10);
+}
+
+function loadMod(key) {
+  const mod = approvalData.moderators[key];
+  document.getElementById('pageTitle').textContent = `${mod.name} — Job Approval`;
+
+  // Approval tracking has no "election day" to count down to, so today's
+  // date (UTC) stands in as the reference point: the closer an approval
+  // poll is to today, the more it counts, same recency model as everywhere
+  // else on the site.
+  const asOf = todayUTCString();
+  // normalize:false -- approve/disapprove are independently-measured shares, not a
+  // vote split, so they shouldn't be forced to sum to 100% (the gap is "no opinion").
+  const points = BaseCalc_rollingAverage(mod.polls, ['approve', 'disapprove'], asOf, 90, { normalize: false });
+  const latest = points[points.length - 1]?.averages || {};
+  const approve = latest.approve || 0, disapprove = latest.disapprove || 0;
+  const photo = photoFor(mod.candidateKey || key);
+
+  let html = `
+    <div class="appr-hero">
+      <div class="appr-hero-photo"><img class="white-filter-img" src="${photo}" alt=""></div>
+      <div>
+        <div style="font-family:var(--font-spinner-display); font-size:20px; font-weight:900;">${mod.name}</div>
+        <div class="small-muted">${mod.polls.length} approval poll${mod.polls.length === 1 ? '' : 's'} tracked</div>
+      </div>
+    </div>
+
+    <div class="rcp-bars-wrap">
+      <div class="rcp-lead-badge">${approve >= disapprove ? 'Approve' : 'Disapprove'}<span class="rcp-lead-value" style="background:${approve >= disapprove ? '#111214' : '#cf1322'}">+${(Math.abs(approve - disapprove) * 100).toFixed(1)}</span></div>
+      <div class="rcp-bar-row">
+        <div class="rcp-bar-fill" style="width:${Math.max(approve * 100, 14)}%; background:linear-gradient(120deg, #111214, #3a3c40);">
+          <div class="rcp-bar-photo"><img class="white-filter-img" src="${photo}" alt=""></div>
+        </div>
+        <div class="rcp-bar-remainder"></div>
+        <div class="rcp-bar-meta"><div class="name">Approve</div><div class="pct">${(approve * 100).toFixed(1)}<sup>%</sup></div></div>
+      </div>
+      <div class="rcp-bar-row">
+        <div class="rcp-bar-fill" style="width:${Math.max(disapprove * 100, 14)}%; background:linear-gradient(120deg, #cf1322, #93000f);"></div>
+        <div class="rcp-bar-remainder"></div>
+        <div class="rcp-bar-meta"><div class="name">Disapprove</div><div class="pct">${(disapprove * 100).toFixed(1)}<sup>%</sup></div></div>
+      </div>
+    </div>
+
+    <div class="rcp-chart-panel">
+      <h3>90-Day Rolling Average</h3>
+      <p class="small-muted" style="margin:0;">Weighted as of today (UTC) — the more recent an approval poll, the more it counts, same "days-to-reference-date" model as everything else, just with today standing in for an election day.</p>
+      <div id="apprChart"></div>
+    </div>
+
+    <div class="rcp-table-wrap">
+      <table class="rcp-table">
+        <thead><tr><th>Pollster</th><th>Date</th><th>Sample</th><th>Approve</th><th>Disapprove</th></tr></thead>
+        <tbody>
+          ${[...mod.polls].sort((a, b) => new Date(b.date) - new Date(a.date)).map(p => `
+            <tr><td>${p.pollster}</td><td>${p.date}</td><td>${p.sample}</td>
+              <td>${((p.shares.approve || 0) * 100).toFixed(1)}%</td>
+              <td>${((p.shares.disapprove || 0) * 100).toFixed(1)}%</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  document.getElementById('modContent').innerHTML = html;
+  if (typeof PhotoFilter_applyAll === 'function') PhotoFilter_applyAll('#modContent .white-filter-img');
+  RCPChart_render(document.getElementById('apprChart'), points, ['approve', 'disapprove'],
+    { candidates: { approve: { name: 'Approve', color: '#111214' }, disapprove: { name: 'Disapprove', color: '#cf1322' } } });
+}
+
+boot();
+</script>
+</body>
+</html>

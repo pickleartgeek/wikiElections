@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wikiElections — The place for all things TSR Elections</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="utility-bar">
+  <div class="wrap">
+    <span><span class="brand-tag">wikiElections</span> · Decision Desk TSR &amp; Spinner Insights</span>
+    <span>
+      <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
+    </span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="index.html">
+      <img class="mark" src="assets/img/wikielections-logo.svg" alt="wikiElections">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+  <nav class="main-nav">
+    <div class="wrap">
+      <a href="index.html" class="current">Main Page</a>
+      <a href="activities.html">Decision Desk TSR</a>
+      <a href="polls.html">Spinner Insights Polls</a>
+      <a href="elects/index.html"><img src="assets/img/brand/tsr-elects-brandmark.png" alt="" style="height:14px; width:14px; vertical-align:-2px; margin-right:5px; border-radius:3px;">TSR Elects — Live</a>
+    </div>
+  </nav>
+</header>
+
+<div id="dynamicBanner"></div>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="kicker">Main Page</div>
+    <h1>The place for all things TSR Elections</h1>
+    <p class="lede">Welcome to the official wikiElections website! We feature both razor-sharp
+      polls from <strong>Spinner Insights</strong> and cutting-edge electoral calculus from
+      <strong>Decision Desk TSR</strong>.</p>
+    <div id="heroLiveSlot"></div>
+  </section>
+
+  <div class="hub-buttons" id="hubButtons"></div>
+
+  <div id="rcpHub"></div>
+
+  <h2 class="section-title">Must-see articles and websites</h2>
+  <div class="card-grid">
+    <a class="article-card" href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">
+      <div class="thumb">r/</div>
+      <div class="body">
+        <div class="eyebrow">Community</div>
+        <div class="title">r/thespinroom</div>
+        <div class="byline">TSR Wiki</div>
+      </div>
+    </a>
+    <a class="article-card" href="guide.html">
+      <div class="thumb yellow">%</div>
+      <div class="body">
+        <div class="eyebrow">Guide</div>
+        <div class="title">Understanding ProbCalc</div>
+        <div class="byline">article by: PickleArtGeek</div>
+      </div>
+    </a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
+    <span><a href="activities.html">About</a></span>
+  </div>
+</footer>
+
+<script>window.SITE_BASE = './';</script>
+<script src="assets/js/overrides.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/tsrelects.js"></script>
+<script src="assets/js/basecalc.js"></script>
+<script src="assets/js/rcp-donut.js"></script>
+<script>
+initSiteChrome();
+
+async function renderHub() {
+  const cfgBase = await fetch('data/site-config.json').then(r => r.json());
+  const cfg = OVR_getSiteConfig(cfgBase);
+  const registry = await fetch('data/registries.json').then(r => r.json());
+
+  renderHubButtons(cfg);
+
+  const hub = document.getElementById('rcpHub');
+  if (cfg.mode === 'active' && cfg.activePollsId) {
+    await renderActiveHub(hub, cfg, registry);
+  } else {
+    await renderOffCycleHub(hub, registry);
+  }
+}
+
+function renderHubButtons(cfg) {
+  const wrap = document.getElementById('hubButtons');
+  let html = '';
+  if (cfg.mode === 'active') {
+    html += `
+      <a class="hub-btn elects" href="${cfg.liveBox.link}">
+        <img class="hub-btn-wordmark" src="assets/img/brand/tsr-elects-full-logo-white.png" alt="TSR Elects">
+        <div class="hub-btn-sub">Live results, right now →</div>
+      </a>`;
+  }
+  html += `
+      <a class="hub-btn ddtsr" href="activities.html">
+        <div class="hub-btn-title">Decision Desk TSR</div>
+        <div class="hub-btn-sub">BaseCalc · ProbCalc · Race Calls</div>
+      </a>
+      <a class="hub-btn spin" href="polls.html">
+        <img class="hub-btn-logo" src="assets/img/brand/spinner-insights-icon.png" alt="">
+        <div class="hub-btn-title">Spinner Insights</div>
+        <div class="hub-btn-sub">Our Polling</div>
+      </a>`;
+  wrap.innerHTML = html;
+}
+
+async function renderActiveHub(hub, cfg, registry) {
+  const [election, pollsFile] = await Promise.all([
+    fetch(`data/elections/${cfg.activePollsId}.json`).then(r => r.json()),
+    fetch(`data/polls/${cfg.activePollsId}.json`).then(r => r.json())
+  ]);
+  const currentIds = BaseCalc_currentCandidates(pollsFile.polls, election.candidateIds);
+  const agg = BaseCalc_aggregate(pollsFile.polls, currentIds, election.electionDate, { anticipatedTurnout: election.anticipatedTurnout });
+
+  hub.innerHTML = `
+    <h2 class="section-title">On the Radar</h2>
+    <p class="hub-note">Live composite polling average (all pollsters) for the current race.
+      Full breakdown on <a href="activities.html#probcalc">DDTSR's BaseCalc &amp; ProbCalc</a>.</p>
+    <div style="display:flex; justify-content:center;"><div id="hubDonut"></div></div>`;
+  RCPDonut_fromAggregate(document.getElementById('hubDonut'), agg, registry, election.title, `activities.html?election=${cfg.activePollsId}#probcalc`);
+}
+
+function todayUTCString() {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString().slice(0, 10);
+}
+
+async function renderOffCycleHub(hub, registry) {
+  const approvalData = await fetch('data/approval-polls.json').then(r => r.json()).catch(() => ({ moderators: {} }));
+  const modKeys = Object.keys(approvalData.moderators || {});
+  const asOf = todayUTCString();
+
+  if (modKeys.length > 0) {
+    hub.innerHTML = `<h2 class="section-title">Moderator Approval</h2>
+      <p class="hub-note">90-day rolling average as of today (UTC), Approve vs. Disapprove. Click a moderator for their full approval polling history.</p>
+      <div class="hub-scroll" id="hubScroll"></div>`;
+    const scroll = document.getElementById('hubScroll');
+    modKeys.forEach(key => {
+      const mod = approvalData.moderators[key];
+      const points = BaseCalc_rollingAverage(mod.polls, ['approve', 'disapprove'], asOf, 90, { normalize: false });
+      const latest = points[points.length - 1]?.averages || {};
+      const approve = latest.approve || 0, disapprove = latest.disapprove || 0;
+      const card = document.createElement('div');
+      scroll.appendChild(card);
+      RCPDonut_render(card, {
+        title: mod.name,
+        segments: [
+          { name: 'Approve', color: '#111214', pct: approve },
+          { name: 'Disapprove', color: '#cf1322', pct: disapprove }
+        ],
+        leadLabel: approve >= disapprove ? 'Approve' : 'Disapprove',
+        leadValue: Math.abs(approve - disapprove) * 100,
+        leadColor: approve >= disapprove ? '#111214' : '#cf1322',
+        href: `approval.html?mod=${encodeURIComponent(key)}`
+      });
+    });
+    return;
+  }
+
+  // No approval polling logged yet -- fall back to recent-race polling snapshots
+  // (real data, just not what the RCP hub eventually wants to show).
+  const idx = await fetch('data/polls-index.json').then(r => r.json());
+  hub.innerHTML = `<h2 class="section-title">Recent Polling Snapshots</h2>
+    <p class="hub-note">No moderator approval polling has been logged yet, so this scrolls through
+      the final composite average for each recently-tracked race instead. Once approval polling
+      exists (see <code>data/approval-polls.json</code>), this becomes an approval-rating carousel.
+      Click any race for its full DDTSR breakdown.</p>
+    <div class="hub-scroll" id="hubScroll"></div>`;
+  const scroll = document.getElementById('hubScroll');
+  for (const entry of idx.elections) {
+    const [election, pollsFile] = await Promise.all([
+      fetch(`data/elections/${entry.id}.json`).then(r => r.json()),
+      fetch(`data/polls/${entry.id}.json`).then(r => r.json())
+    ]);
+    if (!pollsFile.polls.length) continue;
+    const currentIds = BaseCalc_currentCandidates(pollsFile.polls, election.candidateIds);
+    const agg = BaseCalc_aggregate(pollsFile.polls, currentIds, election.electionDate, { anticipatedTurnout: election.anticipatedTurnout });
+    const card = document.createElement('div');
+    scroll.appendChild(card);
+    RCPDonut_fromAggregate(card, agg, registry, election.title, `activities.html?election=${entry.id}#probcalc`);
+  }
+}
+
+renderHub();
+</script>
+</body>
+</html>

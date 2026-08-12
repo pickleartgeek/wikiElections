@@ -1,0 +1,936 @@
+[
+  {
+    "id": "Class 6 July",
+    "title": "Class 6 July 2026 Election",
+    "date": "2026-07-31",
+    "party": "Regular",
+    "turnout": 35,
+    "precincts_reporting": 95,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 6 July 2026 First Round": {
+          "1": {
+            "wip": 0,
+            "dvwb": 0,
+            "jc17": 0,
+            "nzb": 2,
+            "ictoan": 1,
+            "mf1": 0,
+            "hkf": 0
+          },
+          "2": {
+            "wip": 0,
+            "dvwb": 0,
+            "jc17": 0,
+            "nzb": 0,
+            "ictoan": 0,
+            "mf1": 0,
+            "hkf": 0
+          },
+          "3": {
+            "wip": 2,
+            "dvwb": 1,
+            "jc17": 0,
+            "nzb": 1,
+            "ictoan": 0,
+            "mf1": 0,
+            "hkf": 2
+          },
+          "4": {
+            "wip": 0,
+            "dvwb": 0,
+            "jc17": 1,
+            "nzb": 0,
+            "ictoan": 0,
+            "mf1": 0,
+            "hkf": 0
+          },
+          "5": {
+            "wip": 1,
+            "dvwb": 0,
+            "jc17": 0,
+            "nzb": 1,
+            "ictoan": 0,
+            "mf1": 0,
+            "hkf": 0
+          },
+          "6": {
+            "wip": 1,
+            "dvwb": 0,
+            "jc17": 0,
+            "nzb": 0,
+            "ictoan": 0,
+            "mf1": 1,
+            "hkf": 1
+          },
+          "7": {
+            "wip": 1,
+            "dvwb": 0,
+            "jc17": 0,
+            "nzb": 0,
+            "ictoan": 0,
+            "mf1": 0,
+            "hkf": 0
+          },
+          "8": {
+            "wip": 0,
+            "dvwb": 1,
+            "jc17": 0,
+            "nzb": 0,
+            "ictoan": 0,
+            "mf1": 2,
+            "hkf": 0
+          },
+          "9": {
+            "wip": 1,
+            "dvwb": 0,
+            "jc17": 0,
+            "nzb": 0,
+            "ictoan": 0,
+            "mf1": 0,
+            "hkf": 0
+          }
+        }
+      },
+      "race_calls": {
+        "Class 6 July 2026 First Round": {
+          "status": "runoff",
+          "winner": "wip"
+        }
+      }
+    },
+    "runoff_round": null
+  },
+  {
+    "id": "Class 4",
+    "title": "Class 4 Election",
+    "date": "2026-04-11",
+    "party": "Special",
+    "turnout": 38,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 4": {
+          "1": {
+            "wc": 2,
+            "qtw": 1
+          },
+          "2": {
+            "wc": 0,
+            "qtw": 1
+          },
+          "3": {
+            "wc": 2,
+            "qtw": 3
+          },
+          "4": {
+            "wc": 0,
+            "qtw": 0
+          },
+          "5": {
+            "wc": 1,
+            "qtw": 2
+          },
+          "6": {
+            "wc": 2,
+            "qtw": 2
+          },
+          "7": {
+            "wc": 1,
+            "qtw": 1
+          },
+          "8": {
+            "wc": 2,
+            "qtw": 0
+          },
+          "9": {
+            "wc": 1,
+            "qtw": 0
+          }
+        }
+      },
+      "race_calls": {
+        "Class 4": {
+          "status": "winner",
+          "winner": "wc"
+        }
+      }
+    },
+    "runoff_round": null
+  },
+  {
+    "id": "Class 5",
+    "title": "Class 5 Election",
+    "date": "2026-04-11",
+    "party": "Special",
+    "turnout": 38,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 5": {
+          "1": {
+            "dvwb": 1,
+            "gsx": 1,
+            "rf": 1
+          },
+          "2": {
+            "dvwb": 0,
+            "gsx": 1,
+            "rf": 0
+          },
+          "3": {
+            "dvwb": 2,
+            "gsx": 2,
+            "rf": 1
+          },
+          "4": {
+            "dvwb": 0,
+            "gsx": 0,
+            "rf": 0
+          },
+          "5": {
+            "dvwb": 1,
+            "gsx": 0,
+            "rf": 2
+          },
+          "6": {
+            "dvwb": 0,
+            "gsx": 2,
+            "rf": 2
+          },
+          "7": {
+            "dvwb": 1,
+            "gsx": 1,
+            "rf": 0
+          },
+          "8": {
+            "dvwb": 1,
+            "gsx": 0,
+            "rf": 1
+          },
+          "9": {
+            "dvwb": 1,
+            "gsx": 0,
+            "rf": 0
+          }
+        }
+      },
+      "race_calls": {
+        "Class 5": {
+          "status": "runoff",
+          "winner": "dvwb"
+        }
+      }
+    },
+    "runoff_round": {
+      "turnout": 38,
+      "precincts_reporting": 100,
+      "precincts_total": 100,
+      "races": {
+        "Class 5": {
+          "1": {
+            "dvwb": 0,
+            "gsx": 0
+          },
+          "2": {
+            "dvwb": 0,
+            "gsx": 0
+          },
+          "3": {
+            "dvwb": 0,
+            "gsx": 0
+          },
+          "4": {
+            "dvwb": 0,
+            "gsx": 0
+          },
+          "5": {
+            "dvwb": 0,
+            "gsx": 0
+          },
+          "6": {
+            "dvwb": 0,
+            "gsx": 0
+          },
+          "7": {
+            "dvwb": 0,
+            "gsx": 0
+          },
+          "8": {
+            "dvwb": 0,
+            "gsx": 0
+          },
+          "9": {
+            "dvwb": 0,
+            "gsx": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "Class 5 September",
+    "title": "Class 5 Special Election",
+    "date": "2025-10-02",
+    "party": "Special",
+    "turnout": 62,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 5 September First Round": {
+          "1": {
+            "fw": 3,
+            "gsx": 2,
+            "rf": 0,
+            "snjj": 0
+          },
+          "2": {
+            "fw": 1,
+            "gsx": 1,
+            "rf": 0,
+            "snjj": 0
+          },
+          "3": {
+            "fw": 2,
+            "gsx": 1,
+            "rf": 1,
+            "snjj": 0
+          },
+          "4": {
+            "fw": 1,
+            "gsx": 2,
+            "rf": 0,
+            "snjj": 0
+          },
+          "5": {
+            "fw": 0,
+            "gsx": 2,
+            "rf": 1,
+            "snjj": 1
+          },
+          "6": {
+            "fw": 3,
+            "gsx": 3,
+            "rf": 0,
+            "snjj": 0
+          },
+          "7": {
+            "fw": 1,
+            "gsx": 2,
+            "rf": 0,
+            "snjj": 0
+          },
+          "8": {
+            "fw": 3,
+            "gsx": 0,
+            "rf": 0,
+            "snjj": 0
+          },
+          "9": {
+            "fw": 1,
+            "gsx": 1,
+            "rf": 1,
+            "snjj": 0
+          }
+        }
+      }
+    },
+    "runoff_round": {
+      "turnout": 62,
+      "precincts_reporting": 100,
+      "precincts_total": 100,
+      "races": {
+        "Class 5 September Runoff": {
+          "1": {
+            "fw": 3,
+            "gsx": 2
+          },
+          "2": {
+            "fw": 1,
+            "gsx": 1
+          },
+          "3": {
+            "fw": 2,
+            "gsx": 2
+          },
+          "4": {
+            "fw": 1,
+            "gsx": 2
+          },
+          "5": {
+            "fw": 2,
+            "gsx": 2
+          },
+          "6": {
+            "fw": 3,
+            "gsx": 3
+          },
+          "7": {
+            "fw": 1,
+            "gsx": 2
+          },
+          "8": {
+            "fw": 3,
+            "gsx": 0
+          },
+          "9": {
+            "fw": 1,
+            "gsx": 2
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "Class 1 September",
+    "title": "Class 1 Election",
+    "date": "2025-10-02",
+    "party": "Regular",
+    "turnout": 62,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 1 September First Round": {
+          "1": {
+            "ip": 3,
+            "hkf": 1,
+            "dvwb": 1
+          },
+          "2": {
+            "ip": 0,
+            "hkf": 1,
+            "dvwb": 1
+          },
+          "3": {
+            "ip": 2,
+            "hkf": 1,
+            "dvwb": 1
+          },
+          "4": {
+            "ip": 3,
+            "hkf": 0,
+            "dvwb": 0
+          },
+          "5": {
+            "ip": 3,
+            "hkf": 1,
+            "dvwb": 0
+          },
+          "6": {
+            "ip": 2,
+            "hkf": 3,
+            "dvwb": 1
+          },
+          "7": {
+            "ip": 0,
+            "hkf": 1,
+            "dvwb": 2
+          },
+          "8": {
+            "ip": 3,
+            "hkf": 0,
+            "dvwb": 0
+          },
+          "9": {
+            "ip": 3,
+            "hkf": 0,
+            "dvwb": 0
+          }
+        }
+      }
+    },
+    "runoff_round": {
+      "turnout": 62,
+      "precincts_reporting": 100,
+      "precincts_total": 100,
+      "races": {
+        "Class 1 September Runoff": {
+          "1": {
+            "ip": 3,
+            "hkf": 1
+          },
+          "2": {
+            "ip": 0,
+            "hkf": 2
+          },
+          "3": {
+            "ip": 3,
+            "hkf": 1
+          },
+          "4": {
+            "ip": 3,
+            "hkf": 0
+          },
+          "5": {
+            "ip": 3,
+            "hkf": 1
+          },
+          "6": {
+            "ip": 3,
+            "hkf": 3
+          },
+          "7": {
+            "ip": 1,
+            "hkf": 2
+          },
+          "8": {
+            "ip": 3,
+            "hkf": 0
+          },
+          "9": {
+            "ip": 3,
+            "hkf": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "Class 2 July",
+    "title": "Class 2 Election",
+    "date": "2025-08-03",
+    "party": "Special",
+    "turnout": 72,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 2": {
+          "1": {
+            "gsx": 3,
+            "oc": 0,
+            "fmr": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 1
+          },
+          "2": {
+            "gsx": 1,
+            "oc": 0,
+            "fmr": 1,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          },
+          "3": {
+            "gsx": 1,
+            "oc": 2,
+            "fmr": 2,
+            "dvwb": 1,
+            "bberry": 0,
+            "wi": 0
+          },
+          "4": {
+            "gsx": 1,
+            "oc": 1,
+            "fmr": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          },
+          "5": {
+            "gsx": 0,
+            "oc": 2,
+            "fmr": 1,
+            "dvwb": 0,
+            "bberry": 1,
+            "wi": 0
+          },
+          "6": {
+            "gsx": 2,
+            "oc": 4,
+            "fmr": 1,
+            "dvwb": 1,
+            "bberry": 0,
+            "wi": 1
+          },
+          "7": {
+            "gsx": 2,
+            "oc": 0,
+            "fmr": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          },
+          "8": {
+            "gsx": 0,
+            "oc": 1,
+            "fmr": 0,
+            "dvwb": 1,
+            "bberry": 0,
+            "wi": 1
+          },
+          "9": {
+            "gsx": 2,
+            "oc": 1,
+            "fmr": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          }
+        }
+      }
+    },
+    "runoff_round": {
+      "turnout": 72,
+      "precincts_reporting": 100,
+      "precincts_total": 100,
+      "races": {
+        "First Round Class 2 July": {
+          "1": {
+            "oc": 1,
+            "dvwb": 1,
+            "bberry": 2
+          },
+          "2": {
+            "oc": 1,
+            "dvwb": 0,
+            "bberry": 1
+          },
+          "3": {
+            "oc": 2,
+            "dvwb": 1,
+            "bberry": 2
+          },
+          "4": {
+            "oc": 1,
+            "dvwb": 0,
+            "bberry": 1
+          },
+          "5": {
+            "oc": 2,
+            "dvwb": 0,
+            "bberry": 2
+          },
+          "6": {
+            "oc": 5,
+            "dvwb": 1,
+            "bberry": 2
+          },
+          "7": {
+            "oc": 2,
+            "dvwb": 0,
+            "bberry": 1
+          },
+          "8": {
+            "oc": 0,
+            "dvwb": 3,
+            "bberry": 0
+          },
+          "9": {
+            "oc": 1,
+            "dvwb": 1,
+            "bberry": 1
+          }
+        },
+        "Final Round Class 2 July": {
+          "1": {
+            "oc": 2,
+            "bberry": 2
+          },
+          "2": {
+            "oc": 1,
+            "bberry": 1
+          },
+          "3": {
+            "oc": 3,
+            "bberry": 2
+          },
+          "4": {
+            "oc": 1,
+            "bberry": 1
+          },
+          "5": {
+            "oc": 2,
+            "bberry": 2
+          },
+          "6": {
+            "oc": 6,
+            "bberry": 2
+          },
+          "7": {
+            "oc": 2,
+            "bberry": 1
+          },
+          "8": {
+            "oc": 2,
+            "bberry": 1
+          },
+          "9": {
+            "oc": 2,
+            "bberry": 1
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "Class 7 July",
+    "title": "Class 7 Election",
+    "date": "2025-08-03",
+    "party": "Regular",
+    "turnout": 72,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 7 July First Round": {
+          "1": {
+            "tmf1": 2,
+            "pag": 1,
+            "qtw1": 0,
+            "wi": 1
+          },
+          "2": {
+            "tmf1": 0,
+            "pag": 1,
+            "qtw1": 0,
+            "wi": 1
+          },
+          "3": {
+            "tmf1": 4,
+            "pag": 0,
+            "qtw1": 2,
+            "wi": 0
+          },
+          "4": {
+            "tmf1": 0,
+            "pag": 1,
+            "qtw1": 1,
+            "wi": 0
+          },
+          "5": {
+            "tmf1": 3,
+            "pag": 1,
+            "qtw1": 0,
+            "wi": 0
+          },
+          "6": {
+            "tmf1": 2,
+            "pag": 2,
+            "qtw1": 2,
+            "wi": 2
+          },
+          "7": {
+            "tmf1": 1,
+            "pag": 2,
+            "qtw1": 0,
+            "wi": 0
+          },
+          "8": {
+            "tmf1": 1,
+            "pag": 0,
+            "qtw1": 0,
+            "wi": 2
+          },
+          "9": {
+            "tmf1": 1,
+            "pag": 0,
+            "qtw1": 2,
+            "wi": 0
+          }
+        }
+      }
+    },
+    "runoff_round": {
+      "turnout": 72,
+      "precincts_reporting": 100,
+      "precincts_total": 100,
+      "races": {
+        "Class 7 July Runoff": {
+          "1": {
+            "tmf1": 2,
+            "pag": 2
+          },
+          "2": {
+            "tmf1": 0,
+            "pag": 2
+          },
+          "3": {
+            "tmf1": 3,
+            "pag": 2
+          },
+          "4": {
+            "tmf1": 1,
+            "pag": 1
+          },
+          "5": {
+            "tmf1": 2,
+            "pag": 2
+          },
+          "6": {
+            "tmf1": 2,
+            "pag": 6
+          },
+          "7": {
+            "tmf1": 3,
+            "pag": 1
+          },
+          "8": {
+            "tmf1": 3,
+            "pag": 0
+          },
+          "9": {
+            "tmf1": 2,
+            "pag": 1
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "Class 6 June",
+    "title": "Class 6 Election",
+    "date": "2025-06-26",
+    "party": "Regular",
+    "turnout": 55,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 6 June First Round": {
+          "1": {
+            "wip1": 2,
+            "md": 0,
+            "halo": 0,
+            "qtw2": 2,
+            "pm": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          },
+          "2": {
+            "wip1": 2,
+            "md": 0,
+            "halo": 0,
+            "qtw2": 0,
+            "pm": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          },
+          "3": {
+            "wip1": 2,
+            "md": 1,
+            "halo": 0,
+            "qtw2": 0,
+            "pm": 0,
+            "dvwb": 1,
+            "bberry": 0,
+            "wi": 0
+          },
+          "4": {
+            "wip1": 0,
+            "md": 1,
+            "halo": 0,
+            "qtw2": 0,
+            "pm": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          },
+          "5": {
+            "wip1": 2,
+            "md": 1,
+            "halo": 1,
+            "qtw2": 1,
+            "pm": 0,
+            "dvwb": 1,
+            "bberry": 0,
+            "wi": 0
+          },
+          "6": {
+            "wip1": 2,
+            "md": 0,
+            "halo": 1,
+            "qtw2": 1,
+            "pm": 1,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          },
+          "7": {
+            "wip1": 1,
+            "md": 0,
+            "halo": 1,
+            "qtw2": 1,
+            "pm": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          },
+          "8": {
+            "wip1": 0,
+            "md": 0,
+            "halo": 0,
+            "qtw2": 0,
+            "pm": 0,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 1
+          },
+          "9": {
+            "wip1": 0,
+            "md": 0,
+            "halo": 1,
+            "qtw2": 1,
+            "pm": 1,
+            "dvwb": 0,
+            "bberry": 0,
+            "wi": 0
+          }
+        }
+      }
+    },
+    "runoff_round": {
+      "turnout": 60,
+      "precincts_reporting": 100,
+      "precincts_total": 100,
+      "races": {
+        "Class 6 June Runoff": {
+          "1": {
+            "wip1": 3,
+            "md": 0
+          },
+          "2": {
+            "wip1": 1,
+            "md": 0
+          },
+          "3": {
+            "wip1": 2,
+            "md": 2
+          },
+          "4": {
+            "wip1": 1,
+            "md": 1
+          },
+          "5": {
+            "wip1": 3,
+            "md": 1
+          },
+          "6": {
+            "wip1": 3,
+            "md": 3
+          },
+          "7": {
+            "wip1": 2,
+            "md": 0
+          },
+          "8": {
+            "wip1": 0,
+            "md": 1
+          },
+          "9": {
+            "wip1": 3,
+            "md": 1
+          }
+        }
+      }
+    }
+  }
+]

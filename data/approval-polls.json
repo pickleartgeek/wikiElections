@@ -1,0 +1,4 @@
+{
+  "_comment": "Job-approval tracking for currently-serving moderators, RCP-style (Approve/Disapprove), rendered as a 90-day rolling average on a donut per moderator. Empty for now -- no real approval polling has been logged. Shape once populated: { \"moderatorKey\": { \"name\": \"...\", \"polls\": [ {\"pollster\":\"...\",\"date\":\"YYYY-MM-DD\",\"sample\":N,\"weight\":1,\"shares\":{\"approve\":0.0,\"disapprove\":0.0}} ] } }. The homepage (index.html) checks this file first when off-cycle; if it's empty, it falls back to showing recent-race polling snapshots instead.",
+  "moderators": {}
+}

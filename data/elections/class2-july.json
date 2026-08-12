@@ -1,0 +1,20 @@
+{
+  "id": "class2-july",
+  "title": "Class 2 July 2025 Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "gsx",
+    "fmr",
+    "dvwb",
+    "bberry",
+    "rf",
+    "wtrees",
+    "ggdubya",
+    "halo",
+    "oc",
+    "mf"
+  ],
+  "candidatesDir": "../candidates/registry/",
+  "electionDate": "2025-08-03",
+  "anticipatedTurnout": 22
+}

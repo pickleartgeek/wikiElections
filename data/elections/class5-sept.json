@@ -1,0 +1,15 @@
+{
+  "id": "class5-sept",
+  "title": "Class 5 September 2025 Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "gsx",
+    "rf",
+    "fw",
+    "snjj",
+    "mf"
+  ],
+  "candidatesDir": "../candidates/registry/",
+  "electionDate": "2025-10-02",
+  "anticipatedTurnout": 19
+}

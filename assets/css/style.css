@@ -1,0 +1,680 @@
+:root {
+  --ink: #111214;
+  --paper: #fdfdfb;
+  --paper-dim: #f2f1ea;
+  --line: #d8d6cb;
+  --muted: #6b6b62;
+  --red: #cf1322;
+  --red-dark: #93000f;
+  --yellow: #f7e35c;
+  --pink: #e0447c;
+  --green: #2fa66a;
+  --blue: #2e6fdb;
+  --font-display: Georgia, 'Times New Roman', serif;
+  /* DDTSR house fonts: Arimo (loaded from Google Fonts) + Aileron.
+     Aileron isn't a Google/CDN-hosted font, so it falls back to the
+     closest freely-available system sans (Helvetica Neue/Segoe/Roboto),
+     which is visually very close to it -- swap in a real Aileron
+     @font-face block here if you have licensed font files. */
+  --font-body: 'Arimo', 'Aileron', -apple-system, 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;
+  /* Spinner Insights house font: Bridge. Bridge isn't freely
+     redistributable, so this substitutes a bold, high-impact Google
+     Font (Archivo Black for numerals/headlines, Barlow for table
+     text) with a similar sleek/modern feel to RealClearPolitics-style
+     branding. Swap in real Bridge @font-face files if you have them. */
+  --font-spinner-display: 'Archivo Black', 'Arimo', sans-serif;
+  --font-spinner-body: 'Barlow', 'Arimo', sans-serif;
+  /* TSR Elects house look: matches the actual brandmark (heavy block
+     caps for "TSR", bold letter-spaced caps on a solid bar for
+     "ELECTS ✓") -- Archivo Black for the big display type, Public Sans
+     for the bolder uppercase supporting text. */
+  --font-elects-display: 'Archivo Black', 'Arimo', sans-serif;
+  --font-elects-body: 'Public Sans', 'Arimo', sans-serif;
+  --elects-pink: #ca1957;
+  /* Numbers used to be set in Courier New, which reads jarring next to the
+     Archivo Black / Public Sans brand type. Public Sans has real tabular
+     figures, so numeric columns still line up without falling back to a
+     monospace typeface -- kept the variable name so call sites don't change. */
+  --font-mono: 'Public Sans', 'Archivo Black', 'Arimo', sans-serif;
+  --radius: 4px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+a { color: inherit; }
+
+img { max-width: 100%; display: block; }
+
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- Top utility bar ---------- */
+.utility-bar {
+  background: var(--ink);
+  color: #cfcfcf;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.utility-bar .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+}
+.utility-bar a { text-decoration: none; color: #cfcfcf; margin-left: 16px; }
+.utility-bar a:hover { color: #fff; }
+.utility-bar .brand-tag { color: var(--yellow); font-weight: 600; }
+
+/* ---------- Masthead / nav ---------- */
+.masthead {
+  border-bottom: 3px solid var(--ink);
+  background: var(--paper);
+}
+.masthead .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 12px;
+}
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.site-logo .name {
+  font-family: var(--font-elects-display);
+  font-weight: 400;
+  font-size: 23px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.site-logo .name small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.mode-pill {
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+.mode-pill.active { color: var(--red-dark); border-color: var(--red); background: #fff1f1; }
+.mode-pill.off-cycle { color: #3a6b3a; border-color: var(--green); background: #f0f8f2; }
+
+.main-nav {
+  border-top: 1px solid var(--line);
+  background: var(--ink);
+}
+.main-nav .wrap { display: flex; gap: 2px; flex-wrap: wrap; }
+.main-nav a {
+  display: block;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #eee;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border-right: 1px solid #2b2c30;
+}
+.main-nav a:hover, .main-nav a.current { background: var(--red); color: #fff; }
+
+/* ---------- Breaking banner (active mode only) ---------- */
+.breaking-banner {
+  background: var(--red);
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
+.breaking-banner .wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 20px;
+}
+.breaking-banner .tag {
+  background: #fff;
+  color: var(--red);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  animation: flicker 1.4s infinite;
+}
+.breaking-banner .headline { font-weight: 700; font-size: 14px; }
+.breaking-banner .sub { color: #ffe1e1; font-size: 12px; margin-left: auto; }
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* ---------- Off-cycle strip ---------- */
+.offcycle-strip {
+  background: var(--paper-dim);
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+.offcycle-strip .wrap { padding: 8px 20px; display: flex; align-items: center; gap: 8px; }
+.offcycle-strip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+
+/* ---------- Hero / live box ---------- */
+.hero {
+  padding: 28px 0 10px;
+  text-align: center;
+}
+.hero .kicker {
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 42px;
+  margin: 6px 0 4px;
+  letter-spacing: -0.01em;
+}
+.hero p.lede { color: var(--muted); max-width: 640px; margin: 0 auto; font-size: 15px; }
+
+.live-box {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  max-width: 420px;
+  margin: 22px auto 0;
+  border: 2px solid var(--red);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.live-box .label {
+  background: var(--red);
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  padding: 8px 14px;
+  text-align: center;
+}
+.live-box .body {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  background: #fff;
+}
+
+.offcycle-card {
+  max-width: 480px;
+  margin: 24px auto 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  text-align: center;
+  background: var(--paper-dim);
+}
+.offcycle-card h3 { font-family: var(--font-display); margin: 0 0 6px; font-size: 18px; }
+.offcycle-card p { margin: 0; color: var(--muted); font-size: 13px; }
+
+/* ---------- Section headers ---------- */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  margin: 40px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--ink);
+}
+
+/* ---------- Article/link cards ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+.article-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--ink);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.article-card .thumb {
+  height: 110px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 28px;
+}
+.article-card .thumb.yellow { background: var(--yellow); color: var(--ink); }
+.article-card .body { padding: 12px 14px; }
+.article-card .eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.article-card .title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.article-card .byline { font-size: 11px; color: var(--muted); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 3px solid var(--ink);
+  background: var(--paper-dim);
+  margin-top: 50px;
+  padding: 26px 0 40px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.site-footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.site-footer a { text-decoration: none; color: var(--muted); }
+.site-footer a:hover { color: var(--ink); }
+
+/* ---------- Poll bars (RealClearPolling-style) ---------- */
+.poll-bar-list { margin: 18px 0 30px; }
+.poll-bar-row {
+  display: grid;
+  grid-template-columns: 46px 1fr 90px;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.poll-bar-row .avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  overflow: hidden; border: 2px solid var(--ink);
+  flex-shrink: 0;
+}
+.poll-bar-row .avatar img { width: 100%; height: 100%; object-fit: cover; }
+.poll-bar-track {
+  position: relative;
+  height: 40px;
+  background: var(--paper-dim);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.poll-bar-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  display: flex; align-items: center;
+  padding-left: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.poll-bar-name {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 12px; font-weight: 700; color: var(--ink);
+}
+.poll-bar-pct {
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 22px;
+  text-align: right;
+}
+.poll-bar-pct .sign { font-size: 12px; color: var(--muted); }
+.poll-lead-chip {
+  display: inline-block;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* ---------- Calc engine cards ---------- */
+.calc-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+.calc-panel h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  margin: 0 0 4px;
+}
+.calc-panel .desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+.prob-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.prob-row .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.prob-row .name { flex: 1; font-size: 13px; font-weight: 600; }
+.prob-row .bar-track { flex: 2; height: 10px; background: var(--paper-dim); border-radius: 5px; overflow: hidden; }
+.prob-row .bar-fill { height: 100%; }
+.prob-row .pct { width: 54px; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12px; font-weight: 700; }
+
+.btn {
+  display: inline-block;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover { opacity: 0.85; }
+.btn.secondary { background: transparent; color: var(--ink); }
+.btn.danger { background: var(--red); border-color: var(--red); }
+
+.small-muted { font-size: 11px; color: var(--muted); }
+
+/* ================= RealClearPolling-style poll display ================= */
+/* Spinner Insights branded components use --font-spinner-* (see :root) */
+
+.rcp-page-title {
+  font-family: var(--font-spinner-display);
+  font-size: 26px;
+  letter-spacing: -0.01em;
+}
+
+.rcp-table-wrap { overflow-x: auto; margin: 18px 0 28px; border: 1px solid var(--line); border-radius: var(--radius); }
+.rcp-table { width: 100%; border-collapse: collapse; font-family: var(--font-spinner-body); font-size: 13px; min-width: 640px; }
+.rcp-table th {
+  text-align: left; padding: 10px 12px; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--muted); border-bottom: 2px solid var(--ink); background: #fff; white-space: nowrap;
+}
+.rcp-table td { padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.rcp-table tr.rcp-average-row td {
+  background: var(--yellow); font-weight: 800; border-bottom: 2px solid var(--ink); border-top: 2px solid var(--ink);
+}
+.rcp-table tr.rcp-average-row { font-family: var(--font-spinner-display); }
+.rcp-spread-pill {
+  display: inline-block; padding: 3px 10px; border-radius: 999px; font-weight: 800; font-size: 12px;
+  color: #fff; white-space: nowrap;
+}
+.rcp-pollster-link { color: var(--ink); text-decoration: underline; text-decoration-color: var(--line); }
+
+/* Big colored candidate bars, RCP "poll average" chart style */
+.rcp-bars-wrap { margin: 22px 0 10px; }
+.rcp-lead-badge {
+  display: inline-flex; align-items: center; gap: 8px; background: var(--yellow); border-radius: 999px;
+  padding: 5px 8px 5px 16px; font-family: var(--font-spinner-display); font-weight: 900; font-size: 15px; margin-bottom: 14px;
+}
+.rcp-lead-badge .rcp-lead-value { border-radius: 999px; padding: 4px 12px; font-size: 13px; color: #fff; }
+.rcp-bar-row {
+  position: relative; display: flex; align-items: stretch; margin-bottom: 10px; border-radius: 6px; overflow: hidden;
+  min-height: 74px; box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+.rcp-bar-fill {
+  position: relative; display: flex; align-items: center; padding-left: 88px; color: #fff;
+  font-family: var(--font-spinner-display); font-weight: 900; font-size: 17px;
+}
+.rcp-bar-photo {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 64px; height: 64px;
+  opacity: 0.92; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+}
+.rcp-bar-photo img { width: 100%; height: 100%; object-fit: contain; }
+.rcp-bar-remainder { flex: 1; background: #fff; }
+.rcp-bar-meta {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%); text-align: right;
+  font-family: var(--font-spinner-display);
+  /* A high-percentage bar's colored fill can extend all the way under this
+     label (e.g. a dark candidate/approval color) -- a white chip keeps the
+     name/pct legible no matter what's rendered underneath it, rather than
+     relying on fixed dark ink text that can vanish against a dark bar. */
+  background: rgba(255, 255, 255, 0.94);
+  padding: 4px 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.rcp-bar-meta .name { font-size: 13px; font-weight: 700; color: var(--ink); }
+.rcp-bar-meta .pct { font-size: 26px; font-weight: 900; color: var(--ink); line-height: 1; }
+.rcp-bar-meta .pct sup { font-size: 13px; }
+
+/* Trend chart */
+.rcp-chart-panel { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 16px 18px; margin-bottom: 24px; }
+.rcp-chart-panel h3 { font-family: var(--font-spinner-display); font-size: 16px; margin: 0 0 2px; }
+.rcp-chart-wrap { margin-top: 8px; }
+.rcp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-family: var(--font-spinner-body); font-size: 12px; }
+.rcp-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.rcp-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.rcp-chart-lead { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.rcp-scrub-date { font-size: 11px; color: var(--muted); font-style: italic; }
+.rcp-scrub-hint { margin-top: 6px; }
+.rcp-scrub-handle { touch-action: none; }
+#rcp-capture-0, [id^="rcp-capture-"] { touch-action: none; }
+
+.approval-panel { border: 1px dashed var(--line); border-radius: var(--radius); background: var(--paper-dim); padding: 16px 18px; margin-bottom: 24px; }
+.approval-panel h3 { font-family: var(--font-spinner-display); font-size: 16px; margin: 0 0 6px; }
+
+/* ---------- shared election picker (used on activities.html, polls.html, elects) ---------- */
+.picker-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 18px 0 6px; }
+.picker-row .field-row label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:4px; }
+.picker-row select { width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px; background:#fff; font-family: inherit; }
+
+/* ---------- Spinner Insights poll cards ---------- */
+.sp-election-section { margin-bottom: 34px; }
+.sp-election-title { font-family: var(--font-spinner-display); font-size: 20px; margin-bottom: 4px; }
+.sp-election-empty { font-size: 13px; color: var(--muted); font-style: italic; padding: 10px 0 4px; }
+.sp-card { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; margin-bottom: 12px; overflow: hidden; }
+.sp-card-header {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 16px; background: var(--paper-dim); border: none; cursor: pointer; text-align: left;
+  font-family: var(--font-spinner-body);
+}
+.sp-card-pollster { font-weight: 800; font-size: 14px; color: var(--ink); }
+.sp-card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.sp-arrow { font-size: 16px; color: var(--muted); flex-shrink: 0; }
+.sp-bars { padding: 14px 16px 6px; }
+.sp-bar-row { display: grid; grid-template-columns: 140px 1fr 52px; align-items: center; gap: 10px; margin-bottom: 8px; }
+.sp-bar-label { font-size: 12px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-bar-track { height: 16px; background: var(--paper-dim); border-radius: 3px; overflow: hidden; }
+.sp-bar-fill { height: 100%; }
+.sp-bar-pct { font-size: 12px; font-weight: 700; text-align: right; }
+.sp-sheet { border-top: 1px dashed var(--line); padding: 12px 16px 16px; background: var(--paper-dim); }
+.sp-sheet-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.sp-sheet-table th { text-align: left; padding: 6px 8px; border-bottom: 2px solid var(--ink); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.sp-sheet-table td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.sp-swatch { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+
+/* ---------- RCP donut chart ---------- */
+.rcp-donut-card { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px; }
+.rcp-donut-title { font-family: var(--font-spinner-display, var(--font-display)); font-size: 15px; margin-bottom: 8px; max-width: 240px; }
+.rcp-donut-lead {
+  display: inline-flex; align-items: center; gap: 8px; background: var(--yellow); border-radius: 999px;
+  padding: 5px 14px; margin-bottom: 10px;
+}
+.rcp-donut-lead-name { font-family: var(--font-spinner-display, var(--font-display)); font-weight: 900; font-size: 13px; }
+.rcp-donut-lead-badge { color: #fff; border-radius: 999px; padding: 2px 10px; font-weight: 800; font-size: 12px; }
+.rcp-donut-link { text-decoration: none; color: inherit; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+.rcp-donut-link:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+.rcp-donut-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; margin-top: 10px; font-size: 12px; }
+.rcp-donut-legend-item { display: inline-flex; align-items: center; gap: 5px; }
+.rcp-donut-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+.hub-scroll {
+  display: flex; gap: 16px; overflow-x: auto; padding: 6px 2px 16px;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+}
+.hub-scroll .rcp-donut-card {
+  flex: 0 0 auto; scroll-snap-align: start; border: 1px solid var(--line); border-radius: var(--radius);
+  background: #fff; min-width: 260px;
+}
+.hub-note { font-size: 12px; color: var(--muted); margin: 0 0 10px; }
+
+/* ---------- Candidate photo white/transparent filter (RCP-style) ---------- */
+/* Actual pixel processing happens in assets/js/photo-filter.js (a real
+   per-pixel luminance-to-alpha mask, not a CSS filter -- light pixels
+   become opaque white, dark pixels become transparent). This class is
+   just a marker so PhotoFilter_applyAll() knows which <img> tags to
+   process; a very brief flash-of-original-image before JS finishes is
+   the only thing this file's job. Works on png/jpg/webp/svg alike. */
+.white-filter-img {
+  background: transparent;
+}
+
+/* ---------- Homepage hub buttons (Elects / DDTSR / SpIn) ---------- */
+.hub-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 22px 0 30px; }
+.hub-btn {
+  position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+  min-height: 150px; border-radius: 12px; padding: 18px 20px; text-decoration: none;
+  overflow: hidden; transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.hub-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
+.hub-btn .hub-btn-wordmark { height: 34px; width: auto; margin-bottom: 12px; display: block; }
+.hub-btn .hub-btn-logo { width: 46px; height: 46px; margin-bottom: 10px; }
+.hub-btn .hub-btn-title { font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: -0.01em; }
+.hub-btn .hub-btn-sub { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; margin-top: 4px; opacity: 0.85; }
+
+.hub-btn.elects {
+  background: linear-gradient(135deg, var(--elects-pink), #7a0e3c);
+  color: #fff;
+  min-height: 170px;
+}
+.hub-btn.elects::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 10px, transparent 10px 20px);
+}
+.hub-btn.elects .hub-btn-wordmark { height: 56px; margin-bottom: 14px; }
+.hub-btn.elects .hub-btn-sub { font-family: var(--font-elects-body); font-weight: 800; letter-spacing: 0.08em; }
+
+/* ---------- TSR Elects brand look: heavy Archivo Black caps + a solid
+   letter-spaced "bar" of Public Sans, echoing the brandmark's white-on-pink
+   ELECTS strip with its checkmark accent. Reusable anywhere on the Elects
+   page that wants to visually match the logo instead of the generic RCP
+   house style used everywhere else on the site. ---------- */
+.elects-kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--elects-pink); color: #fff;
+  font-family: var(--font-elects-body); font-weight: 800; font-size: 12px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 5px 12px 5px 14px; border-radius: 3px;
+}
+.elects-kicker::after { content: '✓'; font-weight: 900; }
+.elects-title { font-family: var(--font-elects-display); letter-spacing: -0.01em; }
+
+.hub-btn.ddtsr {
+  background: #0d0d0f; color: #fff;
+  border-top: 4px solid #d6216b; border-bottom: 4px solid #2fbf82;
+}
+.hub-btn.ddtsr .hub-btn-title { font-family: var(--font-elects-body); font-weight: 800; text-transform: uppercase; }
+
+.hub-btn.spin {
+  background: linear-gradient(135deg, #fdf3d3, #f3d98a);
+  color: #a8631a; border: 2px solid #c17a1e;
+}
+.hub-btn.spin .hub-btn-title { font-family: var(--font-spinner-display, var(--font-display)); }
+.hub-btn.spin .hub-btn-sub { color: #c17a1e; }
+
+/* ---------- Guide page ---------- */
+.guide-download-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--paper-dim); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 18px; margin: 18px 0;
+}
+.guide-download-bar .info { font-size: 13px; color: var(--muted); }
+.guide-pdf-frame {
+  width: 100%; height: 80vh; min-height: 500px; border: 1px solid var(--line);
+  border-radius: var(--radius); background: #525659;
+}
+.guide-toc { columns: 2; column-gap: 24px; font-size: 13px; margin: 10px 0 20px; }
+.guide-toc li { margin-bottom: 4px; break-inside: avoid; }
+@media (max-width: 640px) {
+  .guide-toc { columns: 1; }
+}
+
+/* =================================================================
+   Mobile responsiveness
+   ================================================================= */
+@media (max-width: 760px) {
+  .wrap { padding: 0 14px; }
+
+  .utility-bar .wrap { flex-wrap: wrap; gap: 4px; height: auto; padding: 6px 14px; font-size: 11px; }
+
+  .masthead .wrap { flex-wrap: wrap; padding: 14px 14px 10px; gap: 8px; }
+  .site-logo .name { font-size: 19px; }
+
+  .main-nav .wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
+  .main-nav a { padding: 10px 12px; font-size: 12px; white-space: nowrap; }
+
+  .breaking-banner .wrap { flex-wrap: wrap; padding: 8px 14px; }
+  .breaking-banner .sub { margin-left: 0; width: 100%; }
+
+  .hero h1 { font-size: 28px; }
+  .hero p.lede { font-size: 13px; }
+  .rcp-page-title { font-size: 21px; }
+
+  .hub-buttons { grid-template-columns: 1fr; }
+  .hub-btn { min-height: 110px; }
+
+  .card-grid, .team-grid { grid-template-columns: 1fr 1fr; }
+
+  .rcp-bar-row { min-height: 58px; }
+  .rcp-bar-fill { padding-left: 56px; font-size: 13px; }
+  .rcp-bar-photo { width: 40px; height: 40px; left: 8px; }
+  .rcp-bar-meta { right: 8px; }
+  .rcp-bar-meta .pct { font-size: 18px; }
+  .rcp-bar-meta .name { font-size: 11px; }
+
+  .rcp-table { font-size: 12px; }
+  .rcp-table th, .rcp-table td { padding: 7px 8px; }
+
+  .sp-bar-row { grid-template-columns: 96px 1fr 44px; }
+  .sp-bar-label { font-size: 11px; }
+
+  .map-section { grid-template-columns: 1fr; }
+  #map { height: 320px; }
+
+  .picker-row { grid-template-columns: 1fr; }
+
+  .field-grid { grid-template-columns: 1fr 1fr; }
+
+  .rcp-donut-card { padding: 6px; }
+  .hub-scroll .rcp-donut-card { min-width: 220px; }
+
+  .stats-row { grid-template-columns: 1fr 1fr; }
+
+  .guide-pdf-frame { height: 60vh; }
+  .guide-download-bar { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 460px) {
+  .card-grid, .team-grid, .stats-row, .field-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 24px; }
+  .rcp-bar-meta .name { display: none; }
+}

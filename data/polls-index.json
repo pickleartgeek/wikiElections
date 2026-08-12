@@ -1,0 +1,50 @@
+{
+  "_comment": "Every polling dataset available on polls.html, most recent first.",
+  "elections": [
+    {
+      "id": "class6",
+      "title": "Class 6 July 2026 Election",
+      "order": "2026-07-25"
+    },
+    {
+      "id": "class5-june",
+      "title": "Class 5 June 2026 Election",
+      "order": "2026-06-12"
+    },
+    {
+      "id": "class5-april",
+      "title": "Class 5 April 2026 Election",
+      "order": "2026-04-06"
+    },
+    {
+      "id": "class4-april",
+      "title": "Class 4 April 2026 Election",
+      "order": "2026-04-06"
+    },
+    {
+      "id": "class4-march",
+      "title": "Class 4 March 2026 Election",
+      "order": "2026-03-24"
+    },
+    {
+      "id": "class5-sept",
+      "title": "Class 5 September 2025 Election",
+      "order": "2025-09-14"
+    },
+    {
+      "id": "class1-sept",
+      "title": "Class 1 September 2025 Election",
+      "order": "2025-09-07"
+    },
+    {
+      "id": "class2-july",
+      "title": "Class 2 July 2025 Election",
+      "order": "2025-07-25"
+    },
+    {
+      "id": "class7-july",
+      "title": "Class 7 July 2025 Election",
+      "order": "2025-07-25"
+    }
+  ]
+}

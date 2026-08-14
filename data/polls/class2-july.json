@@ -1,0 +1,90 @@
+{
+  "electionId": "class2-july",
+  "polls": [
+    {
+      "id": "c2j-5",
+      "pollster": "Representative-Fee65 (H2H, self-poll)",
+      "date": "2025-07-25",
+      "sample": 20,
+      "weight": 0.5,
+      "shares": {
+        "gsx": 0.65,
+        "rf": 0.35
+      }
+    },
+    {
+      "id": "c2j-6",
+      "pollster": "GSX (self-poll)",
+      "date": "2025-07-25",
+      "sample": 32,
+      "weight": 0.5,
+      "shares": {
+        "gsx": 0.4375,
+        "mf": 0.3125
+      }
+    },
+    {
+      "id": "c2j-4",
+      "pollster": "GSX (self-poll)",
+      "date": "2025-07-26",
+      "sample": 25,
+      "weight": 0.5,
+      "shares": {
+        "gsx": 0.52,
+        "fmr": 0.12,
+        "dvwb": 0.12,
+        "bberry": 0.08,
+        "rf": 0.04,
+        "wtrees": 0.12
+      }
+    },
+    {
+      "id": "c2j-3",
+      "pollster": "EggPolls",
+      "date": "2025-07-28",
+      "sample": 22,
+      "weight": 1.0,
+      "shares": {
+        "gsx": 0.4545,
+        "fmr": 0.0909,
+        "dvwb": 0.0455,
+        "bberry": 0.0,
+        "rf": 0.1364,
+        "wtrees": 0.0455,
+        "ggdubya": 0.0,
+        "halo": 0.0909,
+        "oc": 0.1364
+      }
+    },
+    {
+      "id": "c2j-1",
+      "pollster": "EggPolls",
+      "date": "2025-07-29",
+      "sample": 23,
+      "weight": 1.0,
+      "shares": {
+        "gsx": 0.4348,
+        "fmr": 0.087,
+        "dvwb": 0.0435,
+        "bberry": 0.0,
+        "rf": 0.087,
+        "oc": 0.3478
+      }
+    },
+    {
+      "id": "c2j-2",
+      "pollster": "GSX (self-poll)",
+      "date": "2025-07-29",
+      "sample": 18,
+      "weight": 0.5,
+      "shares": {
+        "gsx": 0.5,
+        "fmr": 0.1667,
+        "dvwb": 0.0556,
+        "bberry": 0.0,
+        "rf": 0.0556,
+        "oc": 0.2222
+      }
+    }
+  ]
+}

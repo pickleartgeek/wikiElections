@@ -1,0 +1,67 @@
+{
+  "electionId": "class6",
+  "polls": [
+    {
+      "id": "c6-4",
+      "pollster": "Spinner Insights",
+      "date": "2026-07-25",
+      "sample": 23,
+      "weight": 1.0,
+      "shares": {
+        "wip": 0.3043,
+        "dvwb": 0.1739,
+        "jc17": 0.1739,
+        "nzb": 0.3478,
+        "ictoan": 0.0
+      }
+    },
+    {
+      "id": "c6-1",
+      "pollster": "Golden Eagle Gallup",
+      "date": "2026-07-26",
+      "sample": 18,
+      "weight": 1.0,
+      "shares": {
+        "wip": 0.3333,
+        "dvwb": 0.0556,
+        "jc17": 0.1111,
+        "nzb": 0.1667,
+        "ictoan": 0.1111,
+        "mf1": 0.1111,
+        "hkf": 0.1111
+      }
+    },
+    {
+      "id": "c6-2",
+      "pollster": "Spinner Insights",
+      "date": "2026-07-26",
+      "sample": 35,
+      "weight": 1.0,
+      "shares": {
+        "wip": 0.2857,
+        "dvwb": 0.1428,
+        "jc17": 0.0571,
+        "nzb": 0.3428,
+        "ictoan": 0.0571,
+        "mf1": 0.1428,
+        "hkf": 0.1142
+      }
+    },
+    {
+      "id": "c6-3",
+      "pollster": "PracticalPurpose Polling",
+      "date": "2026-07-26",
+      "sample": 18,
+      "weight": 1.0,
+      "shares": {
+        "wip": 0.3333,
+        "dvwb": 0.2222,
+        "jc17": 0.0556,
+        "nzb": 0.1667,
+        "ictoan": 0.2222,
+        "mf1": 0.1667,
+        "hkf": 0.0556
+      }
+    }
+  ]
+}

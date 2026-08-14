@@ -1,0 +1,23 @@
+{
+  "_comment": "Controls the wikiElections homepage. 'mode': 'active' shows the flashing red breaking-news banner, the LIVE results box, and an RCP-style poll-aggregate donut for activePollsId. 'mode': 'off-cycle' hides the banner and instead shows a scrollable carousel of RCP-style donuts (moderator approval if data/approval-polls.json has entries, otherwise recent-race snapshots). Admins can flip this from /admin/.",
+  "mode": "off-cycle",
+  "activeElectionId": "Class 6 July",
+  "activePollsId": "class6",
+  "banner": {
+    "eyebrow": "BREAKING",
+    "headline": "DDTSR: Class 6 July heads to a runoff",
+    "subtext": "wiptes167 leads the first round but falls short of a majority",
+    "link": "elects/index.html?election=Class%206%20July"
+  },
+  "liveBox": {
+    "label": "LIVE: Class 6 July 2026 Election",
+    "text": "Watch the results come in real time and find out who's going to be TSR's next moderator.",
+    "link": "elects/index.html?election=Class%206%20July"
+  },
+  "offCycle": {
+    "headline": "No elections currently underway",
+    "text": "Check back closer to the next TSR moderator or council cycle. Browse recent polling snapshots below in the meantime."
+  }
+}
+
+

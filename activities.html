@@ -281,7 +281,7 @@ function calcRenderTable(polls, allIds, currentIds, writeInIds, electionDate, ca
       const v = result.totals[id];
       html += `<td>${typeof v === 'number' ? ((v / total) * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
     });
-    html += `<td><span class="rcp-spread-pill" style="background:${winner ? calcColor(winner[0]) : '#888'}">${winner ? calcName(winner[0]) : '—'} won</span></td></tr>`;
+    html += `<td><span class="rcp-spread-pill" style="background:${winner ? calcColor(winner[0]) : '#888'}">${winner ? calcName(winner[0]) : '—'}${winner && sorted.length > 1 ? ' +' + (((winner[1] - sorted[1][1]) / total) * 100).toFixed(1) : ' won'}</span></td></tr>`;
   }
 
   html += `<tr class="rcp-average-row"><td>DDTSR Average</td><td>—</td><td>—</td>`;

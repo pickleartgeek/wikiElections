@@ -271,154 +271,18 @@ function calcRenderTable(polls, allIds, currentIds, writeInIds, electionDate, ca
   allIds.forEach(id => { html += `<th>${calcName(id)}${writeInIds && writeInIds.includes(id) ? ' <span class="small-muted">(write-in)</span>' : ''}</th>`; });
   html += `<th>Spread</th></tr></thead><tbody>`;
 
-  Konverzácia s Gemini
-how to have the margin in first thing instead of won
-
-const result = calcFindResult(electionTitle, electionDate);
-
-  if (result) {
-
-    const total = Object.values(result.totals).reduce((a, b) => a + b, 0) || 1;
-
-    const sorted = Object.entries(result.totals).sort((a, b) => b[1] - a[1]);
-
-    const winner = sorted[0];
-
-    html += `<tr class="rcp-result-row"><td>Election Result${result.isFirstRoundOnly ? ' (1st Rd.)' : ''}</td><td>${electionDate}</td><td>—</td>`;
-
-    allIds.forEach(id => {
-
-      const v = result.totals[id];
-
-      html += `<td>${typeof v === 'number' ? ((v / total) * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
-
-    });
-
-html += `<td><span class="rcp-spread-pill" style="background:${winner ? calcColor(winner[0]) : '#888'}">${winner ? calcName(winner[0]) : '—'} won</span></td></tr>`;
-
-  }
-
-
-
-  html += `<tr class="rcp-average-row"><td>DDTSR Average</td><td>—</td><td>—</td>`;
-
-  allIds.forEach(id => {
-
-    const pct = agg.averages[id];
-
-    const wiTag = (writeInIds || []).includes(id) ? ' <span title="Write-in methodology discount applied">✎</span>' : '';
-
-    html += `<td>${agg.coverage[id] ? (pct * 100).toFixed(1) + '%' + wiTag : '<span class="small-muted">dropped</span>'}</td>`;
-
-  });
-
-  const leaderId = agg.sorted[0] ? agg.sorted[0][0] : null;
-
-  const margin = agg.sorted.length > 1 ? (agg.sorted[0][1] - agg.sorted[1][1]) * 100 : 0;
-
-  html += `<td><span class="rcp-lead-badge" style="margin-bottom:0;">${leaderId ? calcName(leaderId) : '—'}<span class="rcp-lead-value" style="background:${leaderId ? calcColor(leaderId) : '#888'}">+${margin.toFixed(1)}</span></span></td></tr>`;
-
-To display the winning margin (percentage spread) instead of writing "won", you need to calculate the difference between the 1st place and 2nd place candidate in sorted, convert it to a percentage, and update the template string.
-
-Here is the updated section of your code:
-
-JavaScript
-const result = calcFindResult(electionTitle, electionDate);
-if (result) {
-  const total = Object.values(result.totals).reduce((a, b) => a + b, 0) || 1;
-  const sorted = Object.entries(result.totals).sort((a, b) => b[1] - a[1]);
-  const winner = sorted[0];
-  
-  // Calculate margin between 1st and 2nd place in percentage points
-  const marginPct = sorted.length > 1 
-    ? (((sorted[0][1] - sorted[1][1]) / total) * 100).toFixed(1) 
-    : '0.0';
-
-  html += `<tr class="rcp-result-row"><td>Election Result${result.isFirstRoundOnly ? ' (1st Rd.)' : ''}</td><td>${electionDate}</td><td>—</td>`;
-  
-  allIds.forEach(id => {
-    const v = result.totals[id];
-    html += `<td>${typeof v === 'number' ? ((v / total) * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
-  });
-
-  // Updated pill displaying the candidate name + margin
-  html += `<td><span class="rcp-spread-pill" style="background:${winner ? calcColor(winner[0]) : '#888'}">${winner ? calcName(winner[0]) : '—'} +${marginPct}%</span></td></tr>`;
-}
-What changed?
-Added marginPct calculation: ```javascript
-const marginPct = sorted.length > 1
-? (((sorted[0][1] - sorted[1][1]) / total) * 100).toFixed(1)
-: '0.0';
-
-This takes the vote difference `(sorted[0][1] - sorted[1][1])`, divides it by `total` to get the ratio, multiplies by `100`, and formats it to 1 decimal place.
-
-Updated HTML output:
-Changed ${winner ? calcName(winner[0]) : '—'} won to:
-${winner ? calcName(winner[0]) : '—'} +${marginPct}%
-
-Informácie o voľbách sa rýchlo menia. Overujte si odpovede v oficiálnych zdrojoch.
-cant you reuse the latter's way of doing it
-
-const result = calcFindResult(electionTitle, electionDate);
-
-  if (result) {
-
-    const total = Object.values(result.totals).reduce((a, b) => a + b, 0) || 1;
-
-    const sorted = Object.entries(result.totals).sort((a, b) => b[1] - a[1]);
-
-    const winner = sorted[0];
-
-    html += `<tr class="rcp-result-row"><td>Election Result${result.isFirstRoundOnly ? ' (1st Rd.)' : ''}</td><td>${electionDate}</td><td>—</td>`;
-
-    allIds.forEach(id => {
-
-      const v = result.totals[id];
-
-      html += `<td>${typeof v === 'number' ? ((v / total) * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
-
-    });
-
-    html += `<td><span class="rcp-spread-pill" style="background:${winner ? calcColor(winner[0]) : '#888'}">${winner ? calcName(winner[0]) : '—'} won</span></td></tr>`;
-
-  }
-
-
-
-  html += `<tr class="rcp-average-row"><td>DDTSR Average</td><td>—</td><td>—</td>`;
-
-  allIds.forEach(id => {
-
-    const pct = agg.averages[id];
-
-    const wiTag = (writeInIds || []).includes(id) ? ' <span title="Write-in methodology discount applied">✎</span>' : '';
-
-    html += `<td>${agg.coverage[id] ? (pct * 100).toFixed(1) + '%' + wiTag : '<span class="small-muted">dropped</span>'}</td>`;
-
-  });
-
-  const leaderId = agg.sorted[0] ? agg.sorted[0][0] : null;
-
-  const margin = agg.sorted.length > 1 ? (agg.sorted[0][1] - agg.sorted[1][1]) * 100 : 0;
-
-  html += `<td><span class="rcp-lead-badge" style="margin-bottom:0;">${leaderId ? calcName(leaderId) : '—'}<span class="rcp-lead-value" style="background:${leaderId ? calcColor(leaderId) : '#888'}">+${margin.toFixed(1)}</span></span></td></tr>`;
-
   const result = calcFindResult(electionTitle, electionDate);
   if (result) {
     const total = Object.values(result.totals).reduce((a, b) => a + b, 0) || 1;
     const sorted = Object.entries(result.totals).sort((a, b) => b[1] - a[1]);
-
-  const winnerId = sorted[0] ? sorted[0][0] : null;
-  const margin = sorted.length > 1 ? ((sorted[0][1] - sorted[1][1]) / total) * 100 : 0;
-
+    const winner = sorted[0];
     html += `<tr class="rcp-result-row"><td>Election Result${result.isFirstRoundOnly ? ' (1st Rd.)' : ''}</td><td>${electionDate}</td><td>—</td>`;
-
     allIds.forEach(id => {
-    const v = result.totals[id];
-    html += `<td>${typeof v === 'number' ? ((v / total) * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
-  })
-  html += `<td><span class="rcp-lead-badge" style="margin-bottom:0;">${winnerId ? calcName(winnerId) : '—'}<span class="rcp-lead-value" style="background:${winnerId ? calcColor(winnerId) : '#888'}">+${margin.toFixed(1)}</span></span></td></tr>`;
-}
+      const v = result.totals[id];
+      html += `<td>${typeof v === 'number' ? ((v / total) * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
+    });
+    html += `<td><span class="rcp-spread-pill" style="background:${winner ? calcColor(winner[0]) : '#888'}">${winner ? calcName(winner[0]) : '—'} won</span></td></tr>`;
+  }
 
   html += `<tr class="rcp-average-row"><td>DDTSR Average</td><td>—</td><td>—</td>`;
   allIds.forEach(id => {

@@ -273,27 +273,23 @@ function calcRenderTable(polls, allIds, currentIds, writeInIds, electionDate, ca
 
   const result = calcFindResult(electionTitle, electionDate);
     if (result) {
-      const total = Object.values(result.totals).reduce((a, b) => a + b, 0) || 1;
-      const sorted = Object.entries(result.totals).sort((a, b) => b[1] - a[1]);
-      const winner = sorted[0];
-    
-      const resultMargin = sorted.length > 1
-        ? ((sorted[0][1] - sorted[1][1]) / total) * 100
-        : 0;
-    
-      html += `<tr class="rcp-result-row">
-        <td>Election Result${result.isFirstRoundOnly ? ' (1st Rd.)' : ''}</td>
-        <td>${electionDate}</td>
-        <td>—</td>`;
-    
-      allIds.forEach(id => {
-        const v = result.totals[id];
-        html += `<td>${
-          typeof v === 'number'
-            ? ((v / total) * 100).toFixed(1) + '%'
-            : '<span class="small-muted">—</span>'
-        }</td>`;
-      });
+  const total = Object.values(result.totals).reduce((a, b) => a + b, 0) || 1;
+  const sorted = Object.entries(result.totals).sort((a, b) => b[1] - a[1]);
+  const winner = sorted[0];
+
+  const resultMargin = sorted.length > 1
+    ? (sorted[0][1] - sorted[1][1]) / total
+    : 0;
+
+  html += `<tr class="rcp-result-row"><td>Election Result${result.isFirstRoundOnly ? ' (1st Rd.)' : ''}</td><td>${electionDate}</td><td>—</td>`;
+
+  allIds.forEach(id => {
+    const v = result.totals[id];
+    html += `<td>${typeof v === 'number' ? ((v / total) * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
+  });
+
+  html += `<td><span class="rcp-spread-pill" style="background:${winner ? calcColor(winner[0]) : '#888'}">${winner ? calcName(winner[0]) : '—'}${winner && sorted.length > 1 ? ' +' + (resultMargin * 100).toFixed(1) : ' won'}</span></td></tr>`;
+}
     
       html += `<td>
         <span class="rcp-spread-pill"

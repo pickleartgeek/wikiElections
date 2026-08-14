@@ -118,9 +118,14 @@ function renderHubButtons(cfg) {
   const electsSub = electsActive ? 'Live results, right now →' : 'Browse race history & results →';
   let html = `
       <a class="hub-btn elects" href="${electsLink}">
-        <img class="hub-btn-wordmark" src="assets/img/brand/tsr-elects-full-logo-white.png" alt="TSR Elects">
-        <div class="hub-btn-sub">${electsSub}</div>
-      </a>`;
+    <img
+      class="hub-btn-wordmark"
+      src="assets/img/brand/tsr-elects-full-logo-white.png"
+      alt="TSR Elects"
+      style="height: auto; max-width: 100%; object-fit: contain;"
+    >
+    <div class="hub-btn-sub">${electsSub}</div>
+  </a>`;
   html += `
       <a class="hub-btn ddtsr" href="activities.html">
         <div class="hub-btn-title">Decision Desk TSR</div>

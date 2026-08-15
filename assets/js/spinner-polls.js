@@ -54,7 +54,7 @@ function SpinnerPolls_renderCard(poll, candidateIds, registry) {
       <div class="sp-bars">${barsHtml}</div>
       <div class="sp-sheet" id="${id}-sheet" style="display:none;">
         <table class="sp-sheet-table">
-          <thead><tr><th>Candidate</th><th>Share</th><th>Implied votes (of n=${poll.sample})</th></tr></thead>
+          <thead><tr><th>Candidate</th><th>Share</th><th>${poll.sample} Votes</th></tr></thead>
           <tbody>${sheetRows}</tbody>
         </table>
       </div>

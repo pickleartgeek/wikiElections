@@ -648,26 +648,6 @@
             "approve": 0.3226,
             "disapprove": 0.0323
           }
-        },
-        {
-          "pollster": "CENSUS",
-          "date": "2025-11-27",
-          "sample": 37,
-          "weight": 1,
-          "shares": {
-            "approve": 0.4865,
-            "disapprove": 0.0541
-          }
-        },
-        {
-          "pollster": "CENSUS",
-          "date": "2025-10-20",
-          "sample": 38,
-          "weight": 1,
-          "shares": {
-            "approve": 0.4474,
-            "disapprove": 0.0789
-          }
         }
       ]
     }

@@ -58,13 +58,13 @@
       "name": "practicalpurpose",
       "color": "#f2eb11",
       "party": "udc",
-      "photo": "photos/prac.svg"
+      "photo": "photos/prac.png"
     },
     "prac1": {
       "name": "practicalpurpose",
       "color": "#f2eb11",
       "party": "ua",
-      "photo": "photos/prac1.svg"
+      "photo": "photos/prac1.png"
     },
     "rf": {
       "name": "Representative-Fee65",

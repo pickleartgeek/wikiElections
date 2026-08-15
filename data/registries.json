@@ -10,7 +10,13 @@
       "name": "Impressive_Plant",
       "color": "#03003b",
       "party": "iltsr",
-      "photo": "photos/ip.svg"
+      "photo": "photos/ip.webp"
+    },
+    "ip1": {
+      "name": "Impressive_Plant",
+      "color": "#03003b",
+      "party": "ua",
+      "photo": "photos/ip.webp"
     },
     "wc": {
       "name": "Worth-Cupcake",
@@ -22,25 +28,19 @@
       "name": "TyroniusTheIII",
       "color": "#e05555",
       "party": "tsp",
-      "photo": "photos/qtw.svg"
+      "photo": "photos/qtw.png"
     },
-    "rf": {
-      "name": "Representative-Fee65",
-      "color": "#d42f0b",
+    "qtw1": {
+      "name": "QuantaviousTheWise",
+      "color": "#e05555",
       "party": "tsp",
-      "photo": "photos/rf.svg"
+      "photo": "photos/qtw.png"
     },
-    "hkf": {
-      "name": "HighKingFloof",
-      "color": "#e62080",
-      "party": "tsp",
-      "photo": "photos/hkf.png"
-    },
-    "gsx": {
-      "name": "gunsmokexeon",
-      "color": "#9b6fd4",
+    "qtw2": {
+      "name": "QuantaviousTheWise",
+      "color": "#e05555",
       "party": "ua",
-      "photo": "photos/gsx.svg"
+      "photo": "photos/qtw.png"
     },
     "dvwb": {
       "name": "Disguised_VW_Beetle",
@@ -48,29 +48,95 @@
       "party": "ua",
       "photo": "photos/dvwb.svg"
     },
+    "hkf": {
+      "name": "HighKingFloof",
+      "color": "#e62080",
+      "party": "tsp",
+      "photo": "photos/hkf.png"
+    },
     "prac": {
       "name": "practicalpurpose",
       "color": "#f2eb11",
       "party": "udc",
       "photo": "photos/prac.svg"
     },
-    "pc": {
-      "name": "ProCookies128",
-      "color": "#10cc26",
+    "prac1": {
+      "name": "practicalpurpose",
+      "color": "#f2eb11",
       "party": "ua",
-      "photo": "photos/pc.svg"
+      "photo": "photos/prac1.svg"
+    },
+    "rf": {
+      "name": "Representative-Fee65",
+      "color": "#d42f0b",
+      "party": "tsp",
+      "photo": "photos/rf.svg"
+    },
+    "gsx": {
+      "name": "gunsmokexeon",
+      "color": "#9b6fd4",
+      "party": "ua",
+      "photo": "photos/gsx.svg"
     },
     "oc": {
       "name": "One-Community",
       "color": "#1b235e",
       "party": "ua",
-      "photo": "photos/oc.svg"
+      "photo": "photos/oc.png"
     },
     "wip": {
       "name": "wiptes167",
       "color": "#f2a38f",
       "party": "udc",
-      "photo": "photos/wip.svg"
+      "photo": "photos/wip.png"
+    },
+    "wip1": {
+      "name": "wiptes167",
+      "color": "#f2a38f",
+      "party": "fumo",
+      "photo": "photos/wip1.svg"
+    },
+    "mf1": {
+      "name": "MaxFlares",
+      "color": "#991a5a",
+      "party": "ua",
+      "photo": "photos/mf.png"
+    },
+    "mf": {
+      "name": "MaxFlares",
+      "color": "#991a5a",
+      "party": "csuf",
+      "photo": "photos/mf.png"
+    },
+    "nzb": {
+      "name": "Nazibol1234",
+      "color": "#c457c9",
+      "party": "ua",
+      "photo": "photos/nb1234.png"
+    },
+    "jc17": {
+      "name": "JackColon17",
+      "color": "#42e0ff",
+      "party": "ua",
+      "photo": "photos/jc17.png"
+    },
+    "ictoan": {
+      "name": "ICantThinkOfAName827",
+      "color": "#b6b6e6",
+      "party": "ua",
+      "photo": "photos/ictoan.png"
+    },
+    "fw": {
+      "name": "Forsaken-Wedding",
+      "color": "#991a5a",
+      "party": "csuf",
+      "photo": "photos/fw.png"
+    },
+    "tmf1": {
+      "name": "teammomofan",
+      "color": "#7d1e4f",
+      "party": "ua",
+      "photo": "photos/tmf.png"
     },
     "halo": {
       "name": "Halogram",
@@ -96,6 +162,12 @@
       "party": "tsp",
       "photo": "photos/pag.svg"
     },
+    "pag1": {
+      "name": "PickleArtGeek",
+      "color": "#269982",
+      "party": "ua",
+      "photo": "photos/pag1.svg"
+    },
     "fmr": {
       "name": "Boot",
       "color": "#8c0b12",
@@ -108,89 +180,11 @@
       "party": "tsp",
       "photo": "photos/bberry.svg"
     },
-    "mf1": {
-      "name": "MaxFlares",
-      "color": "#991a5a",
-      "party": "ua",
-      "photo": "photos/mf1.svg"
-    },
-    "mf": {
-      "name": "MaxFlares",
-      "color": "#991a5a",
-      "party": "csuf",
-      "photo": "photos/mf.svg"
-    },
     "snjj": {
       "name": "SeneJj",
       "color": "#a6d1ed",
       "party": "ua",
       "photo": "photos/snjj.svg"
-    },
-    "fw": {
-      "name": "Forsaken-Wedding",
-      "color": "#991a5a",
-      "party": "csuf",
-      "photo": "photos/fw.svg"
-    },
-    "nzb": {
-      "name": "Nazibol1234",
-      "color": "#c457c9",
-      "party": "ua",
-      "photo": "photos/nzb.svg"
-    },
-    "jc17": {
-      "name": "JackColon17",
-      "color": "#42e0ff",
-      "party": "ua",
-      "photo": "photos/jc17.svg"
-    },
-    "ictoan": {
-      "name": "ICantThinkOfAName827",
-      "color": "#b6b6e6",
-      "party": "ua",
-      "photo": "photos/ictoan.svg"
-    },
-    "pag1": {
-      "name": "PickleArtGeek",
-      "color": "#269982",
-      "party": "ua",
-      "photo": "photos/pag1.svg"
-    },
-    "tmf1": {
-      "name": "teammomofan",
-      "color": "#7d1e4f",
-      "party": "ua",
-      "photo": "photos/tmf1.svg"
-    },
-    "wip1": {
-      "name": "wiptes167",
-      "color": "#f2a38f",
-      "party": "fumo",
-      "photo": "photos/wip1.svg"
-    },
-    "qtw1": {
-      "name": "QuantaviousTheWise",
-      "color": "#e05555",
-      "party": "tsp",
-      "photo": "photos/qtw1.svg"
-    },
-    "qtw2": {
-      "name": "QuantaviousTheWise",
-      "color": "#e05555",
-      "party": "ua",
-      "photo": "photos/qtw2.svg"
-    },
-    "prac1": {
-      "name": "practicalpurpose",
-      "color": "#f2eb11",
-      "party": "ua",
-      "photo": "photos/prac1.svg"
-    },
-    "ip1": {
-      "name": "Impressive_Plant",
-      "color": "#03003b",
-      "party": "ua",
-      "photo": "photos/ip1.svg"
     },
     "abagel": {
       "name": "Arkansas-Bagel",

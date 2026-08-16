@@ -401,7 +401,7 @@ function renderChart(totals, call) {
   if (isOutrightCall && winnerKeys.length) {
     const wName = winnerKeys.map(k => TSR_candidateName(registry, k)).join(' & ');
     const bannerImg = winnerKeys.length === 1
-      ? `<img src="candidates/registry/${calcRegistry.candidates[winnerKeys[0]].photo}" alt="${wName}">`
+      ? `<img src="candidates/registry/${calcRegistry.candidates[winnerKeys[0]].photo}" alt="${wName}">` : '';
     bannerSlot.className = 'projected-banner show';
     bannerSlot.innerHTML = `
       <div class="flag">Projected Winner</div>

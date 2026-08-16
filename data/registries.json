@@ -22,7 +22,7 @@
       "name": "Worth-Cupcake",
       "color": "#4a9edd",
       "party": "udc",
-      "photo": "photos/wc.svg"
+      "photo": "photos/wc.jpeg"
     },
     "qtw": {
       "name": "TyroniusTheIII",
@@ -160,13 +160,13 @@
       "name": "PickleArtGeek",
       "color": "#269982",
       "party": "tsp",
-      "photo": "photos/pag.svg"
+      "photo": "photos/pag.jpeg"
     },
     "pag1": {
       "name": "PickleArtGeek",
       "color": "#269982",
       "party": "ua",
-      "photo": "photos/pag1.svg"
+      "photo": "photos/pag.jpeg"
     },
     "fmr": {
       "name": "Boot",

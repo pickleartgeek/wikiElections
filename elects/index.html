@@ -401,7 +401,7 @@ function renderChart(totals, call) {
   if (isOutrightCall && winnerKeys.length) {
     const wName = winnerKeys.map(k => TSR_candidateName(registry, k)).join(' & ');
     const bannerImg = winnerKeys.length === 1
-      ? `<img src="../candidates/registry/images/${winnerKeys[0]}.svg" alt="${wName}">` : '';
+      ? `<img src="candidates/registry/${calcRegistry.candidates[winnerKeys[0]].photo}" alt="${wName}">`
     bannerSlot.className = 'projected-banner show';
     bannerSlot.innerHTML = `
       <div class="flag">Projected Winner</div>
@@ -428,7 +428,7 @@ function renderChart(totals, call) {
     const partyLabel = partyInfo ? ` <span class="nbc-party">(${partyInfo.shortName})</span>` : '';
     html += `
       <div class="nbc-row${isLeading ? ' leading' : ''}"${isLeading ? ` style="background:${color};"` : ''}>
-        <div class="nbc-avatar"><img src="../candidates/registry/images/${key}.svg" alt="${name}"></div>
+        <div class="nbc-avatar"><img src="candidates/registry/${calcRegistry.candidates[winnerKeys[0]].photo}" alt="${name}"></div>
         <div class="nbc-cand">
           <span class="nbc-name">${name}</span>${partyLabel}${checkTag}
         </div>

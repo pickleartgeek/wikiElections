@@ -48,12 +48,9 @@
 
 <div id="gateView" class="gate">
   <h2 style="font-family:var(--font-display);">Admin Access</h2>
-  <p class="small-muted">This is a lightweight UI gate, not real authentication — anyone with the
-    passphrase (or with basic browser dev tools) can get in. Don't rely on this for anything
-    that needs real access control; keep this URL unlisted if that matters.</p>
+  <p class="small-muted">Input passphrase:</p>
   <input type="password" id="gatePass" placeholder="Passphrase">
   <button class="btn" onclick="tryEnter()">Enter Admin</button>
-  <p class="small-muted">Default passphrase: <code>ddtsr</code> — change ADMIN_PASS in admin/index.html.</p>
 </div>
 
 <div id="adminView" style="display:none;">

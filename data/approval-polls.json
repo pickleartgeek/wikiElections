@@ -1,89 +1,654 @@
 {
   "_comment": "CENSUS official moderator approval/favorability polling. Current moderators are determined by the latest Census. Only moderators with registry IDs are included. Historical polling is included only when that moderator was actually featured. Favorable is mapped to approve and Unfavorable to disapprove. Neutral/No Opinion is omitted. Rendered as a 90-day rolling average on a donut per moderator on the homepage; the approval.html page shows the full weighted-average trendline per ProbCalc. The `questions` block below uses the exact same {pollster,date,sample,weight,shares:{approve,disapprove}} shape and the same rendering pipeline as `moderators` -- these are generic community track-record questions rather than a specific person, so `approve`/`disapprove` here just mean the Yes/No side of that question (see each entry's `yesLabel`/`noLabel` for the real button text) and there's no CENSUS/registry candidate photo tied to them.",
-  "moderators": {
+   "moderators": {
     "ip": {
       "name": "Impressive_Plant",
-      "status": "current",
       "polls": [
-        { "pollster": "CENSUS", "date": "2026-08-10", "sample": 15, "weight": 1, "shares": { "approve": 0.5333, "disapprove": 0.0667 } },
-        { "pollster": "CENSUS", "date": "2026-07-08", "sample": 13, "weight": 1, "shares": { "approve": 0.6154, "disapprove": 0.0 } },
-        { "pollster": "CENSUS", "date": "2026-06-08", "sample": 17, "weight": 1, "shares": { "approve": 0.6471, "disapprove": 0.0 } },
-        { "pollster": "CENSUS", "date": "2026-05-03", "sample": 18, "weight": 1, "shares": { "approve": 0.5556, "disapprove": 0.0556 } },
-        { "pollster": "CENSUS", "date": "2026-04-03", "sample": 19, "weight": 1, "shares": { "approve": 0.5263, "disapprove": 0.1579 } }
+        {
+          "pollster": "CENSUS",
+          "date": "2026-08-10",
+          "sample": 15,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5333,
+            "disapprove": 0.0667
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-07-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6154,
+            "disapprove": 0.0
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-06-08",
+          "sample": 17,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6471,
+            "disapprove": 0.0
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-05-03",
+          "sample": 18,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5556,
+            "disapprove": 0.0556
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-04-03",
+          "sample": 19,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5263,
+            "disapprove": 0.1579
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-24",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6216,
+            "disapprove": 0.0541
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-01",
+          "sample": 41,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4878,
+            "disapprove": 0.122
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-12-27",
+          "sample": 31,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5484,
+            "disapprove": 0.0323
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-11-27",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5405,
+            "disapprove": 0.0811
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-10-20",
+          "sample": 38,
+          "weight": 1,
+          "shares": {
+            "approve": 0.7105,
+            "disapprove": 0.0789
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-09-12",
+          "sample": 32,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6875,
+            "disapprove": 0.0938
+          }
+        }
       ]
     },
     "pag": {
       "name": "PickleArtGeek",
-      "status": "current",
       "polls": [
-        { "pollster": "CENSUS", "date": "2026-08-10", "sample": 15, "weight": 1, "shares": { "approve": 0.5333, "disapprove": 0.1333 } },
-        { "pollster": "CENSUS", "date": "2026-07-08", "sample": 13, "weight": 1, "shares": { "approve": 0.5385, "disapprove": 0.0769 } },
-        { "pollster": "CENSUS", "date": "2026-06-08", "sample": 17, "weight": 1, "shares": { "approve": 0.4706, "disapprove": 0.0588 } },
-        { "pollster": "CENSUS", "date": "2026-05-03", "sample": 18, "weight": 1, "shares": { "approve": 0.5, "disapprove": 0.0556 } },
-        { "pollster": "CENSUS", "date": "2026-04-03", "sample": 19, "weight": 1, "shares": { "approve": 0.5263, "disapprove": 0.1053 } }
+        {
+          "pollster": "CENSUS",
+          "date": "2026-08-10",
+          "sample": 15,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5333,
+            "disapprove": 0.1333
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-07-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5385,
+            "disapprove": 0.0769
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-06-08",
+          "sample": 17,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4706,
+            "disapprove": 0.0588
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-05-03",
+          "sample": 18,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5,
+            "disapprove": 0.0556
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-04-03",
+          "sample": 19,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5263,
+            "disapprove": 0.1053
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-24",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3514,
+            "disapprove": 0.0541
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-01",
+          "sample": 41,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3659,
+            "disapprove": 0.0244
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-12-27",
+          "sample": 31,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5161,
+            "disapprove": 0.0
+          }
+        }
       ]
     },
     "prac": {
       "name": "practicalpurpose",
-      "status": "current",
       "polls": [
-        { "pollster": "CENSUS", "date": "2026-08-10", "sample": 15, "weight": 1, "shares": { "approve": 0.6, "disapprove": 0.0667 } },
-        { "pollster": "CENSUS", "date": "2026-07-08", "sample": 13, "weight": 1, "shares": { "approve": 0.6154, "disapprove": 0.0769 } },
-        { "pollster": "CENSUS", "date": "2026-06-08", "sample": 17, "weight": 1, "shares": { "approve": 0.4118, "disapprove": 0.0588 } },
-        { "pollster": "CENSUS", "date": "2026-05-03", "sample": 18, "weight": 1, "shares": { "approve": 0.4444, "disapprove": 0.0556 } },
-        { "pollster": "CENSUS", "date": "2026-04-03", "sample": 19, "weight": 1, "shares": { "approve": 0.5263, "disapprove": 0.1053 } }
+        {
+          "pollster": "CENSUS",
+          "date": "2026-08-10",
+          "sample": 15,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6,
+            "disapprove": 0.0667
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-07-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6154,
+            "disapprove": 0.0769
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-06-08",
+          "sample": 17,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4118,
+            "disapprove": 0.0588
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-05-03",
+          "sample": 18,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4444,
+            "disapprove": 0.0556
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-04-03",
+          "sample": 19,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5263,
+            "disapprove": 0.1053
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-24",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3784,
+            "disapprove": 0.0541
+          }
+        }
       ]
     },
     "wc": {
       "name": "Worth-Cupcake",
-      "status": "current",
       "polls": [
-        { "pollster": "CENSUS", "date": "2026-08-10", "sample": 15, "weight": 1, "shares": { "approve": 0.4667, "disapprove": 0.0667 } },
-        { "pollster": "CENSUS", "date": "2026-07-08", "sample": 13, "weight": 1, "shares": { "approve": 0.5385, "disapprove": 0.0769 } },
-        { "pollster": "CENSUS", "date": "2026-06-08", "sample": 17, "weight": 1, "shares": { "approve": 0.3529, "disapprove": 0.1176 } },
-        { "pollster": "CENSUS", "date": "2026-05-03", "sample": 18, "weight": 1, "shares": { "approve": 0.3889, "disapprove": 0.0556 } }
+        {
+          "pollster": "CENSUS",
+          "date": "2026-08-10",
+          "sample": 15,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4667,
+            "disapprove": 0.0667
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-07-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5385,
+            "disapprove": 0.0769
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-06-08",
+          "sample": 17,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3529,
+            "disapprove": 0.1176
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-05-03",
+          "sample": 18,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3889,
+            "disapprove": 0.0556
+          }
+        }
       ]
     },
     "rf": {
       "name": "Representative-Fee65",
-      "status": "current",
       "polls": [
-        { "pollster": "CENSUS", "date": "2026-08-10", "sample": 15, "weight": 1, "shares": { "approve": 0.2, "disapprove": 0.1333 } },
-        { "pollster": "CENSUS", "date": "2026-07-08", "sample": 13, "weight": 1, "shares": { "approve": 0.4615, "disapprove": 0.0769 } }
+        {
+          "pollster": "CENSUS",
+          "date": "2026-08-10",
+          "sample": 15,
+          "weight": 1,
+          "shares": {
+            "approve": 0.2,
+            "disapprove": 0.1333
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-07-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4615,
+            "disapprove": 0.0769
+          }
+        }
       ]
     },
     "wip": {
       "name": "wiptes167",
-      "status": "current",
       "polls": [
-        { "pollster": "CENSUS", "date": "2026-08-10", "sample": 15, "weight": 1, "shares": { "approve": 0.5333, "disapprove": 0.0667 } },
-        { "pollster": "CENSUS", "date": "2026-07-08", "sample": 13, "weight": 1, "shares": { "approve": 0.6154, "disapprove": 0.0769 } },
-        { "pollster": "CENSUS", "date": "2026-06-08", "sample": 17, "weight": 1, "shares": { "approve": 0.3529, "disapprove": 0.0588 } },
-        { "pollster": "CENSUS", "date": "2026-05-03", "sample": 18, "weight": 1, "shares": { "approve": 0.4444, "disapprove": 0.0556 } },
-        { "pollster": "CENSUS", "date": "2026-04-03", "sample": 19, "weight": 1, "shares": { "approve": 0.3684, "disapprove": 0.1579 } }
+        {
+          "pollster": "CENSUS",
+          "date": "2026-08-10",
+          "sample": 15,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5333,
+            "disapprove": 0.0667
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-07-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6154,
+            "disapprove": 0.0769
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-06-08",
+          "sample": 17,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3529,
+            "disapprove": 0.0588
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-05-03",
+          "sample": 18,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4444,
+            "disapprove": 0.0556
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-04-03",
+          "sample": 19,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3684,
+            "disapprove": 0.1579
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-24",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.2973,
+            "disapprove": 0.0541
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-01",
+          "sample": 41,
+          "weight": 1,
+          "shares": {
+            "approve": 0.2927,
+            "disapprove": 0.0244
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-12-27",
+          "sample": 31,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4194,
+            "disapprove": 0.0323
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-11-27",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4595,
+            "disapprove": 0.027
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-10-20",
+          "sample": 38,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4211,
+            "disapprove": 0.0789
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-09-12",
+          "sample": 32,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5,
+            "disapprove": 0.0625
+          }
+        }
       ]
     },
     "tmf1": {
       "name": "teammomofan",
-      "status": "current",
       "polls": [
-        { "pollster": "CENSUS", "date": "2026-08-10", "sample": 15, "weight": 1, "shares": { "approve": 0.3333, "disapprove": 0.1333 } },
-        { "pollster": "CENSUS", "date": "2026-07-08", "sample": 13, "weight": 1, "shares": { "approve": 0.5385, "disapprove": 0.1538 } },
-        { "pollster": "CENSUS", "date": "2026-06-08", "sample": 17, "weight": 1, "shares": { "approve": 0.3529, "disapprove": 0.0588 } },
-        { "pollster": "CENSUS", "date": "2026-05-03", "sample": 18, "weight": 1, "shares": { "approve": 0.4444, "disapprove": 0.0556 } },
-        { "pollster": "CENSUS", "date": "2026-04-03", "sample": 19, "weight": 1, "shares": { "approve": 0.3684, "disapprove": 0.1579 } }
+        {
+          "pollster": "CENSUS",
+          "date": "2026-08-10",
+          "sample": 15,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3333,
+            "disapprove": 0.1333
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-07-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5385,
+            "disapprove": 0.1538
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-06-08",
+          "sample": 17,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3529,
+            "disapprove": 0.0588
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-05-03",
+          "sample": 18,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4444,
+            "disapprove": 0.0556
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-04-03",
+          "sample": 19,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3684,
+            "disapprove": 0.1579
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-24",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3243,
+            "disapprove": 0.0811
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-01",
+          "sample": 41,
+          "weight": 1,
+          "shares": {
+            "approve": 0.2683,
+            "disapprove": 0.0244
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-12-27",
+          "sample": 31,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3871,
+            "disapprove": 0.0
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-11-27",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5135,
+            "disapprove": 0.027
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-10-20",
+          "sample": 38,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5,
+            "disapprove": 0.0526
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-09-12",
+          "sample": 32,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5,
+            "disapprove": 0.0625
+          }
+        }
       ]
     },
     "oc": {
       "name": "One-Community",
-      "role": "Election Secretary",
-      "status": "current",
       "polls": [
-        { "pollster": "CENSUS", "date": "2026-08-10", "sample": 15, "weight": 1, "shares": { "approve": 0.1333, "disapprove": 0.2 } },
-        { "pollster": "CENSUS", "date": "2026-07-08", "sample": 13, "weight": 1, "shares": { "approve": 0.4615, "disapprove": 0.0 } },
-        { "pollster": "CENSUS", "date": "2026-06-08", "sample": 17, "weight": 1, "shares": { "approve": 0.3529, "disapprove": 0.0 } },
-        { "pollster": "CENSUS", "date": "2026-05-03", "sample": 18, "weight": 1, "shares": { "approve": 0.5556, "disapprove": 0.0556 } },
-        { "pollster": "CENSUS", "date": "2026-04-03", "sample": 19, "weight": 1, "shares": { "approve": 0.4211, "disapprove": 0.1053 } }
+        {
+          "pollster": "CENSUS",
+          "date": "2026-08-10",
+          "sample": 15,
+          "weight": 1,
+          "shares": {
+            "approve": 0.1333,
+            "disapprove": 0.2
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-07-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4615,
+            "disapprove": 0.0
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-06-08",
+          "sample": 17,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3529,
+            "disapprove": 0.0
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-05-03",
+          "sample": 18,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5556,
+            "disapprove": 0.0556
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-04-03",
+          "sample": 19,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4211,
+            "disapprove": 0.1053
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-24",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4324,
+            "disapprove": 0.0541
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-02-01",
+          "sample": 41,
+          "weight": 1,
+          "shares": {
+            "approve": 0.2439,
+            "disapprove": 0.0244
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-12-27",
+          "sample": 31,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3226,
+            "disapprove": 0.0323
+          }
+        }
       ]
     }
   },

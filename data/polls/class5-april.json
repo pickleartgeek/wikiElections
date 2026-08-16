@@ -1,0 +1,29 @@
+{
+  "electionId": "class5-april",
+  "polls": [
+    {
+      "id": "c5a-2",
+      "pollster": "Spinner Insights",
+      "date": "2026-04-06",
+      "sample": 16,
+      "weight": 1.0,
+      "shares": {
+        "dvwb": 0.25,
+        "gsx": 0.5,
+        "rf": 0.25
+      }
+    },
+    {
+      "id": "c5a-1",
+      "pollster": "Spinner Insights",
+      "date": "2026-04-07",
+      "sample": 12,
+      "weight": 1.0,
+      "shares": {
+        "dvwb": 0.3333,
+        "gsx": 0.4167,
+        "rf": 0.25
+      }
+    }
+  ]
+}

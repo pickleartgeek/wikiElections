@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fcf003"/>
+      <stop offset="100%" stop-color="#a39c01"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="98" fill="url(#g)" stroke="#111" stroke-width="2"/>
+  <text x="100" y="122" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="700"
+        fill="#111111" text-anchor="middle" opacity="0.95">MD</text>
+</svg>

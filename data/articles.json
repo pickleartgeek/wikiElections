@@ -1,0 +1,4 @@
+{
+  "_comment": "Admin-authored articles (written from admin/index.html's rich-text editor, same overrides-then-export workflow as the rest of the site). Each entry: {id, title, byline, author, date (YYYY-MM-DD), thumbColor (hex), bodyHtml, published}. bodyHtml comes from a contenteditable editor restricted to a small safe formatting subset (bold/italic/underline/headings/lists/quote/links) -- treat it the same as any other hand-authored HTML in this repo, not user-submitted content. Unpublished articles are saved but not shown on articles.html; useful for drafts. Rendered on articles.html (index/grid) and article.html?id=<id> (single article view).",
+  "articles": []
+}

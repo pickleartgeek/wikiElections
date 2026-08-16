@@ -1,0 +1,56 @@
+{
+  "electionId": "class7-july",
+  "polls": [
+    {
+      "id": "c7j-3",
+      "pollster": "Representative-Fee65 (self-poll)",
+      "date": "2025-07-25",
+      "sample": 20,
+      "weight": 0.5,
+      "shares": {
+        "tmf1": 0.4737,
+        "pag": 0.1579,
+        "qtw1": 0.2105,
+        "rf": 0.1579
+      }
+    },
+    {
+      "id": "c7j-4",
+      "pollster": "GSX",
+      "date": "2025-07-25",
+      "sample": 22,
+      "weight": 0.8,
+      "shares": {
+        "tmf1": 0.5455,
+        "pag": 0.2727,
+        "qtw1": 0.1818
+      }
+    },
+    {
+      "id": "c7j-2",
+      "pollster": "EggPolls",
+      "date": "2025-07-27",
+      "sample": 23,
+      "weight": 1.0,
+      "shares": {
+        "tmf1": 0.4348,
+        "pag": 0.2609,
+        "qtw1": 0.1304,
+        "mf": 0.3043
+      }
+    },
+    {
+      "id": "c7j-1",
+      "pollster": "EggPolls",
+      "date": "2025-07-29",
+      "sample": 27,
+      "weight": 1.0,
+      "shares": {
+        "tmf1": 0.2963,
+        "pag": 0.2593,
+        "qtw1": 0.1852,
+        "mf": 0.2593
+      }
+    }
+  ]
+}

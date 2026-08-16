@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Party Support — wikiElections</title>
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-wiki.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&family=Archivo+Black&family=Public+Sans:wght@400;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  body { font-family: var(--font-spinner-body), var(--font-body); }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="index.html">
+      <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <nav class="main-nav-inline">
+      <a href="index.html">Main Page</a>
+      <a href="activities.html">Decision Desk TSR</a>
+      <a href="polls.html">Spinner Insights Polls</a>
+      <a href="elects/index.html">TSR Elects — Live</a>
+      <a href="articles.html">Articles</a>
+    </nav>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+</header>
+
+<div id="dynamicBanner"></div>
+
+<main class="wrap">
+  <section class="hero" style="text-align:left; padding-top:30px;">
+    <div class="kicker">Party Support</div>
+    <h1 class="rcp-page-title">Generic Ballot / Party ID</h1>
+    <p class="lede" style="margin:4px 0 0;">
+      "If a generic-ballot vote were held today, which party would you back?" — pooled across every
+      tracked party, ProbCalc-weighted average.
+    </p>
+  </section>
+
+  <div id="partyContent"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
+    <span>
+      <a href="index.html">Main Page</a>
+      <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
+      <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
+    </span>
+  </div>
+</footer>
+
+<script>window.SITE_BASE = './';</script>
+<script src="assets/js/overrides.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/tsrelects.js"></script>
+<script src="assets/js/basecalc.js"></script>
+<script src="assets/js/rcp-chart.js"></script>
+<script>
+initSiteChrome();
+
+function todayUTCString() {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString().slice(0, 10);
+}
+
+async function boot() {
+  const [partyPollsBase, registryData] = await Promise.all([
+    fetch('data/party-polls.json').then(r => r.json()),
+    fetch('data/registries.json').then(r => r.json())
+  ]);
+  const partyPollsFile = OVR_getPartyPolls(partyPollsBase);
+  const polls = partyPollsFile.polls;
+
+  // Build a registry shaped like a candidate registry ({candidates: {...}})
+  // out of the parties registry, so this can reuse every existing
+  // TSR_candidateName / TSR_candidateColor / BaseCalc / RCPChart helper
+  // unmodified instead of writing a parallel set just for parties.
+  const partyIds = Object.keys(registryData.parties || {});
+  const partyRegistry = { candidates: {} };
+  partyIds.forEach(pid => {
+    const p = registryData.parties[pid];
+    partyRegistry.candidates[pid] = { name: p.shortName || p.name, color: p.color };
+  });
+
+  const slot = document.getElementById('partyContent');
+
+  if (!polls.length) {
+    slot.innerHTML = `
+      <div class="calc-panel">
+        <p class="desc" style="margin:0;">No party support polling has been logged yet
+        (see <code>data/party-polls.json</code>). Once real numbers exist, this page fills in
+        with a bar breakdown, trend chart, and poll table — same BaseCalc/ProbCalc engine as
+        every race on this site.</p>
+      </div>`;
+    return;
+  }
+
+  const asOf = todayUTCString();
+  const aggOpts = {};
+  const agg = BaseCalc_aggregate(polls, partyIds, asOf, aggOpts);
+  const sorted = agg.sorted; // [[partyId, pct], ...] already sorted desc by BaseCalc_aggregate
+
+  let barsHtml = `<div class="rcp-bars-wrap">`;
+  sorted.forEach(([pid, pct], i) => {
+    const color = TSR_candidateColor(partyRegistry, pid);
+    const name = TSR_candidateName(partyRegistry, pid);
+    if (i === 0) {
+      const second = sorted[1] ? sorted[1][1] : 0;
+      barsHtml += `<div class="rcp-lead-badge">${name}<span class="rcp-lead-value" style="background:${color}">+${((pct - second) * 100).toFixed(1)}</span></div>`;
+    }
+    barsHtml += `
+      <div class="rcp-bar-row">
+        <div class="rcp-bar-fill" style="width:${Math.max(pct * 100, 6)}%; background:linear-gradient(120deg, ${color}, ${color});"></div>
+        <div class="rcp-bar-remainder"></div>
+        <div class="rcp-bar-meta${pct * 100 >= 80 ? ' on-fill' : ''}"><div class="name">${name}</div><div class="pct">${(pct * 100).toFixed(1)}<sup>%</sup></div></div>
+      </div>`;
+  });
+  barsHtml += `</div>`;
+
+  const points = BaseCalc_weightedTimeline(polls, partyIds, asOf, aggOpts);
+
+  let tableHtml = `<div class="rcp-table-wrap"><table class="rcp-table"><thead><tr><th>Pollster</th><th>Date</th><th>Sample</th>`;
+  partyIds.forEach(pid => { tableHtml += `<th>${TSR_candidateName(partyRegistry, pid)}</th>`; });
+  tableHtml += `</tr></thead><tbody>`;
+  tableHtml += `<tr class="rcp-average-row"><td>DDTSR Average</td><td>—</td><td>—</td>`;
+  partyIds.forEach(pid => {
+    const pct = agg.averages[pid];
+    tableHtml += `<td>${agg.coverage[pid] ? (pct * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
+  });
+  tableHtml += `</tr>`;
+  [...polls].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(p => {
+    tableHtml += `<tr><td>${p.pollster}</td><td>${p.date}</td><td>${p.sample}</td>`;
+    partyIds.forEach(pid => {
+      const v = p.shares[pid];
+      tableHtml += `<td>${typeof v === 'number' ? (v * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;
+    });
+    tableHtml += `</tr>`;
+  });
+  tableHtml += `</tbody></table></div>`;
+
+  slot.innerHTML = `
+    ${barsHtml}
+    <div class="rcp-chart-panel">
+      <h3>Weighted Party Support Average</h3>
+      <p class="small-muted" style="margin:0;">Day-by-day ProbCalc-weighted average, recomputed fresh for each day as if it were "election day" — same engine as every trend chart on this site.</p>
+      <div id="partyChart"></div>
+    </div>
+    ${tableHtml}`;
+
+  RCPChart_render(document.getElementById('partyChart'), points, partyIds, partyRegistry);
+}
+
+boot();
+</script>
+</body>
+</html>

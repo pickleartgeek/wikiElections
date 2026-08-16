@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Article — wikiElections</title>
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-wiki.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&family=Public+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  .article-hero { padding: 30px 0 10px; }
+  .article-hero .kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; color: var(--muted); text-transform: uppercase; }
+  .article-hero h1 { font-family: var(--font-display); font-size: 36px; line-height: 1.1; margin: 8px 0; }
+  .article-byline { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .article-thumb-bar { height: 6px; border-radius: 3px; margin: 16px 0 26px; }
+  .article-body {
+    font-family: var(--font-body); font-size: 17px; line-height: 1.7; color: var(--ink);
+    max-width: 720px;
+  }
+  .article-body h2 { font-family: var(--font-display); font-size: 26px; margin: 32px 0 12px; }
+  .article-body h3 { font-family: var(--font-display); font-size: 20px; margin: 26px 0 10px; }
+  .article-body p { margin: 0 0 16px; }
+  .article-body ul, .article-body ol { margin: 0 0 16px; padding-left: 24px; }
+  .article-body li { margin-bottom: 6px; }
+  .article-body blockquote {
+    border-left: 3px solid var(--ink); margin: 20px 0; padding: 4px 0 4px 16px;
+    font-style: italic; color: var(--muted);
+  }
+  .article-body a { color: #2e6fdb; }
+  .article-not-found { padding: 40px 0; }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="index.html">
+      <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <nav class="main-nav-inline">
+      <a href="index.html">Main Page</a>
+      <a href="activities.html">Decision Desk TSR</a>
+      <a href="polls.html">Spinner Insights Polls</a>
+      <a href="elects/index.html">TSR Elects — Live</a>
+      <a href="articles.html" class="current">Articles</a>
+    </nav>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+</header>
+
+<div id="dynamicBanner"></div>
+
+<main class="wrap">
+  <div id="articleSlot"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
+    <span>
+      <a href="articles.html">All Articles</a>
+      <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
+      <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
+    </span>
+  </div>
+</footer>
+
+<script>window.SITE_BASE = './';</script>
+<script src="assets/js/overrides.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+initSiteChrome();
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function boot() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  const base = await fetch('data/articles.json').then(r => r.json());
+  const articles = OVR_getArticles(base.articles || []);
+  const article = articles.find(a => a.id === id);
+  const slot = document.getElementById('articleSlot');
+
+  if (!article) {
+    slot.innerHTML = `
+      <div class="article-not-found">
+        <h1 class="rcp-page-title">Article not found</h1>
+        <p class="lede">This article doesn't exist or hasn't been published yet. <a href="articles.html">Back to all articles</a>.</p>
+      </div>`;
+    return;
+  }
+
+  document.title = `${article.title} — wikiElections`;
+  slot.innerHTML = `
+    <section class="article-hero">
+      <div class="kicker">${escapeHtml(article.date || '')}</div>
+      <h1>${escapeHtml(article.title || 'Untitled')}</h1>
+      <div class="article-byline">${escapeHtml(article.byline || '')}${article.author ? (article.byline ? ' · ' : '') + 'by ' + escapeHtml(article.author) : ''}</div>
+      <div class="article-thumb-bar" style="background:${article.thumbColor || '#111214'};"></div>
+    </section>
+    <article class="article-body">${article.bodyHtml || ''}</article>
+    <p style="margin-top:40px;"><a href="articles.html">← Back to all articles</a></p>`;
+}
+
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+{
+  "_comment": "Party support / membership tracking -- 'if a generic-ballot vote were held today, which party would you back' style polling, pooled across all parties the same way a real generic-ballot poll pools candidates. Same shape as everything else on the site ({pollster,date,sample,weight,shares:{partyId: 0-1}}), fed through the same BaseCalc/ProbCalc engine and rendered on party-support.html. Empty until real numbers exist -- an honest empty state beats fabricated data. Party ids/names/colors come from data/registries.json's `parties` object; add a poll's share for any subset of parties (0 for a party not covered by that particular poll).",
+  "polls": []
+}

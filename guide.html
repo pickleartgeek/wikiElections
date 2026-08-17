@@ -50,7 +50,7 @@
   <p style="font-size:14px; line-height:1.7;">
     <strong>Part I</strong> introduces the inverse gamma distribution ProbCalc is built on —
     its shape (α), scale (β), and position (p) parameters — and how a bigger α tightens the
-    distribution around a result while β simply rescales the axis.
+    distribution around a result while β simply rescales the axis.<br>
     <strong>Part II</strong> covers "Simple ProbCalc": <em>BaseCalc</em> first, where polls are
     copied from Wikipedia, cleaned up, and combined into a single α per candidate via
     <code>(poll result × sample size) ÷ (days until election)</code> — so bigger, more recent
@@ -58,7 +58,7 @@
     which feeds those same α values into <code>GAMMA.INV(RAND(), α, β)</code> to simulate
     an election outcome, repeated hundreds of times and tallied with
     <code>INDEX</code>/<code>MATCH</code>/<code>COUNTIF</code> to get a win probability per
-    candidate. <strong>Part III</strong> gets more advanced: classifying a simulated win as a
+    candidate.<br> <strong>Part III</strong> gets more advanced: classifying a simulated win as a
     plurality, majority, or supermajority; extrapolating results for a subgroup (like a
     demographic or constituency) that lacks its own local polling by adjusting the topline
     α by that group's historical lean; and converting simulated percentages back into a

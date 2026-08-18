@@ -886,6 +886,73 @@
         }
       }
     ]
+  },
+    "plantmod": {
+    "name": "Should u/Impressive_Plant4418 resign as moderator of r/thespinroom due to being appointed as an r/YAPms moderator?",
+    "yesLabel": "Yes",
+    "noLabel": "No",
+    "polls": [
+      {
+        "pollster": "CENSUS",
+        "date": "2026-08-10",
+        "sample": 15,
+        "weight": 1,
+        "shares": {
+          "approve": 0.1333,
+          "disapprove": 0.6667
+        }
+      },
+      {
+        "pollster": "CENSUS",
+        "date": "2026-07-08",
+        "sample": 13,
+        "weight": 1,
+        "shares": {
+          "approve": 0.0769,
+          "disapprove": 0.8462
+        }
+      },
+      {
+        "pollster": "CENSUS",
+        "date": "2026-06-08",
+        "sample": 17,
+        "weight": 1,
+        "shares": {
+          "approve": 0,
+          "disapprove": 0.7647
+        }
+      },
+      {
+        "pollster": "CENSUS",
+        "date": "2026-05-03",
+        "sample": 18,
+        "weight": 1,
+        "shares": {
+          "approve": 0.1111,
+          "disapprove": 0.6667
+        }
+      },
+      {
+        "pollster": "CENSUS",
+        "date": "2026-04-03",
+        "sample": 19,
+        "weight": 1,
+        "shares": {
+          "approve": 0.2105,
+          "disapprove": 0.6316
+        }
+      },
+      {
+        "pollster": "CENSUS",
+        "date": "2026-02-24",
+        "sample": 37,
+        "weight": 1,
+        "shares": {
+          "approve": 0.1081,
+          "disapprove": 0.6216
+        }
+      }
+    ]
   }
 }
 }

@@ -1,4 +1,128 @@
 {
-  "_comment": "Party support / membership tracking -- 'if a generic-ballot vote were held today, which party would you back' style polling, pooled across all parties the same way a real generic-ballot poll pools candidates. Same shape as everything else on the site ({pollster,date,sample,weight,shares:{partyId: 0-1}}), fed through the same BaseCalc/ProbCalc engine and rendered on party-support.html. Empty until real numbers exist -- an honest empty state beats fabricated data. Party ids/names/colors come from data/registries.json's `parties` object; add a poll's share for any subset of parties (0 for a party not covered by that particular poll).",
-  "polls": []
+  "_comment": "Party support / membership tracking -- 'if a generic-ballot vote were held today, which party would you back' style polling, pooled across all parties the same way a real generic-ballot poll pools candidates. Same shape as everything else on the site ({pollster,date,sample,weight,shares:{partyId: 0-1}}), fed through the same BaseCalc/ProbCalc engine and rendered on party-support.html. Party ids/names/colors come from data/registries.json's `parties` object; historical party names that later merged or were reclassified are preserved where necessary. Straight Frogs is mapped to UDC for polls after 2025-12-27.",
+  "polls": [
+    {
+      "pollster": "CENSUS",
+      "date": "2026-08-10",
+      "sample": 15,
+      "weight": 1,
+      "shares": {
+        "ua": 0.4,
+        "tsp": 0.2667,
+        "green": 0.1333,
+        "udc": 0.0667,
+        "iltsr": 0.0667,
+        "csuf": 0.0667
+      }
+    },
+    {
+      "pollster": "CENSUS",
+      "date": "2026-07-08",
+      "sample": 13,
+      "weight": 1,
+      "shares": {
+        "ua": 0.3846,
+        "tsp": 0.3077,
+        "udc": 0.1538,
+        "iltsr": 0.0769,
+        "green": 0.0769
+      }
+    },
+    {
+      "pollster": "CENSUS",
+      "date": "2026-06-08",
+      "sample": 17,
+      "weight": 1,
+      "shares": {
+        "ua": 0.4706,
+        "tsp": 0.1765,
+        "green": 0.1176,
+        "csuf": 0.1176,
+        "iltsr": 0.0588,
+        "udc": 0.0588
+      }
+    },
+    {
+      "pollster": "CENSUS",
+      "date": "2026-05-03",
+      "sample": 18,
+      "weight": 1,
+      "shares": {
+        "ua": 0.3333,
+        "tsp": 0.3333,
+        "csuf": 0.1667,
+        "udc": 0.1111,
+        "iltsr": 0.0556
+      }
+    },
+    {
+      "pollster": "CENSUS",
+      "date": "2026-04-03",
+      "sample": 19,
+      "weight": 1,
+      "shares": {
+        "tsp": 0.4211,
+        "ua": 0.2632,
+        "iltsr": 0.1053,
+        "green": 0.1053,
+        "udc": 0.1053
+      }
+    },
+    {
+      "pollster": "CENSUS",
+      "date": "2026-02-24",
+      "sample": 37,
+      "weight": 1,
+      "shares": {
+        "ua": 0.4324,
+        "tsp": 0.3514,
+        "udc": 0.0811,
+        "iltsr": 0.0541,
+        "csuf": 0.0541,
+        "green": 0.027
+      }
+    },
+    {
+      "pollster": "CENSUS",
+      "date": "2026-02-01",
+      "sample": 41,
+      "weight": 1,
+      "shares": {
+        "ua": 0.439,
+        "tsp": 0.2683,
+        "csuf": 0.0976,
+        "udc": 0.0976,
+        "iltsr": 0.0732,
+        "green": 0.0244
+      }
+    },
+    {
+      "pollster": "CENSUS",
+      "date": "2025-12-27",
+      "sample": 31,
+      "weight": 1,
+      "shares": {
+        "ua": 0.3871,
+        "tsp": 0.3226,
+        "udc": 0.129,
+        "iltsr": 0.0645,
+        "constar": 0.0323,
+        "csuf": 0.0323,
+        "green": 0.0323
+      }
+    },
+    {
+      "pollster": "CENSUS",
+      "date": "2025-11-27",
+      "sample": 37,
+      "weight": 1,
+      "shares": {
+        "ua": 0.4595,
+        "tsp": 0.3514,
+        "iltsr": 0.0811,
+        "udc": 0.0811,
+        "csuf": 0.027
+      }
+    }
+  ]
 }

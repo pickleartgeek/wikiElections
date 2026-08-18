@@ -237,6 +237,21 @@
       "shortName": "FUMO-UDC",
       "color": "#f2a38f"
     },
+    "sfp": {
+      "name": "Straight Frogs Party",
+      "shortName": "Straight Frogs",
+      "color": "#0d2622"
+    },
+    "constar": {
+      "name": " Conservative Orthodox Nationalists of the Spinroom's Tradition, Authority and Revival",
+      "shortName": "CONSTAR",
+      "color": "#a01f1a"
+    },
+    "green": {
+      "name": "Green Party",
+      "shortName": "Green",
+      "color": "#3a9d23"
+    },
     "csuf": {
       "name": "Common Sense Unity Front",
       "shortName": "CSUF",

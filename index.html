@@ -111,9 +111,6 @@ async function renderHub() {
 
 function renderHubButtons(cfg) {
   const wrap = document.getElementById('hubButtons');
-  // TSR Elects gets a permanent spot in the hub row -- previously this button
-  // only rendered during an active election, so most of the time (off-cycle)
-  // there was no Elects presence on the homepage at all.
   const electsActive = cfg.mode === 'active';
   const electsLink = electsActive ? cfg.liveBox.link : 'elects/index.html';
   const electsSub = electsActive ? 'Live results, right now →' : 'Browse race history & results →';
@@ -251,8 +248,7 @@ async function renderOffCycleHub(hub, registry) {
     return;
   }
 
-  // No approval polling logged yet -- fall back to recent-race polling snapshots
-  // (real data, just not what the RCP hub eventually wants to show).
+
   const idx = await fetch('data/polls-index.json').then(r => r.json());
   hub.innerHTML = `<h2 class="section-title">Recent Polling Snapshots</h2>
     <p class="hub-note">No moderator approval polling has been logged yet, so this scrolls through

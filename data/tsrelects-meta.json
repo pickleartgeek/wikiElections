@@ -1,0 +1,4 @@
+{
+  "_comment": "Hand-maintained -- bump lastUpdated (ISO 8601, UTC) whenever tsrelects-results.json is edited. TSR Elects reads this to show a 'Last updated' line, displayed in Eastern Time to match the Decision Desk broadcast convention rather than each viewer's local clock.",
+  "lastUpdated": "2026-08-14T14:05:00Z"
+}

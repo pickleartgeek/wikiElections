@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — wikiElections</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+  .gate { max-width: 380px; margin: 80px auto; text-align: center; }
+  .gate input { width: 100%; padding: 10px; font-size: 14px; border: 1px solid var(--line); border-radius: var(--radius); margin: 12px 0; }
+  .field-row { margin-bottom: 12px; }
+  .field-row label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
+  .field-row input, .field-row select, .field-row textarea {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px; font-family: var(--font-body);
+  }
+  .field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 10px; }
+  .group-editor { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; margin-bottom: 8px; background: var(--paper-dim); }
+  .group-editor .gtitle { font-weight: 700; font-size: 12px; margin-bottom: 6px; }
+  .cand-input-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .cand-input-row .swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .cand-input-row label { flex: 1; font-size: 12px; margin: 0; }
+  .cand-input-row input { width: 90px; }
+  .banner-note { background: #fff8e1; border: 1px solid #e6d27a; border-radius: var(--radius); padding: 10px 14px; font-size: 12px; margin-bottom: 20px; }
+  .status-msg { font-size: 12px; padding: 8px 12px; border-radius: var(--radius); margin: 10px 0; display: none; }
+  .status-msg.show { display: block; }
+  .status-msg.ok { background: #eafaf0; color: #206b3f; border: 1px solid #b7e6c9; }
+  .rte-toolbar { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .rte-toolbar button {
+    padding: 6px 10px; font-size: 12px; border: 1px solid var(--line); border-radius: 4px;
+    background: #fff; cursor: pointer; font-family: var(--font-body);
+  }
+  .rte-toolbar button:hover { background: var(--paper-dim); }
+  .rte-editor {
+    min-height: 260px; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px; font-size: 14px; line-height: 1.6; font-family: var(--font-body);
+  }
+  .rte-editor:focus { outline: 2px solid #2e6fdb33; }
+  .rte-editor h2 { font-size: 20px; margin: 14px 0 6px; }
+  .rte-editor h3 { font-size: 16px; margin: 12px 0 6px; }
+  .rte-editor blockquote { border-left: 3px solid var(--ink); padding-left: 10px; color: var(--muted); font-style: italic; margin: 10px 0; }
+  .rte-editor ul, .rte-editor ol { padding-left: 22px; }
+</style>
+</head>
+<body>
+
+<div id="gateView" class="gate">
+  <h2 style="font-family:var(--font-display);">Admin Access</h2>
+  <p class="small-muted">Input passphrase:</p>
+  <input type="password" id="gatePass" placeholder="Passphrase">
+  <button class="btn" onclick="tryEnter()">Enter Admin</button>
+</div>
+
+<div id="adminView" style="display:none;">
+  <div class="utility-bar">
+    <div class="wrap">
+      <span><span class="brand-tag">wikiElections</span> · Admin Panel</span>
+      <span><a href="../index.html">← Back to site</a></span>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="wrap">
+      <a class="site-logo" href="../index.html">
+        <img class="mark" src="../assets/img/brand/wikielections-mark.png" alt="wikiElections">
+        <div class="name">wikiElections<small>Admin</small></div>
+      </a>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding-bottom:60px;">
+    <div class="banner-note">
+      <strong>How this works on GitHub Pages:</strong> there's no server, so everything you
+      change here saves to <em>your browser's local storage</em> and updates the live pages
+      immediately for you. To make a change visible to everyone, use <strong>Export updated
+      JSON</strong> below and commit the downloaded file over
+      <code>data/tsrelects-results.json</code>.
+    </div>
+
+    <div id="statusMsg" class="status-msg ok"></div>
+
+    <h2 class="section-title">Site Mode</h2>
+    <div class="calc-panel">
+      <div class="field-grid">
+        <div class="field-row">
+          <label>Mode</label>
+          <select id="siteMode">
+            <option value="off-cycle">Off-cycle</option>
+            <option value="active">Active election</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row"><label>Banner headline (active mode)</label><input id="bannerHeadline"></div>
+      <div class="field-row"><label>Banner subtext (active mode)</label><input id="bannerSubtext"></div>
+      <button class="btn" onclick="saveSiteMode()">Save site mode</button>
+      <button class="btn secondary" onclick="downloadSiteConfig()">Export site-config.json</button>
+    </div>
+
+    <h2 class="section-title">TSR Elects — Manage Results</h2>
+    <div class="calc-panel">
+      <div class="field-grid">
+        <div class="field-row">
+          <label>Election</label>
+          <select id="electionSelect" onchange="onElectionChange()"></select>
+        </div>
+        <div class="field-row" id="roundFieldWrap" style="display:none">
+          <label>Round</label>
+          <select id="roundSelect" onchange="onRoundChange()"></select>
+        </div>
+        <div class="field-row">
+          <label>Race</label>
+          <select id="raceSelect" onchange="loadRaceEditors()"></select>
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div class="field-row"><label>Turnout (%)</label><input id="fldTurnout" type="number"></div>
+        <div class="field-row"><label>Precincts reporting</label><input id="fldReporting" type="number"></div>
+        <div class="field-row"><label>Precincts total</label><input id="fldTotal" type="number"></div>
+      </div>
+      <button class="btn" onclick="saveRoundStats()">Save round stats</button>
+
+      <h3 style="margin-top:22px;">Call this race</h3>
+      <div class="field-grid">
+        <div class="field-row">
+          <label>Status</label>
+          <select id="callStatus">
+            <option value="">Not called</option>
+            <option value="winner">Winner — called outright</option>
+            <option value="runoff">Runoff — leader advances</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label>Winner(s) / leader(s)</label>
+          <select id="callWinner" multiple size="4"></select>
+          <p class="desc" style="margin:4px 0 0;">Cmd/Ctrl-click (or shift-click) to select more than one — a runoff call can advance more than one candidate.</p>
+        </div>
+      </div>
+      <button class="btn danger" onclick="saveRaceCall()">Save call</button>
+
+      <h3 style="margin-top:22px;">Group vote counts</h3>
+      <p class="desc">Edit vote totals for each group in this race. Feeds the map and NBC chart on TSR Elects.</p>
+      <div id="groupEditors"></div>
+      <button class="btn" onclick="saveGroupVotes()">Save group votes</button>
+      <button class="btn secondary" onclick="downloadResults()">Export tsrelects-results.json</button>
+    </div>
+
+    <h2 class="section-title">Spinner Insights Polling — Add a Poll</h2>
+    <div class="calc-panel">
+      <p class="desc">Feeds the ProbCalc/BaseCalc forecast on <code>polls.html</code> for
+        whichever election you pick below. Separate from the official TSR Elects count above.</p>
+      <div class="field-grid">
+        <div class="field-row">
+          <label>Election</label>
+          <select id="pollElectionSelect" onchange="onPollElectionChange()"></select>
+        </div>
+        <div class="field-row"><label>Pollster</label><input id="pollPollster" placeholder="Spinner Insights"></div>
+        <div class="field-row"><label>Date</label><input id="pollDate" type="date"></div>
+        <div class="field-row"><label>Sample size</label><input id="pollSample" type="number" value="100"></div>
+        <div class="field-row"><label>Weight</label><input id="pollWeight" type="number" step="0.1" value="1"></div>
+      </div>
+      <div class="gtitle" style="font-weight:700; font-size:12px; margin:10px 0 6px;">Candidate shares (0–1, leave 0 to omit a candidate not in this poll)</div>
+      <div id="pollShareInputs"></div>
+      <button class="btn" onclick="addPoll()">Add poll</button>
+      <button class="btn secondary" onclick="downloadPolls()">Export polls/&lt;id&gt;.json</button>
+    </div>
+
+    <h2 class="section-title">Articles</h2>
+    <div class="calc-panel">
+      <p class="desc">Write and publish articles with a full rich-text editor. Saved locally like
+        everything else here — use <strong>Export articles.json</strong> and commit it over
+        <code>data/articles.json</code> to make it visible to everyone. Unpublished drafts save
+        fine but won't show up on <code>articles.html</code> until you flip them to Published.</p>
+      <div class="field-grid">
+        <div class="field-row">
+          <label>Article</label>
+          <select id="articleSelect" onchange="onArticleSelectChange()"></select>
+        </div>
+      </div>
+      <button class="btn secondary" onclick="newArticle()">+ New article</button>
+
+      <div class="field-grid" style="margin-top:16px;">
+        <div class="field-row"><label>Title</label><input id="artTitle" placeholder="How BaseCalc actually weighs a poll"></div>
+        <div class="field-row"><label>Author</label><input id="artAuthor" placeholder="PickleArtGeek"></div>
+        <div class="field-row"><label>Date</label><input id="artDate" type="date"></div>
+        <div class="field-row"><label>Thumbnail color</label><input id="artColor" type="color" value="#111214"></div>
+        <div class="field-row">
+          <label>Published</label>
+          <select id="artPublished"><option value="true">Published</option><option value="false">Draft</option></select>
+        </div>
+      </div>
+      <div class="field-row"><label>Byline / dek</label><input id="artByline" placeholder="One-line summary shown on the article card"></div>
+
+      <div class="field-row">
+        <label>Body</label>
+        <div class="rte-toolbar">
+          <button type="button" onclick="rteCmd('bold')"><b>B</b></button>
+          <button type="button" onclick="rteCmd('italic')"><i>I</i></button>
+          <button type="button" onclick="rteCmd('underline')"><u>U</u></button>
+          <button type="button" onclick="rteBlock('H2')">H2</button>
+          <button type="button" onclick="rteBlock('H3')">H3</button>
+          <button type="button" onclick="rteBlock('BLOCKQUOTE')">" Quote</button>
+          <button type="button" onclick="rteBlock('P')">¶ Paragraph</button>
+          <button type="button" onclick="rteCmd('insertUnorderedList')">• List</button>
+          <button type="button" onclick="rteCmd('insertOrderedList')">1. List</button>
+          <button type="button" onclick="rteLink()">🔗 Link</button>
+          <button type="button" onclick="rteCmd('removeFormat')">Clear formatting</button>
+        </div>
+        <div id="rteEditor" class="rte-editor" contenteditable="true"></div>
+      </div>
+
+      <button class="btn" onclick="saveArticle()">Save article</button>
+      <button class="btn danger" onclick="deleteArticle()">Delete article</button>
+      <button class="btn secondary" onclick="downloadArticles()">Export articles.json</button>
+    </div>
+
+    <h2 class="section-title">Moderator &amp; Track-Record Approval — Add a Poll</h2>
+    <div class="calc-panel">
+      <p class="desc">Feeds the donuts on the homepage's off-cycle hub and the full trend on
+        <code>approval.html</code>. Covers both moderator job-approval and the generic
+        Community Track Record questions — same engine either way.</p>
+      <div class="field-grid">
+        <div class="field-row">
+          <label>Category</label>
+          <select id="apprKind" onchange="onApprKindChange()">
+            <option value="moderators">Moderator</option>
+            <option value="questions">Community Question</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label>Moderator / Question</label>
+          <select id="apprKey" onchange="onApprKeyChange()"></select>
+        </div>
+        <div class="field-row" id="apprStatusRow">
+          <label>Status</label>
+          <select id="apprStatus">
+            <option value="current">Current</option>
+            <option value="former">Former</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn secondary" onclick="saveApprovalStatus()">Save status</button>
+
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field-row"><label>Pollster</label><input id="apprPollster" value="CENSUS"></div>
+        <div class="field-row"><label>Date</label><input id="apprDate" type="date"></div>
+        <div class="field-row"><label>Sample size</label><input id="apprSample" type="number" value="15"></div>
+        <div class="field-row"><label>Weight</label><input id="apprWeight" type="number" step="0.1" value="1"></div>
+      </div>
+      <div class="field-grid">
+        <div class="field-row"><label id="apprYesLabelText">Approve share (0–1)</label><input id="apprYes" type="number" step="0.01" min="0" max="1" value="0"></div>
+        <div class="field-row"><label id="apprNoLabelText">Disapprove share (0–1)</label><input id="apprNo" type="number" step="0.01" min="0" max="1" value="0"></div>
+      </div>
+      <button class="btn" onclick="addApprovalPoll()">Add poll</button>
+      <button class="btn secondary" onclick="downloadApprovalData()">Export approval-polls.json</button>
+    </div>
+
+    <h2 class="section-title">Party Support Polling — Add a Poll</h2>
+    <div class="calc-panel">
+      <p class="desc">Generic-ballot / party-ID polling, feeds the "Party Support" donut on the
+        homepage's off-cycle hub and the full breakdown on <code>party-support.html</code>.</p>
+      <div class="field-grid">
+        <div class="field-row"><label>Pollster</label><input id="partyPollster" value="CENSUS"></div>
+        <div class="field-row"><label>Date</label><input id="partyDate" type="date"></div>
+        <div class="field-row"><label>Sample size</label><input id="partySample" type="number" value="50"></div>
+        <div class="field-row"><label>Weight</label><input id="partyWeight" type="number" step="0.1" value="1"></div>
+      </div>
+      <div class="gtitle" style="font-weight:700; font-size:12px; margin:10px 0 6px;">Party shares (0–1, leave 0 to omit a party not covered by this poll)</div>
+      <div id="partyShareInputs"></div>
+      <button class="btn" onclick="addPartyPoll()">Add poll</button>
+      <button class="btn secondary" onclick="downloadPartyPolls()">Export party-polls.json</button>
+    </div>
+
+    <h2 class="section-title">Danger Zone</h2>
+    <div class="calc-panel">
+      <p class="desc">Clears every local override (site mode, results edits, calls, added polls) from this browser. Does not touch the committed JSON files.</p>
+      <button class="btn danger" onclick="resetOverrides()">Clear all local overrides</button>
+    </div>
+  </main>
+</div>
+
+<script>window.SITE_BASE = '../';</script>
+<script src="../assets/js/overrides.js"></script>
+<script src="../assets/js/tsrelects.js"></script>
+
+<script>
+const ADMIN_PASS = 'ddtsr';
+
+function tryEnter() {
+  const val = document.getElementById('gatePass').value;
+  if (val === ADMIN_PASS) {
+    sessionStorage.setItem('wikiElections_admin_ok', '1');
+    showAdmin();
+  } else {
+    alert('Wrong passphrase.');
+  }
+}
+if (sessionStorage.getItem('wikiElections_admin_ok') === '1') showAdmin();
+
+function showAdmin() {
+  document.getElementById('gateView').style.display = 'none';
+  document.getElementById('adminView').style.display = 'block';
+  initAdmin();
+}
+
+function flashStatus(msg) {
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+function download(filename, obj) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+let registry = { candidates: {}, parties: {} };
+let electionsBase = [];
+let currentElection = null, currentRoundKey = null, currentRaceName = null;
+let pollsIndex = [];
+let pollsBaseCache = null;
+let pollElectionMeta = null;
+let articlesFileBase = { articles: [] };
+let currentArticleId = null;
+let approvalBase = { moderators: {}, questions: {} };
+let partyPollsBase = { polls: [] };
+
+async function initAdmin() {
+  const [cfgBase, regData, elBase, pIdx] = await Promise.all([
+    fetch('../data/site-config.json').then(r => r.json()),
+    fetch('../data/registries.json').then(r => r.json()),
+    fetch('../data/tsrelects-results.json').then(r => r.json()),
+    fetch('../data/polls-index.json').then(r => r.json())
+  ]);
+  registry = regData;
+  electionsBase = elBase;
+  pollsIndex = pIdx.elections;
+
+  const cfg = OVR_getSiteConfig(cfgBase);
+  document.getElementById('siteMode').value = cfg.mode;
+  document.getElementById('bannerHeadline').value = cfg.banner.headline;
+  document.getElementById('bannerSubtext').value = cfg.banner.subtext;
+
+  const sorted = [...electionsBase].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const sel = document.getElementById('electionSelect');
+  sel.innerHTML = sorted.map(e => `<option value="${e.id}">${e.title} — ${e.date}</option>`).join('');
+  onElectionChange();
+
+  const pollSel = document.getElementById('pollElectionSelect');
+  pollSel.innerHTML = pollsIndex.map(e => `<option value="${e.id}">${e.title}</option>`).join('');
+  await onPollElectionChange();
+
+  await initArticles();
+  await initApproval();
+  await initPartyPolls();
+}
+
+async function onPollElectionChange() {
+  const id = document.getElementById('pollElectionSelect').value;
+  pollElectionMeta = await fetch(`../data/elections/${id}.json`).then(r => r.json());
+  pollsBaseCache = await fetch(`../data/polls/${id}.json`).then(r => r.json());
+  document.getElementById('pollShareInputs').innerHTML = pollElectionMeta.candidateIds.map(cid => `
+    <div class="cand-input-row">
+      <div class="swatch" style="background:${TSR_candidateColor(registry, cid)}"></div>
+      <label>${TSR_candidateName(registry, cid)}</label>
+      <input type="number" step="0.01" min="0" max="1" id="share_${cid}" value="0">
+    </div>`).join('');
+}
+
+function saveSiteMode() {
+  OVR_setSiteConfig({
+    mode: document.getElementById('siteMode').value,
+    banner: {
+      headline: document.getElementById('bannerHeadline').value,
+      subtext: document.getElementById('bannerSubtext').value
+    }
+  });
+  flashStatus('Site mode saved locally.');
+}
+
+function downloadSiteConfig() {
+  fetch('../data/site-config.json').then(r => r.json()).then(base => {
+    download('site-config.json', OVR_getSiteConfig(base));
+  });
+}
+
+function getMergedElections() {
+  return OVR_getTsrElections(electionsBase);
+}
+
+function onElectionChange() {
+  const id = document.getElementById('electionSelect').value;
+  currentElection = getMergedElections().find(e => e.id === id);
+  const roundWrap = document.getElementById('roundFieldWrap');
+  const roundSel = document.getElementById('roundSelect');
+  if (currentElection.runoff_round) {
+    roundWrap.style.display = 'block';
+    roundSel.innerHTML = `<option value="first_round">First Round</option><option value="runoff_round">Runoff Round</option>`;
+    roundSel.value = TSR_defaultRoundKey(currentElection);
+  } else {
+    roundWrap.style.display = 'none';
+  }
+  currentRoundKey = currentElection.runoff_round ? roundSel.value : 'first_round';
+  populateRaceSelect();
+}
+
+function onRoundChange() {
+  currentRoundKey = document.getElementById('roundSelect').value;
+  populateRaceSelect();
+}
+
+function populateRaceSelect() {
+  const roundData = TSR_getRoundData(currentElection, currentRoundKey);
+  const races = TSR_getRaces(roundData);
+  const raceSel = document.getElementById('raceSelect');
+  raceSel.innerHTML = Object.keys(races).map(rn => `<option value="${rn}">${rn}</option>`).join('');
+  loadRaceEditors();
+}
+
+function loadRaceEditors() {
+  currentRaceName = document.getElementById('raceSelect').value;
+  const roundData = TSR_getRoundData(currentElection, currentRoundKey);
+  const raceData = TSR_getRaces(roundData)[currentRaceName] || {};
+
+  document.getElementById('fldTurnout').value = roundData?.turnout ?? currentElection.turnout ?? '';
+  document.getElementById('fldReporting').value = roundData?.precincts_reporting ?? currentElection.precincts_reporting ?? '';
+  document.getElementById('fldTotal').value = roundData?.precincts_total ?? currentElection.precincts_total ?? '';
+
+  const call = TSR_getRaceCall(roundData, currentRaceName);
+  document.getElementById('callStatus').value = call?.status || '';
+
+  const candKeys = [...new Set(Object.values(raceData).flatMap(g => Object.keys(g)))];
+  const winnerSel = document.getElementById('callWinner');
+  const existingWinners = TSR_callWinners(call);
+  winnerSel.innerHTML = candKeys.map(k =>
+    `<option value="${k}"${existingWinners.includes(k) ? ' selected' : ''}>${TSR_candidateName(registry, k)}</option>`).join('');
+
+  const groupWrap = document.getElementById('groupEditors');
+  groupWrap.innerHTML = Object.keys(raceData).sort().map(g => {
+    const data = raceData[g] || {};
+    const inputs = candKeys.map(k => `
+      <div class="cand-input-row">
+        <div class="swatch" style="background:${TSR_candidateColor(registry, k)}"></div>
+        <label>${TSR_candidateName(registry, k)}</label>
+        <input type="number" min="0" id="grp_${g}_${k}" value="${data[k] || 0}">
+      </div>`).join('');
+    return `<div class="group-editor"><div class="gtitle">Group ${g}</div>${inputs}</div>`;
+  }).join('');
+}
+
+function saveRoundStats() {
+  OVR_setTsrRoundStats(currentElection.id, currentRoundKey, {
+    turnout: Number(document.getElementById('fldTurnout').value) || undefined,
+    precincts_reporting: Number(document.getElementById('fldReporting').value) || undefined,
+    precincts_total: Number(document.getElementById('fldTotal').value) || undefined
+  });
+  flashStatus('Round stats saved locally.');
+}
+
+function saveRaceCall() {
+  const status = document.getElementById('callStatus').value;
+  if (!status) {
+    // Note: OVR_deepMerge treats `null` as "keep base value" when the base
+    // field is itself an object/array (it recurses and returns the old
+    // value unchanged) -- an empty array is what actually overwrites a
+    // previously-saved winners list, whereas `winners: null` here would not.
+    OVR_setTsrRaceCall(currentElection.id, currentRoundKey, currentRaceName, { status: null, winner: null, winners: [] });
+  } else {
+    const winners = Array.from(document.getElementById('callWinner').selectedOptions).map(o => o.value);
+    // Explicitly null out the old singular `winner` field too -- without
+    // this, a race called before the multi-winner update could end up with
+    // both a stale `winner` and a fresh `winners` sitting side by side.
+    OVR_setTsrRaceCall(currentElection.id, currentRoundKey, currentRaceName, { status, winner: null, winners });
+  }
+  flashStatus('Call saved locally. TSR Elects will show it on next load.');
+}
+
+function saveGroupVotes() {
+  const roundData = TSR_getRoundData(currentElection, currentRoundKey);
+  const raceData = TSR_getRaces(roundData)[currentRaceName] || {};
+  const candKeys = [...new Set(Object.values(raceData).flatMap(g => Object.keys(g)))];
+  Object.keys(raceData).forEach(g => {
+    const votes = {};
+    candKeys.forEach(k => { votes[k] = Number(document.getElementById(`grp_${g}_${k}`).value) || 0; });
+    OVR_setTsrGroupVotes(currentElection.id, currentRoundKey, currentRaceName, g, votes);
+  });
+  flashStatus('Group votes saved locally.');
+}
+
+function downloadResults() {
+  download('tsrelects-results.json', getMergedElections());
+}
+
+function addPoll() {
+  const electionId = document.getElementById('pollElectionSelect').value;
+  const shares = {};
+  pollElectionMeta.candidateIds.forEach(cid => {
+    const v = Number(document.getElementById(`share_${cid}`).value) || 0;
+    if (v > 0) shares[cid] = v;
+  });
+  const poll = {
+    id: 'p_' + Date.now(),
+    pollster: document.getElementById('pollPollster').value || 'Unnamed Pollster',
+    date: document.getElementById('pollDate').value || new Date().toISOString().slice(0, 10),
+    sample: Number(document.getElementById('pollSample').value) || 50,
+    weight: Number(document.getElementById('pollWeight').value) || 1,
+    shares
+  };
+  OVR_addPoll(electionId, poll);
+  flashStatus('Poll added locally. Reflects on polls.html next load.');
+}
+
+function downloadPolls() {
+  const electionId = document.getElementById('pollElectionSelect').value;
+  download(`${electionId}.json`, OVR_getPolls(pollsBaseCache, electionId));
+}
+
+/* ---------- Articles (rich-text editor) ---------- */
+
+async function initArticles() {
+  articlesFileBase = await fetch('../data/articles.json').then(r => r.json());
+  refreshArticleSelect();
+}
+
+function getMergedArticles() {
+  return OVR_getArticles(articlesFileBase.articles || []);
+}
+
+function refreshArticleSelect(selectId) {
+  const merged = getMergedArticles();
+  const sel = document.getElementById('articleSelect');
+  sel.innerHTML = '<option value="">— New article —</option>' +
+    merged.map(a => `<option value="${a.id}">${a.title || 'Untitled'}${a.published ? '' : ' (draft)'}</option>`).join('');
+  sel.value = selectId || '';
+  if (selectId) onArticleSelectChange(); else newArticle();
+}
+
+function onArticleSelectChange() {
+  const id = document.getElementById('articleSelect').value;
+  if (!id) { newArticle(); return; }
+  const a = getMergedArticles().find(x => x.id === id);
+  if (!a) return;
+  currentArticleId = a.id;
+  document.getElementById('artTitle').value = a.title || '';
+  document.getElementById('artAuthor').value = a.author || '';
+  document.getElementById('artDate').value = a.date || '';
+  document.getElementById('artColor').value = a.thumbColor || '#111214';
+  document.getElementById('artByline').value = a.byline || '';
+  document.getElementById('artPublished').value = a.published ? 'true' : 'false';
+  document.getElementById('rteEditor').innerHTML = a.bodyHtml || '';
+}
+
+function newArticle() {
+  currentArticleId = null;
+  document.getElementById('articleSelect').value = '';
+  document.getElementById('artTitle').value = '';
+  document.getElementById('artAuthor').value = '';
+  document.getElementById('artDate').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('artColor').value = '#111214';
+  document.getElementById('artByline').value = '';
+  document.getElementById('artPublished').value = 'true';
+  document.getElementById('rteEditor').innerHTML = '';
+}
+
+function slugify(s) {
+  return (s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'article';
+}
+
+function rteCmd(cmd) {
+  document.getElementById('rteEditor').focus();
+  document.execCommand(cmd, false, null);
+}
+function rteBlock(tag) {
+  document.getElementById('rteEditor').focus();
+  document.execCommand('formatBlock', false, tag);
+}
+function rteLink() {
+  const url = prompt('Link URL (include https://):');
+  if (!url) return;
+  document.getElementById('rteEditor').focus();
+  document.execCommand('createLink', false, url);
+}
+
+function saveArticle() {
+  const title = document.getElementById('artTitle').value.trim();
+  if (!title) { alert('Give the article a title first.'); return; }
+  let id = currentArticleId;
+  if (!id) {
+    const base = slugify(title);
+    const existing = new Set(getMergedArticles().map(a => a.id));
+    id = base;
+    let n = 2;
+    while (existing.has(id)) { id = `${base}-${n++}`; }
+  }
+  const articleObj = {
+    id,
+    title,
+    author: document.getElementById('artAuthor').value.trim(),
+    date: document.getElementById('artDate').value,
+    thumbColor: document.getElementById('artColor').value,
+    byline: document.getElementById('artByline').value.trim(),
+    bodyHtml: document.getElementById('rteEditor').innerHTML,
+    published: document.getElementById('artPublished').value === 'true'
+  };
+  OVR_setArticle(id, articleObj);
+  currentArticleId = id;
+  refreshArticleSelect(id);
+  flashStatus('Article saved locally.');
+}
+
+function deleteArticle() {
+  if (!currentArticleId) { newArticle(); return; }
+  if (!confirm('Delete this article? This only removes it locally until you export + commit.')) return;
+  OVR_deleteArticle(currentArticleId);
+  refreshArticleSelect();
+  flashStatus('Article deleted locally.');
+}
+
+function downloadArticles() {
+  download('articles.json', {
+    _comment: articlesFileBase._comment,
+    articles: getMergedArticles()
+  });
+}
+
+/* ---------- Moderator / track-record approval polling ---------- */
+
+async function initApproval() {
+  approvalBase = await fetch('../data/approval-polls.json').then(r => r.json());
+  onApprKindChange();
+}
+
+function getMergedApproval() {
+  return OVR_getApprovalData(approvalBase);
+}
+
+function onApprKindChange() {
+  const kind = document.getElementById('apprKind').value;
+  const merged = getMergedApproval();
+  const keys = Object.keys(merged[kind] || {});
+  const sel = document.getElementById('apprKey');
+  sel.innerHTML = keys.map(k => `<option value="${k}">${merged[kind][k].role || merged[kind][k].name}</option>`).join('');
+  document.getElementById('apprYesLabelText').textContent = kind === 'questions' ? 'Yes share (0–1)' : 'Approve share (0–1)';
+  document.getElementById('apprNoLabelText').textContent = kind === 'questions' ? 'No share (0–1)' : 'Disapprove share (0–1)';
+  document.getElementById('apprStatusRow').style.display = kind === 'moderators' ? '' : 'none';
+  onApprKeyChange();
+}
+
+function onApprKeyChange() {
+  const kind = document.getElementById('apprKind').value;
+  const key = document.getElementById('apprKey').value;
+  const merged = getMergedApproval();
+  const entry = merged[kind] && merged[kind][key];
+  if (entry && kind === 'moderators') document.getElementById('apprStatus').value = entry.status || 'current';
+}
+
+function saveApprovalStatus() {
+  const kind = document.getElementById('apprKind').value;
+  const key = document.getElementById('apprKey').value;
+  if (kind !== 'moderators') { alert('Status only applies to moderators.'); return; }
+  if (!key) { alert('Pick a moderator first.'); return; }
+  OVR_setApprovalStatus(kind, key, document.getElementById('apprStatus').value);
+  flashStatus('Status saved locally.');
+}
+
+function addApprovalPoll() {
+  const kind = document.getElementById('apprKind').value;
+  const key = document.getElementById('apprKey').value;
+  if (!key) { alert('Pick a moderator or question first.'); return; }
+  const date = document.getElementById('apprDate').value;
+  if (!date) { alert('Pick a date.'); return; }
+  const poll = {
+    pollster: document.getElementById('apprPollster').value || 'CENSUS',
+    date,
+    sample: Number(document.getElementById('apprSample').value) || 0,
+    weight: Number(document.getElementById('apprWeight').value) || 1,
+    shares: {
+      approve: Number(document.getElementById('apprYes').value) || 0,
+      disapprove: Number(document.getElementById('apprNo').value) || 0
+    }
+  };
+  OVR_addApprovalPoll(kind, key, poll);
+  flashStatus('Poll added locally.');
+}
+
+function downloadApprovalData() {
+  download('approval-polls.json', Object.assign({ _comment: approvalBase._comment }, getMergedApproval()));
+}
+
+/* ---------- Party support / membership polling ---------- */
+
+async function initPartyPolls() {
+  partyPollsBase = await fetch('../data/party-polls.json').then(r => r.json());
+  document.getElementById('partyShareInputs').innerHTML = Object.keys(registry.parties || {}).map(pid => `
+    <div class="cand-input-row">
+      <div class="swatch" style="background:${registry.parties[pid].color}"></div>
+      <label>${registry.parties[pid].shortName || registry.parties[pid].name}</label>
+      <input type="number" step="0.01" min="0" max="1" id="pshare_${pid}" value="0">
+    </div>`).join('');
+}
+
+function addPartyPoll() {
+  const date = document.getElementById('partyDate').value;
+  if (!date) { alert('Pick a date.'); return; }
+  const shares = {};
+  Object.keys(registry.parties || {}).forEach(pid => {
+    const v = Number(document.getElementById(`pshare_${pid}`).value) || 0;
+    if (v > 0) shares[pid] = v;
+  });
+  const poll = {
+    pollster: document.getElementById('partyPollster').value || 'CENSUS',
+    date,
+    sample: Number(document.getElementById('partySample').value) || 0,
+    weight: Number(document.getElementById('partyWeight').value) || 1,
+    shares
+  };
+  OVR_addPartyPoll(poll);
+  flashStatus('Party poll added locally.');
+}
+
+function downloadPartyPolls() {
+  download('party-polls.json', Object.assign({ _comment: partyPollsBase._comment }, OVR_getPartyPolls(partyPollsBase)));
+}
+
+function resetOverrides() {
+  if (confirm('Clear all local admin overrides on this browser?')) {
+    OVR_clearAll();
+    flashStatus('Overrides cleared.');
+    location.reload();
+  }
+}
+</script>
+</body>
+</html>

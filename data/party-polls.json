@@ -1,5 +1,4 @@
 {
-  "_comment": "Party support / membership tracking -- 'if a generic-ballot vote were held today, which party would you back' style polling, pooled across all parties the same way a real generic-ballot poll pools candidates. Same shape as everything else on the site ({pollster,date,sample,weight,shares:{partyId: 0-1}}), fed through the same BaseCalc/ProbCalc engine and rendered on party-support.html. Party ids/names/colors come from data/registries.json's `parties` object; historical party names that later merged or were reclassified are preserved where necessary. Straight Frogs is mapped to UDC for polls after 2025-12-27.",
   "polls": [
     {
       "pollster": "CENSUS",
@@ -122,6 +121,101 @@
         "iltsr": 0.0811,
         "udc": 0.0811,
         "csuf": 0.027
+      }
+    },
+
+    {
+      "pollster": "ELECTION",
+      "date": "2026-07-31",
+      "sample": 21,
+      "weight": 0.5,
+      "shares": {
+        "ua": 0.5238,
+        "udc": 0.3333,
+        "tsp": 0.1429
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2026-04-11",
+      "sample": 21,
+      "weight": 0.5,
+      "shares": {
+        "udc": 0.5238,
+        "tsp": 0.4762
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2026-04-01",
+      "sample": 17,
+      "weight": 0.5,
+      "shares": {
+        "ua": 0.5294,
+        "tsp": 0.3529,
+        "udc": 0.1176
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2026-04-11",
+      "sample": 21,
+      "weight": 0.5,
+      "shares": {
+        "ua": 0.6667,
+        "tsp": 0.3333
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2025-10-02",
+      "sample": 33,
+      "weight": 0.5,
+      "shares": {
+        "csuf": 0.4545,
+        "ua": 0.4545,
+        "tsp": 0.0909
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2025-10-02",
+      "sample": 35,
+      "weight": 0.5,
+      "shares": {
+        "iltsr": 0.5429,
+        "tsp": 0.2286,
+        "ua": 0.2286
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2025-08-03",
+      "sample": 36,
+      "weight": 0.5,
+      "shares": {
+        "ua": 0.7778,
+        "tsp": 0.2222
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2025-08-03",
+      "sample": 38,
+      "weight": 0.5,
+      "shares": {
+        "ua": 0.5526,
+        "tsp": 0.4474
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2025-06-26",
+      "sample": 29,
+      "weight": 0.5,
+      "shares": {
+        "fumo": 0.3793,
+        "ua": 0.6207
       }
     }
   ]

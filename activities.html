@@ -153,11 +153,6 @@ const team = [
   { name: "CentennialElections", role: "Historical Correspondent", color: "#a1742e", photo: null },
   { name: "practicalpurpose", role: "Legal", color: "#c7b800", photo: null }
 ];
-// `photo` supports png/jpg/webp/svg, same as candidate photos -- drop a real
-// profile picture path in (e.g. "assets/img/team/pickleartgeek.jpg") and it
-// renders in full color (no white-filter here; this is a normal avatar
-// context, not an RCP bar). Leave null and it falls back to the colored
-// initials avatar below.
 const grid = document.getElementById('teamGrid');
 team.forEach(m => {
   const initials = m.name.replace(/[^A-Za-z]/g, '').slice(0,2).toUpperCase();
@@ -174,8 +169,7 @@ team.forEach(m => {
       </div>
     </div>`;
 });
-
-/* ---------- BaseCalc & ProbCalc (all-pollster composite) ---------- */
+  
 let calcRegistry = { candidates: {}, parties: {} };
 let calcPollsIndex = [];
 let calcResultsData = [];
@@ -216,12 +210,9 @@ async function calcLoad(electionId) {
   const allCandidateIds = election.candidateIds;
   const electionDate = election.electionDate;
   const writeInIds = election.writeInIds || [];
-  // Poll sample size is now weighted by how closely it matches this race's
-  // anticipated turnout, not by whichever poll simply sampled the most
-  // people -- see BaseCalc_turnoutWeight in basecalc.js.
+ 
   const calcOpts = { anticipatedTurnout: election.anticipatedTurnout };
-  // Write-in discount feeds current standings/chart/ProbCalc, but NOT the raw
-  // per-poll table rows -- those stay a faithful record of what was reported.
+
   const discountedPolls = BaseCalc_applyWriteInDiscount(pollsFile.polls, writeInIds, 0.55);
   const currentIds = BaseCalc_currentCandidates(discountedPolls, allCandidateIds);
 
@@ -234,17 +225,7 @@ async function calcLoad(electionId) {
 function calcName(id) { return TSR_candidateName(calcRegistry, id); }
 function calcColor(id) { return TSR_candidateColor(calcRegistry, id); }
 
-/**
- * Find a real logged result for a poll-tracked election. Results and
- * polls-index use different id/slug conventions and even different result
- * titles ("Class 1 Election" vs poll-side "Class 1 September 2025
- * Election"), so titles alone aren't reliable -- instead this matches on
- * the class number pulled out of the title plus the election date, which
- * is the one thing both sides record consistently. A generous title match
- * would incorrectly attach one seat's result to a *different* election for
- * the same seat (e.g. Class 4 has both a March and an April election), so
- * this only counts a match when the dates line up.
- */
+
 function calcFindResult(electionTitle, electionDate) {
   const classMatch = (electionTitle || '').match(/Class\s*(\d+)/i);
   if (!classMatch) return null;
@@ -346,12 +327,7 @@ function calcRenderBars(polls, currentIds, electionDate, calcOpts = {}) {
 }
 
 function calcRenderChart(polls, currentIds, electionDate, calcOpts = {}) {
-  // Day-by-day weighted average, same approach as the approval page: every
-  // day gets fresh BaseCalc_aggregate treating that day as "election day",
-  // so a poll's own 1/days-till decay does the fading -- no fixed rolling
-  // window, and once a candidate drops out of the current field their line
-  // simply isn't drawn (currentIds already excludes them; see
-  // BaseCalc_currentCandidates in basecalc.js).
+
   const points = BaseCalc_weightedTimeline(polls, currentIds, electionDate, calcOpts);
   RCPChart_render(document.getElementById('calcChart'), points, currentIds, calcRegistry);
 }

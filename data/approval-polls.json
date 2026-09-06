@@ -123,6 +123,86 @@
             "approve": 0.6875,
             "disapprove": 0.0938
           }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-08-14",
+          "sample": 39,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5897,
+            "disapprove": 0.1538
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-07-16",
+          "sample": 38,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6842,
+            "disapprove": 0.1053
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-06-10",
+          "sample": 43,
+          "weight": 1,
+          "shares": {
+            "approve": 0.7674,
+            "disapprove": 0.0698
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-05-04",
+          "sample": 33,
+          "weight": 1,
+          "shares": {
+            "approve": 0.8484,
+            "disapprove": 0.0303
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-03-28",
+          "sample": 34,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6764,
+            "disapprove": 0.2058
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-03-04",
+          "sample": 32,
+          "weight": 1,
+          "shares": {
+            "approve": 0.625,
+            "disapprove": 0.1875
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-02-04",
+          "sample": 37,
+          "weight": 1,
+          "shares": {
+            "approve": 0.7027,
+            "disapprove": 0.1622
+          }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2025-01-04",
+          "sample": 35,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5714,
+            "disapprove": 0.1429
+          }
         }
       ]
     },

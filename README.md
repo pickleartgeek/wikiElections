@@ -5,8 +5,8 @@ A static, GitHub-Pages-ready site that merges the **wikiElections** front end
 version of the **TSRElects** live-results app. 
 
 # Roadmap
-* Working on an original article (Needed data analysis about 95% done, actually writing it is what remains)
-* Moving previous DDTSR analysis articles to the site
-* Extending approval polling for Impressive_Plant, wiptes167 and teammomofan.
+* Working on an original article (Needed data analysis about 95% done, actually writing it is what remains) - DONE
+* Moving previous DDTSR analysis articles to the site - DONE
+* Extending approval polling for Impressive_Plant, wiptes167 and teammomofan. - Impressive-Plant DONE
 * Building in historical moderator approval data.
-* Periodically fetching BallotTSR results on select polls for up to date election results on TSRElects
+* Periodically fetching BallotTSR results on select polls for up to date election results on TSRElects 

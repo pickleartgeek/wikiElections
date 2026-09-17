@@ -2,6 +2,11 @@
   "_comment": "Every polling dataset available on polls.html, most recent first.",
   "elections": [
     {
+      "id": "class7-26",
+      "title": "Class 7 September 2026 Election",
+      "order": "2026-09-21"
+    },
+    {
       "id": "class6",
       "title": "Class 6 July 2026 Election",
       "order": "2026-07-25"

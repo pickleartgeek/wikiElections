@@ -1,0 +1,18 @@
+{
+  "electionId": "class7-26",
+  "polls": [
+    {
+      "id": "c7s-1",
+      "pollster": "Representative-Fee65",
+      "date": "2025-09-15",
+      "sample": 13,
+      "weight": 1,
+      "shares": {
+        "tmf": 0.4615,
+        "nb1234": 0.3077,
+        "dvwb": 0.0769,
+        "xdizy": 0.1538
+      }
+    }
+  ]
+ }

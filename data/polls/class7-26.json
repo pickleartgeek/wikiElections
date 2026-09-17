@@ -2,6 +2,17 @@
   "electionId": "class7-26",
   "polls": [
     {
+      "id": "c7s-2",
+      "pollster": "Spinner Insights",
+      "date": "2026-09-17",
+      "sample": 11,
+      "weight": 1,
+      "shares": {
+        "tmf1": 0.5455,
+        "nzb": 0.3636,
+        "dvwb": 0.0909
+      },
+    {
       "id": "c7s-1",
       "pollster": "Representative-Fee65",
       "date": "2026-09-15",

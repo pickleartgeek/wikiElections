@@ -5,12 +5,12 @@
       "id": "c7s-2",
       "pollster": "Spinner Insights",
       "date": "2026-09-17",
-      "sample": 15,
+      "sample": 16,
       "weight": 1,
       "shares": {
-        "tmf1": 0.4667,
-        "nzb": 0.3333,
-        "dvwb": 0.200
+        "tmf1": 0.5000,
+        "nzb": 0.3125,
+        "dvwb": 0.1875
       }
     },
     {

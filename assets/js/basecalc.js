@@ -281,7 +281,14 @@ function BaseCalc_weightedTimeline(polls, candidateIds, asOfDate, opts = {}) {
 
   const firstDay = new Date(sortedPolls[0].date).getTime();
   const refDay = new Date(asOfDate).getTime();
-  const lastDay = isFinite(refDay) ? Math.max(refDay, firstDay) : firstDay;
+  // Cap at "today" the same way BaseCalc_rollingAverage does: asOfDate here
+  // is often the race's actual (future) electionDate for an ongoing race,
+  // and without this cap the timeline plots the whole line out to election
+  // day on day one and then never changes -- the loop bound is a pure
+  // function of the poll set + electionDate, neither of which move day to
+  // day, so the chart looked frozen instead of growing as today advances.
+  const cappedRefDay = isFinite(refDay) ? Math.min(refDay, Date.now()) : firstDay;
+  const lastDay = Math.max(cappedRefDay, firstDay);
 
   const points = [];
   for (let t = firstDay; t <= lastDay; t += dayMs) {
@@ -305,3 +312,4 @@ if (typeof window !== 'undefined') {
   window.BaseCalc_currentCandidates = BaseCalc_currentCandidates;
   window.BaseCalc_applyWriteInDiscount = BaseCalc_applyWriteInDiscount;
 }
+

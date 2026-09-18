@@ -200,6 +200,11 @@ async function calcBoot() {
   }
 }
 
+function todayUTCString() {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString().slice(0, 10);
+}
+
 async function calcLoad(electionId) {
   let [election, pollsFile] = await Promise.all([
     fetch(`data/elections/${electionId}.json`).then(r => r.json()),
@@ -214,12 +219,22 @@ async function calcLoad(electionId) {
  
   const calcOpts = { anticipatedTurnout: election.anticipatedTurnout };
 
+  // Same idea as approval.html/party-support.html: the "current" average is
+  // as-of today, not as-of the (often still-future) election date. For a
+  // race that's already happened, electionDate is the earlier of the two,
+  // so this still lands on electionDate there -- only ongoing races get
+  // capped at today.
+  const today = todayUTCString();
+  const asOfDate = electionDate && electionDate < today ? electionDate : today;
+
   const discountedPolls = BaseCalc_applyWriteInDiscount(pollsFile.polls, writeInIds, 0.55);
   const currentIds = BaseCalc_currentCandidates(discountedPolls, allCandidateIds);
 
-  calcRenderTable(pollsFile.polls, allCandidateIds, currentIds, writeInIds, electionDate, calcOpts, election.title);
-  calcRenderBars(discountedPolls, currentIds, electionDate, calcOpts);
-  calcRenderChart(discountedPolls, currentIds, electionDate, calcOpts);
+  calcRenderTable(pollsFile.polls, allCandidateIds, currentIds, writeInIds, electionDate, asOfDate, calcOpts, election.title);
+  calcRenderBars(discountedPolls, currentIds, asOfDate, calcOpts);
+  calcRenderChart(discountedPolls, currentIds, asOfDate, calcOpts);
+  // ProbCalc genuinely simulates forward to the real election day, so it
+  // keeps the uncapped electionDate rather than asOfDate.
   calcRenderProbCalc(discountedPolls, currentIds, electionDate, calcOpts);
 }
 
@@ -245,9 +260,9 @@ function calcFindResult(electionTitle, electionDate) {
   return { totals, isFirstRoundOnly: !!match.runoff_round };
 }
 
-function calcRenderTable(polls, allIds, currentIds, writeInIds, electionDate, calcOpts = {}, electionTitle = '') {
+function calcRenderTable(polls, allIds, currentIds, writeInIds, electionDate, asOfDate, calcOpts = {}, electionTitle = '') {
   const avgPolls = BaseCalc_applyWriteInDiscount(polls, writeInIds || [], 0.55);
-  const agg = BaseCalc_aggregate(avgPolls, currentIds, electionDate, calcOpts);
+  const agg = BaseCalc_aggregate(avgPolls, currentIds, asOfDate, calcOpts);
   const sortedPolls = [...polls].sort((a, b) => new Date(b.date) - new Date(a.date));
 
   let html = `<thead><tr><th>Pollster</th><th>Date</th><th>Sample</th>`;
@@ -294,8 +309,8 @@ function calcRenderTable(polls, allIds, currentIds, writeInIds, electionDate, ca
   document.getElementById('calcPollTable').innerHTML = html;
 }
 
-function calcRenderBars(polls, currentIds, electionDate, calcOpts = {}) {
-  const agg = BaseCalc_aggregate(polls, currentIds, electionDate, calcOpts);
+function calcRenderBars(polls, currentIds, asOfDate, calcOpts = {}) {
+  const agg = BaseCalc_aggregate(polls, currentIds, asOfDate, calcOpts);
   const maxPct = agg.sorted.length ? agg.sorted[0][1] : 0;
   const leaderId = agg.sorted[0] ? agg.sorted[0][0] : null;
   const margin = agg.sorted.length > 1 ? (agg.sorted[0][1] - agg.sorted[1][1]) * 100 : 0;
@@ -327,9 +342,9 @@ function calcRenderBars(polls, currentIds, electionDate, calcOpts = {}) {
   if (typeof PhotoFilter_applyAll === 'function') PhotoFilter_applyAll('#calcBars .white-filter-img');
 }
 
-function calcRenderChart(polls, currentIds, electionDate, calcOpts = {}) {
+function calcRenderChart(polls, currentIds, asOfDate, calcOpts = {}) {
 
-  const points = BaseCalc_weightedTimeline(polls, currentIds, electionDate, calcOpts);
+  const points = BaseCalc_weightedTimeline(polls, currentIds, asOfDate, calcOpts);
   RCPChart_render(document.getElementById('calcChart'), points, currentIds, calcRegistry);
 }
 

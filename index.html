@@ -138,7 +138,13 @@ async function renderActiveHub(hub, cfg, registry) {
     fetch(`data/polls/${cfg.activePollsId}.json`).then(r => r.json())
   ]);
   const currentIds = BaseCalc_currentCandidates(pollsFile.polls, election.candidateIds);
-  const agg = BaseCalc_aggregate(pollsFile.polls, currentIds, election.electionDate, { anticipatedTurnout: election.anticipatedTurnout });
+  // As-of today, not the (often still-future) election date -- see
+  // ddtsr.html's calcLoad for the same fix, so this donut matches the
+  // DDTSR page's bars/table/chart for the same race instead of drifting
+  // toward the more-decayed election-day projection.
+  const today = todayUTCString();
+  const asOfDate = election.electionDate && election.electionDate < today ? election.electionDate : today;
+  const agg = BaseCalc_aggregate(pollsFile.polls, currentIds, asOfDate, { anticipatedTurnout: election.anticipatedTurnout });
 
   hub.innerHTML = `
     <h2 class="section-title">On the Radar</h2>
@@ -264,7 +270,8 @@ async function renderOffCycleHub(hub, registry) {
     ]);
     if (!pollsFile.polls.length) continue;
     const currentIds = BaseCalc_currentCandidates(pollsFile.polls, election.candidateIds);
-    const agg = BaseCalc_aggregate(pollsFile.polls, currentIds, election.electionDate, { anticipatedTurnout: election.anticipatedTurnout });
+    const entryAsOfDate = election.electionDate && election.electionDate < asOf ? election.electionDate : asOf;
+    const agg = BaseCalc_aggregate(pollsFile.polls, currentIds, entryAsOfDate, { anticipatedTurnout: election.anticipatedTurnout });
     const card = document.createElement('div');
     scroll.appendChild(card);
     RCPDonut_fromAggregate(card, agg, registry, election.title, `activities.html?election=${entry.id}#probcalc`);

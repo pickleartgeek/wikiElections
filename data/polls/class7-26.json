@@ -5,24 +5,24 @@
       "id": "c7s-4",
       "pollster": "Representative-Fee65",
       "date": "2026-09-19",
-      "sample": 7,
+      "sample": 13,
       "weight": 1,
       "shares": {
-        "tmf1": 0.4286,
-        "nzb": 0.2857,
-        "dvwb": 0.2857
+        "tmf1": 0.2308,
+        "nzb": 0.4615,
+        "dvwb": 0.3077
       }
     },
     {
       "id": "c7s-3",
       "pollster": "Spinner Insights",
       "date": "2026-09-19",
-      "sample": 6,
+      "sample": 8,
       "weight": 1,
       "shares": {
-        "tmf1": 0.1667,
-        "nzb": 0.3333,
-        "dvwb": 0.5000
+        "tmf1": 0.2500,
+        "nzb": 0.3750,
+        "dvwb": 0.3750
       }
     },
     {

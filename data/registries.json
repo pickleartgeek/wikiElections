@@ -114,6 +114,12 @@
       "party": "ua",
       "photo": "photos/nb1234.png"
     },
+      "nzb1": {
+      "name": "Nazibol1234",
+      "color": "#c457c9",
+      "party": "tsp",
+      "photo": "photos/nb1234.png"
+    },
     "jc17": {
       "name": "JackColon17",
       "color": "#42e0ff",
@@ -131,6 +137,12 @@
       "color": "#991a5a",
       "party": "csuf",
       "photo": "photos/fw.png"
+    },
+     "tmf": {
+      "name": "teammomofan",
+      "color": "#7d1e4f",
+      "party": "udc",
+      "photo": "photos/tmf.png"
     },
     "tmf1": {
       "name": "teammomofan",

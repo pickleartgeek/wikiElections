@@ -4,7 +4,7 @@
     "title": "Class 7 September 2026 Election",
     "date": "2026-09-21",
     "party": "Regular",
-    "turnout": 0.4,
+    "turnout": 1,
     "precincts_reporting": 22,
     "precincts_total": 100,
     "first_round": {
@@ -57,14 +57,6 @@
           }
         }
       },
-      "race_calls": {
-        "Class 7 September 2026 First Round": {
-          "status": null
-          "winners": [
-           null
-          ]
-        }
-      }
     },
     "runoff_round": null
   },

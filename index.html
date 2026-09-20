@@ -112,7 +112,7 @@ async function renderHub() {
 function renderHubButtons(cfg) {
   const wrap = document.getElementById('hubButtons');
   const electsActive = cfg.mode === 'active';
-  const electsLink = electsActive ? cfg.liveBox.link : 'elects/index.html';
+  const electsLink = electsActive ? cfg.liveBox.link : '/elects/index.html';
   const electsSub = electsActive ? 'Live results, right now →' : 'Browse race history & results →';
   let html = `
       <a class="hub-btn elects" href="${electsLink}">

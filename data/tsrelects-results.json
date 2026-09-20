@@ -5,7 +5,7 @@
     "date": "2026-09-21",
     "party": "Regular",
     "turnout": 1,
-    "precincts_reporting": 22,
+    "precincts_reporting": 30,
     "precincts_total": 100,
     "first_round": {
       "races": {
@@ -16,7 +16,7 @@
             "nzb1": 0
           },
           "2": {
-            "tmf": 1,
+            "tmf": 2,
             "dvwb": 0,
             "nzb1": 0
           },

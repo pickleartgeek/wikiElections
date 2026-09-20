@@ -7,12 +7,12 @@
     "eyebrow": "BREAKING",
     "headline": "Class 7 Election in full swing, DDTSR launches aggregate",
     "subtext": "Nazibol1234 leads the DDTSR aggregate, voting is now underway.",
-    "link": "/ddtsr.html"
+    "link": "/elects/index.html"
   },
   "liveBox": {
     "label": "LIVE: Class 7 September 2026 Election",
     "text": "Watch the results come in real time and find out who's going to be TSR's next moderator",
-    "link": "/ddtsr.html"
+    "link": "elects/index.html"
   },
   "offCycle": {
     "headline": "No elections currently underway",

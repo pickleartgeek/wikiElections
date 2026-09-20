@@ -11,34 +11,34 @@
       "races": {
         "Class 7 September 2026 First Round": {
           "1": {
-            "tmf1": 0,
+            "tmf": 0,
             "dvwb": 0,
-            "nzb": 0
+            "nzb1": 0
           },
           "2": {
-            "tmf1": 1,
+            "tmf": 1,
             "dvwb": 0,
-            "nzb": 0
+            "nzb1": 0
           },
           "3": {
-            "tmf1": 0,
+            "tmf": 0,
             "dvwb": 0,
-            "nzb": 0
+            "nzb1": 0
           },
           "4": {
-            "tmf1": 0,
+            "tmf": 0,
             "dvwb": 0,
-            "nzb": 0
+            "nzb1": 0
           },
           "5": {
-            "tmf1": 0,
+            "tmf": 0,
             "dvwb": 1,
-            "nzb": 1
+            "nzb1": 1
           },
           "6": {
-            "tmf1": 0,
+            "tmf": 0,
             "dvwb": 0,
-            "nzb": 1
+            "nzb1": 1
           },
           "7": {
             "tmf1": 1,
@@ -46,14 +46,14 @@
             "nzb": 0
           },
           "8": {
-            "tmf1": 0,
+            "tmf": 0,
             "dvwb": 0,
-            "nzb": 0
+            "nzb1": 0
           },
           "9": {
-            "tmf1": 0,
+            "tmf": 0,
             "dvwb": 0,
-            "nzb": 0
+            "nzb1": 0
           }
         }
       }

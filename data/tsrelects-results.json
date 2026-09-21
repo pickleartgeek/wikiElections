@@ -4,7 +4,7 @@
     "title": "Class 7 September 2026 Election",
     "date": "2026-09-21",
     "party": "Regular",
-    "turnout": 1,
+    "turnout": 2,
     "precincts_reporting": 95,
     "precincts_total": 100,
     "first_round": {
@@ -13,7 +13,7 @@
           "1": {
             "tmf": 0,
             "dvwb": 0,
-            "nzb1": 1
+            "nzb1": 2
           },
           "2": {
             "tmf": 2,
@@ -43,7 +43,7 @@
           "7": {
             "tmf": 2,
             "dvwb": 0,
-            "nzb1": 0
+            "nzb1": 1
           },
           "8": {
             "tmf": 1,
@@ -53,7 +53,7 @@
           "9": {
             "tmf": 1,
             "dvwb": 0,
-            "nzb1": 1
+            "nzb1": 2
           }
         }
       },

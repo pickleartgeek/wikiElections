@@ -11,8 +11,8 @@
       "races": {
         "Class 7 September 2026 First Round": {
           "1": {
-            "tmf": 0,
-            "dvwb": 1,
+            "tmf": 1,
+            "dvwb": 0,
             "nzb1": 2
           },
           "2": {
@@ -71,8 +71,8 @@
       "races": {
         "Class 7 September 2026 Runoff": {
           "1": {
-            "tmf": 0,
-            "dvwb": 1,
+            "tmf": 1,
+            "dvwb": 0,
             "nzb1": 2
           },
           "2": {

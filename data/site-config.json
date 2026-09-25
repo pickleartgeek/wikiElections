@@ -1,6 +1,6 @@
 {
   "_comment": "Controls the wikiElections homepage. 'mode': 'active' shows the flashing red breaking-news banner, the LIVE results box, and an RCP-style poll-aggregate donut for activePollsId. 'mode': 'off-cycle' hides the banner and instead shows a scrollable carousel of RCP-style donuts (moderator approval if data/approval-polls.json has entries, otherwise recent-race snapshots). Admins can flip this from /admin/.",
-  "mode": "active",
+  "mode": "off-cycle",
   "activeElectionId": "Class 7 September 2026",
   "activePollsId": "class7-26",
   "banner": {

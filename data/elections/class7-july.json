@@ -9,11 +9,64 @@
     "mf",
     "rf"
   ],
-  "candidatesDir": "../candidates/registry/",
   "writeInIds": [
     "mf"
   ],
   "_writeInNote": "MaxFlares ran as a write-in for this race (source table literally tagged the column 'MaxFlares (write-in)'). Write-in support is well-documented in real-world polling to run hotter in a poll than at the ballot box -- respondents will happily tell a pollster they're writing someone in, then don't bother at the actual ballot. DDTSR's composite (activities.html) applies a discount to writeInIds before averaging; Spinner Insights' raw poll releases (polls.html) are left untouched since those are a historical record of what was actually reported.",
   "electionDate": "2025-08-03",
-  "anticipatedTurnout": 22
+  "anticipatedTurnout": 22,
+  "electionId": "class7-july",
+  "polls": [
+    {
+      "id": "c7j-3",
+      "pollster": "Representative-Fee65 (self-poll)",
+      "date": "2025-07-25",
+      "sample": 20,
+      "weight": 0.5,
+      "shares": {
+        "tmf1": 0.4737,
+        "pag": 0.1579,
+        "qtw1": 0.2105,
+        "rf": 0.1579
+      }
+    },
+    {
+      "id": "c7j-4",
+      "pollster": "GSX",
+      "date": "2025-07-25",
+      "sample": 22,
+      "weight": 0.8,
+      "shares": {
+        "tmf1": 0.5455,
+        "pag": 0.2727,
+        "qtw1": 0.1818
+      }
+    },
+    {
+      "id": "c7j-2",
+      "pollster": "EggPolls",
+      "date": "2025-07-27",
+      "sample": 23,
+      "weight": 1.0,
+      "shares": {
+        "tmf1": 0.4348,
+        "pag": 0.2609,
+        "qtw1": 0.1304,
+        "mf": 0.3043
+      }
+    },
+    {
+      "id": "c7j-1",
+      "pollster": "EggPolls",
+      "date": "2025-07-29",
+      "sample": 27,
+      "weight": 1.0,
+      "shares": {
+        "tmf1": 0.2963,
+        "pag": 0.2593,
+        "qtw1": 0.1852,
+        "mf": 0.2593
+      }
+    }
+  ]
 }

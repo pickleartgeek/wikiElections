@@ -8,11 +8,62 @@
     "dvwb",
     "xdizy"
   ],
-  "candidatesDir": "../candidates/registry/",
   "writeInIds": [
     null
   ],
   "_writeInNote": "MaxFlares ran as a write-in for this race (source table literally tagged the column 'MaxFlares (write-in)'). Write-in support is well-documented in real-world polling to run hotter in a poll than at the ballot box -- respondents will happily tell a pollster they're writing someone in, then don't bother at the actual ballot. DDTSR's composite (activities.html) applies a discount to writeInIds before averaging; Spinner Insights' raw poll releases (polls.html) are left untouched since those are a historical record of what was actually reported.",
   "electionDate": "2026-09-22",
-  "anticipatedTurnout": 22
+  "anticipatedTurnout": 22,
+  "electionId": "class7-26",
+  "polls": [
+    {
+      "id": "c7s-4",
+      "pollster": "Representative-Fee65",
+      "date": "2026-09-19",
+      "sample": 19,
+      "weight": 1,
+      "shares": {
+        "tmf": 0.2632,
+        "nzb1": 0.4737,
+        "dvwb": 0.2632
+      }
+    },
+    {
+      "id": "c7s-3",
+      "pollster": "Spinner Insights",
+      "date": "2026-09-19",
+      "sample": 11,
+      "weight": 1,
+      "shares": {
+        "tmf": 0.3636,
+        "nzb1": 0.2727,
+        "dvwb": 0.3636
+      }
+    },
+    {
+      "id": "c7s-2",
+      "pollster": "Spinner Insights",
+      "date": "2026-09-17",
+      "sample": 16,
+      "weight": 1,
+      "shares": {
+        "tmf": 0.5,
+        "nzb1": 0.3125,
+        "dvwb": 0.1875
+      }
+    },
+    {
+      "id": "c7s-1",
+      "pollster": "Representative-Fee65",
+      "date": "2026-09-15",
+      "sample": 13,
+      "weight": 1,
+      "shares": {
+        "tmf": 0.4615,
+        "nzb1": 0.3077,
+        "dvwb": 0.0769,
+        "xdizy": 0.1538
+      }
+    }
+  ]
 }

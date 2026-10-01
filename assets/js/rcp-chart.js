@@ -3,7 +3,7 @@
  * ---------
  * A small, dependency-free SVG line chart in the RealClearPolitics
  * house style: time-scaled x-axis, faint gridlines, smooth colored
- * lines per candidate (Catmull-Rom smoothed into cubic beziers, no dot
+ * lines per candidate (straight segments by default; opts.smooth>0 re-enables Catmull-Rom smoothing, no dot
  * markers cluttering up every single day now that the rolling average
  * emits one point per calendar day), a legend, a lead badge (yellow pill
  * + leader-colored value, same component as everywhere else on the
@@ -15,7 +15,8 @@
 let RCPChart_instanceCounter = 0;
 
 /** Catmull-Rom -> cubic Bezier smoothing so the line reads as one fluid curve instead of straight day-to-day segments. */
-function RCPChart_smoothPath(coords) {
+function RCPChart_smoothPath(coords, k = 0) {
+  if (k <= 0) return coords.map((c, i) => `${i ? 'L' : 'M'} ${c[0].toFixed(1)} ${c[1].toFixed(1)}`).join(' ');
   if (coords.length < 2) return coords.length ? `M ${coords[0][0].toFixed(1)} ${coords[0][1].toFixed(1)}` : '';
   if (coords.length === 2) {
     return `M ${coords[0][0].toFixed(1)} ${coords[0][1].toFixed(1)} L ${coords[1][0].toFixed(1)} ${coords[1][1].toFixed(1)}`;
@@ -26,10 +27,10 @@ function RCPChart_smoothPath(coords) {
     const p1 = coords[i];
     const p2 = coords[i + 1];
     const p3 = coords[i + 2] || p2;
-    const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
-    const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
-    const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
-    const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+    const cp1x = p1[0] + (p2[0] - p0[0]) / (6 / k);
+    const cp1y = p1[1] + (p2[1] - p0[1]) / (6 / k);
+    const cp2x = p2[0] - (p3[0] - p1[0]) / (6 / k);
+    const cp2y = p2[1] - (p3[1] - p1[1]) / (6 / k);
     d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)} ${cp2x.toFixed(1)} ${cp2y.toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
   }
   return d;
@@ -101,7 +102,7 @@ function RCPChart_render(container, points, candidateIds, registry, opts = {}) {
     const color = colorOf(id);
     seriesColors[id] = color;
     seriesCoordsByPointIdx[id] = coordsByIdx;
-    svg += `<path d="${RCPChart_smoothPath(coords)}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    svg += `<path d="${RCPChart_smoothPath(coords, opts.smooth || 0)}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
   });
 
   // One marker per series, repositioned by renderAtIndex() to sit at the

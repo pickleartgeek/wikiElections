@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision Desk TSR — Custom Election Simulator</title>
+<link rel="icon" type="image/png" href="../assets/img/brand/favicon-ddtsr.png">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/leaflet/leaflet.css">
+<style>
+  body { background: var(--paper); }
+  .picker-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 18px 0 6px;
+  }
+  .picker-row .field-row label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:4px; }
+  .picker-row select {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px; background:#fff;
+  }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .stat-box {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    padding: 12px 14px;
+  }
+  .stat-box .label { font-family: var(--font-elects-body); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .stat-box .value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 700; }
+
+  #raceTitle { font-family: var(--font-elects-display); letter-spacing: -0.01em; }
+
+  .call-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-family: var(--font-elects-body);
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .call-badge.winner { background: var(--green); color: #fff; }
+  .call-badge.runoff { background: #d98a1f; color: #fff; }
+  .call-badge.uncalled { background: var(--paper-dim); color: var(--muted); border: 1px solid var(--line); }
+
+  .nbc-chart { margin: 18px 0 8px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #fff; }
+
+  /* ---------- NBC-style projected-winner banner ---------- */
+  .projected-banner { display: none; }
+  .projected-banner.show { display: block; }
+  .projected-banner .flag {
+    background: #0d0d0f; color: #fff; border-bottom: 3px solid var(--brand);
+    font-family: var(--font-elects-body); font-weight: 800; font-size: 13px;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 10px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .projected-banner .flag::after { content: none; }
+  .projected-banner .flag-icon { height: 28px; width: 28px; display: block; border-radius: 6px; border: 2px solid #fff; margin: -3px 0; }
+  .projected-banner .call-line {
+    background: var(--paper-dim); display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+  }
+  .projected-banner .call-line .headline {
+    font-family: var(--font-elects-display); font-size: 17px; text-transform: uppercase; letter-spacing: -0.01em;
+  }
+  .projected-banner .call-line img { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--ink); flex-shrink: 0; margin-left: 12px; }
+
+  /* ---------- NBC-style candidate table ---------- */
+  .nbc-head {
+    display: flex; align-items: center; padding: 10px 16px;
+    font-family: var(--font-elects-body); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); border-bottom: 1px solid var(--line);
+  }
+  .nbc-head .h-cand { flex: 1; }
+  .nbc-head .h-votes { width: 110px; text-align: right; padding-right: 18px; }
+  .nbc-head .h-bar { flex: 2; }
+  .nbc-head .h-pct { width: 70px; text-align: right; }
+
+  .nbc-row { display: flex; align-items: center; border-bottom: 1px solid var(--line); padding: 10px 16px; gap: 14px; transition: background 0.15s ease; }
+  .nbc-row:last-child { border-bottom: none; }
+  .nbc-row.leading { color: #fff; }
+  .nbc-avatar { width: 40px; height: 40px; flex-shrink: 0; }
+  .nbc-avatar img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--ink); display: block; }
+  .nbc-row.leading .nbc-avatar img { border-color: #fff; }
+  .nbc-cand { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
+  .nbc-name { font-weight: 800; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nbc-party { font-weight: 400; opacity: 0.75; font-size: 11px; }
+  .nbc-check {
+    background: var(--yellow); color: var(--ink); border-radius: 3px;
+    font-size: 11px; font-weight: 900; padding: 1px 5px; flex-shrink: 0;
+  }
+  .nbc-votes { width: 110px; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 700; }
+  .nbc-bar-track { flex: 2; height: 14px; background: var(--paper-dim); border-radius: 2px; overflow: hidden; }
+  .nbc-row.leading .nbc-bar-track { background: rgba(255,255,255,0.25); }
+  .nbc-bar-fill { height: 100%; border-radius: 2px; }
+  .nbc-pct { width: 70px; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 16px; font-weight: 800; }
+
+  .race-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 4px; }
+  .race-tab-btn {
+    padding: 5px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+    border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); cursor: pointer;
+  }
+  .race-tab-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  .map-section { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin: 24px 0 40px; }
+  #map { height: 460px; border-radius: var(--radius); border: 1px solid var(--line); background: #eef4fb; }
+  #map .leaflet-container { background: #eef4fb; }
+  .map-legend {
+    background: #fff; border: 1px solid var(--line); border-radius: 4px;
+    padding: 8px 10px; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  }
+  .map-legend .leg-row { display: flex; align-items: center; gap: 7px; margin: 3px 0; font-weight: 700; }
+  .map-legend .leg-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+  .map-search {
+    width: 100%; margin-top: 10px; padding: 8px 10px; border: 1px solid var(--line);
+    border-radius: var(--radius); font-size: 12px; background: #fff;
+  }
+  .district-panel { border: 2px solid var(--ink); border-radius: var(--radius); background: #fff; padding: 0; font-size: 13px; overflow: hidden; }
+  .district-panel .dtitle {
+    font-family: var(--font-elects-display); font-size: 14px; text-transform: uppercase;
+    letter-spacing: 0.02em; background: var(--ink); color: #fff; padding: 10px 14px;
+  }
+  .district-panel .dsub { padding: 14px; }
+  .district-row {
+    display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+    border-bottom: 1px solid var(--line); transition: background 0.15s ease;
+  }
+  .district-row:last-of-type { border-bottom: none; }
+  .district-row.leader { background: var(--ink); color: #fff; }
+  .district-row .swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .district-row .n { flex: 1; font-weight: 800; font-size: 13px; }
+  .district-row .v {
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    font-size: 13px; font-weight: 700; white-space: nowrap;
+  }
+  .district-row .bar-track { flex-basis: 100%; order: 3; height: 8px; background: var(--paper-dim); border-radius: 2px; overflow: hidden; margin-top: 2px; }
+  .district-row.leader .bar-track { background: rgba(255,255,255,0.25); }
+  .district-row .bar-fill { height: 100%; border-radius: 2px; }
+  .district-total {
+    font-family: var(--font-elects-body); font-weight: 700; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted);
+    padding: 10px 14px; border-top: 2px solid var(--ink); background: var(--paper-dim);
+  }
+  @media (max-width: 760px) {
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .map-section { grid-template-columns: 1fr; }
+    .nbc-head .h-votes, .nbc-head .h-pct { display: none; }
+    .nbc-row { flex-wrap: wrap; padding: 10px 12px; }
+    .nbc-avatar { width: 32px; height: 32px; }
+    .nbc-cand { flex-basis: 100%; order: 1; }
+    .nbc-name { font-size: 13px; }
+    .nbc-votes { order: 3; width: auto; font-size: 12px; }
+    .nbc-bar-track { order: 2; flex-basis: 100%; margin: 6px 0; }
+    .nbc-pct { order: 3; width: auto; margin-left: auto; }
+  }
+
+  .sim-badge { background: var(--yellow); font-size: 12px; font-weight: 800; text-align: center; padding: 6px; letter-spacing: .04em; text-transform: uppercase; }
+  .sim-setup { border: 2px solid var(--ink); border-radius: var(--radius); background: #fff; padding: 16px 18px; margin: 18px 0 22px; }
+  .cand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; max-height: 340px; overflow: auto; margin: 10px 0 14px; padding: 2px; }
+  .sim-cand { display: flex; gap: 8px; align-items: center; border: 2px solid var(--line); border-radius: var(--radius); padding: 6px 8px; cursor: pointer; background: #fff; }
+  .sim-cand.on { border-color: var(--c); box-shadow: inset 0 0 0 1px var(--c); background: color-mix(in srgb, var(--c) 9%, #fff); }
+  .sim-cand img { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--ink); flex-shrink: 0; }
+  .sim-cand .n { font-weight: 800; font-size: 12px; line-height: 1.2; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .sim-cand small { display: block; font-weight: 600; color: var(--muted); font-size: 10px; }
+  .sim-cand select { font-size: 10px; margin-top: 2px; max-width: 120px; }
+  .sim-odds { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; margin: 12px 0; background: var(--paper); font-size: 12px; }
+  .sim-run, .sim-btn { background: var(--brand); color: #fff; border: 0; border-radius: var(--radius); font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 11px 20px; cursor: pointer; font-size: 13px; }
+  .sim-run:disabled { opacity: .4; cursor: not-allowed; }
+  .sim-btn.alt { background: var(--ink); } .sim-controls { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="../index.html">
+      <img class="mark" src="../assets/img/brand/wikielections-mark.png" alt="">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <nav class="main-nav-inline">
+      <a href="../index.html">Main Page</a>
+      <a href="../activities.html">Decision Desk TSR</a>
+      <a href="../polls.html">Spinner Insights Polls</a>
+      <a href="index.html">TSR Elects — Live</a>
+      <a href="../articles.html">Articles</a>
+    </nav>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+  <div class="wrap" id="lastUpdatedRow" style="padding-top:0;"><span class="last-updated-text" id="lastUpdatedText"></span></div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="text-align:center; padding-top:30px;">
+    <img src="../assets/img/brand/favicon-ddtsr.png" alt="Decision Desk TSR" style="height:110px; width:110px; margin:0 auto 10px; display:block; border-radius:18px;">
+    <div style="font-family:var(--font-elects-display); font-size:26px; letter-spacing:.02em; text-transform:uppercase; margin-bottom:10px;">Decision Desk TSR</div>
+    <div class="elects-kicker" style="margin-bottom:14px; background:var(--brand);">Custom Election Simulator</div>
+    <h1 id="raceTitle" style="font-size:30px;">Simulate your own election</h1>
+  </section>
+
+  <section class="sim-setup" id="setup">
+    <h3 style="margin:0 0 4px;font-family:var(--font-elects-display)">1 · Pick your candidates (2 or more)</h3>
+    <div class="small-muted">Strength comes from past TSR election results and party records.</div>
+    <input class="map-search" id="candSearch" type="text" placeholder="Search candidates…">
+    <div class="cand-grid" id="candGrid"></div>
+    <div class="picker-row">
+      <div class="field-row"><label>Turnout scenario</label><select id="scen"><option value="-1">Low</option><option value="0" selected>Typical (historical)</option><option value="1">High</option></select></div>
+      <div class="field-row"><label>Eligible voters (turnout base)</label><input id="elec" type="number" min="10" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:var(--radius)"></div>
+      <div class="field-row"><label>Playback</label><select id="speed"><option value="10">Fast</option><option value="25" selected>Normal</option><option value="50">Slow</option></select></div>
+    </div>
+    <div class="sim-odds" id="oddsBox"></div>
+    <button class="sim-run" id="runBtn" disabled>Run election night ▶</button>
+  </section>
+
+  <div id="night" style="display:none">
+    <div id="callBadgeSlot" style="text-align:center"></div>
+    <div class="race-tabs" id="raceTabs" style="justify-content:center"></div>
+    <div class="sim-controls" style="justify-content:center"><button class="sim-btn alt" id="skipBtn">Skip to results</button><button class="sim-btn alt" id="againBtn">Re-run same field</button><button class="sim-btn" id="editBtn">Change candidates</button></div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="label">Turnout</div><div class="value" id="statTurnout">—</div></div>
+      <div class="stat-box"><div class="label">% Reporting</div><div class="value" id="statReporting">—</div></div>
+      <div class="stat-box"><div class="label">Votes In</div><div class="value" id="statVotesIn">—</div></div>
+      <div class="stat-box"><div class="label">Est. Total Votes</div><div class="value" id="statVotesTotal">—</div></div>
+    </div>
+    <div class="projected-banner" id="projectedBanner"></div>
+    <div class="nbc-chart">
+      <div class="nbc-head"><div class="h-cand">Candidate</div><div class="h-votes">Votes</div><div class="h-bar"></div><div class="h-pct">Percentage</div></div>
+      <div id="nbcChart"></div>
+    </div>
+    <div class="map-section">
+      <div id="map"></div>
+      <div class="district-panel" id="districtPanel"></div>
+    </div>
+  </div>
+</main>
+<footer class="site-footer"><div class="wrap"><span>wikiElections — simulated elections use historical TSR election results</span><span><a href="index.html">Live results</a> <a href="../ddtsr.html">Decision Desk TSR</a></span></div></footer>
+<script>window.SITE_BASE = '../';</script>
+<script src="../assets/js/overrides.js"></script>
+<script src="../assets/js/tsrelects.js"></script>
+<script src="../assets/js/main.js"></script>
+<script src="../assets/leaflet/leaflet.js"></script>
+<script src="../assets/js/groupcalc.js"></script>
+<script src="../assets/js/electsim.js"></script>
+<script>
+initSiteChrome();
+const $ = id => document.getElementById(id);
+let registry, results, geo, Lr, latest = {}, canons = [], sel = new Map(), S = null, map = null, layer = null, timer = null, mapSel = null, oddsT = null;
+const photo = id => `../assets/img/candidates/${registry.candidates[id].photo}`;
+const pShort = p => ((registry.parties || {})[p] || {}).shortName || 'Ua.';
+const pct = (x, d = 1) => (x * 100).toFixed(d) + '%';
+const tpct = x => (x * 100).toFixed(x < .1 ? 1 : 0) + '%'; // turnout is ~2% of the full electorate
+
+(async function boot() {
+  [registry, results, geo] = await Promise.all(['../data/registries.json', '../data/tsrelects-results.json', '../data/groups.geojson'].map(u => fetch(u).then(r => r.json())));
+  Lr = ES_learn(results, registry, geo);
+  [...results].sort((a, b) => b.date.localeCompare(a.date)).forEach(e => Object.values(e).forEach(rd => rd && rd.races && Object.values(rd.races).forEach(r => Object.values(r).forEach(g => Object.keys(g).forEach(id => { if (registry.candidates[id] && !latest[ES_canon(id)]) latest[ES_canon(id)] = id; })))));
+  Object.keys(registry.candidates).forEach(id => { const c = ES_canon(id); if (c !== 'wi' && !canons.includes(c)) canons.push(c); });
+  canons.forEach(c => { if (!latest[c]) latest[c] = Object.keys(registry.candidates).filter(i => ES_canon(i) === c).pop(); });
+  canons.sort((a, b) => ES_score(Lr, b, registry.candidates[latest[b]].party).score - ES_score(Lr, a, registry.candidates[latest[a]].party).score);
+  $('elec').value = Lr.E;
+  (new URLSearchParams(location.search).get('c') || '').split(',').filter(Boolean).forEach(id => { const c = ES_canon(id); if (canons.includes(c)) sel.set(c, { id: registry.candidates[id] ? id : latest[c], party: registry.candidates[registry.candidates[id] ? id : latest[c]].party }); });
+  drawGrid(); odds();
+  ['candSearch'].forEach(i => $(i).oninput = drawGrid);
+  ['scen', 'elec'].forEach(i => $(i).onchange = odds);
+  $('runBtn').onclick = () => run(); $('againBtn').onclick = () => run(); $('skipBtn').onclick = skip;
+  $('editBtn').onclick = () => { clearInterval(timer); $('night').style.display = 'none'; $('setup').scrollIntoView({ behavior: 'smooth' }); };
+})();
+
+function drawGrid() {
+  const q = $('candSearch').value.toLowerCase();
+  $('candGrid').innerHTML = canons.filter(c => registry.candidates[latest[c]].name.toLowerCase().includes(q)).map(c => {
+    const id = latest[c], rc = registry.candidates[id], on = sel.get(c), sc = ES_score(Lr, c, on ? on.party : rc.party);
+    const parties = Object.keys(registry.parties);
+    return `<div class="sim-cand ${on ? 'on' : ''}" data-c="${c}" style="--c:${rc.color}"><img src="${photo(id)}" alt=""><div class="n">${rc.name}<small>${on ? '' : pShort(rc.party) + ' · '}rating ${Math.max(1, Math.min(99, Math.round(50 + sc.score * 30)))}</small>
+      ${on ? `<select data-p="${c}">${parties.map(p => `<option value="${p}" ${p === on.party ? 'selected' : ''}>${pShort(p)}</option>`).join('')}</select>` : ''}</div></div>`;
+  }).join('');
+  $('candGrid').querySelectorAll('.sim-cand').forEach(el => el.onclick = e => {
+    if (e.target.tagName === 'SELECT') return; const c = el.dataset.c;
+    if (sel.has(c)) sel.delete(c); else sel.set(c, { id: latest[c], party: registry.candidates[latest[c]].party });
+    drawGrid(); odds();
+  });
+  $('candGrid').querySelectorAll('select').forEach(s => s.onchange = () => { sel.get(s.dataset.p).party = s.value; odds(); });
+}
+const candList = () => [...sel].map(([canon, v]) => ({ id: v.id, canon, party: v.party }));
+const tParams = () => ES_turnoutParams(Lr, +$('scen').value, Math.max(10, +$('elec').value || Lr.E));
+function odds() {
+  $('runBtn').disabled = sel.size < 2; clearTimeout(oddsT);
+  if (sel.size < 2) { $('oddsBox').innerHTML = 'Select at least two candidates to see pre-election odds.'; return; }
+  oddsT = setTimeout(() => {
+    const cs = candList(), T = tParams(), o = ES_odds(Lr, cs, T, 1500), E = T.E;
+    $('oddsBox').innerHTML = `<b>Pre-election odds</b> · runoff likely ${pct(o.runoff, 0)} · expected turnout ${tpct(o.turnout.p50)} (~${Math.round(o.turnout.p50 * E)} votes; 80% range ${tpct(o.turnout.p10)}–${tpct(o.turnout.p90)})` +
+      [...cs].sort((a, b) => o.win[b.id] - o.win[a.id]).map(c => `<div class="district-row" style="padding:5px 0;border:0"><span class="swatch" style="background:${registry.candidates[c.id].color}"></span><span class="n">${registry.candidates[c.id].name} <span class="small-muted">${pShort(c.party)}</span></span><span class="v">${pct(o.win[c.id], 0)} win · ${pct(o.share[c.id], 0)} 1st-rd</span></div>`).join('');
+  }, 120);
+}
+
+function run() {
+  clearInterval(timer); const cs = candList(), T = tParams(), r = ES_rng((Math.random() * 4294967296) >>> 0);
+  const sim = ES_simulate(Lr, cs, T, r), gids = Lr.geoIds, mk = (key, name, votes, cids) => ({ key, name, votes, cids, tau: 0, done: false, st: Object.fromEntries(gids.map(g => [g, Math.random() * .55])), du: Object.fromEntries(gids.map(g => [g, .25 + Math.random() * .2])) });
+  const finalists = sim.runoff ? Object.keys(sim.runoff[gids[0]]) : null;
+  S = { sim, cs, T, view: 0, rounds: [mk('first', 'First Round', sim.first, cs.map(c => c.id))] };
+  if (sim.runoff) S.rounds.push(mk('runoff', 'Runoff', sim.runoff, finalists));
+  S.rounds[0].started = true; mapSel = null;
+  $('night').style.display = 'block'; $('raceTitle').textContent = 'Custom Election — Simulated'; $('night').scrollIntoView({ behavior: 'smooth' });
+  initMap(); timer = setInterval(tick, 100); paint();
+}
+function tick() {
+  const rd = S.rounds.find(x => x.started && !x.done); if (!rd) { clearInterval(timer); return; }
+  rd.tau += 0.1 / +$('speed').value;
+  if (rd.tau >= 1) { rd.tau = 1; rd.done = true; const nx = S.rounds[S.rounds.indexOf(rd) + 1]; if (nx) setTimeout(() => { nx.started = true; S.view = S.rounds.indexOf(nx); paint(); }, 2500); }
+  paint();
+}
+function skip() { S.rounds.forEach(r => { r.started = true; r.done = true; r.tau = 1; }); S.view = S.rounds.length - 1; clearInterval(timer); paint(); }
+
+function tally(rd) {
+  const gv = {}, tot = {}; let rep = 0, all = 0; rd.cids.forEach(id => tot[id] = 0);
+  Lr.geoIds.forEach(g => { const f = rd.done ? 1 : Math.floor(Math.min(1, Math.max(0, (rd.tau - rd.st[g]) / rd.du[g])) * 4) / 4; gv[g] = {}; let n = 0;
+    rd.cids.forEach(id => { const v = Math.floor(rd.votes[g][id] * f + 1e-9); gv[g][id] = v; tot[id] += v; n += rd.votes[g][id]; }); rep += f * n; all += n; });
+  return { gv, tot, rep: all ? rep / all : 1 };
+}
+function status(rd, t) {
+  const sorted = Object.entries(t.tot).sort((a, b) => b[1] - a[1]), T = sorted.reduce((a, x) => a + x[1], 0);
+  if (rd.done) return rd.key === 'first' && S.sim.runoff ? { s: 'runoff' } : { s: 'winner', w: S.sim.winner, outright: rd.key === 'first' };
+  if (t.rep < .6 || T < 8) return { s: 'uncalled' };
+  const lead = sorted[0][1] - sorted[1][1], rem = T / t.rep - T, z = lead / Math.sqrt(T), sh = sorted[0][1] / T, se = 1.96 * Math.sqrt(.25 / T);
+  if (rd.key === 'runoff') return (lead > rem || z > 2.5) ? { s: 'winner', w: sorted[0][0] } : { s: 'uncalled' };
+  if (t.rep >= .75 && sh - se > .5 && z > 2.5) return { s: 'winner', w: sorted[0][0], outright: true };
+  if (t.rep >= .75 && sh + se < .5) return { s: 'runoff' };
+  return { s: 'uncalled' };
+}
+function paint() {
+  const rd = S.rounds[S.view], t = tally(rd), st = status(rd, t), E = S.T.E, C = id => registry.candidates[id];
+  const T = Object.values(t.tot).reduce((a, b) => a + b, 0), est = t.rep ? Math.round(T / t.rep) : 0, party = id => pShort(S.cs.find(c => c.id === id).party);
+  $('raceTabs').innerHTML = S.rounds.map((r, i) => r.started ? `<button class="race-tab-btn ${i === S.view ? 'active' : ''}" data-i="${i}">${r.name}</button>` : '').join('');
+  $('raceTabs').querySelectorAll('button').forEach(b => b.onclick = () => { S.view = +b.dataset.i; paint(); });
+  const wName = st.w ? C(st.w).name : '', title = 'Custom Election';
+  $('callBadgeSlot').innerHTML = st.s === 'winner' ? `<span class="call-badge winner">✓ ${wName} — ${st.outright ? 'called outright' : 'wins runoff'}</span>` : st.s === 'runoff' ? `<span class="call-badge runoff">Heads to runoff${rd.done && S.sim.runoff ? ': ' + S.rounds[1].cids.map(i => C(i).name).join(' vs ') : ''}</span>` : '<span class="call-badge uncalled">Race not yet called</span>';
+  $('statTurnout').textContent = tpct(est / E); $('statReporting').textContent = pct(t.rep); $('statVotesIn').textContent = T; $('statVotesTotal').textContent = est;
+  const pb = $('projectedBanner');
+  if (st.s === 'winner') { pb.className = 'projected-banner show'; pb.innerHTML = `<div class="flag"><span>Projected Winner ✓</span><img class="flag-icon" src="../assets/img/brand/favicon-ddtsr.png" alt=""></div><div class="call-line"><div class="headline">${wName} wins ${title}</div><img src="${photo(st.w)}" alt=""></div>`; } else pb.className = 'projected-banner';
+  $('nbcChart').innerHTML = Object.entries(t.tot).sort((a, b) => b[1] - a[1]).map(([id, v]) => { const c = C(id), p = T ? v / T : 0, lead = st.w === id;
+    return `<div class="nbc-row ${lead ? 'leading' : ''}" style="${lead ? 'background:' + c.color : ''}"><div class="nbc-avatar"><img src="${photo(id)}" alt=""></div><div class="nbc-cand"><span class="nbc-name">${c.name}</span> <span class="nbc-party">(${party(id)})</span>${lead ? '<span class="nbc-check">✓</span>' : ''}</div>
+      <div class="nbc-votes">${v}</div><div class="nbc-bar-track"><div class="nbc-bar-fill" style="width:${p * 100}%;background:${lead ? '#fff' : c.color}"></div></div><div class="nbc-pct">${pct(p)}</div></div>`; }).join('');
+  if (layer) layer.eachLayer(l => l.setStyle({ fillColor: TSR_marginColor(registry, t.gv[l.feature.properties.id]), fillOpacity: .9, weight: String(mapSel) === String(l.feature.properties.id) ? 3 : 1.2, color: '#fff' }));
+  panel(t);
+}
+function panel(t) {
+  const rows = (o, hdr, sub) => `<div class="dtitle">${hdr}</div>` + Object.entries(o).sort((a, b) => b[1] - a[1]).map(([id, v], i) => { const T = Object.values(o).reduce((a, b) => a + b, 0);
+    return `<div class="district-row ${i === 0 && v > 0 ? 'leader' : ''}"><span class="swatch" style="background:${registry.candidates[id].color}"></span><span class="n">${registry.candidates[id].name}</span><span class="v">${v} · ${T ? pct(v / T, 0) : '—'}</span><div class="bar-track"><div class="bar-fill" style="width:${T ? v / T * 100 : 0}%;background:${registry.candidates[id].color}"></div></div></div>`; }).join('') + `<div class="district-total">${sub}</div>`;
+  $('districtPanel').innerHTML = mapSel ? rows(t.gv[mapSel], 'Group ' + mapSel, 'Click the map again to deselect') : rows(t.tot, 'Overview', 'Click a group for its local tally');
+}
+function initMap() {
+  if (map) map.remove(); map = L.map('map', { zoomControl: true, attributionControl: false, scrollWheelZoom: false });
+  layer = L.geoJSON(geo, { style: () => ({ fillColor: '#e5e4dc', fillOpacity: .9, color: '#fff', weight: 1.2 }), onEachFeature: (f, l) => l.on('click', () => { const g = f.properties.id; mapSel = String(mapSel) === String(g) ? null : g; paint(); }) }).addTo(map);
+  map.fitBounds(layer.getBounds(), { padding: [8, 8] });
+}
+</script>
+</body>
+</html>

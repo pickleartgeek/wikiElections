@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Decision Desk TSR — wikiElections</title>
 <link rel="icon" type="image/png" href="assets/img/brand/favicon-ddtsr.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&family=Archivo+Black&family=Public+Sans:wght@400;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/leaflet/leaflet.css">
 <style>
   .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 30px; }
   .team-card { display: flex; gap: 14px; align-items: center; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; background: #fff; }
@@ -103,6 +102,9 @@
     <div id="calcChart"></div>
   </div>
 
+  <div id="simBar" style="margin:0 0 12px"><a class="sim-link" id="simBtn" href="elects/simulate.html">▶ Simulate your own</a></div>
+  <section class="gf" id="gfSection" style="display:none"></section>
+
   <div class="calc-panel" id="calcProbCalcPanel">
     <h3>Running 20,000 simulations…</h3>
   </div>
@@ -139,7 +141,10 @@
 <script src="assets/js/main.js"></script>
 <script src="assets/js/tsrelects.js"></script>
 <script src="assets/js/basecalc.js"></script>
+<script src="assets/leaflet/leaflet.js"></script>
 <script src="assets/js/probcalc.js"></script>
+<script src="assets/js/groupcalc.js"></script>
+<script src="assets/js/groupforecast.js"></script>
 <script src="assets/js/rcp-chart.js"></script>
 <script src="assets/js/photo-filter.js"></script>
 <script>
@@ -174,13 +179,17 @@ team.forEach(m => {
 let calcRegistry = { candidates: {}, parties: {} };
 let calcPollsIndex = [];
 let calcResultsData = [];
+let calcGeo = null;
+const calcDemo = new URLSearchParams(location.search).get('demo') === 'groups';
 
 async function calcBoot() {
-  const [regData, idx, results] = await Promise.all([
+  const [regData, idx, results, geo] = await Promise.all([
     fetch('data/registries.json').then(r => r.json()),
     fetch('data/polls-index.json').then(r => r.json()),
-    fetch('data/tsrelects-results.json').then(r => r.json()).catch(() => [])
+    fetch('data/tsrelects-results.json').then(r => r.json()).catch(() => []),
+    fetch('data/groups.geojson').then(r => r.json())
   ]);
+  calcGeo = geo;
   calcRegistry = regData;
   calcPollsIndex = idx.elections;
   calcResultsData = results;
@@ -208,10 +217,15 @@ function todayUTCString() {
 async function calcLoad(electionId) {
   let [election, pollsFile] = await Promise.all([
     fetch(`data/elections/${electionId}.json`).then(r => r.json()),
-    fetch(`data/polls/${electionId}.json`).then(r => r.json())
+    fetch(`data/elections/${electionId}.json`).then(r => r.json())
   ]);
   election = OVR_getElection(election, electionId);
   pollsFile = OVR_getPolls(pollsFile, electionId);
+  let demoActive = false;
+  if (calcDemo && electionId === 'class7-26') {
+    pollsFile = { polls: (await fetch('data/demo-groups.json').then(r => r.json())).polls };
+    demoActive = true;
+  }
 
   const allCandidateIds = election.candidateIds;
   const electionDate = election.electionDate;
@@ -235,7 +249,20 @@ async function calcLoad(electionId) {
   calcRenderChart(discountedPolls, currentIds, asOfDate, calcOpts);
   // ProbCalc genuinely simulates forward to the real election day, so it
   // keeps the uncapped electionDate rather than asOfDate.
-  calcRenderProbCalc(discountedPolls, currentIds, electionDate, calcOpts);
+  const useGroups = GC_hasGroups(discountedPolls);
+  const simUrl = 'elects/simulate.html?c=' + currentIds.join(',');
+  document.getElementById('simBtn').href = simUrl;
+  document.getElementById('simBar').style.display = useGroups ? 'none' : 'block';
+  document.getElementById('gfSection').style.display = useGroups ? 'block' : 'none';
+  document.getElementById('calcProbCalcPanel').style.display = useGroups ? 'none' : 'block';
+  if (useGroups) {
+    GF_render(document.getElementById('gfSection'), {
+      polls: discountedPolls, ids: currentIds, electionDate, registry: calcRegistry, geojson: calcGeo,
+      opts: Object.assign({ writeInIds }, calcOpts), simUrl, nm: calcName, col: calcColor, demo: demoActive
+    });
+  } else {
+    calcRenderProbCalc(discountedPolls, currentIds, electionDate, calcOpts);
+  }
 }
 
 function calcName(id) { return TSR_candidateName(calcRegistry, id); }
@@ -329,7 +356,7 @@ function calcRenderBars(polls, currentIds, asOfDate, calcOpts = {}) {
     html += `
       <div class="rcp-bar-row">
         <div class="rcp-bar-fill" style="width:${widthPct}%; background:linear-gradient(120deg, ${color}, ${dark});">
-          <div class="rcp-bar-photo"><img class="white-filter-img" src="candidates/registry/${calcRegistry.candidates[id].photo}" alt="" data-tint="${color}"></div>
+          <div class="rcp-bar-photo"><img class="white-filter-img" src="assets/img/candidates/${calcRegistry.candidates[id].photo}" alt="" data-tint="${color}"></div>
         </div>
         <div class="rcp-bar-remainder"></div>
         <div class="rcp-bar-meta${metaOnFill ? ' on-fill' : ''}">
@@ -374,6 +401,17 @@ function calcRenderProbCalc(polls, currentIds, electionDate, calcOpts = {}) {
 }
 
 calcBoot();
+
+// Auto-update: re-check the election file every 60s (and at UTC midnight) and rebuild everything if it changed.
+let calcSig = null, calcDay = todayUTCString();
+setInterval(async () => {
+  const id = document.getElementById('calcElectionSelect').value;
+  try {
+    const t = await fetch(`data/elections/${id}.json`, { cache: 'no-store' }).then(r => r.text());
+    if (calcSig !== null && (t !== calcSig || calcDay !== todayUTCString())) { calcDay = todayUTCString(); calcLoad(id); }
+    calcSig = t;
+  } catch (e) {}
+}, 60000);
 </script>
 </body>
 </html>

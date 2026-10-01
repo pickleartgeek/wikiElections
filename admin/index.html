@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin — wikiElections</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/style.css">
 <style>
   .gate { max-width: 380px; margin: 80px auto; text-align: center; }
@@ -164,7 +162,7 @@
       <div class="gtitle" style="font-weight:700; font-size:12px; margin:10px 0 6px;">Candidate shares (0–1, leave 0 to omit a candidate not in this poll)</div>
       <div id="pollShareInputs"></div>
       <button class="btn" onclick="addPoll()">Add poll</button>
-      <button class="btn secondary" onclick="downloadPolls()">Export polls/&lt;id&gt;.json</button>
+      <button class="btn secondary" onclick="downloadPolls()">Export elections/&lt;id&gt;.json</button>
     </div>
 
     <h2 class="section-title">Articles</h2>
@@ -365,7 +363,7 @@ async function initAdmin() {
 async function onPollElectionChange() {
   const id = document.getElementById('pollElectionSelect').value;
   pollElectionMeta = await fetch(`../data/elections/${id}.json`).then(r => r.json());
-  pollsBaseCache = await fetch(`../data/polls/${id}.json`).then(r => r.json());
+  pollsBaseCache = await fetch(`../data/elections/${id}.json`).then(r => r.json());
   document.getElementById('pollShareInputs').innerHTML = pollElectionMeta.candidateIds.map(cid => `
     <div class="cand-input-row">
       <div class="swatch" style="background:${TSR_candidateColor(registry, cid)}"></div>
@@ -519,7 +517,7 @@ function addPoll() {
 
 function downloadPolls() {
   const electionId = document.getElementById('pollElectionSelect').value;
-  download(`${electionId}.json`, OVR_getPolls(pollsBaseCache, electionId));
+  download(`${electionId}.json`, Object.assign({}, pollsBaseCache, { polls: OVR_getPolls(pollsBaseCache, electionId).polls }));
 }
 
 /* ---------- Articles (rich-text editor) ---------- */

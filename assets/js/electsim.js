@@ -12,7 +12,7 @@ function ES_gamma(a, r) { if (a < 1) return ES_gamma(a + 1, r) * Math.pow(r() ||
 const ES_sig = x => 1 / (1 + Math.exp(-x));
 
 /** Learn strengths, group affinities and turnout from tsrelects-results.json. */
-function ES_learn(results, registry, geojson, today = new Date()) {
+function ES_learn(results, registry, geojson, today = new Date(), plain = []) {
   const R = registry.candidates, obsC = {}, obsP = {}, groupV = {}, rates = [], ratios = [], elects = [];
   const wOf = d => Math.pow(0.5, Math.max(0, (today - new Date(d)) / 2.6e9 / 6)); // half-life 6 months
   results.forEach(e => {
@@ -36,6 +36,17 @@ function ES_learn(results, registry, geojson, today = new Date()) {
     if (firstTotal) elects.push({ w, votes: firstTotal, turnout: e.turnout, date: e.date });
     const ro = e.runoff_round && Object.values(e.runoff_round.races || {})[0];
     if (ro && firstTotal) { const t = Object.values(ro).reduce((a, g) => a + Object.values(g).reduce((x, y) => x + y, 0), 0); if (t) ratios.push(t / firstTotal); }
+  });
+  // Older elections logged without groups: statewide totals only (no group lean, no turnout %).
+  plain.forEach(e => {
+    const w = wOf(e.date), tot = {}, pty = {};
+    e.first.forEach(x => { const k = ES_canon(x.c); tot[k] = (tot[k] || 0) + x.v; pty[k] = x.p || 'ua'; });
+    const T = Object.values(tot).reduce((a, b) => a + b, 0), n = Object.keys(tot).length;
+    if (T >= 6 && n >= 2) {
+      Object.keys(tot).forEach(k => { const x = Math.log((tot[k] / T + 0.02) * n); (obsC[k] = obsC[k] || []).push({ w, x, share: tot[k] / T }); (obsP[pty[k]] = obsP[pty[k]] || []).push({ w, x }); });
+      elects.push({ w, votes: T, date: e.date });
+      if (e.runoff) { const t = e.runoff.reduce((a, x) => a + x.v, 0); if (t) ratios.push(t / T); }
+    }
   });
   const wm = (a, f) => a.reduce((s, o) => s + o.w * f(o), 0) / a.reduce((s, o) => s + o.w, 0);
   const party = {}; Object.entries(obsP).forEach(([p, a]) => { party[p] = a.reduce((s, o) => s + o.w * o.x, 0) / (a.reduce((s, o) => s + o.w, 0) + 2); });

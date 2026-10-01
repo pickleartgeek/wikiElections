@@ -257,8 +257,9 @@ const pct = (x, d = 1) => (x * 100).toFixed(d) + '%';
 const tpct = x => (x * 100).toFixed(x < .1 ? 1 : 0) + '%'; // turnout is ~2% of the full electorate
 
 (async function boot() {
-  [registry, results, geo] = await Promise.all(['../data/registries.json', '../data/tsrelects-results.json', '../data/groups.geojson'].map(u => fetch(u).then(r => r.json())));
-  Lr = ES_learn(results, registry, geo);
+  let plain;
+  [registry, results, geo, plain] = await Promise.all(['../data/registries.json', '../data/tsrelects-results.json', '../data/groups.geojson', '../data/plain-results.json'].map(u => fetch(u).then(r => r.json())));
+  Lr = ES_learn(results, registry, geo, new Date(), plain.elections);
   [...results].sort((a, b) => b.date.localeCompare(a.date)).forEach(e => Object.values(e).forEach(rd => rd && rd.races && Object.values(rd.races).forEach(r => Object.values(r).forEach(g => Object.keys(g).forEach(id => { if (registry.candidates[id] && !latest[ES_canon(id)]) latest[ES_canon(id)] = id; })))));
   Object.keys(registry.candidates).forEach(id => { const c = ES_canon(id); if (c !== 'wi' && !canons.includes(c)) canons.push(c); });
   canons.forEach(c => { if (!latest[c]) latest[c] = Object.keys(registry.candidates).filter(i => ES_canon(i) === c).pop(); });
@@ -310,9 +311,9 @@ function run() {
   initMap(); timer = setInterval(tick, 100); paint();
 }
 function tick() {
-  const rd = S.rounds.find(x => x.started && !x.done); if (!rd) { clearInterval(timer); return; }
+  const rd = S.rounds.find(x => x.started && !x.done); if (!rd) { if (S.rounds.every(r => r.done)) clearInterval(timer); return; }
   rd.tau += 0.1 / +$('speed').value;
-  if (rd.tau >= 1) { rd.tau = 1; rd.done = true; const nx = S.rounds[S.rounds.indexOf(rd) + 1]; if (nx) setTimeout(() => { nx.started = true; S.view = S.rounds.indexOf(nx); paint(); }, 2500); }
+  if (rd.tau >= 1) { rd.tau = 1; rd.done = true; const nx = S.rounds[S.rounds.indexOf(rd) + 1], cur = S; if (nx) setTimeout(() => { if (S !== cur) return; nx.started = true; S.view = S.rounds.indexOf(nx); paint(); }, 2500); }
   paint();
 }
 function skip() { S.rounds.forEach(r => { r.started = true; r.done = true; r.tau = 1; }); S.view = S.rounds.length - 1; clearInterval(timer); paint(); }

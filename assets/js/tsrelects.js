@@ -117,3 +117,33 @@ function TSR_estimateVotes(roundData, election, votesInSoFar) {
   const estTotal = (reportingPct && reportingPct > 0) ? Math.round(votesInSoFar / (reportingPct / 100)) : votesInSoFar;
   return { reportingPct, estTotal };
 }
+
+/* ---------- Shift maps: change in vote share (percentage points) between two elections ---------- */
+// Candidates whose ids differ only by a trailing number (nzb / nzb1) are the same candidate.
+const TSR_canonId = id => String(id).toLowerCase().replace(/\d+$/, '');
+const TSR_fmtShift = d => d == null ? '—' : (d >= 0 ? '+' : '-') + Math.abs(d).toFixed(2);
+
+/** mode: 'candidate' | 'party'. newRace/oldRace: { groupId: { candidateId: votes } }.
+ *  Returns { buckets, rep, groups: {gid: {nn, on, d: {bucket: {n, o, d}}}}, state: {nn, on, d} } where n/o are share % and d = n - o. */
+function TSR_shift(registry, mode, newRace, oldRace) {
+  const key = id => mode === 'party' ? ((registry.candidates[id] || {}).party || 'ua') : TSR_canonId(id);
+  const agg = race => {
+    const g = {}, st = {}, rep = {}; let sn = 0;
+    Object.entries(race || {}).forEach(([gid, votes]) => {
+      const gg = g[gid] = { n: 0, v: {} };
+      Object.entries(votes).forEach(([id, v]) => { const k = key(id); gg.v[k] = (gg.v[k] || 0) + v; gg.n += v; st[k] = (st[k] || 0) + v; sn += v; rep[k] = rep[k] || id; });
+    });
+    return { g, st, sn, rep };
+  };
+  const N = agg(newRace), O = agg(oldRace), rep = Object.assign({}, O.rep, N.rep);
+  const buckets = [...new Set([...Object.keys(N.st), ...Object.keys(O.st)])].sort((a, b) => (N.st[b] || 0) - (N.st[a] || 0));
+  const cell = (nv, nn, ov, on) => { const n = nn ? nv / nn * 100 : null, o = on ? ov / on * 100 : null; return { n, o, d: n != null && o != null ? n - o : null }; };
+  const groups = {};
+  new Set([...Object.keys(N.g), ...Object.keys(O.g)]).forEach(gid => {
+    const a = N.g[gid] || { n: 0, v: {} }, b = O.g[gid] || { n: 0, v: {} }, d = {};
+    buckets.forEach(k => { d[k] = cell(a.v[k] || 0, a.n, b.v[k] || 0, b.n); });
+    groups[gid] = { nn: a.n, on: b.n, d };
+  });
+  const sd = {}; buckets.forEach(k => { sd[k] = cell(N.st[k] || 0, N.sn, O.st[k] || 0, O.sn); });
+  return { buckets, rep, groups, state: { nn: N.sn, on: O.sn, d: sd } };
+}

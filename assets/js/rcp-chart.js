@@ -3,7 +3,7 @@
  * ---------
  * A small, dependency-free SVG line chart in the RealClearPolitics
  * house style: time-scaled x-axis, faint gridlines, smooth colored
- * lines per candidate (straight segments by default; opts.smooth>0 re-enables Catmull-Rom smoothing, no dot
+ * lines per candidate (Catmull-Rom smoothed (opts.smooth: 1 = full, 0 = straight segments, 0.5 = in between), no dot
  * markers cluttering up every single day now that the rolling average
  * emits one point per calendar day), a legend, a lead badge (yellow pill
  * + leader-colored value, same component as everywhere else on the
@@ -102,7 +102,7 @@ function RCPChart_render(container, points, candidateIds, registry, opts = {}) {
     const color = colorOf(id);
     seriesColors[id] = color;
     seriesCoordsByPointIdx[id] = coordsByIdx;
-    svg += `<path d="${RCPChart_smoothPath(coords, opts.smooth || 0)}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    svg += `<path d="${RCPChart_smoothPath(coords, opts.smooth ?? 1)}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
   });
 
   // One marker per series, repositioned by renderAtIndex() to sit at the

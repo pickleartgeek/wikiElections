@@ -28,4 +28,8 @@ Add a `groups` object to any poll in `data/elections/<id>.json`. Groups may be o
 { "pollster": "Spinner Insights", "date": "2026-09-19", "sample": 11, "shares": {"tmf": 0.36, "nzb1": 0.27},
   "groups": { "1": {"sample": 3, "shares": {"tmf": 0.5, "nzb1": 0.5}}, "4": {"sample": 2, "shares": {"tmf": 1.0}} } }
 ```
-If any poll in an election has `groups`, DDTSR's ProbCalc section switches to the Group Forecast. Preview with fake data: `ddtsr.html?demo=groups`.
+If any poll in an election has `groups`, DDTSR's ProbCalc section switches to the Group Forecast. Preview with fake data: `ddtsr?demo=groups`.
+
+
+# Simulator accuracy (tools/backtest.js)
+`node tools/backtest.js [sims] ['{"scale":0.5,...}']` retrains the simulator on only the elections before each past election, simulates the real field, and compares it with what happened (leader, vote shares, turnout). Calibration knobs live in `ES_TUNE` (assets/js/electsim.js). First-round runs on 12 past races: Brier 0.72 vs 0.76 for "everyone equal", share error 9.8pp vs 9.9pp, 80% intervals cover ~66% of real shares. The ratings carry only a small real edge; races this small are mostly noise.

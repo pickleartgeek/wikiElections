@@ -58,3 +58,16 @@ function renderChrome(cfg, base) {
     }
   }
 }
+
+
+/* ---------- Dark mode toggle (theme is applied pre-paint by a tiny inline script in each <head>) ---------- */
+(function initTheme() {
+  function set(t) { document.documentElement.dataset.theme = t; try { localStorage.setItem('wE-theme', t); } catch (e) {} paint(); }
+  function paint() { const b = document.getElementById('themeToggle'); if (b) { const d = document.documentElement.dataset.theme === 'dark'; b.textContent = d ? '☀ Light' : '☾ Dark'; b.setAttribute('aria-pressed', d); } }
+  function mount() {
+    const wrap = document.querySelector('.masthead .wrap'); if (!wrap || document.getElementById('themeToggle')) return;
+    const b = document.createElement('button'); b.id = 'themeToggle'; b.className = 'theme-toggle'; b.type = 'button'; b.setAttribute('aria-label', 'Toggle dark mode');
+    b.onclick = () => set(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'); wrap.appendChild(b); paint();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
+})();

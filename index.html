@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>wikiElections — The place for all things TSR Elections</title>
@@ -11,16 +12,16 @@
 
 <header class="masthead">
   <div class="wrap">
-    <a class="site-logo" href="index.html">
+    <a class="site-logo" href="./">
       <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
       <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
     </a>
     <nav class="main-nav-inline">
-      <a href="index.html" class="current">Main Page</a>
-      <a href="activities.html">Decision Desk TSR</a>
-      <a href="polls.html">Spinner Insights Polls</a>
-      <a href="elects/index.html">TSR Elects — Live</a>
-      <a href="articles.html">Articles</a>
+      <a href="./" class="current">Main Page</a>
+      <a href="activities">Decision Desk TSR</a>
+      <a href="polls">Spinner Insights Polls</a>
+      <a href="elects/">TSR Elects — Live</a>
+      <a href="articles">Articles</a>
     </nav>
     <span class="mode-pill" id="modePill">…</span>
   </div>
@@ -61,7 +62,7 @@
         <div class="byline">The public archive of all things elections in TSR. Check it out and see if you can contribute anything!</div>
       </div>
     </a>
-    <a class="article-card" href="guide.html">
+    <a class="article-card" href="guide">
       <div class="thumb yellow">%</div>
       <div class="body">
         <div class="eyebrow">Guide</div>
@@ -76,7 +77,7 @@
   <div class="wrap">
     <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
     <span>
-      <a href="activities.html">About</a>
+      <a href="activities">About</a>
       <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
       <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
     </span>
@@ -110,7 +111,7 @@ async function renderHub() {
 function renderHubButtons(cfg) {
   const wrap = document.getElementById('hubButtons');
   const electsActive = cfg.mode === 'active';
-  const electsLink = electsActive ? cfg.liveBox.link : '/elects/index.html';
+  const electsLink = electsActive ? cfg.liveBox.link : 'elects/';
   const electsSub = electsActive ? 'Live results, right now →' : 'Browse race history & results →';
   let html = `
       <a class="hub-btn elects" href="${electsLink}">
@@ -118,11 +119,11 @@ function renderHubButtons(cfg) {
         <div class="hub-btn-sub">${electsSub}</div>
       </a>`;
   html += `
-      <a class="hub-btn ddtsr" href="activities.html">
+      <a class="hub-btn ddtsr" href="activities">
         <div class="hub-btn-title">Decision Desk TSR</div>
         <div class="hub-btn-sub">BaseCalc · ProbCalc · Race Calls</div>
       </a>
-      <a class="hub-btn spin" href="polls.html">
+      <a class="hub-btn spin" href="polls">
         <img class="hub-btn-logo" src="assets/img/brand/spinner-insights-icon.png" alt="">
         <div class="hub-btn-title">Spinner Insights</div>
         <div class="hub-btn-sub">Our Polling</div>
@@ -147,9 +148,9 @@ async function renderActiveHub(hub, cfg, registry) {
   hub.innerHTML = `
     <h2 class="section-title">On the Radar</h2>
     <p class="hub-note">Live composite polling average (all pollsters) for the current race.
-      Full breakdown on <a href="activities.html#probcalc">DDTSR's BaseCalc &amp; ProbCalc</a>.</p>
+      Full breakdown on <a href="activities#probcalc">DDTSR's BaseCalc &amp; ProbCalc</a>.</p>
     <div style="display:flex; justify-content:center;"><div id="hubDonut"></div></div>`;
-  RCPDonut_fromAggregate(document.getElementById('hubDonut'), agg, registry, election.title, `activities.html?election=${cfg.activePollsId}#probcalc`);
+  RCPDonut_fromAggregate(document.getElementById('hubDonut'), agg, registry, election.title, `activities?election=${cfg.activePollsId}#probcalc`);
 }
 
 function todayUTCString() {
@@ -177,7 +178,7 @@ function renderPartyDonut(container, registry, partyPollsFile, asOf) {
     return;
   }
   const agg = BaseCalc_aggregate(partyPollsFile.polls, partyIds, asOf, {});
-  RCPDonut_fromAggregate(container, agg, partyRegistry, 'Generic Ballot', 'party-support.html');
+  RCPDonut_fromAggregate(container, agg, partyRegistry, 'Generic Ballot', 'party-support');
 }
 
 async function renderOffCycleHub(hub, registry) {
@@ -200,7 +201,7 @@ async function renderOffCycleHub(hub, registry) {
       <p class="hub-note">Off-cycle sentiment questions, tracked the same way as moderator approval. Click any question for its full polling history.</p>
       <div class="hub-scroll" id="hubScrollQuestions"></div>
       <h2 class="section-title" style="margin-top:34px;">Party Support</h2>
-      <p class="hub-note">Generic-ballot party ID, pooled across every tracked party. See the full breakdown on <a href="party-support.html">Party Support</a>.</p>
+      <p class="hub-note">Generic-ballot party ID, pooled across every tracked party. See the full breakdown on <a href="party-support">Party Support</a>.</p>
       <div style="display:flex; justify-content:center;"><div id="hubPartyDonut"></div></div>`;
     renderPartyDonut(document.getElementById('hubPartyDonut'), registry, partyPollsFile, asOf);
     const scroll = document.getElementById('hubScroll');
@@ -219,7 +220,7 @@ async function renderOffCycleHub(hub, registry) {
         leadLabel: approve >= disapprove ? 'Approve' : 'Disapprove',
         leadValue: Math.abs(approve - disapprove) * 100,
         leadColor: approve >= disapprove ? '#111214' : '#cf1322',
-        href: `approval.html?mod=${encodeURIComponent(key)}`
+        href: `approval?mod=${encodeURIComponent(key)}`
       });
     });
 
@@ -229,7 +230,7 @@ async function renderOffCycleHub(hub, registry) {
       const card = document.createElement('div');
       qScroll.appendChild(card);
       if (!q.polls.length) {
-        card.innerHTML = `<a class="rcp-donut-card rcp-donut-link" href="approval.html?mod=${encodeURIComponent(key)}">
+        card.innerHTML = `<a class="rcp-donut-card rcp-donut-link" href="approval?mod=${encodeURIComponent(key)}">
           <div class="rcp-donut-title">${q.name}</div>
           <div class="small-muted" style="padding:30px 10px;">No polling logged yet.</div>
         </a>`;
@@ -246,7 +247,7 @@ async function renderOffCycleHub(hub, registry) {
         leadLabel: yes >= no ? (q.yesLabel || 'Yes') : (q.noLabel || 'No'),
         leadValue: Math.abs(yes - no) * 100,
         leadColor: yes >= no ? '#111214' : '#cf1322',
-        href: `approval.html?mod=${encodeURIComponent(key)}`
+        href: `approval?mod=${encodeURIComponent(key)}`
       });
     });
     return;
@@ -272,7 +273,7 @@ async function renderOffCycleHub(hub, registry) {
     const agg = BaseCalc_aggregate(pollsFile.polls, currentIds, entryAsOfDate, { anticipatedTurnout: election.anticipatedTurnout });
     const card = document.createElement('div');
     scroll.appendChild(card);
-    RCPDonut_fromAggregate(card, agg, registry, election.title, `activities.html?election=${entry.id}#probcalc`);
+    RCPDonut_fromAggregate(card, agg, registry, election.title, `activities?election=${entry.id}#probcalc`);
   }
 }
 

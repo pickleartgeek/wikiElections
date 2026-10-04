@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TSR Elects — Live Results</title>
@@ -17,7 +18,7 @@
   }
   .picker-row .field-row label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:4px; }
   .picker-row select {
-    width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px; background:#fff;
+    width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px; background: var(--surface);
   }
   .stats-row {
     display: grid;
@@ -28,7 +29,7 @@
   .stat-box {
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    background: #fff;
+    background: var(--surface);
     padding: 12px 14px;
   }
   .stat-box .label { font-family: var(--font-elects-body); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
@@ -50,7 +51,7 @@
   .call-badge.runoff { background: #d98a1f; color: #fff; }
   .call-badge.uncalled { background: var(--paper-dim); color: var(--muted); border: 1px solid var(--line); }
 
-  .nbc-chart { margin: 18px 0 8px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #fff; }
+  .nbc-chart { margin: 18px 0 8px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
 
   /* ---------- NBC-style projected-winner banner ---------- */
   .projected-banner { display: none; }
@@ -95,8 +96,7 @@
   .nbc-party { font-weight: 400; opacity: 0.75; font-size: 11px; }
   .nbc-check {
     background: var(--yellow); color: var(--ink); border-radius: 3px;
-    font-size: 11px; font-weight: 900; padding: 1px 5px; flex-shrink: 0;
-  }
+    font-size: 11px; font-weight: 900; padding: 1px 5px; flex-shrink: 0; color: var(--ink-fixed); }
   .nbc-votes { width: 110px; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 700; }
   .nbc-bar-track { flex: 2; height: 14px; background: var(--paper-dim); border-radius: 2px; overflow: hidden; }
   .nbc-row.leading .nbc-bar-track { background: rgba(255,255,255,0.25); }
@@ -106,27 +106,27 @@
   .race-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 4px; }
   .race-tab-btn {
     padding: 5px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
-    border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); cursor: pointer;
+    border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--muted); cursor: pointer;
   }
-  .race-tab-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .race-tab-btn.active { background: var(--bar); color: #fff; border-color: var(--ink); }
 
   .map-section { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin: 24px 0 40px; }
-  #map { height: 460px; border-radius: var(--radius); border: 1px solid var(--line); background: #eef4fb; }
-  #map .leaflet-container { background: #eef4fb; }
+  #map { height: 460px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--map-bg); }
+  #map .leaflet-container { background: var(--map-bg); }
   .map-legend {
-    background: #fff; border: 1px solid var(--line); border-radius: 4px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 4px;
     padding: 8px 10px; font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   }
   .map-legend .leg-row { display: flex; align-items: center; gap: 7px; margin: 3px 0; font-weight: 700; }
   .map-legend .leg-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
   .map-search {
     width: 100%; margin-top: 10px; padding: 8px 10px; border: 1px solid var(--line);
-    border-radius: var(--radius); font-size: 12px; background: #fff;
+    border-radius: var(--radius); font-size: 12px; background: var(--surface);
   }
-  .district-panel { border: 2px solid var(--ink); border-radius: var(--radius); background: #fff; padding: 0; font-size: 13px; overflow: hidden; }
+  .district-panel { border: 2px solid var(--ink); border-radius: var(--radius); background: var(--surface); padding: 0; font-size: 13px; overflow: hidden; }
   .district-panel .dtitle {
     font-family: var(--font-elects-display); font-size: 14px; text-transform: uppercase;
-    letter-spacing: 0.02em; background: var(--ink); color: #fff; padding: 10px 14px;
+    letter-spacing: 0.02em; background: var(--bar); color: #fff; padding: 10px 14px;
   }
   .district-panel .dsub { padding: 14px; }
   .district-row {
@@ -134,7 +134,7 @@
     border-bottom: 1px solid var(--line); transition: background 0.15s ease;
   }
   .district-row:last-of-type { border-bottom: none; }
-  .district-row.leader { background: var(--ink); color: #fff; }
+  .district-row.leader { background: var(--bar); color: #fff; }
   .district-row .swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
   .district-row .n { flex: 1; font-weight: 800; font-size: 13px; }
   .district-row .v {
@@ -166,8 +166,8 @@
   .map-controls label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: flex; align-items: center; gap: 6px; }
   .map-controls select { font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--line); border-radius: var(--radius); text-transform: none; letter-spacing: 0; color: var(--ink); max-width: 210px; }
   .seg { display: inline-flex; border: 2px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
-  .seg button { font: inherit; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 7px 14px; border: 0; background: #fff; cursor: pointer; }
-  .seg button.on { background: var(--ink); color: #fff; }
+  .seg button { font: inherit; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 7px 14px; border: 0; background: var(--surface); cursor: pointer; }
+  .seg button.on { background: var(--bar); color: #fff; }
   .shift-label { background: rgba(255,255,255,.92); border: 1px solid #111; border-radius: 4px; font-weight: 800; font-size: 11px; padding: 1px 5px; box-shadow: none; }
   .shift-label::before { display: none; }
   .shift-row { cursor: pointer; }
@@ -181,16 +181,16 @@
 
 <header class="masthead">
   <div class="wrap">
-    <a class="site-logo" href="../index.html">
+    <a class="site-logo" href="../">
       <img class="mark" src="../assets/img/brand/wikielections-mark.png" alt="">
       <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
     </a>
     <nav class="main-nav-inline">
-      <a href="../index.html">Main Page</a>
-      <a href="../activities.html">Decision Desk TSR</a>
-      <a href="../polls.html">Spinner Insights Polls</a>
-      <a href="index.html" class="current">TSR Elects — Live</a>
-      <a href="../articles.html">Articles</a>
+      <a href="../">Main Page</a>
+      <a href="../activities">Decision Desk TSR</a>
+      <a href="../polls">Spinner Insights Polls</a>
+      <a href="./" class="current">TSR Elects — Live</a>
+      <a href="../articles">Articles</a>
     </nav>
     <span class="mode-pill" id="modePill">…</span>
   </div>
@@ -258,7 +258,7 @@
   <div class="wrap">
     <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
     <span>
-      <a href="../index.html">Main Page</a>
+      <a href="../">Main Page</a>
       <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
       <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
     </span>

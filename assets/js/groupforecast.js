@@ -21,7 +21,7 @@ async function GF_render(root, ctx) {
       <div><div class="gf-kicker">Decision Desk TSR</div><h3>ProbCalc Group Forecast</h3>
         <p>Every group is polled, averaged and simulated separately, then combined by voting-age population into a statewide forecast.
         Updates itself when polls change.</p></div>
-      <div class="gf-live"><span class="gf-dot"></span>LIVE · ${R.sims.toLocaleString()} sims<br><small>${new Date().toLocaleTimeString()}</small><br><a class="sim-link" href="${ctx.simUrl || 'elects/simulate.html'}">▶ Simulate your own</a></div>
+      <div class="gf-live"><span class="gf-dot"></span>LIVE · ${R.sims.toLocaleString()} sims<br><small>${new Date().toLocaleTimeString()}</small><br><a class="sim-link" href="${ctx.simUrl || 'elects/simulate'}">▶ Simulate your own</a></div>
     </div>
     ${ctx.demo ? '<div class="gf-demo">DEMO DATA — randomly generated group polling for layout testing, not real results.</div>' : ''}
     <div class="gf-top">
@@ -34,7 +34,7 @@ async function GF_render(root, ctx) {
           <div class="bar-track"><div class="bar-fill" style="width:${S.winProb[i] * 100}%;background:${col(i)}"></div></div>
           <div class="pct">${GF_pct(S.winProb[i])}</div></div>`).join('')}
       </div>
-      <div class="gf-mapcol"><div id="gfMap"></div>
+      <div class="gf-mapcol"><div id="gfSM"></div><div id="gfMap"></div>
         <div class="gf-maplegend">${order.map(i => `<span><i style="background:${col(i)}"></i>${nm(i)}</span>`).join('')}<span class="small-muted">Fainter = closer · dashed = no group polls (${noGroupPolls})</span></div>
         <div id="gfPanel" class="gf-panel"></div></div>
     </div>
@@ -58,12 +58,17 @@ async function GF_render(root, ctx) {
   GF_map = L.map('gfMap', { zoomControl: false, attributionControl: false, scrollWheelZoom: false });
   const style = f => { const g = String(f.properties.id), L0 = leadOf(g), p = R.groups[g].winProb[L0];
     return { fillColor: col(L0), fillOpacity: 0.2 + 0.75 * Math.min(1, Math.max(0, (p - 0.3) / 0.7)), color: '#fff', weight: 1.5, dashArray: R.groups[g].fallback ? '4 3' : null }; };
+  let SMi = null;
   const layer = L.geoJSON(geojson, { style, onEachFeature: (f, l) => {
     const g = String(f.properties.id), L0 = leadOf(g);
-    l.bindTooltip(`Group ${g}: ${nm(L0)} ${GF_pct(R.groups[g].winProb[L0])}`, { sticky: true });
-    l.on('click', () => panel(g));
+    l.on('click', () => SMi && SMi.active() ? SMi.pick(g) : panel(g));
   } }).addTo(GF_map);
+  const tips = () => layer.eachLayer(l => { const g = String(l.feature.properties.id), L0 = leadOf(g); l.bindTooltip(`Group ${g}: ${nm(L0)} ${GF_pct(R.groups[g].winProb[L0])}`, { sticky: true }); });
+  tips();
   GF_map.fitBounds(layer.getBounds(), { padding: [10, 10] });
+  if (ctx.olds && ctx.olds.length) SMi = SM_create({ forecast: true, controls: document.getElementById('gfSM'), panel: document.getElementById('gfPanel'), legend: document.querySelector('.gf-maplegend'), registry, olds: ctx.olds, layer: () => layer,
+    getNew: () => Object.fromEntries(GC_GROUPS.map(g => [g, Object.fromEntries(ids.map(i => [i, R.groups[g].meanShare[i] * 1000]))])),
+    onExit: () => { layer.setStyle(style); tips(); document.getElementById('gfPanel').innerHTML = '<div class="small-muted">Click a group on the map for its breakdown.</div>'; } });
 
   // trend (straight lines via RCPChart)
   if (H.length > 1) RCPChart_render(document.getElementById('gfTrend'), H, ids, registry);
@@ -80,7 +85,7 @@ async function GF_render(root, ctx) {
       <line x1="${X(S.p05[i])}" x2="${X(S.p95[i])}" y1="${y}" y2="${y}" stroke="${col(i)}" stroke-width="2"/>
       <circle cx="${X(S.p50[i])}" cy="${y}" r="6" fill="${col(i)}" stroke="#fff" stroke-width="2"/>
       <text x="${W - 4}" y="${y + 4}" font-size="10" text-anchor="end" fill="#444">${(S.p50[i] * 100).toFixed(0)}% (${(S.p05[i] * 100).toFixed(0)}–${(S.p95[i] * 100).toFixed(0)})</text>`; });
-  document.getElementById('gfRange').innerHTML = svg + '</svg>';
+  document.getElementById('gfRange').innerHTML = '<div style="overflow-x:auto"><div style="min-width:440px">' + svg + '</svg></div></div>';
 
   // heatmap
   const hex = c => { const n = parseInt(c.replace('#', ''), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Approval &amp; Track Record — wikiElections</title>
@@ -10,7 +11,7 @@
   body { font-family: var(--font-spinner-body), var(--font-body); }
   .appr-hero { display: flex; align-items: center; gap: 18px; margin: 20px 0; }
   .appr-hero-photo {
-    width: 84px; height: 84px; border-radius: 50%; background: var(--ink);
+    width: 84px; height: 84px; border-radius: 50%; background: var(--bar);
     display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
   }
   .appr-hero-photo img { width: 60%; height: 60%; object-fit: contain; }
@@ -21,16 +22,16 @@
 
 <header class="masthead">
   <div class="wrap">
-    <a class="site-logo" href="index.html">
+    <a class="site-logo" href="./">
       <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
       <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
     </a>
     <nav class="main-nav-inline">
-      <a href="index.html">Main Page</a>
-      <a href="activities.html">Decision Desk TSR</a>
-      <a href="polls.html">Spinner Insights Polls</a>
-      <a href="elects/index.html">TSR Elects — Live</a>
-      <a href="articles.html">Articles</a>
+      <a href="./">Main Page</a>
+      <a href="activities">Decision Desk TSR</a>
+      <a href="polls">Spinner Insights Polls</a>
+      <a href="elects/">TSR Elects — Live</a>
+      <a href="articles">Articles</a>
     </nav>
     <span class="mode-pill" id="modePill">…</span>
   </div>
@@ -59,7 +60,7 @@
   <div class="wrap">
     <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
     <span>
-      <a href="index.html">Main Page</a>
+      <a href="./">Main Page</a>
       <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
       <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
     </span>

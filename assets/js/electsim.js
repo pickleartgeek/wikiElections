@@ -1,5 +1,5 @@
 /**
- * ElectSim — engine for the Custom Election Simulator (elects/simulate.html).
+ * ElectSim — engine for the Custom Election Simulator (elects/simulate).
  * Candidates whose registry ids differ only by a trailing number (nzb, nzb1) are ONE candidate.
  * Strength comes from past TSR Elects results (recency-weighted, shrunk toward the candidate's party),
  * turnout from historical votes / electorate, runoff when nobody tops 50%.
@@ -67,8 +67,9 @@ function ES_score(L, canon, party) {
 }
 function ES_affinity(L, canon, g) {
   const gv = L.groupV[canon]; if (!gv || !gv.T[g]) return 0;
-  const S = gv.S.reduce((s, x) => s + x[0], 0) / gv.S.reduce((s, x) => s + x[1], 0);
-  return Math.max(-.8, Math.min(.8, 0.6 * Math.log(((gv.v[g] + 6 * S) / (gv.T[g] + 6)) / S)));
+  const S = Math.max(0.01, gv.S.reduce((s, x) => s + x[0], 0) / gv.S.reduce((s, x) => s + x[1], 0)); // floor: candidates with 0 past votes used to give NaN
+  const a = 0.6 * Math.log(((gv.v[g] + 6 * S) / (gv.T[g] + 6)) / S);
+  return isFinite(a) ? Math.max(-.8, Math.min(.8, a)) : 0;
 }
 /** Turnout model: Beta(rate) around the recency-weighted historical mean. scenario: -1 low, 0 typical, 1 high. */
 function ES_turnoutParams(L, scenario = 0, E = L.E) {
@@ -78,15 +79,18 @@ function ES_turnoutParams(L, scenario = 0, E = L.E) {
 function ES_split(total, w, ids) { const raw = ids.map(g => w[g] * total), fl = raw.map(Math.floor); let rem = total - fl.reduce((a, b) => a + b, 0);
   raw.map((x, i) => [x - fl[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (rem-- > 0) fl[i]++; }); return Object.fromEntries(ids.map((g, i) => [g, fl[i]])); }
 
+/** Calibration knobs (fit so simulated 1v1 margins match TSR's historical two-way races). */
+const ES_TUNE = { scale: 0.5, shock: 0.2, shockLow: 0.2, grp: 0.15, aff: 0.5 };
+
 /** One full election. cands: [{id (registry id), canon, party}] -> {first, runoff?, turnout, rate} */
 function ES_simulate(L, cands, T, r) {
   const gids = L.geoIds, el = ES_split(T.E, L.weights, gids);
   const rate = (() => { const x = ES_gamma(T.a, r), y = ES_gamma(T.b, r); return x / (x + y); })();
-  const sc = cands.map(c => { const s = ES_score(L, c.canon, c.party); c.s = s.score; return s.score + ES_norm(r) * (0.3 + 0.5 / (1 + s.sw)); });
+  const sc = cands.map(c => { const s = ES_score(L, c.canon, c.party); c.s = s.score; return ES_TUNE.scale * s.score + ES_norm(r) * (ES_TUNE.shock + ES_TUNE.shockLow / (1 + s.sw)); });
   const first = {}, flat = {};
   gids.forEach(g => {
     const th = Math.min(.95, Math.max(1e-4, rate * Math.exp(0.1 * ES_norm(r)))), n = ES_binom(el[g], th, r);
-    const lg = cands.map((c, i) => sc[i] + ES_affinity(L, c.canon, g) + 0.2 * ES_norm(r)), m = Math.max(...lg), ex = lg.map(x => Math.exp(x - m)), s = ex.reduce((a, b) => a + b);
+    const lg = cands.map((c, i) => sc[i] + ES_TUNE.aff * ES_affinity(L, c.canon, g) + ES_TUNE.grp * ES_norm(r)), m = Math.max(...lg), ex = lg.map(x => Math.exp(x - m)), s = ex.reduce((a, b) => a + b);
     const v = {}; cands.forEach(c => v[c.id] = 0); const cum = []; ex.reduce((a, x, i) => (cum[i] = a + x / s, cum[i]), 0);
     for (let i = 0; i < n; i++) { const u = r(); let j = cum.findIndex(c => u <= c); if (j < 0) j = cands.length - 1; v[cands[j].id]++; }
     first[g] = v;
@@ -100,7 +104,7 @@ function ES_simulate(L, cands, T, r) {
     let a = 0, b = 0; const fa = first[g][A.id], fb = first[g][B.id];
     a += ES_binom(fa, rho, r); b += ES_binom(fb, rho, r);
     cands.filter(c => c !== A && c !== B).forEach(c => { const n = ES_binom(first[g][c.id], .85 * rho, r);
-      const q = ES_sig(1.2 * ((c.party !== 'ua' && c.party === A.party) - (c.party !== 'ua' && c.party === B.party)) + .5 * (A.s - B.s) + .15 * ES_norm(r)), na = ES_binom(n, q, r); a += na; b += n - na; });
+      const q = ES_sig(1.2 * ((c.party !== 'ua' && c.party === A.party) - (c.party !== 'ua' && c.party === B.party)) + .5 * (A.s - B.s) + .35 * ES_norm(r)), na = ES_binom(n, q, r); a += na; b += n - na; });
     out.runoff[g] = { [A.id]: a, [B.id]: b };
   });
   const ta = gids.reduce((s, g) => s + out.runoff[g][A.id], 0), tb = gids.reduce((s, g) => s + out.runoff[g][B.id], 0);

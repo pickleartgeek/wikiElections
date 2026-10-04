@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Articles — wikiElections</title>
@@ -11,16 +12,16 @@
 
 <header class="masthead">
   <div class="wrap">
-    <a class="site-logo" href="index.html">
+    <a class="site-logo" href="./">
       <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
       <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
     </a>
     <nav class="main-nav-inline">
-      <a href="index.html">Main Page</a>
-      <a href="activities.html">Decision Desk TSR</a>
-      <a href="polls.html">Spinner Insights Polls</a>
-      <a href="elects/index.html">TSR Elects — Live</a>
-      <a href="articles.html" class="current">Articles</a>
+      <a href="./">Main Page</a>
+      <a href="activities">Decision Desk TSR</a>
+      <a href="polls">Spinner Insights Polls</a>
+      <a href="elects/">TSR Elects — Live</a>
+      <a href="articles" class="current">Articles</a>
     </nav>
     <span class="mode-pill" id="modePill">…</span>
   </div>
@@ -43,7 +44,7 @@
   <div class="wrap">
     <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
     <span>
-      <a href="index.html">Main Page</a>
+      <a href="./">Main Page</a>
       <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
       <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
     </span>
@@ -75,7 +76,7 @@ async function boot() {
   }
 
   grid.innerHTML = articles.map(a => `
-    <a class="article-card" href="article.html?id=${encodeURIComponent(a.id)}">
+    <a class="article-card" href="article?id=${encodeURIComponent(a.id)}">
       <div class="thumb" style="background:${a.thumbColor || '#111214'};">${escapeHtml((a.title || '?').slice(0, 1).toUpperCase())}</div>
       <div class="body">
         <div class="eyebrow">${a.date || ''}</div>

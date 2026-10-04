@@ -3,7 +3,7 @@
  * ---------
  * A small, dependency-free SVG line chart in the RealClearPolitics
  * house style: time-scaled x-axis, faint gridlines, smooth colored
- * lines per candidate (Catmull-Rom smoothed (opts.smooth: 1 = full, 0 = straight segments, 0.5 = in between), no dot
+ * lines per candidate (monotone-cubic smoothed (opts.smooth: 1 = full, 0 = straight segments, 0.5 = in between), no dot
  * markers cluttering up every single day now that the rolling average
  * emits one point per calendar day), a legend, a lead badge (yellow pill
  * + leader-colored value, same component as everywhere else on the
@@ -15,25 +15,26 @@
 let RCPChart_instanceCounter = 0;
 
 /** Catmull-Rom -> cubic Bezier smoothing so the line reads as one fluid curve instead of straight day-to-day segments. */
-function RCPChart_smoothPath(coords, k = 0) {
-  if (k <= 0) return coords.map((c, i) => `${i ? 'L' : 'M'} ${c[0].toFixed(1)} ${c[1].toFixed(1)}`).join(' ');
-  if (coords.length < 2) return coords.length ? `M ${coords[0][0].toFixed(1)} ${coords[0][1].toFixed(1)}` : '';
-  if (coords.length === 2) {
-    return `M ${coords[0][0].toFixed(1)} ${coords[0][1].toFixed(1)} L ${coords[1][0].toFixed(1)} ${coords[1][1].toFixed(1)}`;
+function RCPChart_smoothPath(coords, k = 1) {
+  // Monotone cubic (Fritsch-Carlson): smooth, but never overshoots a data point and never doubles back in x.
+  // (Plain Catmull-Rom looped and spiked when polls were unevenly spaced in time.) k: 1 = full smoothing, 0 = straight.
+  const f = v => v.toFixed(1), n = coords.length;
+  if (n < 2) return n ? `M ${f(coords[0][0])} ${f(coords[0][1])}` : '';
+  if (k <= 0 || n === 2) return coords.map((c, i) => `${i ? 'L' : 'M'} ${f(c[0])} ${f(c[1])}`).join(' ');
+  const h = [], d = [];
+  for (let i = 0; i < n - 1; i++) { h[i] = coords[i + 1][0] - coords[i][0] || 1e-6; d[i] = (coords[i + 1][1] - coords[i][1]) / h[i]; }
+  const m = [d[0]];
+  for (let i = 1; i < n - 1; i++) {
+    if (d[i - 1] * d[i] <= 0) m[i] = 0;                       // local extremum: flat tangent, so no overshoot
+    else { const w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1]; m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]); }
   }
-  let d = `M ${coords[0][0].toFixed(1)} ${coords[0][1].toFixed(1)}`;
-  for (let i = 0; i < coords.length - 1; i++) {
-    const p0 = coords[i - 1] || coords[i];
-    const p1 = coords[i];
-    const p2 = coords[i + 1];
-    const p3 = coords[i + 2] || p2;
-    const cp1x = p1[0] + (p2[0] - p0[0]) / (6 / k);
-    const cp1y = p1[1] + (p2[1] - p0[1]) / (6 / k);
-    const cp2x = p2[0] - (p3[0] - p1[0]) / (6 / k);
-    const cp2y = p2[1] - (p3[1] - p1[1]) / (6 / k);
-    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)} ${cp2x.toFixed(1)} ${cp2y.toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+  m[n - 1] = d[n - 2];
+  let p = `M ${f(coords[0][0])} ${f(coords[0][1])}`;
+  for (let i = 0; i < n - 1; i++) {
+    const [x0, y0] = coords[i], [x1, y1] = coords[i + 1], t0 = d[i] + k * (m[i] - d[i]), t1 = d[i] + k * (m[i + 1] - d[i]);
+    p += ` C ${f(x0 + h[i] / 3)} ${f(y0 + t0 * h[i] / 3)} ${f(x1 - h[i] / 3)} ${f(y1 - t1 * h[i] / 3)} ${f(x1)} ${f(y1)}`;
   }
-  return d;
+  return p;
 }
 
 function RCPChart_render(container, points, candidateIds, registry, opts = {}) {

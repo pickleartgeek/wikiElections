@@ -19,14 +19,14 @@ async function GF_render(root, ctx) {
   root.innerHTML = `
     <div class="gf-head">
       <div><div class="gf-kicker">Decision Desk TSR</div><h3>ProbCalc Group Forecast</h3>
-        <p>Every group is polled, averaged and simulated separately, then combined by voting-age population into a statewide forecast.
+        <p>Every group is averaged and simulated separately, then combined into a sub-wide forecast.
         Updates itself when polls change.</p></div>
       <div class="gf-live"><span class="gf-dot"></span>LIVE · ${R.sims.toLocaleString()} sims<br><small>${new Date().toLocaleTimeString()}</small><br><a class="sim-link" href="${ctx.simUrl || 'elects/simulate'}">▶ Simulate your own</a></div>
     </div>
     ${ctx.demo ? '<div class="gf-demo">DEMO DATA — randomly generated group polling for layout testing, not real results.</div>' : ''}
     <div class="gf-top">
       <div class="gf-win">
-        <div class="gf-small">Statewide win probability</div>
+        <div class="gf-small">Sub-wide win probability</div>
         <div class="gf-big" style="color:${col(top)}">${nm(top)} <b>${GF_pct(tp)}</b></div>
         <span class="gf-tag" style="background:${col(top)}">${tag}</span>
         ${order.map(i => `<div class="prob-row"><div class="dot" style="background:${col(i)}"></div>
@@ -40,14 +40,14 @@ async function GF_render(root, ctx) {
     </div>
     <div class="gf-grid">
       <div class="gf-card"><h4>Win probability over time</h4><div id="gfTrend"></div></div>
-      <div class="gf-card"><h4>Statewide vote share — 90% range</h4><div id="gfRange"></div></div>
+      <div class="gf-card"><h4>Sub-wide vote share — 90% range</h4><div id="gfRange"></div></div>
     </div>
     <div class="gf-card gf-wide"><h4>Group-by-group win probability</h4><div class="rcp-table-wrap" style="margin:0"><table class="rcp-table" id="gfHeat"></table></div></div>`;
 
   // group panel
   const panel = g => {
     const G = R.groups[g], o = [...ids].sort((a, b) => G.winProb[b] - G.winProb[a]);
-    document.getElementById('gfPanel').innerHTML = `<div class="gf-ptitle">Group ${g} <span class="small-muted">${G.fallback ? 'no group polls — statewide fallback' : G.polls + ' group poll' + (G.polls > 1 ? 's' : '')} · ${(w[g] * 100).toFixed(1)}% of electorate</span></div>` +
+    document.getElementById('gfPanel').innerHTML = `<div class="gf-ptitle">Group ${g} <span class="small-muted">${G.fallback ? 'no group polls — sub-wide fallback' : G.polls + ' group poll' + (G.polls > 1 ? 's' : '')} · ${(w[g] * 100).toFixed(1)}% of electorate</span></div>` +
       o.map(i => `<div class="prob-row"><div class="dot" style="background:${col(i)}"></div><div class="name">${nm(i)} <span class="small-muted">${(G.meanShare[i] * 100).toFixed(0)}%</span></div>
       <div class="bar-track"><div class="bar-fill" style="width:${G.winProb[i] * 100}%;background:${col(i)}"></div></div><div class="pct">${GF_pct(G.winProb[i])}</div></div>`).join('');
   };

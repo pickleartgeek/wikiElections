@@ -72,17 +72,14 @@
         "Class 7 September 2026 Runoff": {
           "1": {
             "tmf": 1,
-            "dvwb": 0,
             "nzb1": 2
           },
           "2": {
-            "tmf": 3,
-            "dvwb": 1,
+            "tmf": 4,
             "nzb1": 1
           },
           "3": {
             "tmf": 1,
-            "dvwb": 0,
             "nzb1": 1
           },
           "4": {
@@ -92,27 +89,22 @@
           },
           "5": {
             "tmf": 0,
-            "dvwb": 1,
-            "nzb1": 3
+            "nzb1": 4
           },
           "6": {
-            "tmf": 1,
-            "dvwb": 2,
-            "nzb1": 2
+            "tmf": 2,
+            "nzb1": 3
           },
           "7": {
             "tmf": 2,
-            "dvwb": 0,
             "nzb1": 1
           },
           "8": {
-            "tmf": 2,
-            "dvwb": 1,
+            "tmf": 3,
             "nzb1": 1
           },
           "9": {
             "tmf": 1,
-            "dvwb": 0,
             "nzb1": 2
           }
         }

@@ -4,6 +4,16 @@
     "ip": {
       "name": "Impressive_Plant",
       "polls": [
+                {
+          "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6921,
+            "disapprove": 0.0
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-09-06",
@@ -209,6 +219,16 @@
     "pag": {
       "name": "PickleArtGeek",
       "polls": [
+                {
+          "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5385,
+            "disapprove": 0.769
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-09-06",
@@ -304,6 +324,16 @@
     "prac": {
       "name": "practicalpurpose",
       "polls": [
+       {
+          "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4615,
+            "disapprove": 0.1538
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-09-06",
@@ -381,6 +411,16 @@
       "polls": [
         {
           "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4615,
+            "disapprove": 0.1538
+          }
+        },
+        {
+          "pollster": "CENSUS",
           "date": "2026-09-06",
           "sample": 11,
           "weight": 1,
@@ -436,6 +476,16 @@
       "polls": [
         {
           "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4615,
+            "disapprove": 0.0769
+          }
+        },
+        {
+          "pollster": "CENSUS",
           "date": "2026-09-06",
           "sample": 11,
           "weight": 1,
@@ -469,6 +519,16 @@
     "wip": {
       "name": "wiptes167",
       "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4615,
+            "disapprove": 0.1538
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-09-06",
@@ -820,12 +880,22 @@
       "polls": [
         {
           "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3846,
+            "disapprove": 0.0909
+          }
+        },
+        {
+          "pollster": "CENSUS",
           "date": "2026-09-06",
           "sample": 11,
           "weight": 1,
           "shares": {
             "approve": 0.3636,
-            "disapprove": 0.0909
+            "disapprove": 0.0769
           }
         },
         {
@@ -945,6 +1015,16 @@
       "yesLabel": "Yes",
       "noLabel": "No",
       "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.6921,
+            "disapprove": 0.2308
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-09-06",

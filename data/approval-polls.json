@@ -1154,6 +1154,16 @@
       "polls": [
         {
           "pollster": "CENSUS",
+          "date": "2026-10-08",
+          "sample": 11,
+          "weight": 1,
+          "shares": {
+            "approve": 0.0769,
+            "disapprove": 0.9231
+          }
+        },
+        {
+          "pollster": "CENSUS",
           "date": "2026-09-06",
           "sample": 11,
           "weight": 1,

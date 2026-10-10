@@ -4,7 +4,7 @@
     "ip": {
       "name": "Impressive_Plant",
       "polls": [
-                {
+        {
           "pollster": "CENSUS",
           "date": "2026-10-08",
           "sample": 13,

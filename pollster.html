@@ -90,7 +90,7 @@ function officialHero(name, tag, text) {
 function censusPage(D) {
   const reg = D.registry, o = D.official.CENSUS, ele = D.official.ELECTION;
   let h = officialHero('CENSUS', 'Official community census · not graded',
-    'CENSUS is the wiki’s own recurring survey of the community. It is treated as the benchmark rather than a competitor, so it carries no letter grade — but you can see below how closely its party-support readings tracked the actual electorate on election day.');
+    'CENSUS is the Mod Team’s own recurring survey of the community. It is treated as the benchmark rather than a competitor, so it carries no letter grade. You can see below how closely its party-support readings tracked the actual electorate on election day.');
   const ps = o.party;
   if (ps.length) {
     h += `<h2 class="section-title">Party support</h2><div class="tk-card"><div class="pg-chart">${PG_lines(partySeries(ps, reg), k => PG_partyColor(reg, k))}</div>`

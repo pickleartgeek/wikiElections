@@ -19,12 +19,25 @@
       <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
       <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
     </a>
-    <nav class="main-nav-inline">
+    <nav class="main-nav-inline" aria-label="Main">
       <a href="./">Main Page</a>
       <a href="activities">Decision Desk TSR</a>
-      <a href="polls">Spinner Insights Polls</a>
-      <a href="elects/">TSR Elects — Live</a>
-      <a href="articles">Articles</a>
+      <a href="polls" class="current">Spinner Insights Polls</a>
+      <a href="elects/">TSR Elects</a>
+      <details class="nav-more">
+        <summary class="">More</summary>
+        <div class="nav-menu">
+          <div class="nav-menu-h">Tools</div>
+          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <!-- Map Maker: add here once released
+          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a> -->
+          <div class="nav-menu-h">Polling</div>
+          <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Read</div>
+          <a href="articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+        </div>
+      </details>
     </nav>
     <span class="mode-pill" id="modePill">…</span>
   </div>
@@ -62,6 +75,8 @@
 <script src="assets/js/tsrelects.js"></script>
 <script src="assets/js/basecalc.js"></script>
 <script src="assets/js/rcp-chart.js"></script>
+<script src="assets/js/tracker.js"></script>
+<script src="assets/js/rcp-donut.js"></script>
 <script>
 initSiteChrome();
 
@@ -146,7 +161,7 @@ async function boot() {
   tableHtml += `</tbody></table></div>`;
 
   slot.innerHTML = `
-    ${barsHtml}
+    <div class="ps-top">${barsHtml}<div id="partyDonut" class="ps-donut"></div></div>
     <div class="rcp-chart-panel">
       <h3>Weighted Party Support Average</h3>
       <p class="small-muted" style="margin:0;">Day-by-day ProbCalc-weighted average, recomputed fresh for each day as if it were "election day" — same engine as every trend chart on this site.</p>
@@ -154,6 +169,7 @@ async function boot() {
     </div>
     ${tableHtml}`;
 
+  RCPDonut_fromPairs(document.getElementById('partyDonut'), sorted, id => TSR_candidateName(partyRegistry, id), id => TSR_candidateColor(partyRegistry, id), 'Party support', { top: 4, fieldLabel: 'Other parties', size: 280 });
   RCPChart_render(document.getElementById('partyChart'), points, partyIds, partyRegistry);
 }
 

@@ -26,12 +26,25 @@
       <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
       <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
     </a>
-    <nav class="main-nav-inline">
+    <nav class="main-nav-inline" aria-label="Main">
       <a href="./">Main Page</a>
       <a href="activities">Decision Desk TSR</a>
-      <a href="polls">Spinner Insights Polls</a>
-      <a href="elects/">TSR Elects — Live</a>
-      <a href="articles">Articles</a>
+      <a href="polls" class="current">Spinner Insights Polls</a>
+      <a href="elects/">TSR Elects</a>
+      <details class="nav-more">
+        <summary class="">More</summary>
+        <div class="nav-menu">
+          <div class="nav-menu-h">Tools</div>
+          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <!-- Map Maker: add here once released
+          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a> -->
+          <div class="nav-menu-h">Polling</div>
+          <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Read</div>
+          <a href="articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+        </div>
+      </details>
     </nav>
     <span class="mode-pill" id="modePill">…</span>
   </div>
@@ -169,7 +182,10 @@ function loadEntry(key) {
   // Approval tracking has no "election day" to count down to, so today's
   // date (UTC) stands in as the reference point: the closer a poll is to
   // today, the more it counts, same recency model as everywhere else.
-  const asOf = todayUTCString();
+  // A former moderator's approval is frozen at the end of their term (termEnd, else their last poll).
+  const wasFormer = !isQuestion && (entry.status || 'current') === 'former';
+  const lastPoll = entry.polls.reduce((x, p) => p.date > x ? p.date : x, '');
+  const asOf = wasFormer ? (entry.termEnd || lastPoll) : todayUTCString();
   // normalize:false -- these are independently-measured shares, not a vote
   // split, so they shouldn't be forced to sum to 100% (the gap is "no opinion").
   const aggOpts = { normalize: false };
@@ -185,7 +201,7 @@ function loadEntry(key) {
       <div class="appr-hero-photo"><img class="white-filter-img" src="${photo}" alt=""></div>
       <div>
         <div style="font-family:var(--font-spinner-display); font-size:20px; font-weight:900;">${label}${isFormer ? ' <span class="rcp-donut-legend-item" style="background:#efece0; border-radius:999px; padding:2px 10px; font-size:11px; font-weight:700; vertical-align:middle;">Former Moderator</span>' : ''}</div>
-        <div class="small-muted">${entry.polls.length} approval poll${entry.polls.length === 1 ? '' : 's'} tracked</div>
+        <div class="small-muted">${entry.polls.length} approval poll${entry.polls.length === 1 ? '' : 's'} tracked${isFormer ? ` · final approval as of ${asOf}` : ''}</div>
       </div>
     </div>` : `
     <div class="appr-hero">

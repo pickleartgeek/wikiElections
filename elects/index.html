@@ -4,7 +4,7 @@
 <script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TSR Elects — Live Results</title>
+<title>TSR Elects — Results</title>
 <link rel="icon" type="image/png" href="../assets/img/brand/tsr-elects-favicon.png">
 <link rel="stylesheet" href="../assets/css/style.css">
 <link rel="stylesheet" href="../assets/leaflet/leaflet.css">
@@ -185,12 +185,25 @@
       <img class="mark" src="../assets/img/brand/wikielections-mark.png" alt="">
       <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
     </a>
-    <nav class="main-nav-inline">
+    <nav class="main-nav-inline" aria-label="Main">
       <a href="../">Main Page</a>
       <a href="../activities">Decision Desk TSR</a>
       <a href="../polls">Spinner Insights Polls</a>
-      <a href="./" class="current">TSR Elects — Live</a>
-      <a href="../articles">Articles</a>
+      <a href="../elects/" class="current">TSR Elects</a>
+      <details class="nav-more">
+        <summary class="">More</summary>
+        <div class="nav-menu">
+          <div class="nav-menu-h">Tools</div>
+          <a href="../elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <!-- Map Maker: add here once released
+          <a href="../elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a> -->
+          <div class="nav-menu-h">Polling</div>
+          <a href="../pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Read</div>
+          <a href="../articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="../guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+        </div>
+      </details>
     </nav>
     <span class="mode-pill" id="modePill">…</span>
   </div>
@@ -228,7 +241,9 @@
 
   <div class="projected-banner" id="projectedBanner"></div>
 
-  <div class="nbc-chart">
+  <div class="tk-seg" id="nbcViewSeg" role="group" aria-label="Results view" style="margin:0 0 10px"><button data-v="bars" class="on">Bars</button><button data-v="donut">Donut</button></div>
+  <div id="nbcDonut" hidden></div>
+  <div class="nbc-chart" id="nbcWrap">
     <div class="nbc-head">
       <div class="h-cand">Candidate</div>
       <div class="h-votes">Votes</div>
@@ -269,6 +284,8 @@
 <script src="../assets/js/overrides.js"></script>
 <script src="../assets/js/tsrelects.js"></script>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/tracker.js"></script>
+<script src="../assets/js/rcp-donut.js"></script>
 <script src="../assets/leaflet/leaflet.js"></script>
 <script>
 initSiteChrome();
@@ -403,6 +420,16 @@ function render() {
   refreshMap();
 }
 
+function nbcApplyView() {
+  let v = 'bars'; try { v = localStorage.getItem('wE-results-view') === 'donut' ? 'donut' : 'bars'; } catch (e) {}
+  const box = document.getElementById('nbcDonut'), t = window.__nbcTotals || [];
+  document.querySelectorAll('#nbcViewSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  const on = v === 'donut' && t.length && t[0][1] > 0;
+  box.hidden = !on; document.getElementById('nbcWrap').hidden = on;
+  if (on) RCPDonut_fromPairs(box, t, k => TSR_candidateName(registry, k), k => TSR_candidateColor(registry, k), currentRaceName || '', { top: 4, fieldLabel: 'Others', size: 320 });
+}
+document.querySelectorAll('#nbcViewSeg button').forEach(b => b.addEventListener('click', () => { try { localStorage.setItem('wE-results-view', b.dataset.v === 'donut' ? 'donut' : 'bars'); } catch (e) {} nbcApplyView(); }));
+
 function renderChart(totals, call) {
   const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
   const totalVotes = sorted.reduce((a, [, v]) => a + v, 0) || 1;
@@ -456,6 +483,7 @@ function renderChart(totals, call) {
         <div class="nbc-pct">${pct.toFixed(1)}%</div>
       </div>`;
   });
+  window.__nbcTotals = sorted; nbcApplyView();
   document.getElementById('nbcChart').innerHTML = html || '<div style="padding:20px" class="small-muted">No votes recorded for this race yet.</div>';
 }
 

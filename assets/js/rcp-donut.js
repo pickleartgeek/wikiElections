@@ -7,7 +7,10 @@
  * labels on the ring, and a dot-legend underneath.
  */
 
+const RCPDonut_reg = new Map();
+const _rc = c => (typeof TK_col === 'function' ? TK_col(c) : c);
 function RCPDonut_render(container, opts) {
+  RCPDonut_reg.set(container, opts);
   const { title, segments, leadLabel, leadValue, leadColor, size = 260, href } = opts;
   // segments: [{ name, color, pct }], pct in 0-1, should sum to <= 1
 
@@ -30,7 +33,7 @@ function RCPDonut_render(container, opts) {
     const len = seg.pct * circumference;
     const dashArray = `${len} ${circumference - len}`;
     const rotation = (offset / circumference) * 360 - 90;
-    arcs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${seg.color}"
+    arcs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${_rc(seg.color)}"
       stroke-width="${strokeWidth}" stroke-dasharray="${dashArray}" stroke-dashoffset="0"
       transform="rotate(${rotation} ${cx} ${cy})" stroke-linecap="butt"/>`;
 
@@ -42,15 +45,15 @@ function RCPDonut_render(container, opts) {
       const textW = 20 + pctText.length * 7.5;
       labels += `
         <g transform="translate(${lx} ${ly})">
-          <rect x="${-textW / 2}" y="-13" width="${textW}" height="26" rx="13" fill="#fff" stroke="${seg.color}" stroke-width="2"/>
-          <text x="0" y="5" text-anchor="middle" font-size="13" font-weight="800" fill="${seg.color}" font-family="var(--font-spinner-display, sans-serif)">${pctText}</text>
+          <rect x="${-textW / 2}" y="-13" width="${textW}" height="26" rx="13" fill="var(--surface, #fff)" stroke="${_rc(seg.color)}" stroke-width="2"/>
+          <text x="0" y="5" text-anchor="middle" font-size="13" font-weight="800" fill="${_rc(seg.color)}" font-family="var(--font-spinner-display, sans-serif)">${pctText}</text>
         </g>`;
     }
     offset += len;
   });
 
   const legendHtml = segments.filter(s => s.pct > 0).map(s =>
-    `<span class="rcp-donut-legend-item"><span class="rcp-donut-legend-dot" style="background:${s.color}"></span>${s.name}</span>`
+    `<span class="rcp-donut-legend-item"><span class="rcp-donut-legend-dot" style="background:${_rc(s.color)}"></span>${s.name}</span>`
   ).join('');
 
   const leadValueText = typeof leadValue === 'number' ? leadValue.toFixed(1) : leadValue;
@@ -58,9 +61,9 @@ function RCPDonut_render(container, opts) {
 
   const inner = `
       ${title ? `<div class="rcp-donut-title">${title}</div>` : ''}
-      ${leadLabel ? `<div class="rcp-donut-lead"><span class="rcp-donut-lead-name">${leadLabel}</span><span class="rcp-donut-lead-badge" style="background:${badgeColor}">+${leadValueText}</span></div>` : ''}
+      ${leadLabel ? `<div class="rcp-donut-lead"><span class="rcp-donut-lead-name">${leadLabel}</span><span class="rcp-donut-lead-badge" style="background:${_rc(badgeColor)}">+${leadValueText}</span></div>` : ''}
       <svg viewBox="0 0 ${size} ${size}" width="100%" style="display:block; max-width:${size}px; margin:0 auto;">
-        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#e9e7dd" stroke-width="${strokeWidth}"/>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line, #e9e7dd)" stroke-width="${strokeWidth}"/>
         ${arcs}
         ${labels}
       </svg>
@@ -98,7 +101,25 @@ function RCPDonut_fromAggregate(container, agg, registry, title, href) {
   RCPDonut_render(container, { title, segments, leadLabel: leadName, leadValue, leadColor, href });
 }
 
+/** Donut from sorted [[id, share], ...]: top N get their own arc, the rest pool into "Field". */
+function RCPDonut_fromPairs(container, pairs, nameOf, colorOf, title, opts) {
+  opts = opts || {};
+  const total = pairs.reduce((a, [, v]) => a + v, 0) || 1;
+  const n = opts.top || 4, top = pairs.slice(0, n), rest = pairs.slice(n);
+  const segments = top.map(([id, v]) => ({ name: nameOf(id), color: colorOf(id), pct: v / total }));
+  const f = rest.reduce((a, [, v]) => a + v, 0) / total;
+  if (f > 0.005) segments.push({ name: opts.fieldLabel || 'Field', color: '#c9c7bb', pct: f });
+  const lead = top.length > 1 ? (top[0][1] - top[1][1]) / total * 100 : top[0][1] / total * 100;
+  RCPDonut_render(container, { title, segments, leadLabel: nameOf(top[0][0]), leadValue: lead, leadColor: colorOf(top[0][0]), size: opts.size || 260, href: opts.href });
+}
+
+if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
+  new MutationObserver(() => RCPDonut_reg.forEach((o, el) => { if (document.body.contains(el)) RCPDonut_render(el, o); }))
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+}
+
 if (typeof window !== 'undefined') {
+  window.RCPDonut_fromPairs = RCPDonut_fromPairs;
   window.RCPDonut_render = RCPDonut_render;
   window.RCPDonut_fromAggregate = RCPDonut_fromAggregate;
 }

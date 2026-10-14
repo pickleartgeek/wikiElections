@@ -114,7 +114,7 @@
       "party": "ua",
       "photo": "nb1234.png"
     },
-      "nzb1": {
+    "nzb1": {
       "name": "Nazibol1234",
       "color": "#c457c9",
       "party": "tsp",
@@ -138,7 +138,7 @@
       "party": "csuf",
       "photo": "fw.png"
     },
-     "tmf": {
+    "tmf": {
       "name": "teammomofan",
       "color": "#7d1e4f",
       "party": "udc",
@@ -233,12 +233,14 @@
     "tsp": {
       "name": "The Spinner Party",
       "shortName": "TSP",
-      "color": "#b71212"
+      "color": "#b71212",
+      "callColor": "#ff3131"
     },
     "udc": {
       "name": "Union of the Democratic Center",
       "shortName": "UDC",
-      "color": "#32a852"
+      "color": "#32a852",
+      "callColor": "#02bf63"
     },
     "iltsr": {
       "name": "Iron League of TheSpinRoom",

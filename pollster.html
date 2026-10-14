@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pollster — wikiElections</title>
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-spin.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="./">
+      <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <nav class="main-nav-inline" aria-label="Main">
+      <a href="./">Main Page</a>
+      <a href="activities">Decision Desk TSR</a>
+      <a href="polls">Spinner Insights Polls</a>
+      <a href="elects/">TSR Elects</a>
+      <details class="nav-more">
+        <summary class="">More</summary>
+        <div class="nav-menu">
+          <div class="nav-menu-h">Tools</div>
+          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <!-- Map Maker: add here once released
+          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a> -->
+          <div class="nav-menu-h">Polling</div>
+          <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Read</div>
+          <a href="articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+        </div>
+      </details>
+    </nav>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+</header>
+
+<main class="wrap">
+<div id="pgPage"><p class="small-muted">Loading…</p></div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
+    <span>
+      <a href="./">Main Page</a>
+      <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
+      <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
+    </span>
+  </div>
+</footer>
+
+<script>window.SITE_BASE = './';</script>
+<script src="assets/js/overrides.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/tracker.js"></script>
+<script src="assets/js/pollsters.js"></script>
+<script>
+initSiteChrome();
+const $ = id => document.getElementById(id);
+const gradeChip = (g, big) => `<span class="pg-grade ${big ? 'pg-big ' : ''}${PG_gradeClass(g)}">${g}</span>`;
+const pct = v => (v * 100).toFixed(1).replace(/\.0$/, '') + '%';
+const sgn = v => (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(1);
+
+function legend(items) { return `<div class="pg-legend">${items.map(([c, n]) => `<span><i style="background:${PG_col(c)}"></i>${PG_esc(n)}</span>`).join('')}</div>`; }
+
+function partySeries(polls, reg) {
+  const keys = [...new Set(polls.flatMap(p => Object.keys(p.shares)))];
+  return keys.map(k => ({ key: k, points: polls.map(p => ({ date: p.date, v: p.shares[k] || 0 })) }))
+    .sort((a, b) => b.points[b.points.length - 1].v - a.points[a.points.length - 1].v);
+}
+
+function partyTable(polls, reg) {
+  const keys = [...new Set(polls.flatMap(p => Object.keys(p.shares)))]
+    .sort((a, b) => polls.reduce((s, p) => s + (p.shares[b] || 0), 0) - polls.reduce((s, p) => s + (p.shares[a] || 0), 0));
+  const head = keys.map(k => `<th style="color:${PG_col(PG_partyColor(reg, k))}">${PG_esc(PG_partyName(reg, k))}</th>`).join('');
+  const rows = [...polls].reverse().map(p => `<tr><td>${p.date}</td><td>${p.sample}</td>${keys.map(k => `<td>${p.shares[k] != null ? pct(p.shares[k]) : '–'}</td>`).join('')}</tr>`).join('');
+  return `<div class="pg-scroll"><table class="pg-table"><thead><tr><th>Date</th><th>n</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function officialHero(name, tag, text) {
+  return `<section class="pg-hero pg-hero-official"><span class="pg-badge">OFFICIAL SERIES</span><h1 class="pg-h1">${name}</h1><p class="pg-tag">${tag}</p><p class="lede">${text}</p></section>`;
+}
+
+function censusPage(D) {
+  const reg = D.registry, o = D.official.CENSUS, ele = D.official.ELECTION;
+  let h = officialHero('CENSUS', 'Official community census · not graded',
+    'CENSUS is the wiki’s own recurring survey of the community. It is treated as the benchmark rather than a competitor, so it carries no letter grade — but you can see below how closely its party-support readings tracked the actual electorate on election day.');
+  const ps = o.party;
+  if (ps.length) {
+    h += `<h2 class="section-title">Party support</h2><div class="tk-card"><div class="pg-chart">${PG_lines(partySeries(ps, reg), k => PG_partyColor(reg, k))}</div>`
+      + legend(partySeries(ps, reg).map(s => [PG_partyColor(reg, s.key), PG_partyName(reg, s.key)]))
+      + `<details class="pg-more"><summary>All ${ps.length} readings</summary>${partyTable(ps, reg)}</details></div>`;
+  }
+  if (o.approval.length) {
+    h += `<h2 class="section-title">Moderator approval</h2><div class="pg-grid2">` + o.approval.map(m => {
+      const last = m.polls[m.polls.length - 1];
+      const ser = [{ key: 'a', points: m.polls.map(p => ({ date: p.date, v: p.shares.approve })) }, { key: 'd', points: m.polls.map(p => ({ date: p.date, v: p.shares.disapprove })) }];
+      return `<div class="tk-card pg-mini"><b>${PG_esc(m.name)}${m.former ? ' <span class="pg-badge pg-former">FORMER</span>' : ''}</b><div class="pg-big-n"><span style="color:${PG_col('#2fa66a')}">${pct(last.shares.approve)}</span> <small>approve</small> <span style="color:${PG_col('#cf1322')}">${pct(last.shares.disapprove)}</span> <small>disapprove</small></div>`
+        + PG_lines(ser, k => k === 'a' ? '#2fa66a' : '#cf1322') + `<small class="small-muted">${m.polls.length} readings · ${m.former ? 'final reading ' + (m.termEnd || last.date) : 'latest ' + last.date}</small></div>`;
+    }).join('') + `</div>`;
+  }
+  if (o.questions.length) {
+    h += `<h2 class="section-title">Community questions</h2><div class="pg-grid2">` + o.questions.map(q => {
+      const last = q.polls[q.polls.length - 1];
+      const ser = [{ key: 'a', points: q.polls.map(p => ({ date: p.date, v: p.shares.approve })) }, { key: 'd', points: q.polls.map(p => ({ date: p.date, v: p.shares.disapprove })) }];
+      return `<div class="tk-card pg-mini"><b>${PG_esc(q.name)}</b><div class="pg-big-n"><span style="color:${PG_col('#2fa66a')}">${pct(last.shares.approve)}</span> <small>${PG_esc(q.yes || 'Yes')}</small> <span style="color:${PG_col('#cf1322')}">${pct(last.shares.disapprove)}</span> <small>${PG_esc(q.no || 'No')}</small></div>`
+        + PG_lines(ser, k => k === 'a' ? '#2fa66a' : '#cf1322') + `<small class="small-muted">${q.polls.length} readings · latest ${last.date}</small></div>`;
+    }).join('') + `</div>`;
+  }
+  // tracking check: latest CENSUS before each ELECTION snapshot
+  const rows = [...ele.party].reverse().map(e => {
+    const prior = [...ps].filter(p => p.date < e.date).pop();
+    if (!prior) return null;
+    const ks = [...new Set([...Object.keys(e.shares), ...Object.keys(prior.shares)])];
+    const mae = ks.reduce((a, k) => a + Math.abs((e.shares[k] || 0) - (prior.shares[k] || 0)), 0) / ks.length * 100;
+    return `<tr><td>${e.date}</td><td>${prior.date}</td><td>${PG_dayDiff(e.date, prior.date)}</td><td>${mae.toFixed(1)} pts</td></tr>`;
+  }).filter(Boolean).join('');
+  if (rows) h += `<h2 class="section-title">How well did CENSUS track election day?</h2><div class="tk-card"><p class="small-muted" style="margin-top:0">Average gap, per party, between the last CENSUS party reading before each election and the <a href="pollster?p=ELECTION">ELECTION</a> snapshot.</p><div class="pg-scroll"><table class="pg-table"><thead><tr><th>Election</th><th>CENSUS reading</th><th>Days before</th><th>Avg gap</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  return h;
+}
+
+function elTitle(date, ks, D) {
+  const c = (D.elections || []).filter(e => Math.abs(PG_dayDiff(e.electionDate, date)) <= 3);
+  return c.length ? c.map(e => e.title.replace(/ (Special )?Election$/, '').replace(/ 20\d\d$/, '')).join(' / ') : 'Election';
+}
+function electionPage(D) {
+  const reg = D.registry, ele = D.official.ELECTION, cen = D.official.CENSUS;
+  let h = officialHero('ELECTION', 'Official record · not graded',
+    'ELECTION is not a poll: it is the party makeup of the electorate as it actually turned out on each election day. It is the ground truth the census readings are measured against.');
+  const ps = ele.party;
+  h += `<h2 class="section-title">Party makeup by election</h2><div class="pg-snapkey">`;
+  const ser = partySeries(ps, reg);
+  h += legend(ser.map(s => [PG_partyColor(reg, s.key), PG_partyName(reg, s.key)]));
+  h += `</div><div class="pg-snaps" style="margin-top:14px">` + [...ps].reverse().map(p => {
+    const ks = Object.keys(p.shares).sort((a, b) => p.shares[b] - p.shares[a]);
+    const bar = ks.map(k => `<span style="flex:${p.shares[k]};background:${PG_col(PG_partyColor(reg, k))}" title="${PG_esc(PG_partyName(reg, k))} ${pct(p.shares[k])}"></span>`).join('');
+    const txt = ks.map(k => `<span><i style="background:${PG_col(PG_partyColor(reg, k))}"></i>${PG_esc(PG_partyName(reg, k))} <b>${pct(p.shares[k])}</b></span>`).join('');
+    return `<div class="tk-card pg-snap"><div class="pg-snap-h"><b>${PG_esc(elTitle(p.date, ks, D))}</b><small>${p.date}</small><small>n = ${p.sample}</small></div><div class="pg-stack">${bar}</div><div class="pg-snap-t">${txt}</div></div>`;
+  }).join('') + `</div>`;
+  return h;
+}
+
+function pollsterPage(D, p) {
+  const reg = D.registry, g = p.grade;
+  let h = `<section class="pg-hero"><a class="pg-back" href="pollsters">← All pollster ratings</a><h1 class="pg-h1">${PG_esc(p.name)}</h1>`
+    + (p.aliases.length > 1 ? `<p class="pg-tag">Also published as ${p.aliases.filter(a => a !== p.name).map(PG_esc).join(', ')}</p>` : '') + `</section>`;
+  if (g) {
+    h += `<div class="pg-summary">${gradeChip(g.grade, true)}<div class="pg-sum-stats">`
+      + `<div><b>${g.mae.toFixed(1)} pts</b><span>average miss per candidate</span></div>`
+      + `<div><b>${Math.round(g.hit * 100)}%</b><span>polls naming the right leader</span></div>`
+      + `<div><b>${g.n}</b><span>graded poll${g.n === 1 ? '' : 's'}${g.provisional ? ' (provisional)' : ''}</span></div>`
+      + `<div><b>${Math.round(g.score)}</b><span>rating score / 100</span></div></div></div>`;
+  } else {
+    h += `<div class="tk-card"><p style="margin:0">None of this pollster’s polls can be graded yet — ${p.total} poll${p.total === 1 ? '' : 's'} published, but no matching logged result.</p></div>`;
+  }
+
+  if (p.polls.length >= 2) {
+    const ord = [...p.polls].reverse();
+    const W = 640, H = 150, L = 34, R = 12, T = 10, B = 22, xs = i => L + (ord.length === 1 ? 0.5 : i / (ord.length - 1)) * (W - L - R), ys = v => T + (1 - v / 100) * (H - T - B);
+    const P = ord.map((r, i) => [xs(i), ys(r.score)]);
+    let g = [0, 50, 100].map(v => `<line x1="${L}" x2="${W - R}" y1="${ys(v)}" y2="${ys(v)}" class="pg-grid"/><text x="${L - 6}" y="${ys(v) + 3}" class="pg-ax" text-anchor="end">${v}</text>`).join('');
+    g += `<path d="${TK_smoothPath(P)}" fill="none" stroke="${PG_col('#ca1957')}" stroke-width="2.4"/>` + P.map((q, i) => `<circle cx="${q[0]}" cy="${q[1]}" r="3.5" fill="${PG_col('#ca1957')}"><title>${ord[i].election}: ${Math.round(ord[i].score)}</title></circle>`).join('');
+    g += `<text x="${L}" y="${H - 6}" class="pg-ax">${ord[0].date}</text><text x="${W - R}" y="${H - 6}" class="pg-ax" text-anchor="end">${ord[ord.length - 1].date}</text>`;
+    h += `<h2 class="section-title">Accuracy over time</h2><div class="tk-card"><svg viewBox="0 0 ${W} ${H}" class="pg-lines">${g}</svg><p class="small-muted" style="margin:6px 0 0">Score per poll (0–100), oldest to newest.</p></div>`;
+    const bias = (list, nameOf, colorOf) => list.filter(x => x.n >= 2).sort((a, b) => Math.abs(b.mean) - Math.abs(a.mean)).slice(0, 8).map(x => {
+      const w = Math.min(50, Math.abs(x.mean) * 2);
+      return `<div class="pg-bias"><span>${PG_esc(nameOf(x.k))}<small>${x.n} polls</small></span><div class="pg-bias-bar"><i class="mid"></i><b style="background:${PG_col(colorOf(x.k))};${x.mean >= 0 ? 'left:50%' : 'right:50%'};width:${w}%"></b></div><em class="${Math.abs(x.mean) < 4 ? '' : x.mean > 0 ? 'pg-over' : 'pg-under'}">${sgn(x.mean)}</em></div>`; }).join('');
+    const byParty = bias(PG_bias(p.polls, k => (((reg.candidates || {})[k] || {}).party) || 'ua'), k => PG_partyName(reg, k), k => PG_partyColor(reg, k));
+    const byCand = bias(PG_bias(p.polls, k => PG_candName(reg, k)), n => n, n => { const k = Object.keys(reg.candidates || {}).find(x => PG_candName(reg, x) === n); return PG_candColor(reg, k); });
+    if (byParty || byCand) h += `<h2 class="section-title">House effect</h2><div class="pg-grid2">`
+      + (byParty ? `<div class="tk-card"><b>By party</b><p class="small-muted" style="margin:2px 0 8px">Average poll minus result. Right of centre = overstated, left = understated.</p>${byParty}</div>` : '')
+      + (byCand ? `<div class="tk-card"><b>By candidate</b><p class="small-muted" style="margin:2px 0 8px">Only candidates polled at least twice.</p>${byCand}</div>` : '') + `</div>`;
+  }
+  if (p.polls.length) {
+    h += `<h2 class="section-title">Graded polls</h2><div class="pg-polls">` + p.polls.map(r => {
+      const leaderOK = r.leaderHit ? '<span class="pg-ok">✓ right leader</span>' : `<span class="pg-no">✗ led with ${PG_esc(PG_candName(reg, r.leaderPoll))}; ${PG_esc(PG_candName(reg, r.leaderActual))} led</span>`;
+      const tbl = r.errs.sort((a, b) => b.actual - a.actual).map(e => `<tr><td><i class="pg-dot" style="background:${PG_col(PG_candColor(reg, e.k))}"></i>${PG_esc(PG_candName(reg, e.k))}</td><td>${pct(e.poll)}</td><td>${pct(e.actual)}</td><td class="${Math.abs(e.err) < 5 ? 'pg-ok' : Math.abs(e.err) > 15 ? 'pg-no' : ''}">${sgn(e.err)}</td></tr>`).join('');
+      return `<div class="tk-card pg-poll"><div class="pg-poll-h"><div><b>${PG_esc(r.election)}</b><small>${r.date} · ${r.daysOut} day${r.daysOut === 1 ? '' : 's'} out · n = ${r.sample ?? '?'} · vs ${r.kind.toLowerCase()}</small></div>${gradeChip(PG_gradeOf(r.score))}</div>`
+        + `<div class="pg-poll-b">${PG_dumbbell(reg, r)}<table class="pg-table pg-t-sm"><thead><tr><th>Candidate</th><th>Poll</th><th>Result</th><th>Miss (pts)</th></tr></thead><tbody>${tbl}</tbody></table></div>`
+        + `<div class="pg-poll-f">${leaderOK}<span>avg miss ${r.mae.toFixed(1)} pts</span></div></div>`;
+    }).join('') + `</div><p class="small-muted"><span class="pg-dot-key pg-solid"></span> poll &nbsp; <span class="pg-dot-key pg-ring"></span> result. Results are renormalised to the candidates the poll included.</p>`;
+  }
+  if (p.ungraded.length) h += `<details class="pg-more"><summary>${p.ungraded.length} ungraded poll${p.ungraded.length === 1 ? '' : 's'}</summary><ul class="pg-ul">${p.ungraded.map(u => `<li>${PG_esc(u.election)} · ${u.date} — ${u.why}</li>`).join('')}</ul></details>`;
+  return h;
+}
+
+let __D;
+async function renderPage() {
+  const name = new URLSearchParams(location.search).get('p') || '';
+  const D = __D || (__D = await PG_load('./'));
+  const root = $('pgPage');
+  const up = name.toUpperCase();
+  let html;
+  if (up === 'CENSUS') { document.title = 'CENSUS — Pollster Ratings'; html = `<a class="pg-back" href="pollsters">← All pollster ratings</a>` + censusPage(D); }
+  else if (up === 'ELECTION') { document.title = 'ELECTION — Pollster Ratings'; html = `<a class="pg-back" href="pollsters">← All pollster ratings</a>` + electionPage(D); }
+  else {
+    const p = D.pollsters.find(x => x.name.toLowerCase() === name.toLowerCase());
+    if (!p) html = `<section class="pg-hero"><a class="pg-back" href="pollsters">← All pollster ratings</a><h1 class="pg-h1">Pollster not found</h1><p class="lede">No pollster called “${PG_esc(name)}”.</p></section>`;
+    else { document.title = p.name + ' — Pollster Ratings'; html = pollsterPage(D, p); }
+  }
+  root.innerHTML = html;
+}
+renderPage();
+new MutationObserver(() => renderPage()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+</script>
+</body>
+</html>

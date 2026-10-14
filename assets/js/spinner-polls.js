@@ -46,7 +46,7 @@ function SpinnerPolls_renderCard(poll, candidateIds, registry) {
     <div class="sp-card">
       <button class="sp-card-header" onclick="SpinnerPolls_toggle('${id}')">
         <div class="sp-card-meta">
-          <div class="sp-card-pollster">${poll.pollster}</div>
+          <div class="sp-card-pollster"><a href="pollster?p=Spinner%20Insights" onclick="event.stopPropagation()">${poll.pollster}</a></div>
           <div class="sp-card-sub">${poll.date} · n=${poll.sample}${poll.weight !== 1 ? ` · weight ${poll.weight}` : ''}</div>
         </div>
         <span class="sp-arrow" id="${id}-arrow">▸</span>

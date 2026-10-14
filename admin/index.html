@@ -91,6 +91,9 @@
           </select>
         </div>
       </div>
+      <div class="field-row"><label>Active elections (active mode)</label>
+        <select id="activeElections" multiple size="5"></select>
+        <p class="desc" style="margin:4px 0 0;">Cmd/Ctrl-click to select every race running at once. The homepage shows a tracker for each; the banner and live box adapt automatically.</p></div>
       <div class="field-row"><label>Banner headline (active mode)</label><input id="bannerHeadline"></div>
       <div class="field-row"><label>Banner subtext (active mode)</label><input id="bannerSubtext"></div>
       <button class="btn" onclick="saveSiteMode()">Save site mode</button>
@@ -138,6 +141,22 @@
         </div>
       </div>
       <button class="btn danger" onclick="saveRaceCall()">Save call</button>
+
+      <h3 style="margin-top:22px;">Call graphic</h3>
+      <p class="desc">Builds the shareable call image for the race selected above. Colour is the party colour, or the candidate's own colour if unaffiliated.</p>
+      <div class="field-grid">
+        <div class="field-row"><label>Type</label>
+          <select id="cgKind" onchange="cgRefresh()"><option value="winner">Projected winner</option><option value="autorunoff">Projected autorunoff (2)</option></select></div>
+        <div class="field-row"><label>Title</label><input id="cgTitle" oninput="cgRefresh()" placeholder="Class 7"></div>
+        <div class="field-row"><label>Subtitle</label><input id="cgSub" oninput="cgRefresh()" value="moderator"></div>
+        <div class="field-row"><label>Override colour</label><input id="cgBg" type="color" value="#444444" oninput="cgBgOn=true;cgRefresh()"> <label style="font-weight:400"><input type="checkbox" id="cgBgUse" onchange="cgRefresh()"> use</label></div>
+        <div class="field-row"><label>Flip</label><label style="font-weight:400"><input type="checkbox" id="cgFlip" onchange="cgRefresh()"> This is a flip</label></div>
+        <div class="field-row"><label>Candidates (max 2)</label><select id="cgCands" multiple size="4" onchange="cgRefresh()"></select></div>
+      </div>
+      <canvas id="cgCanvas" style="width:100%;max-width:340px;border-radius:8px;border:1px solid var(--border,#ccc);display:block;margin:10px 0"></canvas>
+      <button class="btn" onclick="cgDownload()">Download PNG</button>
+      <button class="btn secondary" onclick="cgCopy()">Copy image</button>
+      <button class="btn secondary" onclick="cgBatch()">Download all called races (this election)</button>
 
       <h3 style="margin-top:22px;">Group vote counts</h3>
       <p class="desc">Edit vote totals for each group in this race. Feeds the map and NBC chart on TSR Elects.</p>
@@ -240,6 +259,10 @@
           </select>
         </div>
       </div>
+      <div class="field-grid" id="apprMetaRow">
+        <div class="field-row"><label>Role title (optional)</label><input id="apprRole" placeholder="e.g. Elections Secretary — shown instead of the username"></div>
+        <div class="field-row"><label>Term ended (former moderators)</label><input id="apprTermEnd" type="date"></div>
+      </div>
       <button class="btn secondary" onclick="saveApprovalStatus()">Save status</button>
 
       <div class="field-grid" style="margin-top:14px;">
@@ -282,7 +305,9 @@
 
 <script>window.SITE_BASE = '../';</script>
 <script src="../assets/js/overrides.js"></script>
+<script src="../assets/js/main.js"></script>
 <script src="../assets/js/tsrelects.js"></script>
+<script src="../assets/js/callgraphic.js"></script>
 
 <script>
 const ADMIN_PASS = 'ddtsr';
@@ -344,6 +369,8 @@ async function initAdmin() {
 
   const cfg = OVR_getSiteConfig(cfgBase);
   document.getElementById('siteMode').value = cfg.mode;
+  const actIds = SITE_activeList(cfg).map(e => e.pollsId);
+  document.getElementById('activeElections').innerHTML = pollsIndex.map(e => `<option value="${e.id}"${actIds.includes(e.id) ? ' selected' : ''}>${e.title}</option>`).join('');
   document.getElementById('bannerHeadline').value = cfg.banner.headline;
   document.getElementById('bannerSubtext').value = cfg.banner.subtext;
 
@@ -374,8 +401,11 @@ async function onPollElectionChange() {
 }
 
 function saveSiteMode() {
+  const act = Array.from(document.getElementById('activeElections').selectedOptions).map(o => ({ pollsId: o.value }));
   OVR_setSiteConfig({
     mode: document.getElementById('siteMode').value,
+    activeElections: act.length ? act : [],
+    activePollsId: act.length ? act[0].pollsId : '',
     banner: {
       headline: document.getElementById('bannerHeadline').value,
       subtext: document.getElementById('bannerSubtext').value
@@ -440,6 +470,7 @@ function loadRaceEditors() {
   const existingWinners = TSR_callWinners(call);
   winnerSel.innerHTML = candKeys.map(k =>
     `<option value="${k}"${existingWinners.includes(k) ? ' selected' : ''}>${TSR_candidateName(registry, k)}</option>`).join('');
+  if (typeof cgInit === 'function') cgInit();
 
   const groupWrap = document.getElementById('groupEditors');
   groupWrap.innerHTML = Object.keys(raceData).sort().map(g => {
@@ -452,6 +483,85 @@ function loadRaceEditors() {
       </div>`).join('');
     return `<div class="group-editor"><div class="gtitle">Group ${g}</div>${inputs}</div>`;
   }).join('');
+}
+
+
+/* ---------- Call graphic ---------- */
+let cgBgOn = false;
+function cgInit() {
+  const call = TSR_getRaceCall(TSR_getRoundData(currentElection, currentRoundKey), currentRaceName);
+  const winners = TSR_callWinners(call);
+  const roundData = TSR_getRoundData(currentElection, currentRoundKey);
+  const raceData = TSR_getRaces(roundData)[currentRaceName] || {};
+  const keys = [...new Set(Object.values(raceData).flatMap(g => Object.keys(g)))];
+  const sel = document.getElementById('cgCands');
+  const picks = winners.length ? winners.slice(0, 2) : [];
+  sel.innerHTML = keys.map(k => `<option value="${k}"${picks.includes(k) ? ' selected' : ''}>${TSR_candidateName(registry, k)}</option>`).join('');
+  document.getElementById('cgKind').value = (call?.status === 'runoff' && winners.length > 1) ? 'autorunoff' : 'winner';
+  const m = String(currentElection.title || '').match(/Class\s*\d+/i);
+  document.getElementById('cgTitle').value = m ? m[0] : (currentElection.title || '');
+  document.getElementById('cgFlip').checked = false;
+  document.getElementById('cgBgUse').checked = false;
+  cgRefresh();
+}
+let cgTimer;
+function cgRefresh() {
+  clearTimeout(cgTimer);
+  cgTimer = setTimeout(async () => {
+    const sel = document.getElementById('cgCands');
+    let keys = Array.from(sel.selectedOptions).map(o => o.value);
+    const kind = document.getElementById('cgKind').value;
+    keys = keys.slice(0, kind === 'autorunoff' ? 2 : 1);
+    const cands = keys.map(k => {
+      const c = (registry.candidates || {})[k] || {};
+      return { name: TSR_candidateName(registry, k), color: CG_candidateColor(registry, k), partyLabel: CG_candidateParty(registry, k),
+        photo: c.photo ? '../assets/img/candidates/' + c.photo : '../assets/img/bust-silhouette.svg' };
+    });
+    await CG_render(document.getElementById('cgCanvas'), {
+      title: document.getElementById('cgTitle').value, subtitle: document.getElementById('cgSub').value,
+      kind, flip: document.getElementById('cgFlip').checked, candidates: cands,
+      bg: document.getElementById('cgBgUse').checked ? document.getElementById('cgBg').value : null
+    });
+    window.__cgReady = (window.__cgReady || 0) + 1;
+  }, 30);
+}
+
+async function cgBatch() {
+  const jobs = [];
+  ['first_round', 'runoff_round'].forEach(rk => {
+    const rd = TSR_getRoundData(currentElection, rk); if (!rd) return;
+    Object.keys(TSR_getRaces(rd)).forEach(rn => {
+      const call = TSR_getRaceCall(rd, rn), w = TSR_callWinners(call);
+      if (!call || !call.status || !w.length) return;
+      jobs.push({ rk, rn, kind: call.status === 'runoff' && w.length > 1 ? 'autorunoff' : 'winner', keys: w.slice(0, 2) });
+    });
+  });
+  if (!jobs.length) { flashStatus('No called races in this election yet.'); return; }
+  const m = String(currentElection.title || '').match(/Class\s*\d+/i), title = m ? m[0] : currentElection.title;
+  const cv = document.createElement('canvas');
+  for (const j of jobs) {
+    const cands = j.keys.map(k => { const c = (registry.candidates || {})[k] || {};
+      return { name: TSR_candidateName(registry, k), color: CG_candidateColor(registry, k), partyLabel: CG_candidateParty(registry, k),
+        photo: c.photo ? '../assets/img/candidates/' + c.photo : '../assets/img/bust-silhouette.svg' }; });
+    await CG_render(cv, { title, subtitle: document.getElementById('cgSub').value, kind: j.kind, flip: false, candidates: cands });
+    const a = document.createElement('a');
+    a.download = `${title}-${j.rk === 'runoff_round' ? 'runoff' : 'first-round'}-${j.kind}.png`.replace(/\s+/g, '-').toLowerCase();
+    a.href = cv.toDataURL('image/png'); a.click();
+    await new Promise(r => setTimeout(r, 250));
+  }
+  flashStatus(`Downloaded ${jobs.length} call graphic${jobs.length === 1 ? '' : 's'}.`);
+}
+function cgDownload() {
+  const c = document.getElementById('cgCanvas'), a = document.createElement('a');
+  a.download = (document.getElementById('cgTitle').value || 'call').replace(/\s+/g, '-').toLowerCase() + '-call.png';
+  a.href = c.toDataURL('image/png'); a.click();
+}
+async function cgCopy() {
+  try {
+    const blob = await new Promise(r => document.getElementById('cgCanvas').toBlob(r, 'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    flashStatus('Image copied.');
+  } catch (e) { flashStatus('Copy not allowed here — use Download PNG.'); }
 }
 
 function saveRoundStats() {
@@ -648,7 +758,7 @@ function onApprKindChange() {
   sel.innerHTML = keys.map(k => `<option value="${k}">${merged[kind][k].role || merged[kind][k].name}</option>`).join('');
   document.getElementById('apprYesLabelText').textContent = kind === 'questions' ? 'Yes share (0–1)' : 'Approve share (0–1)';
   document.getElementById('apprNoLabelText').textContent = kind === 'questions' ? 'No share (0–1)' : 'Disapprove share (0–1)';
-  document.getElementById('apprStatusRow').style.display = kind === 'moderators' ? '' : 'none';
+  document.getElementById('apprStatusRow').style.display = document.getElementById('apprMetaRow').style.display = kind === 'moderators' ? '' : 'none';
   onApprKeyChange();
 }
 
@@ -657,7 +767,11 @@ function onApprKeyChange() {
   const key = document.getElementById('apprKey').value;
   const merged = getMergedApproval();
   const entry = merged[kind] && merged[kind][key];
-  if (entry && kind === 'moderators') document.getElementById('apprStatus').value = entry.status || 'current';
+  if (entry && kind === 'moderators') {
+    document.getElementById('apprStatus').value = entry.status || 'current';
+    document.getElementById('apprRole').value = entry.role || '';
+    document.getElementById('apprTermEnd').value = entry.termEnd || '';
+  }
 }
 
 function saveApprovalStatus() {
@@ -665,7 +779,7 @@ function saveApprovalStatus() {
   const key = document.getElementById('apprKey').value;
   if (kind !== 'moderators') { alert('Status only applies to moderators.'); return; }
   if (!key) { alert('Pick a moderator first.'); return; }
-  OVR_setApprovalStatus(kind, key, document.getElementById('apprStatus').value);
+  OVR_setApprovalStatus(kind, key, document.getElementById('apprStatus').value, { role: document.getElementById('apprRole').value.trim(), termEnd: document.getElementById('apprTermEnd').value });
   flashStatus('Status saved locally.');
 }
 

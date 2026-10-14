@@ -19,8 +19,8 @@ async function GF_render(root, ctx) {
   root.innerHTML = `
     <div class="gf-head">
       <div><div class="gf-kicker">Decision Desk TSR</div><h3>ProbCalc Group Forecast</h3>
-        <p>Every group is averaged and simulated separately, then combined into a sub-wide forecast.
-        Updates itself when polls change.</p></div>
+        <p>Each group is estimated from its own polls, pulled toward the sub-wide average where samples are tiny,
+        then reconciled so the groups add up to the poll average. Updates itself when polls change.</p></div>
       <div class="gf-live"><span class="gf-dot"></span>LIVE · ${R.sims.toLocaleString()} sims<br><small>${new Date().toLocaleTimeString()}</small><br><a class="sim-link" href="${ctx.simUrl || 'elects/simulate'}">▶ Simulate your own</a></div>
     </div>
     ${ctx.demo ? '<div class="gf-demo">DEMO DATA — randomly generated group polling for layout testing, not real results.</div>' : ''}
@@ -38,11 +38,15 @@ async function GF_render(root, ctx) {
         <div class="gf-maplegend">${order.map(i => `<span><i style="background:${col(i)}"></i>${nm(i)}</span>`).join('')}<span class="small-muted">Fainter = closer · dashed = no group polls (${noGroupPolls})</span></div>
         <div id="gfPanel" class="gf-panel"></div></div>
     </div>
+    <details class="gf-more"><summary>Trend, vote-share ranges &amp; group-by-group table</summary>
+    <div class="gf-check">Reconciled to the poll average — group-weighted expected vote: ${order.map(i => `<b style="color:${col(i)}">${nm(i)} ${(S.avg[i] * 100).toFixed(1)}%</b>`).join(' · ')}.
+      Groups with only a respondent or two lean on that average, so one answer can't swing a whole group.</div>
     <div class="gf-grid">
       <div class="gf-card"><h4>Win probability over time</h4><div id="gfTrend"></div></div>
       <div class="gf-card"><h4>Sub-wide vote share — 90% range</h4><div id="gfRange"></div></div>
     </div>
-    <div class="gf-card gf-wide"><h4>Group-by-group win probability</h4><div class="rcp-table-wrap" style="margin:0"><table class="rcp-table" id="gfHeat"></table></div></div>`;
+    <div class="gf-card gf-wide"><h4>Group-by-group win probability</h4><div class="rcp-table-wrap" style="margin:0"><table class="rcp-table" id="gfHeat"></table></div></div>
+    </details>`;
 
   // group panel
   const panel = g => {

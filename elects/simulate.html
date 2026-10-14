@@ -184,12 +184,25 @@
       <img class="mark" src="../assets/img/brand/wikielections-mark.png" alt="">
       <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
     </a>
-    <nav class="main-nav-inline">
+    <nav class="main-nav-inline" aria-label="Main">
       <a href="../">Main Page</a>
       <a href="../activities">Decision Desk TSR</a>
       <a href="../polls">Spinner Insights Polls</a>
-      <a href="./">TSR Elects — Live</a>
-      <a href="../articles">Articles</a>
+      <a href="../elects/">TSR Elects</a>
+      <details class="nav-more">
+        <summary class="current">More</summary>
+        <div class="nav-menu">
+          <div class="nav-menu-h">Tools</div>
+          <a href="../elects/simulate" class="current"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <!-- Map Maker: add here once released
+          <a href="../elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a> -->
+          <div class="nav-menu-h">Polling</div>
+          <a href="../pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Read</div>
+          <a href="../articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="../guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+        </div>
+      </details>
     </nav>
     <span class="mode-pill" id="modePill">…</span>
   </div>
@@ -197,11 +210,12 @@
 </header>
 
 <main class="wrap">
-  <section class="hero" style="text-align:center; padding-top:30px;">
-    <img src="../assets/img/brand/favicon-ddtsr.png" alt="Decision Desk TSR" style="height:110px; width:110px; margin:0 auto 10px; display:block; border-radius:18px;">
-    <div style="font-family:var(--font-elects-display); font-size:26px; letter-spacing:.02em; text-transform:uppercase; margin-bottom:10px;">Decision Desk TSR</div>
-    <div class="elects-kicker" style="margin-bottom:14px; background:var(--brand);">Custom Election Simulator</div>
-    <h1 id="raceTitle" style="font-size:30px;">Simulate your own election</h1>
+  <section class="hero sim-hero">
+    <img src="../assets/img/brand/favicon-ddtsr.png" alt="Decision Desk TSR" class="sim-hero-logo">
+    <div>
+      <div class="elects-kicker" style="margin-bottom:8px; background:var(--brand);">Decision Desk TSR · Custom Election Simulator</div>
+      <h1 id="raceTitle" style="font-size:clamp(24px,4.5vw,32px); margin:0;">Simulate your own election</h1>
+    </div>
   </section>
 
   <section class="sim-setup" id="setup">

@@ -115,11 +115,11 @@ function OVR_addApprovalPoll(kind, key, poll) {
   OVR_save(ovr);
 }
 
-function OVR_setApprovalStatus(kind, key, status) {
+function OVR_setApprovalStatus(kind, key, status, extra) {
   const ovr = OVR_load();
   ovr.approvalStatus = ovr.approvalStatus || {};
   ovr.approvalStatus[kind] = ovr.approvalStatus[kind] || {};
-  ovr.approvalStatus[kind][key] = status;
+  ovr.approvalStatus[kind][key] = extra ? Object.assign({ status }, extra) : status;
   OVR_save(ovr);
 }
 
@@ -135,7 +135,9 @@ function OVR_getApprovalData(base) {
     Object.keys(baseGroup).forEach(key => {
       const entry = JSON.parse(JSON.stringify(baseGroup[key]));
       entry.polls = entry.polls.concat((added[kind] && added[kind][key]) || []);
-      if (statusOvr[kind] && statusOvr[kind][key]) entry.status = statusOvr[kind][key];
+      const so = statusOvr[kind] && statusOvr[kind][key];
+      if (so && typeof so === 'object') { ['status', 'role', 'termEnd'].forEach(f => { if (so[f]) entry[f] = so[f]; else if (f !== 'status' && so[f] === '') delete entry[f]; }); }
+      else if (so) entry.status = so;
       result[kind][key] = entry;
     });
   });

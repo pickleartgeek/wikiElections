@@ -9,7 +9,7 @@ version of the **TSRElects** live-results app.
 * Moving previous DDTSR analysis articles to the site - DONE
 * Extending approval polling for Impressive_Plant, wiptes167 and teammomofan. - Impressive-Plant DONE
 * Building in historical moderator approval data.
-* Periodically fetching BallotTSR results on select polls for up to date election results on TSRElects 
+* Periodically fetching BallotTSR results on select polls for up to date election results on TSRElects - in progress
 
 
 # Project layout

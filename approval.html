@@ -241,7 +241,7 @@ function loadEntry(key) {
             <td>${(approve * 100).toFixed(1)}%</td>
             <td>${(disapprove * 100).toFixed(1)}%</td></tr>
           ${[...entry.polls].sort((a, b) => new Date(b.date) - new Date(a.date)).map(p => `
-            <tr><td>${p.pollster}</td><td>${p.date}</td><td>${p.sample}</td>
+            <tr><td><a href="pollster?p=${encodeURIComponent(String(p.pollster).replace(/\s*\(.*?\)/g,'').replace(/^u\//,'').replace(/\s+H2H Poll$/,'').trim())}">${p.pollster}</a></td><td>${p.date}</td><td>${p.sample}</td>
               <td>${((p.shares.approve || 0) * 100).toFixed(1)}%</td>
               <td>${((p.shares.disapprove || 0) * 100).toFixed(1)}%</td></tr>`).join('')}
         </tbody>

@@ -151,7 +151,7 @@ async function boot() {
   });
   tableHtml += `</tr>`;
   [...polls].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(p => {
-    tableHtml += `<tr><td>${p.pollster}</td><td>${p.date}</td><td>${p.sample}</td>`;
+    tableHtml += `<tr><td><a href="pollster?p=${encodeURIComponent(String(p.pollster).replace(/\s*\(.*?\)/g,'').replace(/^u\//,'').replace(/\s+H2H Poll$/,'').trim())}">${p.pollster}</a></td><td>${p.date}</td><td>${p.sample}</td>`;
     partyIds.forEach(pid => {
       const v = p.shares[pid];
       tableHtml += `<td>${typeof v === 'number' ? (v * 100).toFixed(1) + '%' : '<span class="small-muted">—</span>'}</td>`;

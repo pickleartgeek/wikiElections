@@ -237,7 +237,7 @@
         "June 2026 Class 5 Mod Election First Round": {
           "1": {
             "abagel": 1,
-            "rf": 1
+            "rf": 2
           },
           "2": {
             "gsx": 1
@@ -283,7 +283,7 @@
         "June 2026 Class 5 Mod Election Final RCV Round": {
           "1": {
             "abagel": 1,
-            "rf": 1
+            "rf": 2
           },
           "2": {
             "rf": 1

@@ -62,7 +62,7 @@
           "status": "runoff",
           "winners": [
             "nzb1",
-            "tmf" 
+            "tmf"
           ]
         }
       }
@@ -116,7 +116,7 @@
           ]
         }
       }
-    } 
+    }
   },
   {
     "id": "Class 6 July",
@@ -225,100 +225,99 @@
     "runoff_round": null
   },
   {
-  "id": "class5-june",
-  "title": "June 2026 Class 5 Mod Election",
-  "date": "2026-06-15",
-  "party": "Regular",
-  "turnout": 15,
-  "precincts_reporting": 100,
-  "precincts_total": 100,
-  "first_round": {
-    "races": {
-      "June 2026 Class 5 Mod Election First Round": {
-        "1": {
-          "abagel": 1,
-          "rf": 1
-        },
-        "2": {
-          "gsx": 1
-        },
-        "3": {
-          "abagel": 1,
-          "rf": 1,
-          "dvwb": 1
-        },
-        "4": {
-          "gsx": 1
-        },
-        "5": {
-          "abagel": 1,
-          "fw": 1,
-          "rf": 1
-        },
-        "6": {
-          "abagel": 1,
-          "gsx": 1
-        },
-        "7": {
-          "abagel": 1
-        },
-        "8": {
-          "abagel": 1,
-          "fw": 1
+    "id": "class5-june",
+    "title": "June 2026 Class 5 Mod Election",
+    "date": "2026-06-15",
+    "party": "Regular",
+    "turnout": 15,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "June 2026 Class 5 Mod Election First Round": {
+          "1": {
+            "abagel": 1,
+            "rf": 1
+          },
+          "2": {
+            "gsx": 1
+          },
+          "3": {
+            "abagel": 1,
+            "rf": 1,
+            "dvwb": 1
+          },
+          "4": {
+            "gsx": 1
+          },
+          "5": {
+            "abagel": 1,
+            "fw": 1,
+            "rf": 1
+          },
+          "6": {
+            "abagel": 1,
+            "gsx": 1
+          },
+          "7": {
+            "abagel": 1
+          },
+          "8": {
+            "abagel": 1,
+            "fw": 1
+          }
+        }
+      },
+      "race_calls": {
+        "June 2026 Class 5 Mod Election First Round": {
+          "status": "runoff",
+          "winners": [
+            "abagel",
+            "rf"
+          ]
         }
       }
     },
-    "race_calls": {
-      "June 2026 Class 5 Mod Election First Round": {
-        "status": "runoff",
-        "winners": [
-          "abagel",
-          "rf",
-        ]
-      }
-    }
-  },
-    {
     "runoff_round": {
-    "races": {
-      "June 2026 Class 5 Mod Election Final RCV Round": {
-       "1": {
-          "abagel": 1,
-          "rf": 1
-        },
-        "2": {
-          "rf": 1
-        },
-        "3": {
-          "abagel": 1,
-          "rf": 2
-        },
-        "4": {
-          "rf": 1
-        },
-        "5": {
-          "abagel": 2,
-          "rf": 1
-        },
-        "6": {
-          "abagel": 1,
-          "rf": 1
-        },
-        "7": {
-          "abagel": 1
-        },
-        "8": {
-          "abagel": 2,
+      "races": {
+        "June 2026 Class 5 Mod Election Final RCV Round": {
+          "1": {
+            "abagel": 1,
+            "rf": 1
+          },
+          "2": {
+            "rf": 1
+          },
+          "3": {
+            "abagel": 1,
+            "rf": 2
+          },
+          "4": {
+            "rf": 1
+          },
+          "5": {
+            "abagel": 2,
+            "rf": 1
+          },
+          "6": {
+            "abagel": 1,
+            "rf": 1
+          },
+          "7": {
+            "abagel": 1
+          },
+          "8": {
+            "abagel": 2
+          }
         }
-      }
-     } 
-    },
-    "race_calls": {
-      "June 2026 Class 5 Mod Election Final RCV Round": {
-        "status": "winner",
-        "winners": [
-          "abagel"
-        ]
+      },
+      "race_calls": {
+        "June 2026 Class 5 Mod Election Final RCV Round": {
+          "status": "winner",
+          "winners": [
+            "abagel"
+          ]
+        }
       }
     }
   },
@@ -395,7 +394,7 @@
             "dvwb": 1,
             "qtw": 0,
             "wc": 2
-          }
+          },
           "2": {
             "dvwb": 1,
             "qtw": 0,

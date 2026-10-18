@@ -1,0 +1,22 @@
+{
+  "_note": "Older elections logged WITHOUT group breakdowns: statewide totals only. Used by the Custom Election Simulator for candidate/party strength, turnout and runoff drop-off (never for group lean). c = registry id where one exists, otherwise a slug. p = party id at the time (unmapped parties -> ua).",
+  "elections": [
+    { "id": "class3-apr25", "date": "2025-04-30", "name": "April 2025 Class 3",
+      "first": [ {"c":"missouriegg","p":"ua","v":20}, {"c":"pc","p":"ua","v":7}, {"c":"tmf","p":"ua","v":4} ] },
+    { "id": "class4-may25", "date": "2025-05-06", "name": "May 2025 Class 4",
+      "first": [ {"c":"canine","p":"ua","v":12}, {"c":"pc","p":"ua","v":9}, {"c":"prac","p":"ua","v":4}, {"c":"wtrees","p":"ua","v":3}, {"c":"wip","p":"ua","v":1}, {"c":"dumplings","p":"ua","v":0} ],
+      "runoff": [ {"c":"canine","p":"ua","v":18}, {"c":"pc","p":"ua","v":12} ] },
+    { "id": "class5-jun25", "date": "2025-06-07", "name": "June 2025 Class 5",
+      "first": [ {"c":"mf","p":"ua","v":10}, {"c":"pc","p":"ua","v":17}, {"c":"wip","p":"fumo","v":6}, {"c":"capablestandard","p":"ua","v":2}, {"c":"seaafternoon","p":"ua","v":2}, {"c":"barelycentrist","p":"ua","v":1} ],
+      "runoff": [ {"c":"mf","p":"ua","v":20}, {"c":"pc","p":"ua","v":15} ] },
+    { "id": "class2-nov25", "date": "2025-12-01", "name": "November 2025 Class 2",
+      "first": [ {"c":"pag","p":"ua","v":7}, {"c":"gsx","p":"ua","v":6}, {"c":"dvwb","p":"ua","v":5}, {"c":"mf","p":"csuf","v":3}, {"c":"fmr","p":"ua","v":3}, {"c":"rf","p":"tsp","v":2}, {"c":"alxuntmd","p":"ua","v":1} ],
+      "runoff": [ {"c":"pag","p":"ua","v":17}, {"c":"gsx","p":"ua","v":7} ] },
+    { "id": "class3-jan26", "date": "2026-02-01", "name": "January 2026 Class 3",
+      "first": [ {"c":"prac","p":"udc","v":8}, {"c":"hkf","p":"tsp","v":3}, {"c":"dvwb","p":"ua","v":4}, {"c":"gsx","p":"ua","v":3}, {"c":"mf","p":"csuf","v":1}, {"c":"insert779op","p":"ua","v":1}, {"c":"patella78","p":"ua","v":1}, {"c":"ictoan","p":"ua","v":0} ],
+      "runoff": [ {"c":"prac","p":"udc","v":11}, {"c":"hkf","p":"tsp","v":9} ] },
+    { "id": "class5-jun26", "date": "2026-06-14", "name": "June 2026 Class 5",
+      "first": [ {"c":"rf","p":"tsp","v":4}, {"c":"abagel","p":"ua","v":6}, {"c":"gsx","p":"ua","v":3}, {"c":"fw","p":"ua","v":2}, {"c":"dvwb","p":"ua","v":1} ],
+      "runoff": [ {"c":"rf","p":"tsp","v":8}, {"c":"abagel","p":"ua","v":8} ] }
+  ]
+}

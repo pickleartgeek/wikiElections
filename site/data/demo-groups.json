@@ -1,0 +1,277 @@
+{
+ "_DEMO": "Randomly generated placeholder group polling for layout testing only. Load with ddtsr.html?demo=groups",
+ "polls": [
+  {
+   "id": "c7s-4",
+   "pollster": "Representative-Fee65",
+   "date": "2026-09-19",
+   "sample": 19,
+   "weight": 1,
+   "shares": {
+    "tmf": 0.2632,
+    "nzb1": 0.4737,
+    "dvwb": 0.2632
+   },
+   "groups": {
+    "1": {
+     "sample": 3,
+     "shares": {
+      "tmf": 0.2123,
+      "nzb1": 0.4092,
+      "dvwb": 0.3785
+     }
+    },
+    "3": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.2024,
+      "nzb1": 0.6087,
+      "dvwb": 0.1889
+     }
+    },
+    "4": {
+     "sample": 2,
+     "shares": {
+      "tmf": 0.3138,
+      "nzb1": 0.484,
+      "dvwb": 0.2022
+     }
+    },
+    "5": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.2826,
+      "nzb1": 0.5264,
+      "dvwb": 0.191
+     }
+    },
+    "6": {
+     "sample": 1,
+     "shares": {
+      "tmf": 0.1976,
+      "nzb1": 0.3967,
+      "dvwb": 0.4058
+     }
+    },
+    "7": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.2072,
+      "nzb1": 0.3612,
+      "dvwb": 0.4316
+     }
+    },
+    "9": {
+     "sample": 3,
+     "shares": {
+      "tmf": 0.2604,
+      "nzb1": 0.4084,
+      "dvwb": 0.3311
+     }
+    }
+   }
+  },
+  {
+   "id": "c7s-3",
+   "pollster": "Spinner Insights",
+   "date": "2026-09-19",
+   "sample": 11,
+   "weight": 1,
+   "shares": {
+    "tmf": 0.3636,
+    "nzb1": 0.2727,
+    "dvwb": 0.3636
+   },
+   "groups": {
+    "1": {
+     "sample": 1,
+     "shares": {
+      "tmf": 0.294,
+      "nzb1": 0.1996,
+      "dvwb": 0.5064
+     }
+    },
+    "2": {
+     "sample": 1,
+     "shares": {
+      "tmf": 0.3165,
+      "nzb1": 0.3001,
+      "dvwb": 0.3833
+     }
+    },
+    "3": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.2738,
+      "nzb1": 0.3932,
+      "dvwb": 0.333
+     }
+    },
+    "4": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.4715,
+      "nzb1": 0.2799,
+      "dvwb": 0.2486
+     }
+    },
+    "5": {
+     "sample": 3,
+     "shares": {
+      "tmf": 0.3963,
+      "nzb1": 0.38,
+      "dvwb": 0.2237
+     }
+    },
+    "8": {
+     "sample": 3,
+     "shares": {
+      "tmf": 0.3285,
+      "nzb1": 0.3224,
+      "dvwb": 0.3492
+     }
+    },
+    "9": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.3821,
+      "nzb1": 0.2835,
+      "dvwb": 0.3344
+     }
+    }
+   }
+  },
+  {
+   "id": "c7s-2",
+   "pollster": "Spinner Insights",
+   "date": "2026-09-17",
+   "sample": 16,
+   "weight": 1,
+   "shares": {
+    "tmf": 0.5,
+    "nzb1": 0.3125,
+    "dvwb": 0.1875
+   },
+   "groups": {
+    "1": {
+     "sample": 1,
+     "shares": {
+      "tmf": 0.553,
+      "nzb1": 0.2386,
+      "dvwb": 0.2084
+     }
+    },
+    "5": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.5326,
+      "nzb1": 0.3709,
+      "dvwb": 0.0965
+     }
+    },
+    "6": {
+     "sample": 1,
+     "shares": {
+      "tmf": 0.4435,
+      "nzb1": 0.337,
+      "dvwb": 0.2195
+     }
+    },
+    "7": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.4988,
+      "nzb1": 0.2771,
+      "dvwb": 0.224
+     }
+    },
+    "8": {
+     "sample": 2,
+     "shares": {
+      "tmf": 0.3429,
+      "nzb1": 0.484,
+      "dvwb": 0.1731
+     }
+    }
+   }
+  },
+  {
+   "id": "c7s-1",
+   "pollster": "Representative-Fee65",
+   "date": "2026-09-15",
+   "sample": 13,
+   "weight": 1,
+   "shares": {
+    "tmf": 0.4615,
+    "nzb1": 0.3077,
+    "dvwb": 0.0769,
+    "xdizy": 0.1538
+   },
+   "groups": {
+    "3": {
+     "sample": 3,
+     "shares": {
+      "tmf": 0.3649,
+      "nzb1": 0.3773,
+      "dvwb": 0.0639,
+      "xdizy": 0.1939
+     }
+    },
+    "4": {
+     "sample": 3,
+     "shares": {
+      "tmf": 0.4697,
+      "nzb1": 0.233,
+      "dvwb": 0.0672,
+      "xdizy": 0.2302
+     }
+    },
+    "5": {
+     "sample": 4,
+     "shares": {
+      "tmf": 0.4389,
+      "nzb1": 0.313,
+      "dvwb": 0.0534,
+      "xdizy": 0.1947
+     }
+    },
+    "6": {
+     "sample": 2,
+     "shares": {
+      "tmf": 0.3544,
+      "nzb1": 0.3481,
+      "dvwb": 0.1291,
+      "xdizy": 0.1685
+     }
+    },
+    "7": {
+     "sample": 1,
+     "shares": {
+      "tmf": 0.3955,
+      "nzb1": 0.3482,
+      "dvwb": 0.097,
+      "xdizy": 0.1594
+     }
+    },
+    "8": {
+     "sample": 3,
+     "shares": {
+      "tmf": 0.2728,
+      "nzb1": 0.4804,
+      "dvwb": 0.0523,
+      "xdizy": 0.1945
+     }
+    },
+    "9": {
+     "sample": 2,
+     "shares": {
+      "tmf": 0.4321,
+      "nzb1": 0.2544,
+      "dvwb": 0.0972,
+      "xdizy": 0.2164
+     }
+    }
+   }
+  }
+ ]
+}

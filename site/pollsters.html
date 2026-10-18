@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pollster Ratings — wikiElections</title>
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-spin.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="./">
+      <img class="mark" src="assets/img/brand/wikielections-mark.png" alt="">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <nav class="main-nav-inline" aria-label="Main">
+      <a href="./">Main Page</a>
+      <a href="activities">Decision Desk TSR</a>
+      <a href="polls">Spinner Insights Polls</a>
+      <a href="elects/">TSR Elects</a>
+      <details class="nav-more">
+        <summary class="">More</summary>
+        <div class="nav-menu">
+          <div class="nav-menu-h">Tools</div>
+          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <!-- Map Maker: add here once released
+          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a> -->
+          <div class="nav-menu-h">Polling</div>
+          <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Read</div>
+          <a href="articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+        </div>
+      </details>
+    </nav>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+</header>
+
+<main class="wrap">
+<section class="hero" style="text-align:left;padding-top:18px;">
+  <h1 class="pg-h1">Pollster Ratings</h1>
+  <p class="lede" style="margin:4px 0 0;">Every outlet that has published a race poll, graded on how close it landed to the logged result. <a href="pollster?p=CENSUS">CENSUS</a> and <a href="pollster?p=ELECTION">ELECTION</a> are the official series and are not graded.</p>
+</section>
+<div id="pgOfficial" class="pg-official"></div>
+<div id="pgBoard" class="pg-board"><p class="small-muted">Loading…</p></div>
+<details class="pg-method"><summary>How grades work</summary>
+  <p>Each poll is compared with the first-round result among the candidates it polled (or the runoff result for a head-to-head poll, when one exists). A poll scores out of 100: <b>70%</b> for how close its shares were to the result (average miss in points, 25 points off or worse scores zero) and <b>30%</b> for naming the right leader.</p>
+  <p>A pollster's grade is the <b>weighted</b> average of its poll scores — polls released closer to election day count more, and older polls fade with a one-year half-life — pulled toward a C+ with the weight of two imaginary polls, so one lucky or unlucky poll cannot decide a grade. Pollsters with fewer than three graded polls are marked <i>provisional</i>. Polls for races with no logged result yet are listed but not graded.</p>
+  <p>Variants of one outlet (e.g. “self-poll” or “H2H” editions) count together.</p>
+</details>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>wikiElections — a Decision Desk TSR / Spinner Insights project</span>
+    <span>
+      <a href="./">Main Page</a>
+      <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
+      <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
+    </span>
+  </div>
+</footer>
+
+<script>window.SITE_BASE = './';</script>
+<script src="assets/js/overrides.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/tracker.js"></script>
+<script src="assets/js/pollsters.js"></script>
+<script>
+initSiteChrome();
+
+const CSS_GRADE = g => `<span class="pg-grade ${PG_gradeClass(g)}">${g}</span>`;
+(async () => {
+  const D = await PG_load('./');
+  const off = ['CENSUS', 'ELECTION'].map(n => {
+    const o = D.official[n], last = o.party[o.party.length - 1];
+    const blurb = n === 'CENSUS' ? 'Official community census: party support, moderator approval and right-track polling.' : 'The party makeup of the electorate on each election day.';
+    return `<a class="pg-off" href="pollster?p=${n}"><span class="pg-badge">OFFICIAL</span><b>${n}</b><span>${blurb}</span><small>${o.party.length} party snapshot${o.party.length===1?'':'s'}${last ? ' · latest ' + last.date : ''}</small></a>`;
+  }).join('');
+  document.getElementById('pgOfficial').innerHTML = off;
+  const rows = D.pollsters.map((p, i) => {
+    const g = p.grade;
+    return `<a class="pg-row" href="pollster?p=${PG_slug(p.name)}">
+      <span class="pg-rank">${g ? i + 1 : '–'}</span>
+      <span class="pg-name"><b>${PG_esc(p.name)}</b><small>${p.total} poll${p.total===1?'':'s'}${g ? ` · ${g.n} graded` : ' · none graded yet'}${g && g.provisional ? ' · provisional' : ''}</small></span>
+      <span class="pg-stat"><i>Avg miss</i>${g ? g.mae.toFixed(1) + ' pts' : '—'}</span>
+      <span class="pg-stat"><i>Right leader</i>${g ? Math.round(g.hit * 100) + '%' : '—'}</span>
+      ${g ? CSS_GRADE(g.grade) : '<span class="pg-grade pg-g-n">NR</span>'}
+    </a>`;
+  }).join('');
+  document.getElementById('pgBoard').innerHTML = rows;
+})();
+
+</script>
+</body>
+</html>

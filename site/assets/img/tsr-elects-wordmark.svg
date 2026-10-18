@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 90" width="300" height="90">
+  <text x="0" y="42" font-family="Arimo, Arial, sans-serif" font-weight="900" font-style="italic"
+        font-size="46" letter-spacing="-1" fill="#cf1322">TSR</text>
+  <rect x="2" y="52" width="180" height="4" fill="#cf1322"/>
+  <text x="2" y="78" font-family="Arimo, Arial, sans-serif" font-weight="800"
+        font-size="22" letter-spacing="6" fill="#111214">ELECTS</text>
+  <circle cx="192" cy="72" r="4" fill="#cf1322"/>
+</svg>

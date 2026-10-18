@@ -83,14 +83,15 @@ function partyTable(polls, reg) {
   return `<div class="pg-scroll"><table class="pg-table"><thead><tr><th>Date</th><th>n</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-function officialHero(name, tag, text) {
-  return `<section class="pg-hero pg-hero-official"><span class="pg-badge">OFFICIAL SERIES</span><h1 class="pg-h1">${name}</h1><p class="pg-tag">${tag}</p><p class="lede">${text}</p></section>`;
+function officialHero(name, tag, text, banner) {
+  return (banner || '') + `<section class="pg-hero pg-hero-official"><span class="pg-badge">OFFICIAL SERIES</span><h1 class="pg-h1">${name}</h1><p class="pg-tag">${tag}</p><p class="lede">${text}</p></section>`;
 }
 
 function censusPage(D) {
   const reg = D.registry, o = D.official.CENSUS, ele = D.official.ELECTION;
+  const censusBanner = `<div class="pg-banner" role="img" aria-label="Spinroom Census"><img class="pg-banner-light" src="assets/img/census/census-banner-light.png" alt="" width="851" height="315"><img class="pg-banner-dark" src="assets/img/census/census-banner-dark.png" alt="" width="851" height="315"></div>`;
   let h = officialHero('CENSUS', 'Official community census · not graded',
-    'CENSUS is the Mod Team’s own recurring survey of the community. It is treated as the benchmark rather than a competitor, so it carries no letter grade. You can see below how closely its party-support readings tracked the actual electorate on election day.');
+    'CENSUS is the Mod Team’s own recurring survey of the community. It is treated as the benchmark rather than a competitor, so it carries no letter grade. You can see below how closely its party-support readings tracked the actual electorate on election day.', censusBanner);
   const ps = o.party;
   if (ps.length) {
     h += `<h2 class="section-title">Party support</h2><div class="tk-card"><div class="pg-chart">${PG_lines(partySeries(ps, reg), k => PG_partyColor(reg, k))}</div>`

@@ -103,6 +103,53 @@
   .nbc-bar-fill { height: 100%; border-radius: 2px; }
   .nbc-pct { width: 70px; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 16px; font-weight: 800; }
 
+  /* ---------- broadcast-style masthead: the TSR Elects logo anchors a full-width brand band ---------- */
+  .elects-masthead {
+    background: linear-gradient(135deg, var(--elects-pink) 0%, #8f1243 62%, #5e0a2d 100%);
+    color: #fff; border-bottom: 4px solid var(--ink);
+    position: relative; overflow: hidden;
+  }
+  .elects-masthead::before {   /* faint diagonal stripes, echoing the brand tile on the homepage */
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 14px, transparent 14px 28px);
+  }
+  .em-inner { position: relative; display: flex; align-items: center; gap: 34px; padding-top: 26px; padding-bottom: 26px; }
+  .em-logo { flex: 0 0 auto; height: 168px; width: auto; max-width: 46%; object-fit: contain; filter: drop-shadow(0 4px 14px rgba(0,0,0,.25)); }
+  .em-info { flex: 1 1 auto; min-width: 0; padding-left: 30px; border-left: 3px solid rgba(255,255,255,.35); }
+  .em-kicker {
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px;
+    font-family: var(--font-elects-body); font-weight: 800; font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    background: #fff; color: var(--elects-pink); padding: 5px 12px; border-radius: 3px;
+  }
+  .em-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: lcPulse 1.6s ease-in-out infinite; }
+  .em-check { font-weight: 900; }
+  .elects-masthead h1 { margin: 0 0 12px; font-size: 40px; line-height: 1.05; letter-spacing: -.01em; color: #fff; text-align: left; }
+  .elects-masthead #callBadgeSlot { text-align: left; }
+  .elects-masthead .call-badge.uncalled { background: rgba(255,255,255,.16); color: #fff; border-color: rgba(255,255,255,.5); }
+  @media (max-width: 760px) {
+    .em-inner { flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 20px; padding-bottom: 22px; }
+    .em-logo { height: 104px; max-width: 78%; }
+    .em-info { padding-left: 0; border-left: 0; border-top: 3px solid rgba(255,255,255,.35); padding-top: 14px; width: 100%; }
+    .elects-masthead h1 { font-size: 28px; }
+  }
+
+  /* live-race switcher: one card per election currently running */
+  .live-strip { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 14px; }
+  .live-strip[hidden] { display: none; }
+  .live-card {
+    flex: 1 1 200px; min-width: 0; text-align: left; cursor: pointer; font: inherit; color: var(--ink);
+    padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+    border-left: 4px solid var(--elects-pink);
+  }
+  .live-card:hover { border-color: var(--ink); }
+  .live-card.active { background: var(--bar); color: #fff; border-color: var(--ink); border-left-color: var(--elects-pink); }
+  .live-card .lc-live { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .08em; color: var(--elects-pink); }
+  .live-card.active .lc-live { color: #fff; }
+  .live-card .lc-live::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: currentColor; animation: lcPulse 1.6s ease-in-out infinite; }
+  @keyframes lcPulse { 50% { opacity: .25; } }
+  .live-card .lc-t { display: block; font-weight: 800; font-size: 14px; margin: 3px 0 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .live-card .lc-s { display: block; font-size: 11px; opacity: .8; }
+
   .race-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 4px; }
   .race-tab-btn {
     padding: 5px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
@@ -212,13 +259,20 @@
 
 <div id="dynamicBanner"></div>
 
+<section class="elects-masthead" aria-label="TSR Elects">
+  <div class="wrap em-inner">
+    <img class="em-logo" src="../assets/img/brand/tsr-elects-full-logo-white.png" alt="TSR Elects" width="1200" height="581">
+    <div class="em-info">
+      <div class="em-kicker"><span class="em-dot"></span>Live Results<span class="em-check">✓</span></div>
+      <h1 id="raceTitle">Loading…</h1>
+      <div id="callBadgeSlot"></div>
+    </div>
+  </div>
+</section>
+
 <main class="wrap">
-  <section class="hero" style="text-align:center; padding-top:30px;">
-    <img src="../assets/img/brand/tsr-elects-full-logo.png" alt="TSR Elects" style="height:150px; max-width:100%; width:auto; margin:0 auto 14px; display:block;">
-    <div class="elects-kicker" style="margin-bottom:14px;">Live Results</div>
-    <h1 id="raceTitle" style="font-size:30px;">Loading…</h1>
-    <div id="callBadgeSlot"></div>
-  </section>
+
+  <div class="live-strip" id="liveStrip" hidden role="group" aria-label="Elections underway"></div>
 
   <div class="picker-row">
     <div class="field-row">
@@ -292,17 +346,19 @@ initSiteChrome();
 
 const params = new URLSearchParams(location.search);
 let allElections = [];
+let liveIds = [];   // elections running right now (site mode = active), newest first
 let registry = { candidates: {}, parties: {} };
 let geoLayer, mapInstance, geojsonCache, legendControl;
 let currentElection = null, currentRoundKey = null, currentRaceName = null;
 let selectedGroup = null;
 
 async function load() {
-  const [electionsBase, registryData, geojson, resultsMeta] = await Promise.all([
+  const [electionsBase, registryData, geojson, resultsMeta, siteCfg] = await Promise.all([
     fetch('../data/tsrelects-results.json').then(r => r.json()),
     fetch('../data/registries.json').then(r => r.json()),
     fetch('../data/groups.geojson').then(r => r.json()),
-    fetch('../data/tsrelects-meta.json').then(r => r.json()).catch(() => null)
+    fetch('../data/tsrelects-meta.json').then(r => r.json()).catch(() => null),
+    fetch('../data/site-config.json').then(r => r.json()).catch(() => ({}))
   ]);
   registry = registryData;
   geojsonCache = geojson;
@@ -311,16 +367,22 @@ async function load() {
 
   renderLastUpdated(resultsMeta);
 
+  const cfg = (typeof OVR_getSiteConfig === 'function') ? OVR_getSiteConfig(siteCfg) : siteCfg;
+  liveIds = SITE_electsIds(cfg).filter(id => allElections.some(e => e.id === id));
+  const isLive = e => liveIds.includes(e.id);
+  const ordered = [...allElections.filter(isLive), ...allElections.filter(e => !isLive(e))];   // live races first, each group newest-first
+
   const electionSel = document.getElementById('electionSelect');
-  electionSel.innerHTML = allElections.map(e =>
-    `<option value="${e.id}">${e.title} — ${e.date}</option>`).join('');
+  electionSel.innerHTML = ordered.map(e =>
+    `<option value="${e.id}">${isLive(e) ? '● LIVE · ' : ''}${e.title} — ${e.date}</option>`).join('');
   electionSel.onchange = () => openElection(electionSel.value);
   document.getElementById('roundSelect').onchange = () => selectRound(document.getElementById('roundSelect').value);
 
   initMap(geojson);
+  renderLiveStrip();
 
   const requestedId = params.get('election');
-  const startId = (requestedId && allElections.find(e => e.id === requestedId)) ? requestedId : allElections[0].id;
+  const startId = (requestedId && allElections.find(e => e.id === requestedId)) ? requestedId : (liveIds[0] || allElections[0].id);
   electionSel.value = startId;
   openElection(startId);
 }
@@ -348,9 +410,30 @@ function renderLastUpdated(meta) {
   slot.textContent = `Results last updated ${formatted}`;
 }
 
+/** One card per live election: title, how many races are called, and how much is reporting. Shown when 2+ are running. */
+function renderLiveStrip() {
+  const strip = document.getElementById('liveStrip');
+  if (!strip) return;
+  if (liveIds.length < 2) { strip.hidden = true; return; }
+  strip.hidden = false;
+  strip.innerHTML = liveIds.map(id => {
+    const e = allElections.find(x => x.id === id);
+    const rk = TSR_defaultRoundKey(e), rd = TSR_getRoundData(e, rk);
+    const names = Object.keys(TSR_getRaces(rd));
+    const called = names.filter(n => { const c = TSR_getRaceCall(rd, n); return c && (c.status === 'winner' || c.status === 'runoff'); }).length;
+    const votes = names.reduce((s, n) => s + Object.values(TSR_raceTotals(TSR_getRaces(rd)[n] || {})).reduce((a, b) => a + b, 0), 0);
+    const rep = TSR_estimateVotes(rd, e, votes).reportingPct;
+    const status = `${called}/${names.length} called${rep != null ? ' · ' + rep.toFixed(0) + '% in' : ''}${rk === 'runoff_round' ? ' · runoff' : ''}`;
+    return `<button type="button" class="live-card${currentElection && currentElection.id === id ? ' active' : ''}" data-id="${String(id).replace(/"/g, '&quot;')}"><span class="lc-live">LIVE</span><span class="lc-t">${e.title}</span><span class="lc-s">${status}</span></button>`;
+  }).join('');
+  strip.querySelectorAll('.live-card').forEach(b => b.onclick = () => openElection(b.dataset.id));
+}
+
 function openElection(id) {  currentElection = allElections.find(e => e.id === id);
   if (!currentElection) return;
   document.getElementById('electionSelect').value = id;
+  try { const u = new URL(location.href); u.searchParams.set('election', id); history.replaceState(null, '', u); } catch (e) {}
+  document.querySelectorAll('.live-card').forEach(b => b.classList.toggle('active', b.dataset.id === id));
 
   const roundWrap = document.getElementById('roundFieldWrap');
   const roundSel = document.getElementById('roundSelect');
@@ -411,7 +494,8 @@ function render() {
     badgeSlot.innerHTML = `<span class="call-badge uncalled">Race not yet called</span>`;
   }
 
-  document.getElementById('statTurnout').textContent = (roundData?.turnout ?? currentElection.turnout ?? '—') + '%';
+  const _turn = roundData?.turnout ?? currentElection.turnout;
+  document.getElementById('statTurnout').textContent = _turn != null ? _turn + '%' : '—';
   document.getElementById('statReporting').textContent = reportingPct != null ? reportingPct.toFixed(1) + '%' : '—';
   document.getElementById('statVotesIn').textContent = votesIn.toLocaleString();
   document.getElementById('statVotesTotal').textContent = estTotal.toLocaleString();

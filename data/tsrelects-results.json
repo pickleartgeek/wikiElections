@@ -380,67 +380,6 @@
     "runoff_round": null
   },
   {
-    "id": "Class 4 March",
-    "title": "Class 4 March 2026 Election",
-    "date": "2026-04-01",
-    "party": "Regular",
-    "turnout": 17,
-    "precincts_reporting": 100,
-    "precincts_total": 100,
-    "first_round": {
-      "races": {
-        "Class 4 March 2026 First Round": {
-          "1": {
-            "dvwb": 1,
-            "qtw": 0,
-            "wc": 2
-          },
-          "2": {
-            "dvwb": 1,
-            "qtw": 0,
-            "wc": 0
-          },
-          "3": {
-            "dvwb": 3,
-            "qtw": 2,
-            "wc": 0
-          },
-          "4": {
-            "dvwb": 0,
-            "qtw": 1,
-            "wc": 0
-          },
-          "5": {
-            "dvwb": 2,
-            "qtw": 1,
-            "wc": 0
-          },
-          "6": {
-            "dvwb": 0,
-            "qtw": 2,
-            "wc": 0
-          },
-          "7": {
-            "dvwb": 1,
-            "qtw": 0,
-            "wc": 0
-          },
-          "8": {
-            "dvwb": 1,
-            "qtw": 0,
-            "wc": 0
-          },
-          "9": {
-            "dvwb": 0,
-            "qtw": 0,
-            "wc": 0
-          }
-        }
-      }
-    },
-    "runoff_round": null
-  },
-  {
     "id": "Class 5",
     "title": "Class 5 Election",
     "date": "2026-04-11",
@@ -547,6 +486,168 @@
             "dvwb": 0,
             "gsx": 0
           }
+        }
+      }
+    }
+  },
+  {
+    "id": "Class 4 March",
+    "title": "Class 4 March 2026 Election",
+    "date": "2026-04-01",
+    "party": "Regular",
+    "turnout": 17,
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "Class 4 March 2026 First Round": {
+          "1": {
+            "dvwb": 1,
+            "qtw": 0,
+            "wc": 2
+          },
+          "2": {
+            "dvwb": 1,
+            "qtw": 0,
+            "wc": 0
+          },
+          "3": {
+            "dvwb": 3,
+            "qtw": 2,
+            "wc": 0
+          },
+          "4": {
+            "dvwb": 0,
+            "qtw": 1,
+            "wc": 0
+          },
+          "5": {
+            "dvwb": 2,
+            "qtw": 1,
+            "wc": 0
+          },
+          "6": {
+            "dvwb": 0,
+            "qtw": 2,
+            "wc": 0
+          },
+          "7": {
+            "dvwb": 1,
+            "qtw": 0,
+            "wc": 0
+          },
+          "8": {
+            "dvwb": 1,
+            "qtw": 0,
+            "wc": 0
+          },
+          "9": {
+            "dvwb": 0,
+            "qtw": 0,
+            "wc": 0
+          }
+        }
+      }
+    },
+    "runoff_round": null
+  },
+  {
+    "id": "class3-jan",
+    "title": "January 2026 Class 3 Mod Election",
+    "date": "2026-01-30",
+    "party": "Regular",
+    "precincts_reporting": 100,
+    "precincts_total": 100,
+    "first_round": {
+      "races": {
+        "January 2026 Class 3 Mod Election First Round": {
+          "1": {
+            "prac": 2
+          },
+          "2": {
+            "gsx1": 1
+          },
+          "3": {
+            "hkf": 2,
+            "prac": 2,
+            "dvwb": 1
+          },
+          "4": {
+            "gsx1": 1
+          },
+          "5": {
+            "hkf": 1,
+            "p78": 1,
+            "prac": 1,
+            "dvwb": 1
+          },
+          "6": {
+            "gsx1": 1,
+            "prac": 1,
+            "mf": 1
+          },
+          "7": {
+            "prac": 1,
+            "dvwb": 1,
+            "i779": 1
+          },
+          "8": {
+            "dvwb": 1
+          },
+          "9": {
+            "prac": 1
+          }
+        }
+      },
+      "race_calls": {
+        "January 2026 Class 3 Mod Election First Round": {
+          "status": "runoff",
+          "winners": [
+            "prac",
+            "hkf"
+          ]
+        }
+      }
+    },
+    "runoff_round": {
+      "races": {
+        "January 2026 Class 3 Mod Election Final RCV Round": {
+          "1": {
+            "prac": 2
+          },
+          "2": {
+            "hkf": 1
+          },
+          "3": {
+            "prac": 3,
+            "hkf": 2
+          },
+          "4": {
+            "hkf": 1
+          },
+          "5": {
+            "hkf": 2,
+            "prac": 2
+          },
+          "6": {
+            "hkf": 2,
+            "prac": 1
+          },
+          "7": {
+            "prac": 2,
+            "hkf": 1
+          },
+          "9": {
+            "prac": 1
+          }
+        }
+      },
+      "race_calls": {
+        "January 2026 Class 3 Mod Election Final RCV Round": {
+          "status": "winner",
+          "winners": [
+            "prac"
+          ]
         }
       }
     }

@@ -227,6 +227,24 @@
       "color": "#10cc26",
       "party": "ua",
       "photo": "pc.svg"
+    },
+    "gsx1": {
+      "name": "gunsmokexeon",
+      "color": "#9b6fd4",
+      "party": "tcbp",
+      "photo": "gsx.webp"
+    },
+    "i779": {
+      "name": "insert779op",
+      "color": "#956741",
+      "party": "ua",
+      "photo": "i779.svg"
+    },
+    "p78": {
+      "name": "patella78",
+      "color": "#9B59B6",
+      "party": "ua",
+      "photo": "p78.svg"
     }
   },
   "parties": {
@@ -276,6 +294,11 @@
       "name": "Common Sense Unity Front",
       "shortName": "CSUF",
       "color": "#991a5a"
+    },
+    "tcbp": {
+      "name": "Tungsten Cube Bisexual Party",
+      "shortName": "TCBP",
+      "color": "#691391"
     }
   }
 }

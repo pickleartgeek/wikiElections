@@ -1209,4 +1209,13 @@ a.tk-row:hover { background: var(--paper-dim); }
 .ac-fig .rcp-bars-wrap { margin-top: 6px; }
 @media (max-width: 640px) { .ac-fig { padding: 14px 12px 12px; } .ac-chips b { font-size: 26px; } .ac-an { font-size: 10px; } }
 .ac-fig{--c-tsp:#b71212;--c-udc:#32a852;--c-ua:#bcc0c2;--c-oth:#8e7aa8;--c-iltsr:#edce2f;--c-sfp:#2a4a44;--c-constar:#a01f1a;--c-tcbp:#c0588f;}
-:root[data-theme="dark"] .ac-fig{--c-tsp:#ed4848;--c-udc:#5ace79;--c-ua:#bcc0c2;--c-oth:#8e7aa8;--c-iltsr:#edce2f;--c-sfp:#b5d5cf;--c-constar:#e5645f;--c-tcbp:#c0588f;}
+:root[data-theme="dark"] .ac-fig{--c-tsp:#ed4848;--c-udc:#5ace79;--c-ua:#bcc0c2;--c-oth:#8e7aa8;--c-iltsr:#edce2f;--c-sfp:#b5d5cf;--c-constar:#e5645f;--c-tcbp:#c0588f;}.tk-leadbadge { margin-left: auto; align-self: center; margin-bottom: 0; }
+@media (max-width: 760px) { .tk-leadbadge { margin-left: 0; } }
+
+/* Official-series banner (CENSUS pollster page): the light version is white-backed, so multiply lets it sit on the page background */
+.pg-banner { margin: 8px 0 4px; border-radius: 12px; overflow: hidden; line-height: 0; }
+.pg-banner img { display: block; width: 100%; height: auto; max-height: 260px; object-fit: cover; object-position: left center; }
+.pg-banner .pg-banner-dark { display: none; }
+.pg-banner .pg-banner-light { mix-blend-mode: multiply; }
+[data-theme="dark"] .pg-banner .pg-banner-dark { display: block; }
+[data-theme="dark"] .pg-banner .pg-banner-light { display: none; }

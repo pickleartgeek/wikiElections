@@ -20,6 +20,20 @@ function SITE_activeList(cfg) {
   return l.length ? l : (cfg.activePollsId ? [{ pollsId: cfg.activePollsId }] : []);
 }
 
+/** Elections live on TSR Elects right now: the explicit `electsIds` list, else the active races' ids (which match results ids for some races). */
+function SITE_electsIds(cfg) {
+  if (cfg.mode !== 'active') return [];
+  if (Array.isArray(cfg.electsIds) && cfg.electsIds.length) return cfg.electsIds;
+  return SITE_activeList(cfg).map(e => e.pollsId);
+}
+
+/** Where the banner / live box / hub button should send people: straight to the race when only one is live, else the TSR Elects chooser. */
+function SITE_electsLink(cfg, base) {
+  const ids = SITE_electsIds(cfg);
+  if (ids.length === 1) return `${base}elects/?election=${encodeURIComponent(ids[0])}`;
+  return base + 'elects/';
+}
+
 function renderChrome(cfg, base) {
   const nActive = Math.max(1, SITE_activeList(cfg).length);
   // mode pill in masthead, if present
@@ -34,7 +48,7 @@ function renderChrome(cfg, base) {
 
   if (cfg.mode === 'active') {
     slot.innerHTML = `
-      <a class="breaking-banner" href="${base}${cfg.banner.link}">
+      <a class="breaking-banner" href="${nActive > 1 ? base + 'elects/' : (SITE_electsIds(cfg).length === 1 ? SITE_electsLink(cfg, base) : base + cfg.banner.link)}">
         <div class="wrap">
           <span class="tag">${cfg.banner.eyebrow}${nActive > 1 ? ' · ' + nActive + ' RACES' : ''}</span>
           <span class="headline">${cfg.banner.headline}</span>
@@ -52,7 +66,7 @@ function renderChrome(cfg, base) {
   if (heroSlot) {
     if (cfg.mode === 'active') {
       heroSlot.innerHTML = `
-        <a class="live-box" href="${base}${cfg.liveBox.link}">
+        <a class="live-box" href="${nActive > 1 ? base + 'elects/' : (SITE_electsIds(cfg).length === 1 ? SITE_electsLink(cfg, base) : base + cfg.liveBox.link)}">
           <div class="label">${nActive > 1 ? 'LIVE: ' + nActive + ' elections underway' : cfg.liveBox.label}</div>
           <div class="body">${nActive > 1 ? 'Follow every race as the results come in, live on TSR Elects.' : cfg.liveBox.text}</div>
         </a>`;

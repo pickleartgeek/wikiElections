@@ -78,11 +78,15 @@ function BaseCalc_turnoutWeight(sample, anticipatedTurnout) {
  *   multiplied into that poll's weight on top of everything else. Used by
  *   BaseCalc_rollingAverage to fade a poll out gradually near the edge of its
  *   window instead of a hard cliff at the window boundary.
+ * @param {number} [opts.softDecay=0] - 0 keeps the classic 1/days recency decay (a poll loses half its
+ *   weight after day 2, a tenth after day 10), which makes a day-by-day timeline saw-tooth: every new poll
+ *   spikes the average and then it sags back. >0 swaps in a soft curve: a poll eases in over ~4 days (10% -> 100%), then fades
+ *   logarithmically, 1/(1 + softDecay*ln(days)), so a new poll nudges the average instead of yanking it. Larger values = faster fade. Used by the approval and party-support charts.
  * @returns {Object} { alphas: {candId: rawAlpha}, averages: {candId: pct 0-1},
  *   coverage: {candId: pollCount}, totalAlpha, n, sorted: [[candId, pct], ...] }
  */
 function BaseCalc_aggregate(polls, candidateIds, electionDate, opts = {}) {
-  const { anticipatedTurnout, normalize = true, weightMultiplierFn } = opts;
+  const { anticipatedTurnout, normalize = true, weightMultiplierFn, softDecay = 0 } = opts;
   const alphas = {};
   const weightSums = {};
   const coverage = {};
@@ -90,12 +94,21 @@ function BaseCalc_aggregate(polls, candidateIds, electionDate, opts = {}) {
 
   polls.forEach(poll => {
     const daysTill = BaseCalc_daysUntil(poll.date, electionDate);
+    // soft mode: weight = ramp-in / log-decay, as a divisor of the raw weight.
+    // ramp-in: a poll starts at 10% weight on its own day and eases up to full over ~4 days, so a new
+    // poll fades in instead of stepping the line; log-decay: slow, heavy-tailed fade after that.
+    let decayDays = daysTill;
+    if (softDecay > 0) {
+      const age = (new Date(electionDate).getTime() - new Date(poll.date).getTime()) / 86400000;
+      const ramp = 0.1 + 0.9 * (1 - Math.exp(-Math.max(age, 0) / 4));
+      decayDays = (1 + softDecay * Math.log(daysTill)) / ramp;
+    }
     let weight = BaseCalc_turnoutWeight(poll.sample, anticipatedTurnout);
     if (weightMultiplierFn) weight *= weightMultiplierFn(poll);
     candidateIds.forEach(id => {
       if (poll.shares && typeof poll.shares[id] === 'number') {
-        alphas[id] += (poll.shares[id] * weight) / (daysTill * 100);
-        weightSums[id] += weight / (daysTill * 100);
+        alphas[id] += (poll.shares[id] * weight) / (decayDays * 100);
+        weightSums[id] += weight / (decayDays * 100);
         coverage[id] += 1;
       }
     });

@@ -18,6 +18,7 @@ const TK_iso = t => new Date(t).toISOString().slice(0, 10);
 const TK_clip = (s, n) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
 const TK_net = (v, d = 1) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(d);
 const TK_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const TK_pollsterHref = n => 'pollster?p=' + encodeURIComponent(String(n).replace(/\s*\(.*?\)/g, '').replace(/^u\//, '').replace(/\s+H2H Poll$/, '').trim());
 const TK_INK = '#111214', TK_RED = '#cf1322';
 
 
@@ -102,7 +103,7 @@ function TK_trend(el, cfg) {
   const series = cfg.series.map(s => ({
     ...s, color: TK_col(s.color),
     pts: (s.pts || []).map(p => ({ t: TK_t(p.d), d: p.d, v: p.v })).sort((a, b) => a.t - b.t),
-    dots: (s.dots || []).map(p => ({ t: TK_t(p.d), d: p.d, v: p.v, n: p.n })),
+    dots: (s.dots || []).map(p => ({ t: TK_t(p.d), d: p.d, v: p.v, n: p.n, pl: p.pl })),
   })).filter(s => s.pts.length);
   if (!series.length) { el.innerHTML = '<div class="small-muted" style="padding:16px">No polling logged yet.</div>'; return; }
   const tEnd = Math.max(...series.map(s => s.pts[s.pts.length - 1].t));
@@ -124,7 +125,7 @@ function TK_trend(el, cfg) {
     const narrow = W < 540;
     const H = cfg.height || (narrow ? 250 : 330);
     const lblMode = cfg.labelMode || (narrow ? 'value' : 'name');
-    const m = { t: 12, r: lblMode === 'name' ? 138 : 46, b: 28, l: narrow ? 36 : 42 };
+    const m = { t: 12, r: lblMode === 'name' ? 172 : 46, b: 28, l: narrow ? 36 : 42 };
     const t0 = state.range ? Math.max(tAll, tEnd - state.range * TK_DAY) : tAll;
     const t1 = tEnd, span = Math.max(TK_DAY, t1 - t0);
     const X = t => m.l + ((t - t0) / span) * (W - m.l - m.r);
@@ -160,9 +161,11 @@ function TK_trend(el, cfg) {
     }
     // dots first (under the lines), faint series first
     const order = [...vis].sort((a, b) => (b.faint ? 1 : 0) - (a.faint ? 1 : 0));
+    let dotLinks = '';   // invisible hit-targets drawn above the hover layer: clicking a dot opens that pollster's rating page
     order.forEach(s => {
-      s.vd.forEach(p => { const r = Math.min(6, 2.4 + Math.sqrt(p.n || 4) * 0.55);
-        g += `<circle cx="${X(p.t)}" cy="${Y(p.v)}" r="${r}" fill="${s.color}" fill-opacity="${s.faint ? .12 : .3}" stroke="${s.color}" stroke-opacity="${s.faint ? .3 : .75}" stroke-width="1"/>`; });
+      s.vd.forEach(p => { const r = Math.min(6, 2.4 + Math.sqrt(p.n || 4) * 0.55), cx = X(p.t), cy = Y(p.v);
+        g += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${s.color}" fill-opacity="${s.faint ? .12 : .3}" stroke="${s.color}" stroke-opacity="${s.faint ? .3 : .75}" stroke-width="1" style="pointer-events:none"/>`;
+        if (p.pl) dotLinks += `<a href="${TK_esc(TK_pollsterHref(p.pl))}"><circle cx="${cx}" cy="${cy}" r="${Math.max(r, 7)}" fill="transparent" style="cursor:pointer"><title>${TK_esc(p.pl)} · ${TK_esc(tipFmt(p.v))} · ${TK_esc(p.d)}${p.n ? ' · n=' + p.n : ''} — open pollster rating</title></circle></a>`; });
     });
     order.forEach(s => {
       const d = TK_smoothPath(s.vp.map(p => [X(p.t), Y(p.v)]));
@@ -170,13 +173,17 @@ function TK_trend(el, cfg) {
     });
     // end labels with simple vertical dodge
     const labs = vis.filter(s => !s.faint).map(s => { const p = s.vp[s.vp.length - 1]; return { s, p, y: Y(p.v) }; }).sort((a, b) => a.y - b.y);
-    for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i - 1].y < 15) labs[i].y = labs[i - 1].y + 15;
+    { // spread end labels: push down to clear neighbours, then pull back up if the stack hits the bottom edge
+      const GAP = 15, top = m.t + 8, bot = H - m.b - 2;
+      labs.forEach((l, i) => { l.y = Math.max(l.y, i ? labs[i - 1].y + GAP : top); });
+      if (labs.length) { labs[labs.length - 1].y = Math.min(labs[labs.length - 1].y, bot); for (let i = labs.length - 2; i >= 0; i--) labs[i].y = Math.min(labs[i].y, labs[i + 1].y - GAP); }
+    }
     labs.forEach(l => {
       const x = X(l.p.t);
       g += `<circle cx="${x}" cy="${Y(l.p.v)}" r="4.2" fill="${l.s.color}" stroke="var(--surface,#fff)" stroke-width="2"/>` +
-        `<text x="${x + 10}" y="${l.y + 4}" class="tk-end" fill="${l.s.color}">${lblMode === 'name' ? TK_esc(TK_clip(l.s.short || l.s.name, 15)) + ' ' : ''}${TK_esc(yFmt(Math.round(l.p.v * 10) / 10))}</text>`;
+        `<text x="${x + 10}" y="${l.y + 4}" class="tk-end" fill="${l.s.color}">${lblMode === 'name' ? TK_esc(TK_clip(l.s.short || l.s.name, 21)) + ' ' : ''}${TK_esc(yFmt(Math.round(l.p.v * 10) / 10))}</text>`;
     });
-    g += `<line class="tk-cross" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" style="display:none"/><rect class="tk-hit" x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${H - m.t - m.b}" fill="transparent"/>`;
+    g += `<line class="tk-cross" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" style="display:none"/><rect class="tk-hit" x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${H - m.t - m.b}" fill="transparent"/>${dotLinks}`;
     plot.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${TK_esc(cfg.label || 'Polling trend chart')}">${g}</svg>`;
 
     const svg = plot.querySelector('svg'), cross = svg.querySelector('.tk-cross'), hit = svg.querySelector('.tk-hit');
@@ -328,6 +335,12 @@ function _TK_questions(el, o) {
 }
 
 /* ---------- Generic-ballot style party tracker ---------- */
+/** The classic DDTSR lead badge: yellow pill, leader's name, and the margin in the leader's own colour. */
+function TK_leadBadge(name, color, margin) {
+  const hsl = TK_hexToHsl(color), ink = hsl && hsl[2] > 0.62 ? '#111214' : '#fff';  // keep light party colours (e.g. Unaffiliated grey) legible
+  return `<div class="rcp-lead-badge tk-leadbadge">${TK_esc(name)}<span class="rcp-lead-value" style="background:${color};color:${ink}">+${margin.toFixed(1)}</span></div>`;
+}
+
 function _TK_parties(el, o) {
   const asOf = o.asOf || TK_dayStr(), ids = Object.keys(o.parties);
   if (!o.polls.length) { el.innerHTML = '<div class="small-muted" style="padding:16px">No party support polling logged yet.</div>'; return; }
@@ -338,11 +351,11 @@ function _TK_parties(el, o) {
   const series = show.map(i => ({
     id: i, name: o.parties[i].shortName || o.parties[i].name, short: o.parties[i].shortName || o.parties[i].name, color: o.parties[i].color,
     pts: tl.filter(p => p.coverage[i] > 0).map(p => ({ d: p.date, v: p.averages[i] * 100 })),
-    dots: o.polls.filter(p => p.shares && typeof p.shares[i] === 'number').map(p => ({ d: p.date, v: p.shares[i] * 100, n: p.sample }))
+    dots: o.polls.filter(p => p.shares && typeof p.shares[i] === 'number').map(p => ({ d: p.date, v: p.shares[i] * 100, n: p.sample, pl: p.pollster }))
   }));
   el.innerHTML = `
     <div class="tk-chips">${show.map(i => `<div class="tk-chip" style="--c:${TK_col(o.parties[i].color)}"><span class="tk-chip-n">${TK_esc(o.parties[i].shortName || o.parties[i].name)}</span><span class="tk-chip-v">${(last[i] * 100).toFixed(1)}<small>%</small></span></div>`).join('')}
-      ${second ? `<div class="tk-chip-lead"><small>Lead</small><b>${TK_esc(o.parties[lead].shortName || o.parties[lead].name)} ${TK_net((last[lead] - last[second]) * 100)}</b></div>` : ''}</div>
+      ${second ? TK_leadBadge(o.parties[lead].shortName || o.parties[lead].name, o.parties[lead].color, (last[lead] - last[second]) * 100) : ''}</div>
     <div class="tk-panel"><div class="tk-panel-h"><h3>Party support over time</h3><span>Lines are the weighted average · dots are individual polls, sized by sample</span></div><div id="tkPartyChart"></div></div>
     <a class="tk-more" href="${o.href || 'party-support'}">Full party breakdown →</a>`;
   TK_trend(el.querySelector('#tkPartyChart'), { label: 'Party support over time', series, ranges: [90, 180, 0], range: 180, yMin: 0 });
@@ -358,12 +371,12 @@ function _TK_race(el, o) {
   const series = show.map(i => ({
     id: i, name: TSR_candidateName(reg, i), short: TSR_candidateName(reg, i), color: TSR_candidateColor(reg, i),
     pts: tl.filter(p => p.coverage[i] > 0).map(p => ({ d: p.date, v: p.averages[i] * 100 })),
-    dots: o.polls.filter(p => p.shares && typeof p.shares[i] === 'number').map(p => ({ d: p.date, v: p.shares[i] * 100, n: p.sample }))
+    dots: o.polls.filter(p => p.shares && typeof p.shares[i] === 'number').map(p => ({ d: p.date, v: p.shares[i] * 100, n: p.sample, pl: p.pollster }))
   }));
   const [a, b] = agg.sorted;
   let view = 'trend'; try { view = localStorage.getItem('wE-race-view') === 'donut' ? 'donut' : 'trend'; } catch (e) {}
   el.innerHTML = `
-    <div class="tk-race-h"><div class="tk-race-t">${TK_esc(o.title)}</div>${b ? `<div class="tk-chip-lead"><small>Lead</small><b>${TK_esc(TSR_candidateName(reg, a[0]))} ${TK_net((a[1] - b[1]) * 100)}</b></div>` : ''}</div>
+    <div class="tk-race-h"><div class="tk-race-t">${TK_esc(o.title)}</div>${b ? TK_leadBadge(TSR_candidateName(reg, a[0]), TSR_candidateColor(reg, a[0]), (a[1] - b[1]) * 100) : ''}</div>
     <div class="tk-chips">${agg.sorted.map(([i, v]) => `<div class="tk-chip" style="--c:${TK_col(TSR_candidateColor(reg, i))}"><span class="tk-chip-n">${TK_esc(TSR_candidateName(reg, i))}</span><span class="tk-chip-v">${(v * 100).toFixed(1)}<small>%</small></span></div>`).join('')}</div>
     <div class="tk-panel"><div class="tk-panel-h"><h3>Polling average</h3><span class="tk-sub">Dots are individual polls, sized by sample</span>${typeof RCPDonut_render === 'function' ? `<div class="tk-seg" role="group" aria-label="Chart view"><button data-v="trend" class="${view === 'trend' ? 'on' : ''}">Trend</button><button data-v="donut" class="${view === 'donut' ? 'on' : ''}">Donut</button></div>` : ''}</div><div id="tkRaceChart"></div></div>
     <a class="tk-more" href="${o.href}">Full breakdown on Decision Desk TSR →</a>`;
@@ -391,4 +404,4 @@ if (typeof MutationObserver !== 'undefined') {
     .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 }
 
-if (typeof window !== 'undefined') Object.assign(window, { TK_trend, TK_spark, TK_renderApproval, TK_renderQuestions, TK_renderParties, TK_renderRace });
+if (typeof window !== 'undefined') Object.assign(window, { TK_leadBadge, TK_trend, TK_spark, TK_renderApproval, TK_renderQuestions, TK_renderParties, TK_renderRace });

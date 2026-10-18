@@ -94,6 +94,9 @@
       <div class="field-row"><label>Active elections (active mode)</label>
         <select id="activeElections" multiple size="5"></select>
         <p class="desc" style="margin:4px 0 0;">Cmd/Ctrl-click to select every race running at once. The homepage shows a tracker for each; the banner and live box adapt automatically.</p></div>
+      <div class="field-row"><label>Live on TSR Elects (active mode)</label>
+        <select id="electsIds" multiple size="5"></select>
+        <p class="desc" style="margin:4px 0 0;">The elections whose results are being posted. With two or more, TSR Elects shows a switcher strip at the top and tags them “● LIVE” in its dropdown; with one, the banner links straight to it.</p></div>
       <div class="field-row"><label>Banner headline (active mode)</label><input id="bannerHeadline"></div>
       <div class="field-row"><label>Banner subtext (active mode)</label><input id="bannerSubtext"></div>
       <button class="btn" onclick="saveSiteMode()">Save site mode</button>
@@ -371,6 +374,9 @@ async function initAdmin() {
   document.getElementById('siteMode').value = cfg.mode;
   const actIds = SITE_activeList(cfg).map(e => e.pollsId);
   document.getElementById('activeElections').innerHTML = pollsIndex.map(e => `<option value="${e.id}"${actIds.includes(e.id) ? ' selected' : ''}>${e.title}</option>`).join('');
+  const resultsSorted = [...electionsBase].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const liveSel = SITE_electsIds(cfg).filter(id => electionsBase.some(e => e.id === id));
+  document.getElementById('electsIds').innerHTML = resultsSorted.map(e => `<option value="${e.id}"${liveSel.includes(e.id) ? ' selected' : ''}>${e.title} — ${e.date}</option>`).join('');
   document.getElementById('bannerHeadline').value = cfg.banner.headline;
   document.getElementById('bannerSubtext').value = cfg.banner.subtext;
 
@@ -406,6 +412,7 @@ function saveSiteMode() {
     mode: document.getElementById('siteMode').value,
     activeElections: act.length ? act : [],
     activePollsId: act.length ? act[0].pollsId : '',
+    electsIds: Array.from(document.getElementById('electsIds').selectedOptions).map(o => o.value),
     banner: {
       headline: document.getElementById('bannerHeadline').value,
       subtext: document.getElementById('bannerSubtext').value

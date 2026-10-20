@@ -25,10 +25,10 @@
   "resultsEmbargoed": false,
   "tally": {
     "method": "fptp",
-    "totalBallots": 10,
+    "totalBallots": 11,
     "finalPct": {
-      "opt_0_cd556j": 70,
-      "opt_1_qcls5r": 30
+      "opt_0_cd556j": 72.72727272727273,
+      "opt_1_qcls5r": 27.27272727272727
     },
     "cacheVersion": 2,
     "groupWinners": {
@@ -77,7 +77,7 @@
       "4": 1,
       "5": 2,
       "6": 2,
-      "7": 1
+      "7": 2
     }
   },
   "propositionResults": {},

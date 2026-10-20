@@ -2,6 +2,26 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xav0cq_1792509807616",
+      "title": "Pre Debate Poll Class 1 - Spinner Insights",
+      "status": "open",
+      "createdAt": 1792509807616,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xav0cq_1792509807616.json"
+    },
+    {
+      "id": "poll_t3_1xausr9_1792509367954",
+      "title": "Pre Debate Poll Class 1 - Spinner Insights",
+      "status": "open",
+      "createdAt": 1792509367954,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xausr9_1792509367954.json"
+    },
+    {
       "id": "poll_t3_1xa9owf_1792445472930",
       "title": "Class 1 Polling ~ Rensenware by DDTSR",
       "status": "open",

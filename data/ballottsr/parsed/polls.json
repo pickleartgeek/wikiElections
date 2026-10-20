@@ -1,19 +1,46 @@
 {
   "polls": [
     {
+      "id": "poll_t3_1xausr9_1792509367954",
+      "title": "Pre Debate Poll Class 1 - Spinner Insights",
+      "createdBy": "JungleJumpersfan",
+      "date": "2026-10-20",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 0,
+      "included": false,
+      "reason": "no ballots yet"
+    },
+    {
+      "id": "poll_t3_1xav0cq_1792509807616",
+      "title": "Pre Debate Poll Class 1 - Spinner Insights",
+      "createdBy": "JungleJumpersfan",
+      "date": "2026-10-20",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 3,
+      "included": true,
+      "electionId": "class1-2026-10",
+      "pollster": "Spinner Insights",
+      "shares": {
+        "oc1": 0.6667,
+        "dvwb": 0.3333
+      }
+    },
+    {
       "id": "poll_t3_1xa7xzl_1792441381072",
       "title": "Class 1 Poll - RepresentativePolling",
       "createdBy": "Representative-Fee65",
       "date": "2026-10-19",
       "method": "fptp",
       "status": "open",
-      "ballots": 10,
+      "ballots": 11,
       "included": true,
       "electionId": "class1-2026-10",
       "pollster": "Representative-Fee65",
       "shares": {
-        "oc1": 0.7,
-        "dvwb": 0.3
+        "oc1": 0.7273,
+        "dvwb": 0.2727
       }
     },
     {

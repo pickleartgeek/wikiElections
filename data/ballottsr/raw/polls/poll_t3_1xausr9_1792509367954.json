@@ -1,0 +1,80 @@
+{
+  "id": "poll_t3_1xausr9_1792509367954",
+  "title": "Pre Debate Poll Class 1 - Spinner Insights",
+  "createdBy": "JungleJumpersfan",
+  "createdAt": 1792509367954,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xausr9",
+  "method": "rcv",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": 1792595767954,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_waz5me",
+      "name": "Option 1",
+      "color": "#b71212"
+    },
+    {
+      "id": "opt_1_ilyuw8",
+      "name": "Option 2",
+      "color": "#32a852"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "rcv",
+    "totalBallots": 0,
+    "finalPct": {
+      "opt_0_waz5me": 0,
+      "opt_1_ilyuw8": 0
+    },
+    "rounds": [
+      {
+        "round": 1,
+        "tallies": {
+          "opt_0_waz5me": 0,
+          "opt_1_ilyuw8": 0
+        },
+        "eliminated": "opt_0_waz5me",
+        "exhausted": 0,
+        "transfers": {
+          "opt_1_ilyuw8": 0
+        },
+        "transferExhausted": 0
+      },
+      {
+        "round": 2,
+        "tallies": {
+          "opt_1_ilyuw8": 0
+        },
+        "exhausted": 0
+      }
+    ],
+    "totalRounds": 2,
+    "rcvTransferMatrix": {
+      "opt_0_waz5me": {
+        "total": 0,
+        "to": {
+          "opt_1_ilyuw8": 0
+        },
+        "exhausted": 0
+      },
+      "opt_1_ilyuw8": {
+        "total": 0,
+        "to": {
+          "opt_0_waz5me": 0
+        },
+        "exhausted": 0
+      }
+    },
+    "cacheVersion": 2,
+    "groupWinners": {},
+    "groupPct": {},
+    "groupBallotCount": {},
+    "groupRoundLeaders": {}
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

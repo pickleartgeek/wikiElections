@@ -1,8 +1,14 @@
 {
   "_comment": "Controls the wikiElections homepage. 'mode': 'active' shows the flashing red breaking-news banner, the LIVE results box, and an RCP-style poll-aggregate donut for activePollsId. 'mode': 'off-cycle' hides the banner and instead shows a scrollable carousel of RCP-style donuts (moderator approval if data/approval-polls.json has entries, otherwise recent-race snapshots). Admins can flip this from /admin/. 'activeElections' lists every race running at once ({pollsId}); the singular activePollsId is kept as a fallback and mirrors the first entry.",
   "mode": "off-cycle",
-  "activeElectionId": "Class 1 October 2026 Election", "Class 2 October 2026 Special Election"
-  "activePollsId": "class1-2026-10", "class2-2026-10"
+  "activeElectionId": [
+    "Class 1 October 2026 Election",
+    "Class 2 October 2026 Special Election"
+  ],
+  "activePollsId": [
+    "class1-2026-10",
+    "class2-2026-10"
+  ],
   "banner": {
     "eyebrow": "BREAKING",
     "headline": "Class 1&2 campaign in full swing, DDTSR to host debate later today",
@@ -20,7 +26,10 @@
   },
   "activeElections": [
     {
-      "pollsId": "class1-2026-10", "class2-2026-10"
+      "pollsId": "class1-2026-10"
+    },
+    {
+      "pollsId": "class2-2026-10"
     }
   ]
 }

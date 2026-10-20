@@ -26,7 +26,57 @@
       "sourceId": "poll_t3_1xa7z10_1792441452986",
       "status": "open",
       "method": "rcv",
-      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xa7z10"
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xa7z10",
+      "groups": {
+        "2": {
+          "sample": 2,
+          "shares": {
+            "fw2442": 0,
+            "tmf": 1,
+            "mf1": 0
+          }
+        },
+        "3": {
+          "sample": 2,
+          "shares": {
+            "fw2442": 0.5,
+            "tmf": 0,
+            "mf1": 0.5
+          }
+        },
+        "4": {
+          "sample": 1,
+          "shares": {
+            "fw2442": 0,
+            "tmf": 0,
+            "mf1": 1
+          }
+        },
+        "5": {
+          "sample": 3,
+          "shares": {
+            "fw2442": 0.3333,
+            "tmf": 0.3333,
+            "mf1": 0.3333
+          }
+        },
+        "6": {
+          "sample": 2,
+          "shares": {
+            "fw2442": 0.5,
+            "tmf": 0.5,
+            "mf1": 0
+          }
+        },
+        "7": {
+          "sample": 1,
+          "shares": {
+            "fw2442": 0,
+            "tmf": 1,
+            "mf1": 0
+          }
+        }
+      }
     }
   ]
 }

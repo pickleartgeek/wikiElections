@@ -1,7 +1,7 @@
 {
   "_comment": "Settings for tools/ballottsr-sync.js. Edit this file (not the script) to teach the parser new names or pollsters.",
   "source": "https://raw.githubusercontent.com/pickleartgeek/ElSec/main/ballottsr",
-  "includeGroups": false,
+  "includeGroups": true,
   "pollWindowDays": 120,
   "ignoreOptions": [
     "^mystery",

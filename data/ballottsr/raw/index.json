@@ -2,6 +2,26 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xaymvr_1792517905075",
+      "title": "What's likelier?",
+      "status": "open",
+      "createdAt": 1792517905075,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xaymvr_1792517905075.json"
+    },
+    {
+      "id": "poll_t3_1xaxqhb_1792515873850",
+      "title": "Pre Debate Class 2 Poll - Spinner Insights",
+      "status": "open",
+      "createdAt": 1792515873850,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xaxqhb_1792515873850.json"
+    },
+    {
       "id": "poll_t3_1xav0cq_1792509807616",
       "title": "Pre Debate Poll Class 1 - Spinner Insights",
       "status": "open",

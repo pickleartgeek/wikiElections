@@ -1,0 +1,73 @@
+{
+  "id": "class3-2026-01",
+  "title": "January 2026 Class 3 Mod Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "mf",
+    "gsx1",
+    "hkf",
+    "ictoan",
+    "dvwb",
+    "prac",
+    "i779",
+    "p78"
+  ],
+  "electionDate": "2026-02-01",
+  "anticipatedTurnout": 21,
+  "electionId": "class3-2026-01",
+  "polls": [
+    {
+      "id": "c3j-3",
+      "pollster": "Spinner Insights",
+      "date": "2026-01-25",
+      "sample": 12,
+      "weight": 1.0,
+      "shares": {
+        "mf": 0.0493,
+        "gsx1": 0.1275,
+        "hkf": 0.3103,
+        "ictoan": 0.0491,
+        "dvwb": 0.1275,
+        "prac": 0.3362,
+        "i779": 0.0,
+        "p78": 0.0
+      },
+      "note": "Sample of 12 is weighted. Source lead: practicalpurpose +2.59; HighKingFloof +13.12 in the final round."
+    },
+    {
+      "id": "c3j-2",
+      "pollster": "Spinroom Analytics",
+      "date": "2026-01-27",
+      "sample": 16,
+      "weight": 1.0,
+      "shares": {
+        "mf": 0.125,
+        "gsx1": 0.125,
+        "hkf": 0.125,
+        "ictoan": 0.125,
+        "dvwb": 0.063,
+        "prac": 0.313,
+        "i779": 0.0,
+        "p78": 0.063
+      },
+      "note": "1 write-in (6.3%) not attributed to a candidate."
+    },
+    {
+      "id": "c3j-1",
+      "pollster": "Spinner Insights",
+      "date": "2026-01-30",
+      "sample": 15,
+      "weight": 1.0,
+      "shares": {
+        "mf": 0.0,
+        "gsx1": 0.266,
+        "hkf": 0.2,
+        "ictoan": 0.066,
+        "dvwb": 0.133,
+        "prac": 0.333,
+        "i779": 0.0,
+        "p78": 0.0
+      }
+    }
+  ]
+}

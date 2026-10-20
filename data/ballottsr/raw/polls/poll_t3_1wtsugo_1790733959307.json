@@ -1,0 +1,92 @@
+{
+  "id": "poll_t3_1wtsugo_1790733959307",
+  "title": "Shall PickleArtGeek be elevated to PermaMod to serve as Election Secretary?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1790733959307,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1wtsugo",
+  "method": "fptp",
+  "isOfficialElection": true,
+  "status": "closed",
+  "votingClosesAt": 1790906759307,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_3iqo3p",
+      "name": "Yes",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_1_at8dc4",
+      "name": "No",
+      "color": "#b71212"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 16,
+    "finalPct": {
+      "opt_0_3iqo3p": 62.5,
+      "opt_1_at8dc4": 37.5
+    },
+    "winnerId": "opt_0_3iqo3p",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_1_at8dc4",
+      "2": "opt_0_3iqo3p",
+      "3": "opt_1_at8dc4",
+      "5": "opt_1_at8dc4",
+      "6": "opt_0_3iqo3p",
+      "7": "opt_0_3iqo3p",
+      "8": "opt_0_3iqo3p",
+      "9": "opt_1_at8dc4"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_3iqo3p": 0,
+        "opt_1_at8dc4": 100
+      },
+      "2": {
+        "opt_0_3iqo3p": 100,
+        "opt_1_at8dc4": 0
+      },
+      "3": {
+        "opt_0_3iqo3p": 0,
+        "opt_1_at8dc4": 100
+      },
+      "5": {
+        "opt_0_3iqo3p": 33.33333333333333,
+        "opt_1_at8dc4": 66.66666666666666
+      },
+      "6": {
+        "opt_0_3iqo3p": 100,
+        "opt_1_at8dc4": 0
+      },
+      "7": {
+        "opt_0_3iqo3p": 100,
+        "opt_1_at8dc4": 0
+      },
+      "8": {
+        "opt_0_3iqo3p": 100,
+        "opt_1_at8dc4": 0
+      },
+      "9": {
+        "opt_0_3iqo3p": 0,
+        "opt_1_at8dc4": 100
+      }
+    },
+    "groupBallotCount": {
+      "1": 1,
+      "2": 2,
+      "3": 2,
+      "5": 3,
+      "6": 3,
+      "7": 1,
+      "8": 3,
+      "9": 1
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

@@ -245,6 +245,18 @@
       "color": "#9B59B6",
       "party": "ua",
       "photo": "p78.svg"
+    },
+    "oc1": {
+      "name": "One-Community",
+      "color": "#004e7a",
+      "party": "ndtsr",
+      "photo": "oc.png"
+    },
+    "fw2442": {
+      "name": "Filipinowanderer2442",
+      "color": "#b71212",
+      "party": "tsp",
+      "photo": "fw2442.png"
     }
   },
   "parties": {
@@ -299,6 +311,11 @@
       "name": "Tungsten Cube Bisexual Party",
       "shortName": "TCBP",
       "color": "#691391"
+    },
+    "ndtsr": {
+      "name": "New Democrats of TSR",
+      "shortName": "NDTSR",
+      "color": "#004e7a"
     }
   }
 }

@@ -1,6 +1,6 @@
 [
   {
-    "id": "class7-26",
+    "id": "class7-2026-09",
     "title": "Class 7 September 2026 Election",
     "date": "2026-09-21",
     "party": "Regular",
@@ -119,7 +119,7 @@
     }
   },
   {
-    "id": "Class 6 July",
+    "id": "class6-2026-07",
     "title": "Class 6 July 2026 Election",
     "date": "2026-07-31",
     "party": "Regular",
@@ -225,7 +225,7 @@
     "runoff_round": null
   },
   {
-    "id": "class5-june",
+    "id": "class5-2026-06",
     "title": "June 2026 Class 5 Mod Election",
     "date": "2026-06-15",
     "party": "Regular",
@@ -322,7 +322,7 @@
     }
   },
   {
-    "id": "Class 4",
+    "id": "class4-2026-04",
     "title": "Class 4 Election",
     "date": "2026-04-11",
     "party": "Special",
@@ -380,7 +380,7 @@
     "runoff_round": null
   },
   {
-    "id": "Class 5",
+    "id": "class5-2026-04",
     "title": "Class 5 Election",
     "date": "2026-04-11",
     "party": "Special",
@@ -491,7 +491,7 @@
     }
   },
   {
-    "id": "Class 4 March",
+    "id": "class4-2026-03",
     "title": "Class 4 March 2026 Election",
     "date": "2026-04-01",
     "party": "Regular",
@@ -552,7 +552,7 @@
     "runoff_round": null
   },
   {
-    "id": "class3-jan",
+    "id": "class3-2026-01",
     "title": "January 2026 Class 3 Mod Election",
     "date": "2026-01-30",
     "party": "Regular",
@@ -653,7 +653,7 @@
     }
   },
   {
-    "id": "Class 5 September",
+    "id": "class5-2025-09",
     "title": "Class 5 Special Election",
     "date": "2025-10-02",
     "party": "Special",
@@ -767,7 +767,7 @@
     }
   },
   {
-    "id": "Class 1 September",
+    "id": "class1-2025-09",
     "title": "Class 1 Election",
     "date": "2025-10-02",
     "party": "Regular",
@@ -872,7 +872,7 @@
     }
   },
   {
-    "id": "Class 2 July",
+    "id": "class2-2025-07",
     "title": "Class 2 Election",
     "date": "2025-08-03",
     "party": "Special",
@@ -1051,7 +1051,7 @@
     }
   },
   {
-    "id": "Class 7 July",
+    "id": "class7-2025-07",
     "title": "Class 7 Election",
     "date": "2025-08-03",
     "party": "Regular",
@@ -1165,7 +1165,7 @@
     }
   },
   {
-    "id": "Class 6 June",
+    "id": "class6-2025-06",
     "title": "Class 6 Election",
     "date": "2025-06-26",
     "party": "Regular",

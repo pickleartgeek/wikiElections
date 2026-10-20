@@ -29,7 +29,7 @@
     </a>
     <nav class="main-nav-inline" aria-label="Main">
       <a href="./">Main Page</a>
-      <a href="activities" class="current">Decision Desk TSR</a>
+      <a href="ddtsr" class="current">Decision Desk TSR</a>
       <a href="polls">Spinner Insights Polls</a>
       <a href="elects/">TSR Elects</a>
       <details class="nav-more">
@@ -167,6 +167,7 @@
 </footer>
 
 <script>window.SITE_BASE = './';</script>
+<script src="assets/js/election-ids.js"></script>
 <script src="assets/js/overrides.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/tsrelects.js"></script>
@@ -233,8 +234,7 @@ async function calcBoot() {
   sel.innerHTML = calcPollsIndex.map(e => `<option value="${e.id}">${e.title}</option>`).join('');
   sel.onchange = () => calcLoad(sel.value);
 
-  const params = new URLSearchParams(location.search);
-  const requested = params.get('election');
+  const requested = EID_fromUrl('election');
   const startId = (requested && calcPollsIndex.find(e => e.id === requested)) ? requested : calcPollsIndex[0].id;
   sel.value = startId;
   calcLoad(startId);
@@ -250,15 +250,12 @@ function todayUTCString() {
 }
 
 async function calcLoad(electionId) {
-  let [election, pollsFile] = await Promise.all([
-    fetch(`data/elections/${electionId}.json`).then(r => r.json()),
-    fetch(`data/elections/${electionId}.json`).then(r => r.json())
-  ]);
+  let [election, pollsFile] = await fetch(`data/elections/${electionId}.json`).then(r => r.json()).then(j => [j, structuredClone(j)]);
   election = OVR_getElection(election, electionId);
   calcCurrentElectionId = electionId;
   pollsFile = OVR_getPolls(pollsFile, electionId);
   let demoActive = false;
-  if (calcDemo && electionId === 'class7-26') {
+  if (calcDemo && electionId === 'class7-2026-09') {
     pollsFile = { polls: (await fetch('data/demo-groups.json').then(r => r.json())).polls };
     demoActive = true;
   }
@@ -440,17 +437,13 @@ function calcRenderBars(polls, currentIds, asOfDate, calcOpts = {}) {
     const widthPct = maxPct > 0 ? Math.max((pct / maxPct) * 100, 14) : 14;
     // Meta sits ~14-18% into the row from the right, so once the fill passes
     // roughly 80% width its color runs underneath the meta text.
-    const metaOnFill = widthPct >= 80;
     html += `
       <div class="rcp-bar-row">
         <div class="rcp-bar-fill" style="width:${widthPct}%; background:linear-gradient(120deg, ${color}, ${dark});">
           <div class="rcp-bar-photo"><img class="white-filter-img" src="assets/img/candidates/${calcRegistry.candidates[id].photo}" alt="" data-tint="${color}"></div>
         </div>
         <div class="rcp-bar-remainder"></div>
-        <div class="rcp-bar-meta${metaOnFill ? ' on-fill' : ''}">
-          <div class="name">${calcName(id)}</div>
-          <div class="pct">${(pct * 100).toFixed(1)}<sup>%</sup></div>
-        </div>
+        ${SITE_barMeta(calcName(id), (pct * 100).toFixed(1), widthPct, dark)}
       </div>`;
   });
   document.getElementById('calcBars').innerHTML = html;

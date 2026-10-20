@@ -1,0 +1,395 @@
+{
+  "subreddit": "thespinroom",
+  "polls": [
+    {
+      "id": "poll_t3_1xa9owf_1792445472930",
+      "title": "Class 1 Polling ~ Rensenware by DDTSR",
+      "status": "open",
+      "createdAt": 1792445472930,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xa9owf_1792445472930.json"
+    },
+    {
+      "id": "poll_t3_1xa7z10_1792441452986",
+      "title": "Class 2 Poll - RepresentativePolling",
+      "status": "open",
+      "createdAt": 1792441452986,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xa7z10_1792441452986.json"
+    },
+    {
+      "id": "poll_t3_1xa7xzl_1792441381072",
+      "title": "Class 1 Poll - RepresentativePolling",
+      "status": "open",
+      "createdAt": 1792441381072,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xa7xzl_1792441381072.json"
+    },
+    {
+      "id": "poll_t3_1x97pls_1792341581310",
+      "title": "Class 1 Poll",
+      "status": "open",
+      "createdAt": 1792341581310,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1x97pls_1792341581310.json"
+    },
+    {
+      "id": "poll_t3_1x6wjd2_1792095869473",
+      "title": "Class 2 Poll",
+      "status": "open",
+      "createdAt": 1792095869473,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1x6wjd2_1792095869473.json"
+    },
+    {
+      "id": "poll_t3_1x6whop_1792095771387",
+      "title": "Class 1 Poll",
+      "status": "open",
+      "createdAt": 1792095771387,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1x6whop_1792095771387.json"
+    },
+    {
+      "id": "poll_t3_1wyotwt_1791246522911",
+      "title": "Hypothetical Class 1 Poll",
+      "status": "open",
+      "createdAt": 1791246522911,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wyotwt_1791246522911.json"
+    },
+    {
+      "id": "poll_t3_1wyosdu_1791246391130",
+      "title": "Hypothetical Class 1 Poll",
+      "status": "open",
+      "createdAt": 1791246391130,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wyosdu_1791246391130.json"
+    },
+    {
+      "id": "poll_t3_1wxiybw_1791129093670",
+      "title": "What's likelier?",
+      "status": "closed",
+      "createdAt": 1791129093670,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wxiybw_1791129093670.json"
+    },
+    {
+      "id": "poll_t3_1wtsugo_1790733959307",
+      "title": "Shall PickleArtGeek be elevated to PermaMod to serve as Election Secretary?",
+      "status": "closed",
+      "createdAt": 1790733959307,
+      "method": "fptp",
+      "isOfficialElection": true,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wtsugo_1790733959307.json"
+    },
+    {
+      "id": "poll_t3_1wrybwl_1790550390891",
+      "title": "Hypothetical Class 1 Poll",
+      "status": "open",
+      "createdAt": 1790550390891,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wrybwl_1790550390891.json"
+    },
+    {
+      "id": "poll_t3_1wq3iab_1790359910492",
+      "title": "Referendum (read post title)",
+      "status": "closed",
+      "createdAt": 1790359910492,
+      "method": "fptp",
+      "isOfficialElection": true,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wq3iab_1790359910492.json"
+    },
+    {
+      "id": "poll_t3_1wldztx_1789902317424",
+      "title": "Class 7 Mod Election",
+      "status": "closed",
+      "createdAt": 1789902317424,
+      "method": "rcv",
+      "isOfficialElection": true,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wldztx_1789902317424.json"
+    },
+    {
+      "id": "poll_t3_1wkkvwv_1789820799998",
+      "title": "Class 7 Poll",
+      "status": "open",
+      "createdAt": 1789820799998,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wkkvwv_1789820799998.json"
+    },
+    {
+      "id": "poll_t3_1wkgjg0_1789806479656",
+      "title": "SpIn/DDTSR Poll",
+      "status": "closed",
+      "createdAt": 1789806479656,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wkgjg0_1789806479656.json"
+    },
+    {
+      "id": "poll_t3_1wkggm9_1789805992050",
+      "title": "Who did best in the Mod Debate? (see comments)",
+      "status": "closed",
+      "createdAt": 1789805992050,
+      "method": "star",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wkggm9_1789805992050.json"
+    },
+    {
+      "id": "poll_t3_1wj19kd_1789668016846",
+      "title": "Spinner Insights/DDTSR Class 7 Poll",
+      "status": "closed",
+      "createdAt": 1789668016846,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wj19kd_1789668016846.json"
+    },
+    {
+      "id": "poll_t3_1whj4qa_1789521975050",
+      "title": "Class 7 Poll",
+      "status": "open",
+      "createdAt": 1789521975050,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1whj4qa_1789521975050.json"
+    },
+    {
+      "id": "poll_t3_1wdsjpa_1789160344817",
+      "title": "What will be the margin of Maine's Senate race? (select closest to your belief)",
+      "status": "closed",
+      "createdAt": 1789160344817,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1wdsjpa_1789160344817.json"
+    },
+    {
+      "id": "poll_t3_1w9944u_1788730870445",
+      "title": "Class 7 Poll",
+      "status": "open",
+      "createdAt": 1788730870445,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1w9944u_1788730870445.json"
+    },
+    {
+      "id": "poll_t3_1w993c8_1788730812604",
+      "title": "Class 7 Poll",
+      "status": "open",
+      "createdAt": 1788730812604,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1w993c8_1788730812604.json"
+    },
+    {
+      "id": "poll_t3_1w992c0_1788730754259",
+      "title": "Class 7 Poll",
+      "status": "open",
+      "createdAt": 1788730754259,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1w992c0_1788730754259.json"
+    },
+    {
+      "id": "poll_t3_1w8208a_1788618087260",
+      "title": "Should Sen. John Fetterman (D-PA) resign from the Senate?",
+      "status": "closed",
+      "createdAt": 1788618087260,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1w8208a_1788618087260.json"
+    },
+    {
+      "id": "poll_t3_1w3b5sk_1788176390756",
+      "title": "Rank the Democratic(-aligned) Senate Candidates by probability of winning",
+      "status": "closed",
+      "createdAt": 1788176390756,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1w3b5sk_1788176390756.json"
+    },
+    {
+      "id": "poll_t3_1w07bc8_1787866638485",
+      "title": "More Likely to Happen: Blexas or Blichigan?",
+      "status": "closed",
+      "createdAt": 1787866638485,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1w07bc8_1787866638485.json"
+    },
+    {
+      "id": "poll_t3_1vzk390_1787806000849",
+      "title": "MA-6 Dem Primary",
+      "status": "closed",
+      "createdAt": 1787806000849,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vzk390_1787806000849.json"
+    },
+    {
+      "id": "poll_t3_1vzg6oc_1787794576070",
+      "title": "2028 Republican Party RCV",
+      "status": "closed",
+      "createdAt": 1787794576070,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vzg6oc_1787794576070.json"
+    },
+    {
+      "id": "poll_t3_1vzcbm0_1787784589799",
+      "title": "2028 Democratic Primary RCV",
+      "status": "closed",
+      "createdAt": 1787784589799,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vzcbm0_1787784589799.json"
+    },
+    {
+      "id": "poll_t3_1vwewud_1787509809392",
+      "title": "Ossoff or Buttigieg? Which is the better candidate?",
+      "status": "closed",
+      "createdAt": 1787509809392,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vwewud_1787509809392.json"
+    },
+    {
+      "id": "poll_t3_1vvhzf4_1787419071359",
+      "title": "What will be the margin of Alaska's Senate race? (select closest to your belief)",
+      "status": "closed",
+      "createdAt": 1787419071359,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vvhzf4_1787419071359.json"
+    },
+    {
+      "id": "poll_t3_1vtctpy_1787211915465",
+      "title": "Will Democrats Get Majorities in the House and Senate come November?",
+      "status": "closed",
+      "createdAt": 1787211915465,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vtctpy_1787211915465.json"
+    },
+    {
+      "id": "poll_t3_1vs5nv5_1787095955183",
+      "title": "Is u/Impressive_Plant4418 a True Adam? (Genchat internal)",
+      "status": "closed",
+      "createdAt": 1787095955183,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vs5nv5_1787095955183.json"
+    },
+    {
+      "id": "poll_t3_1vr4dnn_1786999710627",
+      "title": "Zohran Mamdani Approval Poll",
+      "status": "closed",
+      "createdAt": 1786999710627,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vr4dnn_1786999710627.json"
+    },
+    {
+      "id": "poll_t3_1vowj0c_1786779492049",
+      "title": "Michigan Senate Poll",
+      "status": "closed",
+      "createdAt": 1786779492049,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vowj0c_1786779492049.json"
+    },
+    {
+      "id": "poll_t3_1vnfybv_1786639352867",
+      "title": "What is Farage's chance of losing to Binface?",
+      "status": "closed",
+      "createdAt": 1786639352867,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vnfybv_1786639352867.json"
+    },
+    {
+      "id": "poll_t3_1vlcfs8_1786439925780",
+      "title": "Wisconsin Dem Gov Primary Poll",
+      "status": "closed",
+      "createdAt": 1786439925780,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vlcfs8_1786439925780.json"
+    },
+    {
+      "id": "poll_t3_1vkrt6h_1786384380557",
+      "title": "TSR Votes: 2028 Democratic Primary - RCV",
+      "status": "closed",
+      "createdAt": 1786384380557,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vkrt6h_1786384380557.json"
+    },
+    {
+      "id": "poll_t3_1visuhl_1786186219995",
+      "title": "Will James Talarico win come November?",
+      "status": "closed",
+      "createdAt": 1786186219995,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1visuhl_1786186219995.json"
+    },
+    {
+      "id": "poll_t3_1vi8fv6_1786126881635",
+      "title": "Does BallotTSR work on your end?",
+      "status": "closed",
+      "createdAt": 1786126881635,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1vi8fv6_1786126881635.json"
+    }
+  ]
+}

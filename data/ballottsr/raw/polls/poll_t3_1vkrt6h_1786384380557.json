@@ -1,0 +1,570 @@
+{
+  "id": "poll_t3_1vkrt6h_1786384380557",
+  "title": "TSR Votes: 2028 Democratic Primary - RCV",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1786384380557,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vkrt6h",
+  "method": "rcv",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1786557180557,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_bhjsrk",
+      "name": "Gavin Newsom - Governor of CA",
+      "color": "#1d3161"
+    },
+    {
+      "id": "opt_1_ir7qkr",
+      "name": "Pete Buttigieg - fmr. Secretary of Transportation",
+      "color": "#0d173d"
+    },
+    {
+      "id": "opt_2_sf4vrq",
+      "name": "Alexandria Ocasio-Cortez - NY-14 Congresswoman",
+      "color": "#287a54"
+    },
+    {
+      "id": "opt_3_nd3vuq",
+      "name": "Andy Beshear - Governor of KY",
+      "color": "#0000ff"
+    },
+    {
+      "id": "opt_4_8a9wgq",
+      "name": "Josh Shapiro - Governor of PA",
+      "color": "#35487a"
+    },
+    {
+      "id": "opt_5_zu04b7",
+      "name": "Jon Ossoff - Senator of GA",
+      "color": "#47c5de"
+    },
+    {
+      "id": "opt_6_vx6i0q",
+      "name": "Kamala Harris - fmr VPOTUS",
+      "color": "#322259"
+    },
+    {
+      "id": "opt_7_34ir2z",
+      "name": "Raphael Warnock - Senator of GA",
+      "color": "#5c5a9e"
+    },
+    {
+      "id": "opt_8_gv0azf",
+      "name": "Mark Kelly - Senator of AZ",
+      "color": "#1800a3"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "rcv",
+    "totalBallots": 56,
+    "finalPct": {
+      "opt_0_bhjsrk": 1.7857142857142856,
+      "opt_1_ir7qkr": 5.357142857142857,
+      "opt_2_sf4vrq": 35.714285714285715,
+      "opt_3_nd3vuq": 14.285714285714285,
+      "opt_4_8a9wgq": 3.571428571428571,
+      "opt_5_zu04b7": 33.92857142857143,
+      "opt_6_vx6i0q": 0,
+      "opt_7_34ir2z": 3.571428571428571,
+      "opt_8_gv0azf": 1.7857142857142856
+    },
+    "winnerId": "opt_5_zu04b7",
+    "rounds": [
+      {
+        "round": 1,
+        "tallies": {
+          "opt_0_bhjsrk": 1,
+          "opt_1_ir7qkr": 3,
+          "opt_2_sf4vrq": 20,
+          "opt_3_nd3vuq": 8,
+          "opt_4_8a9wgq": 2,
+          "opt_5_zu04b7": 19,
+          "opt_6_vx6i0q": 0,
+          "opt_7_34ir2z": 2,
+          "opt_8_gv0azf": 1
+        },
+        "eliminated": "opt_6_vx6i0q",
+        "exhausted": 0,
+        "transfers": {
+          "opt_0_bhjsrk": 0,
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 0,
+          "opt_7_34ir2z": 0,
+          "opt_8_gv0azf": 0
+        },
+        "transferExhausted": 0
+      },
+      {
+        "round": 2,
+        "tallies": {
+          "opt_0_bhjsrk": 1,
+          "opt_1_ir7qkr": 3,
+          "opt_2_sf4vrq": 20,
+          "opt_3_nd3vuq": 8,
+          "opt_4_8a9wgq": 2,
+          "opt_5_zu04b7": 19,
+          "opt_7_34ir2z": 2,
+          "opt_8_gv0azf": 1
+        },
+        "eliminated": "opt_0_bhjsrk",
+        "exhausted": 0,
+        "transfers": {
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 0,
+          "opt_7_34ir2z": 0,
+          "opt_8_gv0azf": 0
+        },
+        "transferExhausted": 1
+      },
+      {
+        "round": 3,
+        "tallies": {
+          "opt_1_ir7qkr": 3,
+          "opt_2_sf4vrq": 20,
+          "opt_3_nd3vuq": 8,
+          "opt_4_8a9wgq": 2,
+          "opt_5_zu04b7": 19,
+          "opt_7_34ir2z": 2,
+          "opt_8_gv0azf": 1
+        },
+        "eliminated": "opt_8_gv0azf",
+        "exhausted": 1,
+        "transfers": {
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 0,
+          "opt_7_34ir2z": 0
+        },
+        "transferExhausted": 1
+      },
+      {
+        "round": 4,
+        "tallies": {
+          "opt_1_ir7qkr": 3,
+          "opt_2_sf4vrq": 20,
+          "opt_3_nd3vuq": 8,
+          "opt_4_8a9wgq": 2,
+          "opt_5_zu04b7": 19,
+          "opt_7_34ir2z": 2
+        },
+        "eliminated": "opt_4_8a9wgq",
+        "exhausted": 2,
+        "transfers": {
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_5_zu04b7": 1,
+          "opt_7_34ir2z": 0
+        },
+        "transferExhausted": 1
+      },
+      {
+        "round": 5,
+        "tallies": {
+          "opt_1_ir7qkr": 3,
+          "opt_2_sf4vrq": 20,
+          "opt_3_nd3vuq": 8,
+          "opt_5_zu04b7": 20,
+          "opt_7_34ir2z": 2
+        },
+        "eliminated": "opt_7_34ir2z",
+        "exhausted": 3,
+        "transfers": {
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_5_zu04b7": 0
+        },
+        "transferExhausted": 2
+      },
+      {
+        "round": 6,
+        "tallies": {
+          "opt_1_ir7qkr": 3,
+          "opt_2_sf4vrq": 20,
+          "opt_3_nd3vuq": 8,
+          "opt_5_zu04b7": 20
+        },
+        "eliminated": "opt_1_ir7qkr",
+        "exhausted": 5,
+        "transfers": {
+          "opt_2_sf4vrq": 1,
+          "opt_3_nd3vuq": 1,
+          "opt_5_zu04b7": 1
+        },
+        "transferExhausted": 0
+      },
+      {
+        "round": 7,
+        "tallies": {
+          "opt_2_sf4vrq": 21,
+          "opt_3_nd3vuq": 9,
+          "opt_5_zu04b7": 21
+        },
+        "eliminated": "opt_3_nd3vuq",
+        "exhausted": 5,
+        "transfers": {
+          "opt_2_sf4vrq": 2,
+          "opt_5_zu04b7": 6
+        },
+        "transferExhausted": 1
+      },
+      {
+        "round": 8,
+        "tallies": {
+          "opt_2_sf4vrq": 23,
+          "opt_5_zu04b7": 27
+        },
+        "winner": "opt_5_zu04b7",
+        "exhausted": 6
+      }
+    ],
+    "totalRounds": 8,
+    "rcvTransferMatrix": {
+      "opt_0_bhjsrk": {
+        "total": 1,
+        "to": {
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 0,
+          "opt_6_vx6i0q": 0,
+          "opt_7_34ir2z": 0,
+          "opt_8_gv0azf": 0
+        },
+        "exhausted": 1
+      },
+      "opt_1_ir7qkr": {
+        "total": 3,
+        "to": {
+          "opt_0_bhjsrk": 0,
+          "opt_2_sf4vrq": 1,
+          "opt_3_nd3vuq": 1,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 1,
+          "opt_6_vx6i0q": 0,
+          "opt_7_34ir2z": 0,
+          "opt_8_gv0azf": 0
+        },
+        "exhausted": 0
+      },
+      "opt_2_sf4vrq": {
+        "total": 20,
+        "to": {
+          "opt_0_bhjsrk": 0,
+          "opt_1_ir7qkr": 3,
+          "opt_3_nd3vuq": 2,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 9,
+          "opt_6_vx6i0q": 0,
+          "opt_7_34ir2z": 2,
+          "opt_8_gv0azf": 0
+        },
+        "exhausted": 4
+      },
+      "opt_3_nd3vuq": {
+        "total": 8,
+        "to": {
+          "opt_0_bhjsrk": 0,
+          "opt_1_ir7qkr": 2,
+          "opt_2_sf4vrq": 1,
+          "opt_4_8a9wgq": 1,
+          "opt_5_zu04b7": 3,
+          "opt_6_vx6i0q": 0,
+          "opt_7_34ir2z": 0,
+          "opt_8_gv0azf": 0
+        },
+        "exhausted": 1
+      },
+      "opt_4_8a9wgq": {
+        "total": 2,
+        "to": {
+          "opt_0_bhjsrk": 0,
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_5_zu04b7": 1,
+          "opt_6_vx6i0q": 0,
+          "opt_7_34ir2z": 0,
+          "opt_8_gv0azf": 0
+        },
+        "exhausted": 1
+      },
+      "opt_5_zu04b7": {
+        "total": 19,
+        "to": {
+          "opt_0_bhjsrk": 1,
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 3,
+          "opt_3_nd3vuq": 7,
+          "opt_4_8a9wgq": 0,
+          "opt_6_vx6i0q": 0,
+          "opt_7_34ir2z": 2,
+          "opt_8_gv0azf": 1
+        },
+        "exhausted": 5
+      },
+      "opt_6_vx6i0q": {
+        "total": 0,
+        "to": {
+          "opt_0_bhjsrk": 0,
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 0,
+          "opt_7_34ir2z": 0,
+          "opt_8_gv0azf": 0
+        },
+        "exhausted": 0
+      },
+      "opt_7_34ir2z": {
+        "total": 2,
+        "to": {
+          "opt_0_bhjsrk": 0,
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 0,
+          "opt_6_vx6i0q": 0,
+          "opt_8_gv0azf": 0
+        },
+        "exhausted": 2
+      },
+      "opt_8_gv0azf": {
+        "total": 1,
+        "to": {
+          "opt_0_bhjsrk": 0,
+          "opt_1_ir7qkr": 0,
+          "opt_2_sf4vrq": 0,
+          "opt_3_nd3vuq": 0,
+          "opt_4_8a9wgq": 0,
+          "opt_5_zu04b7": 0,
+          "opt_6_vx6i0q": 0,
+          "opt_7_34ir2z": 0
+        },
+        "exhausted": 1
+      }
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_5_zu04b7",
+      "2": "opt_3_nd3vuq",
+      "3": "opt_7_34ir2z",
+      "4": "opt_5_zu04b7",
+      "5": "opt_5_zu04b7",
+      "6": "opt_5_zu04b7",
+      "7": "opt_3_nd3vuq",
+      "8": "opt_2_sf4vrq",
+      "9": "opt_5_zu04b7"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_bhjsrk": 0,
+        "opt_1_ir7qkr": 0,
+        "opt_2_sf4vrq": 40,
+        "opt_3_nd3vuq": 20,
+        "opt_4_8a9wgq": 0,
+        "opt_5_zu04b7": 20,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 0,
+        "opt_8_gv0azf": 20
+      },
+      "2": {
+        "opt_0_bhjsrk": 0,
+        "opt_1_ir7qkr": 0,
+        "opt_2_sf4vrq": 33.33333333333333,
+        "opt_3_nd3vuq": 66.66666666666666,
+        "opt_4_8a9wgq": 0,
+        "opt_5_zu04b7": 0,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 0,
+        "opt_8_gv0azf": 0
+      },
+      "3": {
+        "opt_0_bhjsrk": 25,
+        "opt_1_ir7qkr": 0,
+        "opt_2_sf4vrq": 25,
+        "opt_3_nd3vuq": 0,
+        "opt_4_8a9wgq": 25,
+        "opt_5_zu04b7": 0,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 25,
+        "opt_8_gv0azf": 0
+      },
+      "4": {
+        "opt_0_bhjsrk": 0,
+        "opt_1_ir7qkr": 11.11111111111111,
+        "opt_2_sf4vrq": 44.44444444444444,
+        "opt_3_nd3vuq": 0,
+        "opt_4_8a9wgq": 0,
+        "opt_5_zu04b7": 44.44444444444444,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 0,
+        "opt_8_gv0azf": 0
+      },
+      "5": {
+        "opt_0_bhjsrk": 0,
+        "opt_1_ir7qkr": 0,
+        "opt_2_sf4vrq": 37.5,
+        "opt_3_nd3vuq": 25,
+        "opt_4_8a9wgq": 0,
+        "opt_5_zu04b7": 37.5,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 0,
+        "opt_8_gv0azf": 0
+      },
+      "6": {
+        "opt_0_bhjsrk": 0,
+        "opt_1_ir7qkr": 0,
+        "opt_2_sf4vrq": 33.33333333333333,
+        "opt_3_nd3vuq": 0,
+        "opt_4_8a9wgq": 11.11111111111111,
+        "opt_5_zu04b7": 44.44444444444444,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 11.11111111111111,
+        "opt_8_gv0azf": 0
+      },
+      "7": {
+        "opt_0_bhjsrk": 0,
+        "opt_1_ir7qkr": 20,
+        "opt_2_sf4vrq": 20,
+        "opt_3_nd3vuq": 40,
+        "opt_4_8a9wgq": 0,
+        "opt_5_zu04b7": 20,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 0,
+        "opt_8_gv0azf": 0
+      },
+      "8": {
+        "opt_0_bhjsrk": 0,
+        "opt_1_ir7qkr": 10,
+        "opt_2_sf4vrq": 50,
+        "opt_3_nd3vuq": 0,
+        "opt_4_8a9wgq": 0,
+        "opt_5_zu04b7": 40,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 0,
+        "opt_8_gv0azf": 0
+      },
+      "9": {
+        "opt_0_bhjsrk": 0,
+        "opt_1_ir7qkr": 0,
+        "opt_2_sf4vrq": 0,
+        "opt_3_nd3vuq": 33.33333333333333,
+        "opt_4_8a9wgq": 0,
+        "opt_5_zu04b7": 66.66666666666666,
+        "opt_6_vx6i0q": 0,
+        "opt_7_34ir2z": 0,
+        "opt_8_gv0azf": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 5,
+      "2": 3,
+      "3": 4,
+      "4": 9,
+      "5": 8,
+      "6": 9,
+      "7": 5,
+      "8": 10,
+      "9": 3
+    },
+    "groupRoundLeaders": {
+      "1": {
+        "1": "opt_2_sf4vrq",
+        "2": "opt_3_nd3vuq",
+        "3": "opt_0_bhjsrk",
+        "4": "opt_2_sf4vrq",
+        "5": "opt_2_sf4vrq",
+        "6": "opt_5_zu04b7",
+        "7": "opt_3_nd3vuq",
+        "8": "opt_2_sf4vrq",
+        "9": "opt_5_zu04b7"
+      },
+      "2": {
+        "1": "opt_2_sf4vrq",
+        "3": "opt_0_bhjsrk",
+        "4": "opt_2_sf4vrq",
+        "5": "opt_2_sf4vrq",
+        "6": "opt_5_zu04b7",
+        "7": "opt_3_nd3vuq",
+        "8": "opt_2_sf4vrq"
+      },
+      "3": {
+        "1": "opt_2_sf4vrq",
+        "3": "opt_0_bhjsrk",
+        "4": "opt_2_sf4vrq",
+        "5": "opt_2_sf4vrq",
+        "6": "opt_5_zu04b7",
+        "7": "opt_3_nd3vuq",
+        "8": "opt_2_sf4vrq"
+      },
+      "4": {
+        "1": "opt_2_sf4vrq",
+        "3": "opt_0_bhjsrk",
+        "4": "opt_2_sf4vrq",
+        "5": "opt_2_sf4vrq",
+        "6": "opt_5_zu04b7",
+        "7": "opt_3_nd3vuq",
+        "8": "opt_2_sf4vrq"
+      },
+      "5": {
+        "1": "opt_2_sf4vrq",
+        "3": "opt_0_bhjsrk",
+        "4": "opt_2_sf4vrq",
+        "5": "opt_2_sf4vrq",
+        "6": "opt_5_zu04b7",
+        "7": "opt_3_nd3vuq",
+        "8": "opt_2_sf4vrq"
+      },
+      "6": {
+        "1": "opt_2_sf4vrq",
+        "3": "opt_0_bhjsrk",
+        "4": "opt_2_sf4vrq",
+        "5": "opt_2_sf4vrq",
+        "6": "opt_5_zu04b7",
+        "7": "opt_3_nd3vuq",
+        "8": "opt_2_sf4vrq"
+      },
+      "7": {
+        "1": "opt_2_sf4vrq",
+        "3": "opt_2_sf4vrq",
+        "4": "opt_2_sf4vrq",
+        "5": "opt_2_sf4vrq",
+        "6": "opt_5_zu04b7",
+        "7": "opt_3_nd3vuq",
+        "8": "opt_2_sf4vrq"
+      },
+      "8": {
+        "1": "opt_2_sf4vrq",
+        "3": "opt_7_34ir2z",
+        "4": "opt_5_zu04b7",
+        "5": "opt_2_sf4vrq",
+        "6": "opt_5_zu04b7",
+        "7": "opt_3_nd3vuq",
+        "8": "opt_2_sf4vrq"
+      },
+      "9": {
+        "1": "opt_5_zu04b7",
+        "5": "opt_5_zu04b7"
+      }
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

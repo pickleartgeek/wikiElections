@@ -1,0 +1,430 @@
+{
+  "id": "poll_t3_1vzcbm0_1787784589799",
+  "title": "2028 Democratic Primary RCV",
+  "createdBy": "JCEurovision",
+  "createdAt": 1787784589799,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vzcbm0",
+  "method": "rcv",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1788648589799,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_s6rfgj",
+      "name": "Kamala Harris",
+      "color": "#3b5bdb"
+    },
+    {
+      "id": "opt_1_ai9fm2",
+      "name": "Alexandria Ocasio-Cortez",
+      "color": "#e8443b"
+    },
+    {
+      "id": "opt_2_obxcej",
+      "name": "Gavin Newsom",
+      "color": "#0ca678"
+    },
+    {
+      "id": "opt_3_yoz5vm",
+      "name": "Jon Ossoff",
+      "color": "#ec7728"
+    },
+    {
+      "id": "opt_4_3kv9mf",
+      "name": "Andy Beshear",
+      "color": "#5aad3f"
+    },
+    {
+      "id": "opt_5_mv0029",
+      "name": "Mark Kelly",
+      "color": "#2aa8d0"
+    },
+    {
+      "id": "opt_6_pwtjbz",
+      "name": "Josh Shapiro",
+      "color": "#e6a020"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "rcv",
+    "totalBallots": 50,
+    "finalPct": {
+      "opt_0_s6rfgj": 0,
+      "opt_1_ai9fm2": 28.000000000000004,
+      "opt_2_obxcej": 6,
+      "opt_3_yoz5vm": 36,
+      "opt_4_3kv9mf": 20,
+      "opt_5_mv0029": 0,
+      "opt_6_pwtjbz": 10
+    },
+    "winnerId": "opt_3_yoz5vm",
+    "rounds": [
+      {
+        "round": 1,
+        "tallies": {
+          "opt_0_s6rfgj": 0,
+          "opt_1_ai9fm2": 14,
+          "opt_2_obxcej": 3,
+          "opt_3_yoz5vm": 18,
+          "opt_4_3kv9mf": 10,
+          "opt_5_mv0029": 0,
+          "opt_6_pwtjbz": 5
+        },
+        "eliminated": "opt_0_s6rfgj",
+        "exhausted": 0,
+        "transfers": {
+          "opt_1_ai9fm2": 0,
+          "opt_2_obxcej": 0,
+          "opt_3_yoz5vm": 0,
+          "opt_4_3kv9mf": 0,
+          "opt_5_mv0029": 0,
+          "opt_6_pwtjbz": 0
+        },
+        "transferExhausted": 0
+      },
+      {
+        "round": 2,
+        "tallies": {
+          "opt_1_ai9fm2": 14,
+          "opt_2_obxcej": 3,
+          "opt_3_yoz5vm": 18,
+          "opt_4_3kv9mf": 10,
+          "opt_5_mv0029": 0,
+          "opt_6_pwtjbz": 5
+        },
+        "eliminated": "opt_5_mv0029",
+        "exhausted": 0,
+        "transfers": {
+          "opt_1_ai9fm2": 0,
+          "opt_2_obxcej": 0,
+          "opt_3_yoz5vm": 0,
+          "opt_4_3kv9mf": 0,
+          "opt_6_pwtjbz": 0
+        },
+        "transferExhausted": 0
+      },
+      {
+        "round": 3,
+        "tallies": {
+          "opt_1_ai9fm2": 14,
+          "opt_2_obxcej": 3,
+          "opt_3_yoz5vm": 18,
+          "opt_4_3kv9mf": 10,
+          "opt_6_pwtjbz": 5
+        },
+        "eliminated": "opt_2_obxcej",
+        "exhausted": 0,
+        "transfers": {
+          "opt_1_ai9fm2": 0,
+          "opt_3_yoz5vm": 2,
+          "opt_4_3kv9mf": 0,
+          "opt_6_pwtjbz": 0
+        },
+        "transferExhausted": 1
+      },
+      {
+        "round": 4,
+        "tallies": {
+          "opt_1_ai9fm2": 14,
+          "opt_3_yoz5vm": 20,
+          "opt_4_3kv9mf": 10,
+          "opt_6_pwtjbz": 5
+        },
+        "eliminated": "opt_6_pwtjbz",
+        "exhausted": 1,
+        "transfers": {
+          "opt_1_ai9fm2": 0,
+          "opt_3_yoz5vm": 0,
+          "opt_4_3kv9mf": 5
+        },
+        "transferExhausted": 0
+      },
+      {
+        "round": 5,
+        "tallies": {
+          "opt_1_ai9fm2": 14,
+          "opt_3_yoz5vm": 20,
+          "opt_4_3kv9mf": 15
+        },
+        "eliminated": "opt_1_ai9fm2",
+        "exhausted": 1,
+        "transfers": {
+          "opt_3_yoz5vm": 11,
+          "opt_4_3kv9mf": 1
+        },
+        "transferExhausted": 2
+      },
+      {
+        "round": 6,
+        "tallies": {
+          "opt_3_yoz5vm": 31,
+          "opt_4_3kv9mf": 16
+        },
+        "winner": "opt_3_yoz5vm",
+        "exhausted": 3
+      }
+    ],
+    "totalRounds": 6,
+    "rcvTransferMatrix": {
+      "opt_0_s6rfgj": {
+        "total": 0,
+        "to": {
+          "opt_1_ai9fm2": 0,
+          "opt_2_obxcej": 0,
+          "opt_3_yoz5vm": 0,
+          "opt_4_3kv9mf": 0,
+          "opt_5_mv0029": 0,
+          "opt_6_pwtjbz": 0
+        },
+        "exhausted": 0
+      },
+      "opt_1_ai9fm2": {
+        "total": 14,
+        "to": {
+          "opt_0_s6rfgj": 0,
+          "opt_2_obxcej": 0,
+          "opt_3_yoz5vm": 11,
+          "opt_4_3kv9mf": 0,
+          "opt_5_mv0029": 1,
+          "opt_6_pwtjbz": 0
+        },
+        "exhausted": 2
+      },
+      "opt_2_obxcej": {
+        "total": 3,
+        "to": {
+          "opt_0_s6rfgj": 0,
+          "opt_1_ai9fm2": 0,
+          "opt_3_yoz5vm": 2,
+          "opt_4_3kv9mf": 0,
+          "opt_5_mv0029": 0,
+          "opt_6_pwtjbz": 0
+        },
+        "exhausted": 1
+      },
+      "opt_3_yoz5vm": {
+        "total": 18,
+        "to": {
+          "opt_0_s6rfgj": 0,
+          "opt_1_ai9fm2": 4,
+          "opt_2_obxcej": 1,
+          "opt_4_3kv9mf": 7,
+          "opt_5_mv0029": 3,
+          "opt_6_pwtjbz": 1
+        },
+        "exhausted": 2
+      },
+      "opt_4_3kv9mf": {
+        "total": 10,
+        "to": {
+          "opt_0_s6rfgj": 0,
+          "opt_1_ai9fm2": 0,
+          "opt_2_obxcej": 0,
+          "opt_3_yoz5vm": 3,
+          "opt_5_mv0029": 2,
+          "opt_6_pwtjbz": 3
+        },
+        "exhausted": 2
+      },
+      "opt_5_mv0029": {
+        "total": 0,
+        "to": {
+          "opt_0_s6rfgj": 0,
+          "opt_1_ai9fm2": 0,
+          "opt_2_obxcej": 0,
+          "opt_3_yoz5vm": 0,
+          "opt_4_3kv9mf": 0,
+          "opt_6_pwtjbz": 0
+        },
+        "exhausted": 0
+      },
+      "opt_6_pwtjbz": {
+        "total": 5,
+        "to": {
+          "opt_0_s6rfgj": 0,
+          "opt_1_ai9fm2": 0,
+          "opt_2_obxcej": 1,
+          "opt_3_yoz5vm": 0,
+          "opt_4_3kv9mf": 3,
+          "opt_5_mv0029": 1
+        },
+        "exhausted": 0
+      }
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_4_3kv9mf",
+      "2": "opt_3_yoz5vm",
+      "3": "opt_6_pwtjbz",
+      "4": "opt_4_3kv9mf",
+      "5": "opt_3_yoz5vm",
+      "6": "opt_6_pwtjbz",
+      "7": "opt_6_pwtjbz",
+      "8": "opt_3_yoz5vm",
+      "9": "opt_1_ai9fm2"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 14.285714285714285,
+        "opt_2_obxcej": 14.285714285714285,
+        "opt_3_yoz5vm": 28.57142857142857,
+        "opt_4_3kv9mf": 28.57142857142857,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 14.285714285714285
+      },
+      "2": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 25,
+        "opt_2_obxcej": 25,
+        "opt_3_yoz5vm": 25,
+        "opt_4_3kv9mf": 25,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 0
+      },
+      "3": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 50,
+        "opt_2_obxcej": 0,
+        "opt_3_yoz5vm": 0,
+        "opt_4_3kv9mf": 0,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 50
+      },
+      "4": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 50,
+        "opt_2_obxcej": 0,
+        "opt_3_yoz5vm": 25,
+        "opt_4_3kv9mf": 25,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 0
+      },
+      "5": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 12.5,
+        "opt_2_obxcej": 0,
+        "opt_3_yoz5vm": 50,
+        "opt_4_3kv9mf": 37.5,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 0
+      },
+      "6": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 14.285714285714285,
+        "opt_2_obxcej": 0,
+        "opt_3_yoz5vm": 28.57142857142857,
+        "opt_4_3kv9mf": 28.57142857142857,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 28.57142857142857
+      },
+      "7": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 50,
+        "opt_2_obxcej": 0,
+        "opt_3_yoz5vm": 0,
+        "opt_4_3kv9mf": 0,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 50
+      },
+      "8": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 14.285714285714285,
+        "opt_2_obxcej": 0,
+        "opt_3_yoz5vm": 71.42857142857143,
+        "opt_4_3kv9mf": 14.285714285714285,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 0
+      },
+      "9": {
+        "opt_0_s6rfgj": 0,
+        "opt_1_ai9fm2": 55.55555555555556,
+        "opt_2_obxcej": 11.11111111111111,
+        "opt_3_yoz5vm": 33.33333333333333,
+        "opt_4_3kv9mf": 0,
+        "opt_5_mv0029": 0,
+        "opt_6_pwtjbz": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 7,
+      "2": 4,
+      "3": 2,
+      "4": 4,
+      "5": 8,
+      "6": 7,
+      "7": 2,
+      "8": 7,
+      "9": 9
+    },
+    "groupRoundLeaders": {
+      "1": {
+        "1": "opt_3_yoz5vm",
+        "2": "opt_1_ai9fm2",
+        "3": "opt_1_ai9fm2",
+        "4": "opt_1_ai9fm2",
+        "5": "opt_3_yoz5vm",
+        "6": "opt_3_yoz5vm",
+        "7": "opt_1_ai9fm2",
+        "8": "opt_3_yoz5vm",
+        "9": "opt_1_ai9fm2"
+      },
+      "2": {
+        "1": "opt_3_yoz5vm",
+        "2": "opt_1_ai9fm2",
+        "3": "opt_1_ai9fm2",
+        "4": "opt_1_ai9fm2",
+        "5": "opt_3_yoz5vm",
+        "6": "opt_3_yoz5vm",
+        "7": "opt_1_ai9fm2"
+      },
+      "3": {
+        "1": "opt_3_yoz5vm",
+        "2": "opt_1_ai9fm2",
+        "3": "opt_1_ai9fm2",
+        "4": "opt_1_ai9fm2",
+        "5": "opt_3_yoz5vm",
+        "6": "opt_3_yoz5vm",
+        "7": "opt_1_ai9fm2"
+      },
+      "4": {
+        "1": "opt_3_yoz5vm",
+        "2": "opt_1_ai9fm2",
+        "3": "opt_1_ai9fm2",
+        "4": "opt_1_ai9fm2",
+        "5": "opt_3_yoz5vm",
+        "6": "opt_3_yoz5vm",
+        "7": "opt_1_ai9fm2"
+      },
+      "5": {
+        "1": "opt_3_yoz5vm",
+        "2": "opt_3_yoz5vm",
+        "3": "opt_1_ai9fm2",
+        "4": "opt_1_ai9fm2",
+        "5": "opt_3_yoz5vm",
+        "6": "opt_3_yoz5vm",
+        "7": "opt_1_ai9fm2"
+      },
+      "6": {
+        "1": "opt_3_yoz5vm",
+        "2": "opt_3_yoz5vm",
+        "3": "opt_1_ai9fm2",
+        "4": "opt_1_ai9fm2",
+        "5": "opt_3_yoz5vm",
+        "6": "opt_6_pwtjbz",
+        "7": "opt_1_ai9fm2"
+      },
+      "7": {
+        "1": "opt_4_3kv9mf",
+        "3": "opt_6_pwtjbz",
+        "4": "opt_4_3kv9mf",
+        "7": "opt_6_pwtjbz"
+      }
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

@@ -1,0 +1,277 @@
+{
+  "id": "poll_t3_1w3b5sk_1788176390756",
+  "title": "Rank the Democratic(-aligned) Senate Candidates by probability of winning",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1788176390756,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1w3b5sk",
+  "method": "rcv",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1788349190756,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_c3cgck",
+      "name": "Abdul El-Sayed (MI)",
+      "color": "#009ee0"
+    },
+    {
+      "id": "opt_1_0k21cw",
+      "name": "Mary Peltola (AK)",
+      "color": "#0015bc"
+    },
+    {
+      "id": "opt_2_4ta86n",
+      "name": "James Talarico (TX)",
+      "color": "#0087dc"
+    },
+    {
+      "id": "opt_3_9tajwa",
+      "name": "Dan Osborn (NE - I)",
+      "color": "#be3075"
+    },
+    {
+      "id": "opt_4_c5pj1t",
+      "name": "Seth Bodnar (MT - I)",
+      "color": "#0d378a"
+    },
+    {
+      "id": "opt_5_iswacu",
+      "name": "Roy Cooper (NC)",
+      "color": "#0000ff"
+    },
+    {
+      "id": "opt_6_jdloz4",
+      "name": "Sherrod Brown (OH)",
+      "color": "#5e599c"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "rcv",
+    "totalBallots": 44,
+    "finalPct": {
+      "opt_0_c3cgck": 6.8181818181818175,
+      "opt_1_0k21cw": 0,
+      "opt_2_4ta86n": 0,
+      "opt_3_9tajwa": 0,
+      "opt_4_c5pj1t": 2.272727272727273,
+      "opt_5_iswacu": 90.9090909090909,
+      "opt_6_jdloz4": 0
+    },
+    "winnerId": "opt_5_iswacu",
+    "rounds": [
+      {
+        "round": 1,
+        "tallies": {
+          "opt_0_c3cgck": 3,
+          "opt_1_0k21cw": 0,
+          "opt_2_4ta86n": 0,
+          "opt_3_9tajwa": 0,
+          "opt_4_c5pj1t": 1,
+          "opt_5_iswacu": 40,
+          "opt_6_jdloz4": 0
+        },
+        "winner": "opt_5_iswacu",
+        "exhausted": 0
+      }
+    ],
+    "totalRounds": 1,
+    "rcvTransferMatrix": {
+      "opt_0_c3cgck": {
+        "total": 3,
+        "to": {
+          "opt_1_0k21cw": 0,
+          "opt_2_4ta86n": 1,
+          "opt_3_9tajwa": 0,
+          "opt_4_c5pj1t": 0,
+          "opt_5_iswacu": 0,
+          "opt_6_jdloz4": 0
+        },
+        "exhausted": 2
+      },
+      "opt_1_0k21cw": {
+        "total": 0,
+        "to": {
+          "opt_0_c3cgck": 0,
+          "opt_2_4ta86n": 0,
+          "opt_3_9tajwa": 0,
+          "opt_4_c5pj1t": 0,
+          "opt_5_iswacu": 0,
+          "opt_6_jdloz4": 0
+        },
+        "exhausted": 0
+      },
+      "opt_2_4ta86n": {
+        "total": 0,
+        "to": {
+          "opt_0_c3cgck": 0,
+          "opt_1_0k21cw": 0,
+          "opt_3_9tajwa": 0,
+          "opt_4_c5pj1t": 0,
+          "opt_5_iswacu": 0,
+          "opt_6_jdloz4": 0
+        },
+        "exhausted": 0
+      },
+      "opt_3_9tajwa": {
+        "total": 0,
+        "to": {
+          "opt_0_c3cgck": 0,
+          "opt_1_0k21cw": 0,
+          "opt_2_4ta86n": 0,
+          "opt_4_c5pj1t": 0,
+          "opt_5_iswacu": 0,
+          "opt_6_jdloz4": 0
+        },
+        "exhausted": 0
+      },
+      "opt_4_c5pj1t": {
+        "total": 1,
+        "to": {
+          "opt_0_c3cgck": 0,
+          "opt_1_0k21cw": 0,
+          "opt_2_4ta86n": 0,
+          "opt_3_9tajwa": 1,
+          "opt_5_iswacu": 0,
+          "opt_6_jdloz4": 0
+        },
+        "exhausted": 0
+      },
+      "opt_5_iswacu": {
+        "total": 40,
+        "to": {
+          "opt_0_c3cgck": 20,
+          "opt_1_0k21cw": 13,
+          "opt_2_4ta86n": 1,
+          "opt_3_9tajwa": 0,
+          "opt_4_c5pj1t": 0,
+          "opt_6_jdloz4": 6
+        },
+        "exhausted": 0
+      },
+      "opt_6_jdloz4": {
+        "total": 0,
+        "to": {
+          "opt_0_c3cgck": 0,
+          "opt_1_0k21cw": 0,
+          "opt_2_4ta86n": 0,
+          "opt_3_9tajwa": 0,
+          "opt_4_c5pj1t": 0,
+          "opt_5_iswacu": 0
+        },
+        "exhausted": 0
+      }
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_5_iswacu",
+      "2": "opt_5_iswacu",
+      "3": "opt_5_iswacu",
+      "4": "opt_5_iswacu",
+      "5": "opt_5_iswacu",
+      "6": "opt_5_iswacu",
+      "8": "opt_5_iswacu",
+      "9": "opt_5_iswacu"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_c3cgck": 0,
+        "opt_1_0k21cw": 0,
+        "opt_2_4ta86n": 0,
+        "opt_3_9tajwa": 0,
+        "opt_4_c5pj1t": 0,
+        "opt_5_iswacu": 100,
+        "opt_6_jdloz4": 0
+      },
+      "2": {
+        "opt_0_c3cgck": 25,
+        "opt_1_0k21cw": 0,
+        "opt_2_4ta86n": 0,
+        "opt_3_9tajwa": 0,
+        "opt_4_c5pj1t": 0,
+        "opt_5_iswacu": 75,
+        "opt_6_jdloz4": 0
+      },
+      "3": {
+        "opt_0_c3cgck": 0,
+        "opt_1_0k21cw": 0,
+        "opt_2_4ta86n": 0,
+        "opt_3_9tajwa": 0,
+        "opt_4_c5pj1t": 0,
+        "opt_5_iswacu": 100,
+        "opt_6_jdloz4": 0
+      },
+      "4": {
+        "opt_0_c3cgck": 0,
+        "opt_1_0k21cw": 0,
+        "opt_2_4ta86n": 0,
+        "opt_3_9tajwa": 0,
+        "opt_4_c5pj1t": 0,
+        "opt_5_iswacu": 100,
+        "opt_6_jdloz4": 0
+      },
+      "5": {
+        "opt_0_c3cgck": 14.285714285714285,
+        "opt_1_0k21cw": 0,
+        "opt_2_4ta86n": 0,
+        "opt_3_9tajwa": 0,
+        "opt_4_c5pj1t": 0,
+        "opt_5_iswacu": 85.71428571428571,
+        "opt_6_jdloz4": 0
+      },
+      "6": {
+        "opt_0_c3cgck": 0,
+        "opt_1_0k21cw": 0,
+        "opt_2_4ta86n": 0,
+        "opt_3_9tajwa": 0,
+        "opt_4_c5pj1t": 14.285714285714285,
+        "opt_5_iswacu": 85.71428571428571,
+        "opt_6_jdloz4": 0
+      },
+      "8": {
+        "opt_0_c3cgck": 12.5,
+        "opt_1_0k21cw": 0,
+        "opt_2_4ta86n": 0,
+        "opt_3_9tajwa": 0,
+        "opt_4_c5pj1t": 0,
+        "opt_5_iswacu": 87.5,
+        "opt_6_jdloz4": 0
+      },
+      "9": {
+        "opt_0_c3cgck": 0,
+        "opt_1_0k21cw": 0,
+        "opt_2_4ta86n": 0,
+        "opt_3_9tajwa": 0,
+        "opt_4_c5pj1t": 0,
+        "opt_5_iswacu": 100,
+        "opt_6_jdloz4": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 7,
+      "2": 4,
+      "3": 4,
+      "4": 2,
+      "5": 7,
+      "6": 7,
+      "8": 8,
+      "9": 5
+    },
+    "groupRoundLeaders": {
+      "1": {
+        "1": "opt_5_iswacu",
+        "2": "opt_5_iswacu",
+        "3": "opt_5_iswacu",
+        "4": "opt_5_iswacu",
+        "5": "opt_5_iswacu",
+        "6": "opt_5_iswacu",
+        "8": "opt_5_iswacu",
+        "9": "opt_5_iswacu"
+      }
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

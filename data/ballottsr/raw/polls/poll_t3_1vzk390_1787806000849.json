@@ -1,0 +1,118 @@
+{
+  "id": "poll_t3_1vzk390_1787806000849",
+  "title": "MA-6 Dem Primary",
+  "createdBy": "chia923",
+  "createdAt": 1787806000849,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vzk390",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1788065200849,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_9h7iez",
+      "name": "Beth Andres-Beck",
+      "color": "#0059c2"
+    },
+    {
+      "id": "opt_1_qt0prf",
+      "name": "John Beccia",
+      "color": "#2cc1e6"
+    },
+    {
+      "id": "opt_2_ynv5g6",
+      "name": "Dan Koh",
+      "color": "#8f3af7"
+    },
+    {
+      "id": "opt_3_c15ls1",
+      "name": "Jamie Belsito",
+      "color": "#147d5a"
+    },
+    {
+      "id": "opt_4_1tcl9d",
+      "name": "Tram Nguyen",
+      "color": "#bd8bfc"
+    },
+    {
+      "id": "opt_5_0y10tc",
+      "name": "Mariah Lancaster",
+      "color": "#98c50a"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 10,
+    "finalPct": {
+      "opt_0_9h7iez": 30,
+      "opt_1_qt0prf": 20,
+      "opt_2_ynv5g6": 20,
+      "opt_3_c15ls1": 0,
+      "opt_4_1tcl9d": 30,
+      "opt_5_0y10tc": 0
+    },
+    "winnerId": "opt_0_9h7iez",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "2": "opt_4_1tcl9d",
+      "3": "opt_0_9h7iez",
+      "5": "opt_0_9h7iez",
+      "6": "opt_4_1tcl9d",
+      "8": "opt_1_qt0prf"
+    },
+    "groupPct": {
+      "2": {
+        "opt_0_9h7iez": 0,
+        "opt_1_qt0prf": 0,
+        "opt_2_ynv5g6": 0,
+        "opt_3_c15ls1": 0,
+        "opt_4_1tcl9d": 100,
+        "opt_5_0y10tc": 0
+      },
+      "3": {
+        "opt_0_9h7iez": 50,
+        "opt_1_qt0prf": 0,
+        "opt_2_ynv5g6": 50,
+        "opt_3_c15ls1": 0,
+        "opt_4_1tcl9d": 0,
+        "opt_5_0y10tc": 0
+      },
+      "5": {
+        "opt_0_9h7iez": 50,
+        "opt_1_qt0prf": 25,
+        "opt_2_ynv5g6": 25,
+        "opt_3_c15ls1": 0,
+        "opt_4_1tcl9d": 0,
+        "opt_5_0y10tc": 0
+      },
+      "6": {
+        "opt_0_9h7iez": 0,
+        "opt_1_qt0prf": 0,
+        "opt_2_ynv5g6": 0,
+        "opt_3_c15ls1": 0,
+        "opt_4_1tcl9d": 100,
+        "opt_5_0y10tc": 0
+      },
+      "8": {
+        "opt_0_9h7iez": 0,
+        "opt_1_qt0prf": 50,
+        "opt_2_ynv5g6": 0,
+        "opt_3_c15ls1": 0,
+        "opt_4_1tcl9d": 50,
+        "opt_5_0y10tc": 0
+      }
+    },
+    "groupBallotCount": {
+      "2": 1,
+      "3": 2,
+      "5": 4,
+      "6": 1,
+      "8": 2
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

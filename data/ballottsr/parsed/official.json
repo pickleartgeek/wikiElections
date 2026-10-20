@@ -1,0 +1,172 @@
+{
+  "elections": [
+    {
+      "id": "poll_t3_1wtsugo_1790733959307",
+      "title": "Shall PickleArtGeek be elevated to PermaMod to serve as Election Secretary?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-09-30",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 16,
+      "opts": [
+        {
+          "name": "Yes",
+          "id": null,
+          "firstRound": 10
+        },
+        {
+          "name": "No",
+          "id": null,
+          "firstRound": 6
+        }
+      ],
+      "winner": "Yes",
+      "kind": "referendum/other"
+    },
+    {
+      "id": "poll_t3_1wq3iab_1790359910492",
+      "title": "Referendum (read post title)",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-09-25",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 14,
+      "opts": [
+        {
+          "name": "Yes",
+          "id": null,
+          "firstRound": 9
+        },
+        {
+          "name": "No",
+          "id": null,
+          "firstRound": 5
+        }
+      ],
+      "winner": "Yes",
+      "kind": "referendum/other"
+    },
+    {
+      "id": "poll_t3_1wldztx_1789902317424",
+      "title": "Class 7 Mod Election",
+      "createdBy": "One-Community-3753",
+      "date": "2026-09-20",
+      "method": "rcv",
+      "status": "closed",
+      "ballots": 29,
+      "opts": [
+        {
+          "name": "u/Nazibol1234",
+          "id": "nzb1",
+          "firstRound": 13
+        },
+        {
+          "name": "u/teammomofan",
+          "id": "tmf",
+          "firstRound": 11
+        },
+        {
+          "name": "u/Disguised_VW_Beetle",
+          "id": "dvwb",
+          "firstRound": 5
+        }
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "tallies": {
+            "u/Nazibol1234": 13,
+            "u/teammomofan": 11,
+            "u/Disguised_VW_Beetle": 5
+          },
+          "exhausted": 0
+        },
+        {
+          "round": 2,
+          "tallies": {
+            "u/Nazibol1234": 15,
+            "u/teammomofan": 14
+          },
+          "exhausted": 0
+        }
+      ],
+      "winner": "u/Nazibol1234",
+      "propositions": [
+        {
+          "number": "1",
+          "name": "Establishment of Parliament Act",
+          "author": "wiptes167",
+          "result": {
+            "aye": 12,
+            "nay": 12
+          }
+        },
+        {
+          "number": "2",
+          "name": "Equal Treatment in Parliament Act",
+          "author": "wiptes167",
+          "result": {
+            "aye": 8,
+            "nay": 13
+          }
+        },
+        {
+          "number": "3",
+          "name": "The Bongcloud Amendment",
+          "author": "Yogurtclosetdry6927",
+          "result": {
+            "aye": 3,
+            "nay": 19
+          }
+        },
+        {
+          "number": "4",
+          "name": "Better Elections Act (Again) (BEAA)",
+          "author": "Representative-Fee65",
+          "result": {
+            "aye": 11,
+            "nay": 10
+          }
+        },
+        {
+          "number": "5",
+          "name": "The Beetle Amemdment 4.0",
+          "author": "teammomofan",
+          "result": {
+            "aye": 16,
+            "nay": 3
+          }
+        },
+        {
+          "number": "6",
+          "name": "The Beetle Amendment 3.0",
+          "author": "Impressive_Plant4418",
+          "result": {
+            "aye": 10,
+            "nay": 11
+          }
+        },
+        {
+          "number": "7",
+          "name": "The Beetle Amendment 2.0",
+          "author": "Disguised_VW_Beetle",
+          "result": {
+            "aye": 7,
+            "nay": 9
+          }
+        },
+        {
+          "number": "8",
+          "name": "PICKLE (Putting Independent and Consciously Knowing Leaders in Elections) Amendment",
+          "author": "Impressive_Plant4418",
+          "result": {
+            "aye": 5,
+            "nay": 13
+          }
+        }
+      ],
+      "kind": "race",
+      "resultId": "class7-2026-09"
+    }
+  ]
+}

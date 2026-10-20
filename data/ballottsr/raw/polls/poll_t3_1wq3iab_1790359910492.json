@@ -1,0 +1,80 @@
+{
+  "id": "poll_t3_1wq3iab_1790359910492",
+  "title": "Referendum (read post title)",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1790359910492,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1wq3iab",
+  "method": "fptp",
+  "isOfficialElection": true,
+  "status": "closed",
+  "votingClosesAt": 1790532710492,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_bv9q9q",
+      "name": "Yes",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_1_9bypgz",
+      "name": "No",
+      "color": "#b71212"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 14,
+    "finalPct": {
+      "opt_0_bv9q9q": 64.28571428571429,
+      "opt_1_9bypgz": 35.714285714285715
+    },
+    "winnerId": "opt_0_bv9q9q",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "2": "opt_0_bv9q9q",
+      "3": "opt_0_bv9q9q",
+      "5": "opt_0_bv9q9q",
+      "6": "opt_0_bv9q9q",
+      "7": "opt_0_bv9q9q",
+      "8": "opt_1_9bypgz"
+    },
+    "groupPct": {
+      "2": {
+        "opt_0_bv9q9q": 100,
+        "opt_1_9bypgz": 0
+      },
+      "3": {
+        "opt_0_bv9q9q": 50,
+        "opt_1_9bypgz": 50
+      },
+      "5": {
+        "opt_0_bv9q9q": 100,
+        "opt_1_9bypgz": 0
+      },
+      "6": {
+        "opt_0_bv9q9q": 100,
+        "opt_1_9bypgz": 0
+      },
+      "7": {
+        "opt_0_bv9q9q": 50,
+        "opt_1_9bypgz": 50
+      },
+      "8": {
+        "opt_0_bv9q9q": 25,
+        "opt_1_9bypgz": 75
+      }
+    },
+    "groupBallotCount": {
+      "2": 2,
+      "3": 2,
+      "5": 2,
+      "6": 2,
+      "7": 2,
+      "8": 4
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

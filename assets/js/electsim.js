@@ -38,7 +38,9 @@ function ES_learn(results, registry, geojson, today = new Date(), plain = []) {
     if (ro && firstTotal) { const t = Object.values(ro).reduce((a, g) => a + Object.values(g).reduce((x, y) => x + y, 0), 0); if (t) ratios.push(t / firstTotal); }
   });
   // Older elections logged without groups: statewide totals only (no group lean, no turnout %).
-  plain.forEach(e => {
+  // Some races exist in both files (same canonical id) -- the grouped record wins, so they aren't counted twice.
+  const have = new Set(results.map(e => e.id));
+  plain.filter(e => !have.has(e.id)).forEach(e => {
     const w = wOf(e.date), tot = {}, pty = {};
     e.first.forEach(x => { const k = ES_canon(x.c); tot[k] = (tot[k] || 0) + x.v; pty[k] = x.p || 'ua'; });
     const T = Object.values(tot).reduce((a, b) => a + b, 0), n = Object.keys(tot).length;

@@ -1,0 +1,88 @@
+{
+  "id": "poll_t3_1wkggm9_1789805992050",
+  "title": "Who did best in the Mod Debate? (see comments)",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1789805992050,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1wkggm9",
+  "method": "star",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1789892392050,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_q5h62b",
+      "name": "JungleJumpersFan",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_1_kxhg99",
+      "name": "Disguised_VW_Beetle",
+      "color": "#bcc0c2"
+    },
+    {
+      "id": "opt_2_89z16a",
+      "name": "Nazibol1234",
+      "color": "#b71212"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "star",
+    "totalBallots": 10,
+    "finalPct": {
+      "opt_0_q5h62b": 46,
+      "opt_1_kxhg99": 72,
+      "opt_2_89z16a": 76
+    },
+    "winnerId": "opt_2_89z16a",
+    "starAverages": {
+      "opt_0_q5h62b": 2.3,
+      "opt_1_kxhg99": 3.6,
+      "opt_2_89z16a": 3.8
+    },
+    "starTotals": {
+      "opt_0_q5h62b": 23,
+      "opt_1_kxhg99": 36,
+      "opt_2_89z16a": 38
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "2": "opt_0_q5h62b",
+      "3": "opt_2_89z16a",
+      "5": "opt_1_kxhg99",
+      "6": "opt_2_89z16a"
+    },
+    "groupPct": {
+      "2": {
+        "opt_0_q5h62b": 90,
+        "opt_1_kxhg99": 80,
+        "opt_2_89z16a": 80
+      },
+      "3": {
+        "opt_0_q5h62b": 0,
+        "opt_1_kxhg99": 60,
+        "opt_2_89z16a": 100
+      },
+      "5": {
+        "opt_0_q5h62b": 53.333333333333336,
+        "opt_1_kxhg99": 73.33333333333333,
+        "opt_2_89z16a": 60
+      },
+      "6": {
+        "opt_0_q5h62b": 30,
+        "opt_1_kxhg99": 70,
+        "opt_2_89z16a": 80
+      }
+    },
+    "groupBallotCount": {
+      "2": 2,
+      "3": 1,
+      "5": 3,
+      "6": 4
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

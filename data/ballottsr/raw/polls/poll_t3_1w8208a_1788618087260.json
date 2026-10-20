@@ -1,0 +1,128 @@
+{
+  "id": "poll_t3_1w8208a_1788618087260",
+  "title": "Should Sen. John Fetterman (D-PA) resign from the Senate?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1788618087260,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1w8208a",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1788790887260,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_q1svha",
+      "name": "Yes - I'm a Democrat(-leaning)",
+      "color": "#546291"
+    },
+    {
+      "id": "opt_1_zf9rdi",
+      "name": "No - I'm a Democrat(-leaning)",
+      "color": "#0015bc"
+    },
+    {
+      "id": "opt_2_u3obk0",
+      "name": "Yes - I'm a Republican(-leaning)",
+      "color": "#b71212"
+    },
+    {
+      "id": "opt_3_gfaarp",
+      "name": "No - I'm a Republican(leaning)",
+      "color": "#bd6d6d"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 58,
+    "finalPct": {
+      "opt_0_q1svha": 67.24137931034483,
+      "opt_1_zf9rdi": 17.24137931034483,
+      "opt_2_u3obk0": 6.896551724137931,
+      "opt_3_gfaarp": 8.620689655172415
+    },
+    "winnerId": "opt_0_q1svha",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_q1svha",
+      "2": "opt_0_q1svha",
+      "3": "opt_0_q1svha",
+      "4": "opt_0_q1svha",
+      "5": "opt_0_q1svha",
+      "6": "opt_0_q1svha",
+      "7": "opt_0_q1svha",
+      "8": "opt_0_q1svha",
+      "9": "opt_0_q1svha"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_q1svha": 44.44444444444444,
+        "opt_1_zf9rdi": 33.33333333333333,
+        "opt_2_u3obk0": 0,
+        "opt_3_gfaarp": 22.22222222222222
+      },
+      "2": {
+        "opt_0_q1svha": 66.66666666666666,
+        "opt_1_zf9rdi": 33.33333333333333,
+        "opt_2_u3obk0": 0,
+        "opt_3_gfaarp": 0
+      },
+      "3": {
+        "opt_0_q1svha": 60,
+        "opt_1_zf9rdi": 0,
+        "opt_2_u3obk0": 20,
+        "opt_3_gfaarp": 20
+      },
+      "4": {
+        "opt_0_q1svha": 83.33333333333334,
+        "opt_1_zf9rdi": 0,
+        "opt_2_u3obk0": 16.666666666666664,
+        "opt_3_gfaarp": 0
+      },
+      "5": {
+        "opt_0_q1svha": 44.44444444444444,
+        "opt_1_zf9rdi": 22.22222222222222,
+        "opt_2_u3obk0": 11.11111111111111,
+        "opt_3_gfaarp": 22.22222222222222
+      },
+      "6": {
+        "opt_0_q1svha": 71.42857142857143,
+        "opt_1_zf9rdi": 14.285714285714285,
+        "opt_2_u3obk0": 14.285714285714285,
+        "opt_3_gfaarp": 0
+      },
+      "7": {
+        "opt_0_q1svha": 100,
+        "opt_1_zf9rdi": 0,
+        "opt_2_u3obk0": 0,
+        "opt_3_gfaarp": 0
+      },
+      "8": {
+        "opt_0_q1svha": 75,
+        "opt_1_zf9rdi": 25,
+        "opt_2_u3obk0": 0,
+        "opt_3_gfaarp": 0
+      },
+      "9": {
+        "opt_0_q1svha": 100,
+        "opt_1_zf9rdi": 0,
+        "opt_2_u3obk0": 0,
+        "opt_3_gfaarp": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 9,
+      "2": 6,
+      "3": 5,
+      "4": 6,
+      "5": 9,
+      "6": 7,
+      "7": 6,
+      "8": 8,
+      "9": 2
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

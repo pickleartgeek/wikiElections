@@ -1,0 +1,92 @@
+{
+  "id": "poll_t3_1vs5nv5_1787095955183",
+  "title": "Is u/Impressive_Plant4418 a True Adam? (Genchat internal)",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1787095955183,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vs5nv5",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1787182355183,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_619rix",
+      "name": "Yes",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_1_htsj2w",
+      "name": "No",
+      "color": "#b71212"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 11,
+    "finalPct": {
+      "opt_0_619rix": 90.9090909090909,
+      "opt_1_htsj2w": 9.090909090909092
+    },
+    "winnerId": "opt_0_619rix",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_619rix",
+      "2": "opt_0_619rix",
+      "3": "opt_0_619rix",
+      "4": "opt_0_619rix",
+      "5": "opt_0_619rix",
+      "6": "opt_0_619rix",
+      "7": "opt_0_619rix",
+      "9": "opt_0_619rix"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_619rix": 100,
+        "opt_1_htsj2w": 0
+      },
+      "2": {
+        "opt_0_619rix": 100,
+        "opt_1_htsj2w": 0
+      },
+      "3": {
+        "opt_0_619rix": 100,
+        "opt_1_htsj2w": 0
+      },
+      "4": {
+        "opt_0_619rix": 100,
+        "opt_1_htsj2w": 0
+      },
+      "5": {
+        "opt_0_619rix": 50,
+        "opt_1_htsj2w": 50
+      },
+      "6": {
+        "opt_0_619rix": 100,
+        "opt_1_htsj2w": 0
+      },
+      "7": {
+        "opt_0_619rix": 100,
+        "opt_1_htsj2w": 0
+      },
+      "9": {
+        "opt_0_619rix": 100,
+        "opt_1_htsj2w": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 1,
+      "2": 1,
+      "3": 2,
+      "4": 1,
+      "5": 2,
+      "6": 2,
+      "7": 1,
+      "9": 1
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

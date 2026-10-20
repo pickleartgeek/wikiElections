@@ -1,0 +1,98 @@
+{
+  "id": "poll_t3_1wxiybw_1791129093670",
+  "title": "What's likelier?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1791129093670,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1wxiybw",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1791301893670,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_5pj81f",
+      "name": "Ken Paxton wins",
+      "color": "#b71212"
+    },
+    {
+      "id": "opt_1_fe62et",
+      "name": "Amy Acton wins",
+      "color": "#0047ab"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 62,
+    "finalPct": {
+      "opt_0_5pj81f": 30.64516129032258,
+      "opt_1_fe62et": 69.35483870967742
+    },
+    "winnerId": "opt_1_fe62et",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_5pj81f",
+      "2": "opt_1_fe62et",
+      "3": "opt_1_fe62et",
+      "4": "opt_1_fe62et",
+      "5": "opt_0_5pj81f",
+      "6": "opt_1_fe62et",
+      "7": "opt_1_fe62et",
+      "8": "opt_1_fe62et",
+      "9": "opt_1_fe62et"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_5pj81f": 57.14285714285714,
+        "opt_1_fe62et": 42.857142857142854
+      },
+      "2": {
+        "opt_0_5pj81f": 33.33333333333333,
+        "opt_1_fe62et": 66.66666666666666
+      },
+      "3": {
+        "opt_0_5pj81f": 0,
+        "opt_1_fe62et": 100
+      },
+      "4": {
+        "opt_0_5pj81f": 33.33333333333333,
+        "opt_1_fe62et": 66.66666666666666
+      },
+      "5": {
+        "opt_0_5pj81f": 55.55555555555556,
+        "opt_1_fe62et": 44.44444444444444
+      },
+      "6": {
+        "opt_0_5pj81f": 16.666666666666664,
+        "opt_1_fe62et": 83.33333333333334
+      },
+      "7": {
+        "opt_0_5pj81f": 28.57142857142857,
+        "opt_1_fe62et": 71.42857142857143
+      },
+      "8": {
+        "opt_0_5pj81f": 0,
+        "opt_1_fe62et": 100
+      },
+      "9": {
+        "opt_0_5pj81f": 42.857142857142854,
+        "opt_1_fe62et": 57.14285714285714
+      }
+    },
+    "groupBallotCount": {
+      "1": 7,
+      "2": 6,
+      "3": 5,
+      "4": 6,
+      "5": 9,
+      "6": 6,
+      "7": 7,
+      "8": 9,
+      "9": 7
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

@@ -234,7 +234,7 @@
     </a>
     <nav class="main-nav-inline" aria-label="Main">
       <a href="../">Main Page</a>
-      <a href="../activities">Decision Desk TSR</a>
+      <a href="../ddtsr">Decision Desk TSR</a>
       <a href="../polls">Spinner Insights Polls</a>
       <a href="../elects/" class="current">TSR Elects</a>
       <details class="nav-more">
@@ -263,7 +263,7 @@
   <div class="wrap em-inner">
     <img class="em-logo" src="../assets/img/brand/tsr-elects-full-logo-white.png" alt="TSR Elects" width="1200" height="581">
     <div class="em-info">
-      <div class="em-kicker"><span class="em-dot"></span>Live Results<span class="em-check">✓</span></div>
+      <div class="em-kicker"><span class="em-dot"></span><span id="emKickerText">Live Results</span><span class="em-check">✓</span></div>
       <h1 id="raceTitle">Loading…</h1>
       <div id="callBadgeSlot"></div>
     </div>
@@ -335,6 +335,7 @@
 </footer>
 
 <script>window.SITE_BASE = '../';</script>
+<script src="../assets/js/election-ids.js"></script>
 <script src="../assets/js/overrides.js"></script>
 <script src="../assets/js/tsrelects.js"></script>
 <script src="../assets/js/main.js"></script>
@@ -353,14 +354,19 @@ let currentElection = null, currentRoundKey = null, currentRaceName = null;
 let selectedGroup = null;
 
 async function load() {
-  const [electionsBase, registryData, geojson, resultsMeta, siteCfg] = await Promise.all([
+  const [electionsHand, registryData, geojson, resultsMetaBase, siteCfg, btResults, btMeta] = await Promise.all([
     fetch('../data/tsrelects-results.json').then(r => r.json()),
     fetch('../data/registries.json').then(r => r.json()),
     fetch('../data/groups.geojson').then(r => r.json()),
     fetch('../data/tsrelects-meta.json').then(r => r.json()).catch(() => null),
-    fetch('../data/site-config.json').then(r => r.json()).catch(() => ({}))
+    fetch('../data/site-config.json').then(r => r.json()).catch(() => ({})),
+    fetch('../data/ballottsr/results.json').then(r => r.json()).catch(() => ({ elections: [] })),
+    fetch('../data/ballottsr/meta.json').then(r => r.json()).catch(() => ({}))
   ]);
   registry = registryData;
+  // Official elections mirrored from BallotTSR fill in races that aren't hand-entered yet; the hand-curated file always wins.
+  const electionsBase = electionsHand.concat((btResults.elections || []).filter(e => !electionsHand.some(h => h.id === e.id)));
+  const resultsMeta = Object.assign({}, resultsMetaBase, { lastUpdated: [resultsMetaBase && resultsMetaBase.lastUpdated, btMeta.electionsChangedAt].filter(Boolean).sort().pop() });
   geojsonCache = geojson;
   allElections = OVR_getTsrElections(electionsBase);
   allElections.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -368,7 +374,8 @@ async function load() {
   renderLastUpdated(resultsMeta);
 
   const cfg = (typeof OVR_getSiteConfig === 'function') ? OVR_getSiteConfig(siteCfg) : siteCfg;
-  liveIds = SITE_electsIds(cfg).filter(id => allElections.some(e => e.id === id));
+  // live = listed in site-config, or still open on BallotTSR (voting hasn't closed)
+  liveIds = [...new Set([...SITE_electsIds(cfg).filter(id => allElections.some(e => e.id === id)), ...allElections.filter(e => e.live).map(e => e.id)])];
   const isLive = e => liveIds.includes(e.id);
   const ordered = [...allElections.filter(isLive), ...allElections.filter(e => !isLive(e))];   // live races first, each group newest-first
 
@@ -381,7 +388,7 @@ async function load() {
   initMap(geojson);
   renderLiveStrip();
 
-  const requestedId = params.get('election');
+  const requestedId = EID_fromUrl('election');
   const startId = (requestedId && allElections.find(e => e.id === requestedId)) ? requestedId : (liveIds[0] || allElections[0].id);
   electionSel.value = startId;
   openElection(startId);
@@ -491,8 +498,12 @@ function render() {
     const verb = callWinnerNames.length > 1 ? 'Advance' : 'Leads';
     badgeSlot.innerHTML = `<span class="call-badge runoff">⚡ ${callWinnerNames.join(' & ')} ${verb} — Goes to Runoff</span>`;
   } else {
-    badgeSlot.innerHTML = `<span class="call-badge uncalled">Race not yet called</span>`;
+    const isLive = liveIds.includes(currentElection.id), top = Object.entries(totals).sort((a, b) => b[1] - a[1])[0];
+    badgeSlot.innerHTML = (!isLive && top && votesIn > 0)
+      ? `<span class="call-badge uncalled">Final results · ${TSR_candidateName(registry, top[0])} led with ${(top[1] / votesIn * 100).toFixed(1)}%</span>`
+      : `<span class="call-badge uncalled">Race not yet called</span>`;
   }
+  { const live = liveIds.includes(currentElection.id); document.getElementById('emKickerText').textContent = live ? 'Live Results' : 'Final Results'; document.querySelector('.em-dot').style.animation = live ? '' : 'none'; }
 
   const _turn = roundData?.turnout ?? currentElection.turnout;
   document.getElementById('statTurnout').textContent = _turn != null ? _turn + '%' : '—';

@@ -18,10 +18,36 @@ const OVR_KEY = 'wikiElections_overrides_v1';
 function OVR_load() {
   try {
     const raw = localStorage.getItem(OVR_KEY);
-    return raw ? JSON.parse(raw) : {};
+    return raw ? OVR_migrateIds(JSON.parse(raw)) : {};
   } catch (e) {
     return {};
   }
+}
+
+/**
+ * Re-key overrides saved under pre-rename election IDs (class7-26, 'Class 6 July', ...) to the
+ * canonical class<N>-<YYYY>-<MM> form. Idempotent; writes back once if anything changed.
+ */
+function OVR_migrateIds(o) {
+  if (!o || typeof o !== 'object' || typeof EID_canon !== 'function') return o || {};
+  let changed = false;
+  ['elections', 'results', 'pollsAdded', 'tsrResults'].forEach(k => {
+    const src = o[k]; if (!src || typeof src !== 'object') return;
+    const out = {};
+    Object.keys(src).forEach(id => {
+      const c = EID_canon(id); if (c !== id) changed = true;
+      out[c] = (c in out) ? (Array.isArray(out[c]) ? out[c].concat(src[id]) : OVR_deepMerge(out[c], src[id])) : src[id];
+    });
+    o[k] = out;
+  });
+  const sc = o.siteConfig;
+  if (sc && typeof sc === 'object') {
+    ['activePollsId'].forEach(k => { if (sc[k] && EID_canon(sc[k]) !== sc[k]) { sc[k] = EID_canon(sc[k]); changed = true; } });
+    if (Array.isArray(sc.electsIds)) { const n = sc.electsIds.map(EID_canon); if (n.join() !== sc.electsIds.join()) { sc.electsIds = n; changed = true; } }
+    if (Array.isArray(sc.activeElections)) sc.activeElections.forEach(e => { if (e && e.pollsId && EID_canon(e.pollsId) !== e.pollsId) { e.pollsId = EID_canon(e.pollsId); changed = true; } });
+  }
+  if (changed) { try { localStorage.setItem(OVR_KEY, JSON.stringify(o)); } catch (e) {} }
+  return o;
 }
 
 function OVR_save(obj) {

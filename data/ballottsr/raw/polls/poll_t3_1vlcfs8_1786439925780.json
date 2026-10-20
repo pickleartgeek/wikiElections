@@ -1,0 +1,128 @@
+{
+  "id": "poll_t3_1vlcfs8_1786439925780",
+  "title": "Wisconsin Dem Gov Primary Poll",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1786439925780,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vlcfs8",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1786526325780,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_fdh9m5",
+      "name": "Francesca Hong",
+      "color": "#1c5c44"
+    },
+    {
+      "id": "opt_1_i96i2j",
+      "name": "David Crowley",
+      "color": "#571b7a"
+    },
+    {
+      "id": "opt_2_3kwim3",
+      "name": "Kelda Roys",
+      "color": "#0000ff"
+    },
+    {
+      "id": "opt_3_dqq8r5",
+      "name": "Joel Brennan",
+      "color": "#3175a8"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 33,
+    "finalPct": {
+      "opt_0_fdh9m5": 54.54545454545454,
+      "opt_1_i96i2j": 45.45454545454545,
+      "opt_2_3kwim3": 0,
+      "opt_3_dqq8r5": 0
+    },
+    "winnerId": "opt_0_fdh9m5",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_fdh9m5",
+      "2": "opt_1_i96i2j",
+      "3": "opt_0_fdh9m5",
+      "4": "opt_0_fdh9m5",
+      "5": "opt_1_i96i2j",
+      "6": "opt_0_fdh9m5",
+      "7": "opt_1_i96i2j",
+      "8": "opt_0_fdh9m5",
+      "9": "opt_0_fdh9m5"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_fdh9m5": 50,
+        "opt_1_i96i2j": 50,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      },
+      "2": {
+        "opt_0_fdh9m5": 0,
+        "opt_1_i96i2j": 100,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      },
+      "3": {
+        "opt_0_fdh9m5": 75,
+        "opt_1_i96i2j": 25,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      },
+      "4": {
+        "opt_0_fdh9m5": 66.66666666666666,
+        "opt_1_i96i2j": 33.33333333333333,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      },
+      "5": {
+        "opt_0_fdh9m5": 25,
+        "opt_1_i96i2j": 75,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      },
+      "6": {
+        "opt_0_fdh9m5": 75,
+        "opt_1_i96i2j": 25,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      },
+      "7": {
+        "opt_0_fdh9m5": 33.33333333333333,
+        "opt_1_i96i2j": 66.66666666666666,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      },
+      "8": {
+        "opt_0_fdh9m5": 75,
+        "opt_1_i96i2j": 25,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      },
+      "9": {
+        "opt_0_fdh9m5": 75,
+        "opt_1_i96i2j": 25,
+        "opt_2_3kwim3": 0,
+        "opt_3_dqq8r5": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 4,
+      "2": 3,
+      "3": 4,
+      "4": 3,
+      "5": 4,
+      "6": 4,
+      "7": 3,
+      "8": 4,
+      "9": 4
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

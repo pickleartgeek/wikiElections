@@ -1,0 +1,158 @@
+{
+  "id": "poll_t3_1vnfybv_1786639352867",
+  "title": "What is Farage's chance of losing to Binface?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1786639352867,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vnfybv",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1786725752867,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_qpuc8r",
+      "name": ">90%",
+      "color": "#756d6d"
+    },
+    {
+      "id": "opt_1_4owinm",
+      "name": ">60%",
+      "color": "#48575c"
+    },
+    {
+      "id": "opt_2_s0h4sf",
+      "name": ">50%",
+      "color": "#517173"
+    },
+    {
+      "id": "opt_3_lrw3c0",
+      "name": ">20%",
+      "color": "#2d9693"
+    },
+    {
+      "id": "opt_4_g3fvme",
+      "name": ">10%",
+      "color": "#2dc4bf"
+    },
+    {
+      "id": "opt_5_4bragv",
+      "name": "<10%",
+      "color": "#54ebf0"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 39,
+    "finalPct": {
+      "opt_0_qpuc8r": 5.128205128205128,
+      "opt_1_4owinm": 2.564102564102564,
+      "opt_2_s0h4sf": 2.564102564102564,
+      "opt_3_lrw3c0": 12.82051282051282,
+      "opt_4_g3fvme": 33.33333333333333,
+      "opt_5_4bragv": 43.58974358974359
+    },
+    "winnerId": "opt_5_4bragv",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_1_4owinm",
+      "2": "opt_4_g3fvme",
+      "3": "opt_5_4bragv",
+      "4": "opt_4_g3fvme",
+      "5": "opt_5_4bragv",
+      "6": "opt_4_g3fvme",
+      "7": "opt_3_lrw3c0",
+      "8": "opt_5_4bragv",
+      "9": "opt_3_lrw3c0"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_qpuc8r": 0,
+        "opt_1_4owinm": 20,
+        "opt_2_s0h4sf": 20,
+        "opt_3_lrw3c0": 20,
+        "opt_4_g3fvme": 20,
+        "opt_5_4bragv": 20
+      },
+      "2": {
+        "opt_0_qpuc8r": 0,
+        "opt_1_4owinm": 0,
+        "opt_2_s0h4sf": 0,
+        "opt_3_lrw3c0": 0,
+        "opt_4_g3fvme": 66.66666666666666,
+        "opt_5_4bragv": 33.33333333333333
+      },
+      "3": {
+        "opt_0_qpuc8r": 0,
+        "opt_1_4owinm": 0,
+        "opt_2_s0h4sf": 0,
+        "opt_3_lrw3c0": 0,
+        "opt_4_g3fvme": 0,
+        "opt_5_4bragv": 100
+      },
+      "4": {
+        "opt_0_qpuc8r": 14.285714285714285,
+        "opt_1_4owinm": 0,
+        "opt_2_s0h4sf": 0,
+        "opt_3_lrw3c0": 0,
+        "opt_4_g3fvme": 42.857142857142854,
+        "opt_5_4bragv": 42.857142857142854
+      },
+      "5": {
+        "opt_0_qpuc8r": 0,
+        "opt_1_4owinm": 0,
+        "opt_2_s0h4sf": 0,
+        "opt_3_lrw3c0": 28.57142857142857,
+        "opt_4_g3fvme": 14.285714285714285,
+        "opt_5_4bragv": 57.14285714285714
+      },
+      "6": {
+        "opt_0_qpuc8r": 12.5,
+        "opt_1_4owinm": 0,
+        "opt_2_s0h4sf": 0,
+        "opt_3_lrw3c0": 0,
+        "opt_4_g3fvme": 50,
+        "opt_5_4bragv": 37.5
+      },
+      "7": {
+        "opt_0_qpuc8r": 0,
+        "opt_1_4owinm": 0,
+        "opt_2_s0h4sf": 0,
+        "opt_3_lrw3c0": 50,
+        "opt_4_g3fvme": 50,
+        "opt_5_4bragv": 0
+      },
+      "8": {
+        "opt_0_qpuc8r": 0,
+        "opt_1_4owinm": 0,
+        "opt_2_s0h4sf": 0,
+        "opt_3_lrw3c0": 0,
+        "opt_4_g3fvme": 20,
+        "opt_5_4bragv": 80
+      },
+      "9": {
+        "opt_0_qpuc8r": 0,
+        "opt_1_4owinm": 0,
+        "opt_2_s0h4sf": 0,
+        "opt_3_lrw3c0": 100,
+        "opt_4_g3fvme": 0,
+        "opt_5_4bragv": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 5,
+      "2": 3,
+      "3": 1,
+      "4": 7,
+      "5": 7,
+      "6": 8,
+      "7": 2,
+      "8": 5,
+      "9": 1
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

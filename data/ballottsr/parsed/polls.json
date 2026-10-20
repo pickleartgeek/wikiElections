@@ -1,0 +1,416 @@
+{
+  "polls": [
+    {
+      "id": "poll_t3_1xa7xzl_1792441381072",
+      "title": "Class 1 Poll - RepresentativePolling",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-10-19",
+      "method": "fptp",
+      "status": "open",
+      "ballots": 10,
+      "included": true,
+      "electionId": "class1-2026-10",
+      "pollster": "Representative-Fee65",
+      "shares": {
+        "oc1": 0.7,
+        "dvwb": 0.3
+      }
+    },
+    {
+      "id": "poll_t3_1xa7z10_1792441452986",
+      "title": "Class 2 Poll - RepresentativePolling",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-10-19",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 11,
+      "included": true,
+      "electionId": "class2-2026-10",
+      "pollster": "Representative-Fee65",
+      "shares": {
+        "fw2442": 0.2727,
+        "tmf": 0.4545,
+        "mf1": 0.2727
+      }
+    },
+    {
+      "id": "poll_t3_1xa9owf_1792445472930",
+      "title": "Class 1 Polling ~ Rensenware by DDTSR",
+      "createdBy": "wiptes167",
+      "date": "2026-10-19",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 12,
+      "included": true,
+      "electionId": "class1-2026-10",
+      "pollster": "Spinner Insights",
+      "shares": {
+        "oc1": 0.6667,
+        "dvwb": 0.3333
+      }
+    },
+    {
+      "id": "poll_t3_1x97pls_1792341581310",
+      "title": "Class 1 Poll",
+      "createdBy": "One-Community-3753",
+      "date": "2026-10-18",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 19,
+      "included": false,
+      "reason": "options don't match class1-2026-10 field: u/JungleJumpersfan (=tmf, not in this field)"
+    },
+    {
+      "id": "poll_t3_1x6whop_1792095771387",
+      "title": "Class 1 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-10-15",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 9,
+      "included": false,
+      "reason": "options don't match class1-2026-10 field: Junglejumpersfan (=tmf, not in this field), Paleolithic-Money91 (=pm, not in this field)"
+    },
+    {
+      "id": "poll_t3_1x6wjd2_1792095869473",
+      "title": "Class 2 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-10-15",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 8,
+      "included": false,
+      "reason": "options don't match class2-2026-10 field: Disguised_VW_Beetle (=dvwb, not in this field), One-Community-3753 (=oc, not in this field)"
+    },
+    {
+      "id": "poll_t3_1wyosdu_1791246391130",
+      "title": "Hypothetical Class 1 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-10-06",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 9,
+      "included": false,
+      "reason": "hypothetical / mock"
+    },
+    {
+      "id": "poll_t3_1wyotwt_1791246522911",
+      "title": "Hypothetical Class 1 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-10-06",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 16,
+      "included": false,
+      "reason": "hypothetical / mock"
+    },
+    {
+      "id": "poll_t3_1wxiybw_1791129093670",
+      "title": "What's likelier?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-10-04",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 62,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1wrybwl_1790550390891",
+      "title": "Hypothetical Class 1 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-09-27",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 15,
+      "included": false,
+      "reason": "hypothetical / mock"
+    },
+    {
+      "id": "poll_t3_1wkggm9_1789805992050",
+      "title": "Who did best in the Mod Debate? (see comments)",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-09-19",
+      "method": "star",
+      "status": "closed",
+      "ballots": 10,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1wkgjg0_1789806479656",
+      "title": "SpIn/DDTSR Poll",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-09-19",
+      "method": "rcv",
+      "status": "closed",
+      "ballots": 11,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1wkkvwv_1789820799998",
+      "title": "Class 7 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-09-19",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 19,
+      "included": false,
+      "reason": "election class7-2026-09 already held (history frozen)"
+    },
+    {
+      "id": "poll_t3_1wj19kd_1789668016846",
+      "title": "Spinner Insights/DDTSR Class 7 Poll",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-09-17",
+      "method": "rcv",
+      "status": "closed",
+      "ballots": 16,
+      "included": false,
+      "reason": "election class7-2026-09 already held (history frozen)"
+    },
+    {
+      "id": "poll_t3_1whj4qa_1789521975050",
+      "title": "Class 7 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-09-16",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 15,
+      "included": false,
+      "reason": "election class7-2026-09 already held (history frozen)"
+    },
+    {
+      "id": "poll_t3_1wdsjpa_1789160344817",
+      "title": "What will be the margin of Maine's Senate race? (select closest to your belief)",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-09-11",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 42,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1w992c0_1788730754259",
+      "title": "Class 7 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-09-06",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 9,
+      "included": false,
+      "reason": "election class7-2026-09 already held (history frozen)"
+    },
+    {
+      "id": "poll_t3_1w993c8_1788730812604",
+      "title": "Class 7 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-09-06",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 7,
+      "included": false,
+      "reason": "election class7-2026-09 already held (history frozen)"
+    },
+    {
+      "id": "poll_t3_1w9944u_1788730870445",
+      "title": "Class 7 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-09-06",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 6,
+      "included": false,
+      "reason": "election class7-2026-09 already held (history frozen)"
+    },
+    {
+      "id": "poll_t3_1w8208a_1788618087260",
+      "title": "Should Sen. John Fetterman (D-PA) resign from the Senate?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-09-05",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 58,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1w3b5sk_1788176390756",
+      "title": "Rank the Democratic(-aligned) Senate Candidates by probability of winning",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-31",
+      "method": "rcv",
+      "status": "closed",
+      "ballots": 44,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vzg6oc_1787794576070",
+      "title": "2028 Republican Party RCV",
+      "createdBy": "JCEurovision",
+      "date": "2026-08-27",
+      "method": "rcv",
+      "status": "closed",
+      "ballots": 42,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vzk390_1787806000849",
+      "title": "MA-6 Dem Primary",
+      "createdBy": "chia923",
+      "date": "2026-08-27",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 10,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1w07bc8_1787866638485",
+      "title": "More Likely to Happen: Blexas or Blichigan?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-27",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 83,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vzcbm0_1787784589799",
+      "title": "2028 Democratic Primary RCV",
+      "createdBy": "JCEurovision",
+      "date": "2026-08-26",
+      "method": "rcv",
+      "status": "closed",
+      "ballots": 50,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vwewud_1787509809392",
+      "title": "Ossoff or Buttigieg? Which is the better candidate?",
+      "createdBy": "practicalpurpose",
+      "date": "2026-08-23",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 114,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vvhzf4_1787419071359",
+      "title": "What will be the margin of Alaska's Senate race? (select closest to your belief)",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-22",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 50,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vtctpy_1787211915465",
+      "title": "Will Democrats Get Majorities in the House and Senate come November?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-20",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 42,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vs5nv5_1787095955183",
+      "title": "Is u/Impressive_Plant4418 a True Adam? (Genchat internal)",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-18",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 11,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vr4dnn_1786999710627",
+      "title": "Zohran Mamdani Approval Poll",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-17",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 35,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vowj0c_1786779492049",
+      "title": "Michigan Senate Poll",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-15",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 58,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vnfybv_1786639352867",
+      "title": "What is Farage's chance of losing to Binface?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-13",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 39,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vlcfs8_1786439925780",
+      "title": "Wisconsin Dem Gov Primary Poll",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-11",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 33,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vkrt6h_1786384380557",
+      "title": "TSR Votes: 2028 Democratic Primary - RCV",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-10",
+      "method": "rcv",
+      "status": "closed",
+      "ballots": 56,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1visuhl_1786186219995",
+      "title": "Will James Talarico win come November?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-08",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 112,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1vi8fv6_1786126881635",
+      "title": "Does BallotTSR work on your end?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-08-07",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 28,
+      "included": false,
+      "reason": "not a class race poll"
+    }
+  ]
+}

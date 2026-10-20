@@ -126,3 +126,23 @@ function renderChrome(cfg, base) {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply); else apply();
   new MutationObserver(apply).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 })();
+
+
+/**
+ * Bar label that changes color exactly where the bar's fill ends. The label is drawn twice at the same spot:
+ * a base copy in normal ink, and a copy in contrast color clipped to the filled part only -- so every letter
+ * flips as the fill passes under it (no whole-label jumps, no halfway-invisible text). Works at any fill width.
+ *   fillPct  0-100, width of the colored fill within the row (what's set as the fill's width:%)
+ *   endColor hex of the fill's RIGHT end (where the label sits) -- picks white or dark ink for the clipped copy
+ */
+function SITE_barMeta(nameHtml, pctNum, fillPct, endColor) {
+  const inner = `<div class="name">${nameHtml}</div><div class="pct">${pctNum}<sup>%</sup></div>`;
+  const hex = String(endColor || '#000').replace('#', ''), f = hex.length === 3 ? hex.replace(/./g, c => c + c) : hex.padEnd(6, '0');
+  const lin = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  const L = 0.2126 * lin(parseInt(f.slice(0, 2), 16)) + 0.7152 * lin(parseInt(f.slice(2, 4), 16)) + 0.0722 * lin(parseInt(f.slice(4, 6), 16));
+  const ink = L > 0.42 ? '#111214' : '#ffffff';
+  const clip = Math.max(0, Math.min(100, 100 - fillPct));
+  return `<div class="rcp-bar-meta">${inner}</div>` +
+    `<div class="rcp-bar-meta-clip" aria-hidden="true" style="clip-path:inset(0 ${clip}% 0 0);--clip-ink:${ink}"><div class="rcp-bar-meta">${inner}</div></div>`;
+}
+if (typeof window !== 'undefined') window.SITE_barMeta = SITE_barMeta;

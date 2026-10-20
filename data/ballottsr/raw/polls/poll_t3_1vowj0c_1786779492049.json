@@ -1,0 +1,98 @@
+{
+  "id": "poll_t3_1vowj0c_1786779492049",
+  "title": "Michigan Senate Poll",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1786779492049,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vowj0c",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1786952292049,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_s5zor0",
+      "name": "Abdul El-Sayed",
+      "color": "#0000ff"
+    },
+    {
+      "id": "opt_1_i8u89v",
+      "name": "Mike Rogers",
+      "color": "#ff0000"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 58,
+    "finalPct": {
+      "opt_0_s5zor0": 82.75862068965517,
+      "opt_1_i8u89v": 17.24137931034483
+    },
+    "winnerId": "opt_0_s5zor0",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_s5zor0",
+      "2": "opt_0_s5zor0",
+      "3": "opt_0_s5zor0",
+      "4": "opt_0_s5zor0",
+      "5": "opt_0_s5zor0",
+      "6": "opt_0_s5zor0",
+      "7": "opt_0_s5zor0",
+      "8": "opt_0_s5zor0",
+      "9": "opt_0_s5zor0"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_s5zor0": 75,
+        "opt_1_i8u89v": 25
+      },
+      "2": {
+        "opt_0_s5zor0": 75,
+        "opt_1_i8u89v": 25
+      },
+      "3": {
+        "opt_0_s5zor0": 100,
+        "opt_1_i8u89v": 0
+      },
+      "4": {
+        "opt_0_s5zor0": 100,
+        "opt_1_i8u89v": 0
+      },
+      "5": {
+        "opt_0_s5zor0": 85.71428571428571,
+        "opt_1_i8u89v": 14.285714285714285
+      },
+      "6": {
+        "opt_0_s5zor0": 85.71428571428571,
+        "opt_1_i8u89v": 14.285714285714285
+      },
+      "7": {
+        "opt_0_s5zor0": 66.66666666666666,
+        "opt_1_i8u89v": 33.33333333333333
+      },
+      "8": {
+        "opt_0_s5zor0": 83.33333333333334,
+        "opt_1_i8u89v": 16.666666666666664
+      },
+      "9": {
+        "opt_0_s5zor0": 83.33333333333334,
+        "opt_1_i8u89v": 16.666666666666664
+      }
+    },
+    "groupBallotCount": {
+      "1": 8,
+      "2": 4,
+      "3": 2,
+      "4": 6,
+      "5": 7,
+      "6": 7,
+      "7": 6,
+      "8": 12,
+      "9": 6
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

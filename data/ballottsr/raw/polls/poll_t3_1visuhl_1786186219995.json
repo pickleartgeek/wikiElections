@@ -1,0 +1,113 @@
+{
+  "id": "poll_t3_1visuhl_1786186219995",
+  "title": "Will James Talarico win come November?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1786186219995,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1visuhl",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1786359019995,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_83f7je",
+      "name": "Yes, handily (+5)",
+      "color": "#283561"
+    },
+    {
+      "id": "opt_1_5pu4b7",
+      "name": "Yes",
+      "color": "#6991c2"
+    },
+    {
+      "id": "opt_2_61ilsp",
+      "name": "No",
+      "color": "#ff0000"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 112,
+    "finalPct": {
+      "opt_0_83f7je": 4.464285714285714,
+      "opt_1_5pu4b7": 60.71428571428571,
+      "opt_2_61ilsp": 34.82142857142857
+    },
+    "winnerId": "opt_1_5pu4b7",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_1_5pu4b7",
+      "2": "opt_1_5pu4b7",
+      "3": "opt_1_5pu4b7",
+      "4": "opt_1_5pu4b7",
+      "5": "opt_1_5pu4b7",
+      "6": "opt_2_61ilsp",
+      "7": "opt_1_5pu4b7",
+      "8": "opt_2_61ilsp",
+      "9": "opt_1_5pu4b7"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_83f7je": 0,
+        "opt_1_5pu4b7": 71.42857142857143,
+        "opt_2_61ilsp": 28.57142857142857
+      },
+      "2": {
+        "opt_0_83f7je": 0,
+        "opt_1_5pu4b7": 50,
+        "opt_2_61ilsp": 50
+      },
+      "3": {
+        "opt_0_83f7je": 0,
+        "opt_1_5pu4b7": 71.42857142857143,
+        "opt_2_61ilsp": 28.57142857142857
+      },
+      "4": {
+        "opt_0_83f7je": 18.181818181818183,
+        "opt_1_5pu4b7": 63.63636363636363,
+        "opt_2_61ilsp": 18.181818181818183
+      },
+      "5": {
+        "opt_0_83f7je": 10,
+        "opt_1_5pu4b7": 60,
+        "opt_2_61ilsp": 30
+      },
+      "6": {
+        "opt_0_83f7je": 0,
+        "opt_1_5pu4b7": 47.368421052631575,
+        "opt_2_61ilsp": 52.63157894736842
+      },
+      "7": {
+        "opt_0_83f7je": 0,
+        "opt_1_5pu4b7": 83.33333333333334,
+        "opt_2_61ilsp": 16.666666666666664
+      },
+      "8": {
+        "opt_0_83f7je": 6.25,
+        "opt_1_5pu4b7": 43.75,
+        "opt_2_61ilsp": 50
+      },
+      "9": {
+        "opt_0_83f7je": 9.090909090909092,
+        "opt_1_5pu4b7": 72.72727272727273,
+        "opt_2_61ilsp": 18.181818181818183
+      }
+    },
+    "groupBallotCount": {
+      "1": 14,
+      "2": 12,
+      "3": 7,
+      "4": 11,
+      "5": 10,
+      "6": 19,
+      "7": 12,
+      "8": 16,
+      "9": 11
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

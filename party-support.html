@@ -21,7 +21,7 @@
     </a>
     <nav class="main-nav-inline" aria-label="Main">
       <a href="./">Main Page</a>
-      <a href="activities">Decision Desk TSR</a>
+      <a href="ddtsr">Decision Desk TSR</a>
       <a href="polls" class="current">Spinner Insights Polls</a>
       <a href="elects/">TSR Elects</a>
       <details class="nav-more">
@@ -70,6 +70,7 @@
 </footer>
 
 <script>window.SITE_BASE = './';</script>
+<script src="assets/js/election-ids.js"></script>
 <script src="assets/js/overrides.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/tsrelects.js"></script>
@@ -134,7 +135,7 @@ async function boot() {
       <div class="rcp-bar-row">
         <div class="rcp-bar-fill" style="width:${Math.max(pct * 100, 6)}%; background:linear-gradient(120deg, ${color}, ${color});"></div>
         <div class="rcp-bar-remainder"></div>
-        <div class="rcp-bar-meta${pct * 100 >= 80 ? ' on-fill' : ''}"><div class="name">${name}</div><div class="pct">${(pct * 100).toFixed(1)}<sup>%</sup></div></div>
+        ${SITE_barMeta(name, (pct * 100).toFixed(1), Math.max(pct * 100, 6), color)}
       </div>`;
   });
   barsHtml += `</div>`;

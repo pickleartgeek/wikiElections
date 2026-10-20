@@ -466,15 +466,17 @@ img { max-width: 100%; display: block; }
 .rcp-bar-meta .name { font-size: 13px; font-weight: 700; color: var(--ink); }
 .rcp-bar-meta .pct { font-size: 26px; font-weight: 900; color: var(--ink); line-height: 1; }
 .rcp-bar-meta .pct sup { font-size: 13px; }
-/* A high-percentage bar's colored fill can extend all the way under this
-   label -- flip the text to white (with a soft dark shadow for legibility
-   on lighter candidate colors) whenever the caller determines the meta
-   sits over the filled portion, instead of vanishing against a dark bar. */
+/* Static bars saved inside articles still use the one-class version: white label when the fill runs under it. */
 .rcp-bar-meta.on-fill .name,
-.rcp-bar-meta.on-fill .pct {
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-}
+.rcp-bar-meta.on-fill .pct { color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); }
+
+/* Label is drawn twice (see SITE_barMeta): the base copy in normal ink, plus a copy clipped to the filled
+   part of the bar in a contrast color. clip-path cuts at the fill's edge, so the text changes color per-letter. */
+.rcp-bar-meta-clip { position: absolute; inset: 0; pointer-events: none; }
+.rcp-bar-meta-clip .rcp-bar-meta .name,
+.rcp-bar-meta-clip .rcp-bar-meta .pct { color: var(--clip-ink, #fff); text-shadow: none; }
+/* approval's black "Approve" fill turns light in dark mode -- its clipped label needs dark ink there */
+[data-theme="dark"] .rcp-bar-row:has(.rcp-bar-fill[style*="#111214"]) .rcp-bar-meta-clip { --clip-ink: #111214; }
 
 /* Trend chart */
 .rcp-chart-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 16px 18px; margin-bottom: 24px; }
@@ -1219,3 +1221,6 @@ a.tk-row:hover { background: var(--paper-dim); }
 .pg-banner .pg-banner-light { mix-blend-mode: multiply; }
 [data-theme="dark"] .pg-banner .pg-banner-dark { display: block; }
 [data-theme="dark"] .pg-banner .pg-banner-light { display: none; }
+
+/* author display rules (flex/grid) must not defeat the hidden attribute */
+[hidden] { display: none !important; }

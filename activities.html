@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
-   <title>Redirecting...</title>
-   <script type="text/javascript">
-       window.location.href = "https://pickleartgeek.github.io/wikiElections/ddtsr";
-   </script>
+<meta charset="utf-8">
+<title>Redirecting…</title>
+<meta http-equiv="refresh" content="0; url=ddtsr">
+<script>
+  // Legacy URL: forward to ddtsr, keeping ?election=… and #probcalc so old shared links still land in the right place.
+  location.replace('ddtsr' + location.search + location.hash);
+</script>
 </head>
 <body>
-   <p>If you are not redirected automatically, click <a href="https://pickleartgeek.github.io/wikiElections/ddtsr">here</a>.</p>
+<p>If you are not redirected automatically, <a href="ddtsr">click here</a>.</p>
 </body>
 </html>

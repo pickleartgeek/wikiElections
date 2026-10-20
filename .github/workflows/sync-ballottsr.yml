@@ -1,0 +1,67 @@
+name: Sync BallotTSR
+
+# Pulls official election results every 30 minutes and poll results every 3 hours from
+# pickleartgeek/ElSec (ballottsr/), mirrors them into data/ballottsr/, and updates the site data.
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # official elections
+    - cron: '7 */3 * * *'    # polls (offset from :00 -- GitHub delays top-of-hour runs the most)
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: 'What to sync'
+        type: choice
+        options: [all, polls, elections]
+        default: all
+      force:
+        description: 'Re-download closed files too'
+        type: boolean
+        default: false
+
+concurrency:
+  group: sync-ballottsr
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Decide what to sync
+        id: kind
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "kind=${{ inputs.kind }}" >> "$GITHUB_OUTPUT"
+            echo "force=${{ inputs.force && '--force' || '' }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "*/30 * * * *" ]; then
+            echo "kind=elections" >> "$GITHUB_OUTPUT"
+          else
+            echo "kind=polls" >> "$GITHUB_OUTPUT"
+          fi
+          # the site lives in site/ if the repo root holds it, otherwise the repo root IS the site
+          if [ -f site/tools/ballottsr-sync.js ]; then echo "dir=site" >> "$GITHUB_OUTPUT"; else echo "dir=." >> "$GITHUB_OUTPUT"; fi
+
+      - name: Sync
+        run: node ${{ steps.kind.outputs.dir }}/tools/ballottsr-sync.js --kind ${{ steps.kind.outputs.kind }} ${{ steps.kind.outputs.force }}
+
+      - name: Validate data
+        run: node ${{ steps.kind.outputs.dir }}/tools/check-data.js
+
+      - name: Commit and push if anything changed
+        run: |
+          git config user.name  "wikiElections sync"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "No changes."; exit 0; fi
+          git commit -m "sync(ballottsr): ${{ steps.kind.outputs.kind }} $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase --autostash
+          git push

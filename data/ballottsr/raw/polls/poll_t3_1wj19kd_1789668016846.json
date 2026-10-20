@@ -1,0 +1,187 @@
+{
+  "id": "poll_t3_1wj19kd_1789668016846",
+  "title": "Spinner Insights/DDTSR Class 7 Poll",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1789668016846,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1wj19kd",
+  "method": "rcv",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1789840816846,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_q5qrc6",
+      "name": "Junglejumpersfan (Union of the Democratic Center)",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_1_2ifyer",
+      "name": "Disguised_VW_Beetle (Unaffiliated)",
+      "color": "#888888"
+    },
+    {
+      "id": "opt_2_34uli5",
+      "name": "Nazibol1234 (The Spinner Party / We Are BCConservative)",
+      "color": "#b71212"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "rcv",
+    "totalBallots": 16,
+    "finalPct": {
+      "opt_0_q5qrc6": 50,
+      "opt_1_2ifyer": 18.75,
+      "opt_2_34uli5": 31.25
+    },
+    "winnerId": "opt_0_q5qrc6",
+    "rounds": [
+      {
+        "round": 1,
+        "tallies": {
+          "opt_0_q5qrc6": 8,
+          "opt_1_2ifyer": 3,
+          "opt_2_34uli5": 5
+        },
+        "eliminated": "opt_1_2ifyer",
+        "exhausted": 0,
+        "transfers": {
+          "opt_0_q5qrc6": 1,
+          "opt_2_34uli5": 2
+        },
+        "transferExhausted": 0
+      },
+      {
+        "round": 2,
+        "tallies": {
+          "opt_0_q5qrc6": 9,
+          "opt_2_34uli5": 7
+        },
+        "winner": "opt_0_q5qrc6",
+        "exhausted": 0
+      }
+    ],
+    "totalRounds": 2,
+    "rcvTransferMatrix": {
+      "opt_0_q5qrc6": {
+        "total": 8,
+        "to": {
+          "opt_1_2ifyer": 4,
+          "opt_2_34uli5": 0
+        },
+        "exhausted": 4
+      },
+      "opt_1_2ifyer": {
+        "total": 3,
+        "to": {
+          "opt_0_q5qrc6": 1,
+          "opt_2_34uli5": 2
+        },
+        "exhausted": 0
+      },
+      "opt_2_34uli5": {
+        "total": 5,
+        "to": {
+          "opt_0_q5qrc6": 0,
+          "opt_1_2ifyer": 3
+        },
+        "exhausted": 2
+      }
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_q5qrc6",
+      "2": "opt_0_q5qrc6",
+      "3": "opt_2_34uli5",
+      "4": "opt_1_2ifyer",
+      "5": "opt_2_34uli5",
+      "6": "opt_1_2ifyer",
+      "7": "opt_0_q5qrc6",
+      "8": "opt_0_q5qrc6",
+      "9": "opt_2_34uli5"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_q5qrc6": 100,
+        "opt_1_2ifyer": 0,
+        "opt_2_34uli5": 0
+      },
+      "2": {
+        "opt_0_q5qrc6": 100,
+        "opt_1_2ifyer": 0,
+        "opt_2_34uli5": 0
+      },
+      "3": {
+        "opt_0_q5qrc6": 0,
+        "opt_1_2ifyer": 0,
+        "opt_2_34uli5": 100
+      },
+      "4": {
+        "opt_0_q5qrc6": 0,
+        "opt_1_2ifyer": 100,
+        "opt_2_34uli5": 0
+      },
+      "5": {
+        "opt_0_q5qrc6": 25,
+        "opt_1_2ifyer": 25,
+        "opt_2_34uli5": 50
+      },
+      "6": {
+        "opt_0_q5qrc6": 33.33333333333333,
+        "opt_1_2ifyer": 33.33333333333333,
+        "opt_2_34uli5": 33.33333333333333
+      },
+      "7": {
+        "opt_0_q5qrc6": 100,
+        "opt_1_2ifyer": 0,
+        "opt_2_34uli5": 0
+      },
+      "8": {
+        "opt_0_q5qrc6": 100,
+        "opt_1_2ifyer": 0,
+        "opt_2_34uli5": 0
+      },
+      "9": {
+        "opt_0_q5qrc6": 50,
+        "opt_1_2ifyer": 0,
+        "opt_2_34uli5": 50
+      }
+    },
+    "groupBallotCount": {
+      "1": 1,
+      "2": 2,
+      "3": 1,
+      "4": 1,
+      "5": 4,
+      "6": 3,
+      "7": 1,
+      "8": 1,
+      "9": 2
+    },
+    "groupRoundLeaders": {
+      "1": {
+        "1": "opt_0_q5qrc6",
+        "2": "opt_0_q5qrc6",
+        "3": "opt_2_34uli5",
+        "4": "opt_1_2ifyer",
+        "5": "opt_2_34uli5",
+        "6": "opt_0_q5qrc6",
+        "7": "opt_0_q5qrc6",
+        "8": "opt_0_q5qrc6",
+        "9": "opt_0_q5qrc6"
+      },
+      "2": {
+        "5": "opt_2_34uli5",
+        "6": "opt_1_2ifyer",
+        "9": "opt_0_q5qrc6"
+      },
+      "3": {
+        "9": "opt_2_34uli5"
+      }
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

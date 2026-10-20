@@ -1,0 +1,32 @@
+{
+  "id": "class2-2026-10",
+  "title": "Class 2 October 2026 Special Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "tmf",
+    "mf1",
+    "fw2442"
+  ],
+  "electionDate": "2026-10-23",
+  "anticipatedTurnout": 20,
+  "electionId": "class2-2026-10",
+  "polls": [
+    {
+      "id": "bt-1xa7z10",
+      "pollster": "Representative-Fee65",
+      "date": "2026-10-19",
+      "sample": 11,
+      "weight": 1,
+      "shares": {
+        "fw2442": 0.2727,
+        "tmf": 0.4545,
+        "mf1": 0.2727
+      },
+      "source": "ballottsr",
+      "sourceId": "poll_t3_1xa7z10_1792441452986",
+      "status": "open",
+      "method": "rcv",
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xa7z10"
+    }
+  ]
+}

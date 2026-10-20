@@ -1,0 +1,92 @@
+{
+  "id": "poll_t3_1vi8fv6_1786126881635",
+  "title": "Does BallotTSR work on your end?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1786126881635,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vi8fv6",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1786213281635,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_uk6prj",
+      "name": "Yes!",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_1_mbos9e",
+      "name": "No.",
+      "color": "#b71212"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 28,
+    "finalPct": {
+      "opt_0_uk6prj": 92.85714285714286,
+      "opt_1_mbos9e": 7.142857142857142
+    },
+    "winnerId": "opt_0_uk6prj",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_uk6prj",
+      "2": "opt_0_uk6prj",
+      "3": "opt_0_uk6prj",
+      "4": "opt_0_uk6prj",
+      "5": "opt_0_uk6prj",
+      "6": "opt_0_uk6prj",
+      "8": "opt_0_uk6prj",
+      "9": "opt_0_uk6prj"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_uk6prj": 80,
+        "opt_1_mbos9e": 20
+      },
+      "2": {
+        "opt_0_uk6prj": 100,
+        "opt_1_mbos9e": 0
+      },
+      "3": {
+        "opt_0_uk6prj": 100,
+        "opt_1_mbos9e": 0
+      },
+      "4": {
+        "opt_0_uk6prj": 100,
+        "opt_1_mbos9e": 0
+      },
+      "5": {
+        "opt_0_uk6prj": 80,
+        "opt_1_mbos9e": 20
+      },
+      "6": {
+        "opt_0_uk6prj": 100,
+        "opt_1_mbos9e": 0
+      },
+      "8": {
+        "opt_0_uk6prj": 100,
+        "opt_1_mbos9e": 0
+      },
+      "9": {
+        "opt_0_uk6prj": 100,
+        "opt_1_mbos9e": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 5,
+      "2": 3,
+      "3": 1,
+      "4": 3,
+      "5": 5,
+      "6": 5,
+      "8": 5,
+      "9": 1
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

@@ -28,7 +28,7 @@
     </a>
     <nav class="main-nav-inline" aria-label="Main">
       <a href="./">Main Page</a>
-      <a href="activities">Decision Desk TSR</a>
+      <a href="ddtsr">Decision Desk TSR</a>
       <a href="polls" class="current">Spinner Insights Polls</a>
       <a href="elects/">TSR Elects</a>
       <details class="nav-more">
@@ -81,6 +81,7 @@
 </footer>
 
 <script>window.SITE_BASE = './';</script>
+<script src="assets/js/election-ids.js"></script>
 <script src="assets/js/overrides.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/tsrelects.js"></script>
@@ -218,12 +219,12 @@ function loadEntry(key) {
           ${photo ? `<div class="rcp-bar-photo"><img class="white-filter-img" src="${photo}" alt=""></div>` : ''}
         </div>
         <div class="rcp-bar-remainder"></div>
-        <div class="rcp-bar-meta${approve * 100 >= 80 ? ' on-fill' : ''}"><div class="name">${yesLabel}</div><div class="pct">${(approve * 100).toFixed(1)}<sup>%</sup></div></div>
+        ${SITE_barMeta(yesLabel, (approve * 100).toFixed(1), Math.max(approve * 100, 14), '#3a3c40')}
       </div>
       <div class="rcp-bar-row">
         <div class="rcp-bar-fill" style="width:${Math.max(disapprove * 100, 14)}%; background:linear-gradient(120deg, #cf1322, #93000f);"></div>
         <div class="rcp-bar-remainder"></div>
-        <div class="rcp-bar-meta${disapprove * 100 >= 80 ? ' on-fill' : ''}"><div class="name">${noLabel}</div><div class="pct">${(disapprove * 100).toFixed(1)}<sup>%</sup></div></div>
+        ${SITE_barMeta(noLabel, (disapprove * 100).toFixed(1), Math.max(disapprove * 100, 14), '#93000f')}
       </div>
     </div>
 

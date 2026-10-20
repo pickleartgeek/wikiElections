@@ -1,0 +1,98 @@
+{
+  "id": "poll_t3_1vwewud_1787509809392",
+  "title": "Ossoff or Buttigieg? Which is the better candidate?",
+  "createdBy": "practicalpurpose",
+  "createdAt": 1787509809392,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1vwewud",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1787596209392,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_5htnzi",
+      "name": "Ossoff",
+      "color": "#00ffff"
+    },
+    {
+      "id": "opt_1_zce9e7",
+      "name": "Buttigieg",
+      "color": "#0000ff"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 114,
+    "finalPct": {
+      "opt_0_5htnzi": 78.0701754385965,
+      "opt_1_zce9e7": 21.929824561403507
+    },
+    "winnerId": "opt_0_5htnzi",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_5htnzi",
+      "2": "opt_0_5htnzi",
+      "3": "opt_0_5htnzi",
+      "4": "opt_0_5htnzi",
+      "5": "opt_0_5htnzi",
+      "6": "opt_0_5htnzi",
+      "7": "opt_0_5htnzi",
+      "8": "opt_0_5htnzi",
+      "9": "opt_0_5htnzi"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_5htnzi": 80,
+        "opt_1_zce9e7": 20
+      },
+      "2": {
+        "opt_0_5htnzi": 91.66666666666666,
+        "opt_1_zce9e7": 8.333333333333332
+      },
+      "3": {
+        "opt_0_5htnzi": 50,
+        "opt_1_zce9e7": 50
+      },
+      "4": {
+        "opt_0_5htnzi": 73.33333333333333,
+        "opt_1_zce9e7": 26.666666666666668
+      },
+      "5": {
+        "opt_0_5htnzi": 73.33333333333333,
+        "opt_1_zce9e7": 26.666666666666668
+      },
+      "6": {
+        "opt_0_5htnzi": 86.66666666666667,
+        "opt_1_zce9e7": 13.333333333333334
+      },
+      "7": {
+        "opt_0_5htnzi": 62.5,
+        "opt_1_zce9e7": 37.5
+      },
+      "8": {
+        "opt_0_5htnzi": 77.77777777777779,
+        "opt_1_zce9e7": 22.22222222222222
+      },
+      "9": {
+        "opt_0_5htnzi": 86.66666666666667,
+        "opt_1_zce9e7": 13.333333333333334
+      }
+    },
+    "groupBallotCount": {
+      "1": 10,
+      "2": 12,
+      "3": 6,
+      "4": 15,
+      "5": 15,
+      "6": 15,
+      "7": 8,
+      "8": 18,
+      "9": 15
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

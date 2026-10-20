@@ -1,0 +1,12 @@
+{
+  "unmapped": [],
+  "skippedPolls": [
+    "poll_t3_1x6whop_1792095771387 \"Class 1 Poll\": options don't match class1-2026-10 field: Junglejumpersfan (=tmf, not in this field), Paleolithic-Money91 (=pm, not in this field)",
+    "poll_t3_1x6wjd2_1792095869473 \"Class 2 Poll\": options don't match class2-2026-10 field: Disguised_VW_Beetle (=dvwb, not in this field), One-Community-3753 (=oc, not in this field)",
+    "poll_t3_1x97pls_1792341581310 \"Class 1 Poll\": options don't match class1-2026-10 field: u/JungleJumpersfan (=tmf, not in this field)"
+  ],
+  "skippedElections": [],
+  "crossChecks": [
+    "class7-2026-09: known difference (ballottsr's raw count still includes one fraudulent ballot that was removed from the official result; the hand-curated file is correct.) tmf: ballottsr 11 vs site 10"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "class1-2026-10",
+  "title": "Class 1 October 2026 Election",
+  "subtitle": "r/thespinroom",
+  "candidateIds": [
+    "oc1",
+    "dvwb"
+  ],
+  "electionDate": "2026-10-23",
+  "anticipatedTurnout": 20,
+  "electionId": "class1-2026-10",
+  "polls": [
+    {
+      "id": "bt-1xa7xzl",
+      "pollster": "Representative-Fee65",
+      "date": "2026-10-19",
+      "sample": 10,
+      "weight": 1,
+      "shares": {
+        "oc1": 0.7,
+        "dvwb": 0.3
+      },
+      "source": "ballottsr",
+      "sourceId": "poll_t3_1xa7xzl_1792441381072",
+      "status": "open",
+      "method": "fptp",
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xa7xzl"
+    },
+    {
+      "id": "bt-1xa9owf",
+      "pollster": "Spinner Insights",
+      "date": "2026-10-19",
+      "sample": 12,
+      "weight": 1,
+      "shares": {
+        "oc1": 0.6667,
+        "dvwb": 0.3333
+      },
+      "source": "ballottsr",
+      "sourceId": "poll_t3_1xa9owf_1792445472930",
+      "status": "open",
+      "method": "rcv",
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xa9owf"
+    }
+  ]
+}

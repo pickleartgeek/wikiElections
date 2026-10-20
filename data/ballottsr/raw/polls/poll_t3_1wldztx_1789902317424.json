@@ -1,0 +1,357 @@
+{
+  "id": "poll_t3_1wldztx_1789902317424",
+  "title": "Class 7 Mod Election",
+  "createdBy": "One-Community-3753",
+  "createdAt": 1789902317424,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1wldztx",
+  "method": "rcv",
+  "isOfficialElection": true,
+  "status": "closed",
+  "votingClosesAt": 1790075117424,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_i348r6",
+      "name": "u/Nazibol1234",
+      "color": "#888888"
+    },
+    {
+      "id": "opt_1_ulp68g",
+      "name": "u/teammomofan",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_2_m6fpnf",
+      "name": "u/Disguised_VW_Beetle",
+      "color": "#888888"
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_0_1szg8w",
+      "number": "1",
+      "name": "Establishment of Parliament Act",
+      "author": "wiptes167",
+      "text": "This proposition will formally establish a position of Prime Minister of TSR to be filled by one person, such person must either be voted by either a simple majority of mods, or in a majority government.\n\nIf a person has his or her party control the most seats in a majority government position then voting may be restricted to only moderators of that party, however such a motion has to be granted by the secretary for elections (El Sec).",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_1_m0qbkg",
+      "number": "2",
+      "name": "Equal Treatment in Parliament Act",
+      "author": "wiptes167",
+      "text": "Gives all mods, not just PickleArtGeek, the right to run for multiple seats. If passed, this will repeal any other amendments on the topic of moderators running for multiple seats",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_2_gpsw1v",
+      "number": "3",
+      "name": "The Bongcloud Amendment",
+      "author": "Yogurtclosetdry6927",
+      "text": "allow u/yogurtclosetdry6927 to ban one random user weekly.",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_3_4knpuf",
+      "number": "4",
+      "name": "Better Elections Act (Again) (BEAA)",
+      "author": "Representative-Fee65",
+      "text": "Section I - Bringing Back Mock Elections\n\nShould this bill pass, mock elections will return to the election schedule, with the election chosen by either the ElSec or the subreddit.\n\nSection II - New Election Schedule\n\nShould this bill pass, the election schedule would be as follows after the September Class 7 election:\n\nOctober: Mock Election\nNovember: Class 1 and Class 2\nDecember: Mock Election\nJanuary: Class 3 and Class 4\nFebruary: Mock Election\nMarch: Class 5 and Class 6\nApril: Mock Election\nMay: Class 7 and Class 1\n\nAnd so on.\n\nThis is expected to reduce the average term length by approximately 1-2 months and is projected to decrease the number of resignations as well as long periods of inactivity.\n\nIf a moderator resigns before their next election, the closest election day would be when the seat becomes available for a new election. (Ex: a moderator resigns in January after the last election, the next election would be held on in February, regardless of the mock election)",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_4_a32dx2",
+      "number": "5",
+      "name": "The Beetle Amemdment 4.0",
+      "author": "teammomofan",
+      "text": "brings back Missouri Egg/Arkansas Bagel",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_5_i8qrcz",
+      "number": "6",
+      "name": "The Beetle Amendment 3.0",
+      "author": "Impressive_Plant4418",
+      "text": "allow u/Impressive_Plant4418 to run for multiple moderator seats, or more than one at a time.",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_6_vl1l2v",
+      "number": "7",
+      "name": "The Beetle Amendment 2.0",
+      "author": "Disguised_VW_Beetle",
+      "text": "undo The PICKLE Amendment if it passes.",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_7_l539wg",
+      "number": "8",
+      "name": "PICKLE (Putting Independent and Consciously Knowing Leaders in Elections) Amendment",
+      "author": "Impressive_Plant4418",
+      "text": "repeal The Beetle Amendment (Prop 43) allowing PickleArtGeek to run for multiple moderator seats while being an incumbent in a different one.",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    }
+  ],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "rcv",
+    "totalBallots": 29,
+    "finalPct": {
+      "opt_0_i348r6": 44.827586206896555,
+      "opt_1_ulp68g": 37.93103448275862,
+      "opt_2_m6fpnf": 17.24137931034483
+    },
+    "winnerId": "opt_0_i348r6",
+    "rounds": [
+      {
+        "round": 1,
+        "tallies": {
+          "opt_0_i348r6": 13,
+          "opt_1_ulp68g": 11,
+          "opt_2_m6fpnf": 5
+        },
+        "eliminated": "opt_2_m6fpnf",
+        "exhausted": 0,
+        "transfers": {
+          "opt_0_i348r6": 2,
+          "opt_1_ulp68g": 3
+        },
+        "transferExhausted": 0
+      },
+      {
+        "round": 2,
+        "tallies": {
+          "opt_0_i348r6": 15,
+          "opt_1_ulp68g": 14
+        },
+        "winner": "opt_0_i348r6",
+        "exhausted": 0
+      }
+    ],
+    "totalRounds": 2,
+    "rcvTransferMatrix": {
+      "opt_0_i348r6": {
+        "total": 13,
+        "to": {
+          "opt_1_ulp68g": 1,
+          "opt_2_m6fpnf": 9
+        },
+        "exhausted": 3
+      },
+      "opt_1_ulp68g": {
+        "total": 11,
+        "to": {
+          "opt_0_i348r6": 0,
+          "opt_2_m6fpnf": 9
+        },
+        "exhausted": 2
+      },
+      "opt_2_m6fpnf": {
+        "total": 5,
+        "to": {
+          "opt_0_i348r6": 2,
+          "opt_1_ulp68g": 3
+        },
+        "exhausted": 0
+      }
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_0_i348r6",
+      "2": "opt_1_ulp68g",
+      "3": "opt_1_ulp68g",
+      "5": "opt_0_i348r6",
+      "6": "opt_2_m6fpnf",
+      "7": "opt_1_ulp68g",
+      "8": "opt_1_ulp68g",
+      "9": "opt_0_i348r6"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_i348r6": 66.66666666666666,
+        "opt_1_ulp68g": 33.33333333333333,
+        "opt_2_m6fpnf": 0
+      },
+      "2": {
+        "opt_0_i348r6": 20,
+        "opt_1_ulp68g": 60,
+        "opt_2_m6fpnf": 20
+      },
+      "3": {
+        "opt_0_i348r6": 50,
+        "opt_1_ulp68g": 50,
+        "opt_2_m6fpnf": 0
+      },
+      "5": {
+        "opt_0_i348r6": 75,
+        "opt_1_ulp68g": 0,
+        "opt_2_m6fpnf": 25
+      },
+      "6": {
+        "opt_0_i348r6": 40,
+        "opt_1_ulp68g": 20,
+        "opt_2_m6fpnf": 40
+      },
+      "7": {
+        "opt_0_i348r6": 33.33333333333333,
+        "opt_1_ulp68g": 66.66666666666666,
+        "opt_2_m6fpnf": 0
+      },
+      "8": {
+        "opt_0_i348r6": 25,
+        "opt_1_ulp68g": 50,
+        "opt_2_m6fpnf": 25
+      },
+      "9": {
+        "opt_0_i348r6": 66.66666666666666,
+        "opt_1_ulp68g": 33.33333333333333,
+        "opt_2_m6fpnf": 0
+      }
+    },
+    "groupBallotCount": {
+      "1": 3,
+      "2": 5,
+      "3": 2,
+      "5": 4,
+      "6": 5,
+      "7": 3,
+      "8": 4,
+      "9": 3
+    },
+    "groupRoundLeaders": {
+      "1": {
+        "1": "opt_0_i348r6",
+        "2": "opt_1_ulp68g",
+        "3": "opt_0_i348r6",
+        "5": "opt_0_i348r6",
+        "6": "opt_0_i348r6",
+        "7": "opt_1_ulp68g",
+        "8": "opt_1_ulp68g",
+        "9": "opt_0_i348r6"
+      },
+      "2": {
+        "3": "opt_0_i348r6",
+        "6": "opt_2_m6fpnf",
+        "8": "opt_1_ulp68g"
+      },
+      "3": {
+        "3": "opt_1_ulp68g"
+      }
+    }
+  },
+  "propositionResults": {
+    "prop_0_1szg8w": {
+      "aye": 12,
+      "nay": 12
+    },
+    "prop_1_m0qbkg": {
+      "aye": 8,
+      "nay": 13
+    },
+    "prop_2_gpsw1v": {
+      "aye": 3,
+      "nay": 19
+    },
+    "prop_3_4knpuf": {
+      "aye": 11,
+      "nay": 10
+    },
+    "prop_4_a32dx2": {
+      "aye": 16,
+      "nay": 3
+    },
+    "prop_5_i8qrcz": {
+      "aye": 10,
+      "nay": 11
+    },
+    "prop_6_vl1l2v": {
+      "aye": 7,
+      "nay": 9
+    },
+    "prop_7_l539wg": {
+      "aye": 5,
+      "nay": 13
+    }
+  },
+  "exitPoll": null
+}

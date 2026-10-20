@@ -1,0 +1,98 @@
+{
+  "id": "poll_t3_1w07bc8_1787866638485",
+  "title": "More Likely to Happen: Blexas or Blichigan?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1787866638485,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1w07bc8",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "closed",
+  "votingClosesAt": 1788039438485,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_cemcv2",
+      "name": "Blexas",
+      "color": "#0047ab"
+    },
+    {
+      "id": "opt_1_rzuxom",
+      "name": "Blichigan",
+      "color": "#0015bc"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 83,
+    "finalPct": {
+      "opt_0_cemcv2": 14.457831325301203,
+      "opt_1_rzuxom": 85.54216867469879
+    },
+    "winnerId": "opt_1_rzuxom",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_1_rzuxom",
+      "2": "opt_1_rzuxom",
+      "3": "opt_1_rzuxom",
+      "4": "opt_1_rzuxom",
+      "5": "opt_1_rzuxom",
+      "6": "opt_1_rzuxom",
+      "7": "opt_1_rzuxom",
+      "8": "opt_1_rzuxom",
+      "9": "opt_1_rzuxom"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_cemcv2": 7.6923076923076925,
+        "opt_1_rzuxom": 92.3076923076923
+      },
+      "2": {
+        "opt_0_cemcv2": 42.857142857142854,
+        "opt_1_rzuxom": 57.14285714285714
+      },
+      "3": {
+        "opt_0_cemcv2": 0,
+        "opt_1_rzuxom": 100
+      },
+      "4": {
+        "opt_0_cemcv2": 18.181818181818183,
+        "opt_1_rzuxom": 81.81818181818183
+      },
+      "5": {
+        "opt_0_cemcv2": 16.666666666666664,
+        "opt_1_rzuxom": 83.33333333333334
+      },
+      "6": {
+        "opt_0_cemcv2": 12.5,
+        "opt_1_rzuxom": 87.5
+      },
+      "7": {
+        "opt_0_cemcv2": 16.666666666666664,
+        "opt_1_rzuxom": 83.33333333333334
+      },
+      "8": {
+        "opt_0_cemcv2": 11.11111111111111,
+        "opt_1_rzuxom": 88.88888888888889
+      },
+      "9": {
+        "opt_0_cemcv2": 9.090909090909092,
+        "opt_1_rzuxom": 90.9090909090909
+      }
+    },
+    "groupBallotCount": {
+      "1": 13,
+      "2": 7,
+      "3": 6,
+      "4": 11,
+      "5": 12,
+      "6": 8,
+      "7": 6,
+      "8": 9,
+      "9": 11
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

@@ -12,6 +12,18 @@ version of the **TSRElects** live-results app.
 * Periodically fetching BallotTSR results on select polls for up to date election results on TSRElects 
 
 
+# Election IDs
+One scheme everywhere: `class<N>-<YYYY>-<MM>` (e.g. `class7-2026-09`) -- seat class + the month in the election's title. It names `data/elections/<id>.json`, and is the `id` in `polls-index.json`, `tsrelects-results.json` and `plain-results.json`, `activePollsId`/`pollsId`/`electsIds` in `site-config.json`, and the `?election=` URL parameter. A same-class, same-month special gets a suffix (`class5-2026-04-special`).
+Old IDs (`class7-26`, `Class 6 July`, ...) still work in links and saved admin overrides: `assets/js/election-ids.js` (`EID_LEGACY`) maps them to the new form.
+`node tools/check-data.js` validates IDs, filenames, the poll index, candidate ids and poll sums -- run it before every release.
+
+# BallotTSR sync (automatic polls + election results)
+`.github/workflows/sync-ballottsr.yml` runs `tools/ballottsr-sync.js` on a schedule: **official elections every 30 min, polls every 3 h** (also runnable by hand: Actions -> Sync BallotTSR -> Run workflow). It mirrors `pickleartgeek/ElSec/ballottsr/` into `data/ballottsr/raw/` (verbatim), then parses:
+* **polls** -> added to the matching `data/elections/<id>.json` as `{"source":"ballottsr"}` polls (first-round shares, sample = ballots). They are regenerated every run, so a poll's numbers keep updating while it is open; hand-entered polls are never touched. Elections whose date has passed are frozen.
+* **official elections** -> `data/ballottsr/results.json` (same shape as `tsrelects-results.json`, first round per group, no race calls) which TSR Elects merges in under the hand-curated file; an election still open is shown as LIVE. Embargoed results are never published.
+* `data/ballottsr/report.json` lists polls skipped/unmatched and cross-checks against hand-entered results -- read it after each election. Teach the parser new names/pollsters in `data/ballottsr/config.json`.
+Run locally: `node tools/ballottsr-sync.js --kind all` (add `--source <dir>` to test against a local clone of ElSec).
+
 # Project layout
 ```
 index.html, ddtsr.html, polls.html, approval.html, party-support.html, articles.html, article.html, guide.html, activities.html, admin/, elects/

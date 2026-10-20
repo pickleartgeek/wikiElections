@@ -18,14 +18,36 @@
       "date": "2026-10-20",
       "method": "rcv",
       "status": "open",
-      "ballots": 3,
+      "ballots": 6,
       "included": true,
       "electionId": "class1-2026-10",
       "pollster": "Spinner Insights",
       "shares": {
-        "oc1": 0.6667,
-        "dvwb": 0.3333
+        "oc1": 0.5,
+        "dvwb": 0.5
       }
+    },
+    {
+      "id": "poll_t3_1xaxqhb_1792515873850",
+      "title": "Pre Debate Class 2 Poll - Spinner Insights",
+      "createdBy": "JungleJumpersfan",
+      "date": "2026-10-20",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 7,
+      "included": false,
+      "reason": "options don't match class2-2026-10 field: Junglejumpersfan/Teammomofan, Max_Flares/Max-Flares"
+    },
+    {
+      "id": "poll_t3_1xaymvr_1792517905075",
+      "title": "What's likelier?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-10-20",
+      "method": "fptp",
+      "status": "open",
+      "ballots": 16,
+      "included": false,
+      "reason": "not a class race poll"
     },
     {
       "id": "poll_t3_1xa7xzl_1792441381072",

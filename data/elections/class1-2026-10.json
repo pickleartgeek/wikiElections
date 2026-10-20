@@ -148,11 +148,11 @@
       "id": "bt-1xav0cq",
       "pollster": "Spinner Insights",
       "date": "2026-10-20",
-      "sample": 3,
+      "sample": 6,
       "weight": 1,
       "shares": {
-        "oc1": 0.6667,
-        "dvwb": 0.3333
+        "oc1": 0.5,
+        "dvwb": 0.5
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xav0cq_1792509807616",
@@ -161,10 +161,10 @@
       "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xav0cq",
       "groups": {
         "2": {
-          "sample": 1,
+          "sample": 2,
           "shares": {
-            "oc1": 1,
-            "dvwb": 0
+            "oc1": 0.5,
+            "dvwb": 0.5
           }
         },
         "6": {
@@ -172,6 +172,20 @@
           "shares": {
             "oc1": 0.5,
             "dvwb": 0.5
+          }
+        },
+        "7": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "9": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
           }
         }
       }

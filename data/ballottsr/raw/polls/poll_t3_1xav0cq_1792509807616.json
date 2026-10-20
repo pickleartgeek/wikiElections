@@ -25,63 +25,90 @@
   "resultsEmbargoed": false,
   "tally": {
     "method": "rcv",
-    "totalBallots": 3,
+    "totalBallots": 6,
     "finalPct": {
-      "opt_0_3hrhrl": 66.66666666666666,
-      "opt_1_za9fxb": 33.33333333333333
+      "opt_0_3hrhrl": 50,
+      "opt_1_za9fxb": 50
     },
     "rounds": [
       {
         "round": 1,
         "tallies": {
-          "opt_0_3hrhrl": 2,
-          "opt_1_za9fxb": 1
+          "opt_0_3hrhrl": 3,
+          "opt_1_za9fxb": 3
         },
-        "exhausted": 0
+        "eliminated": "opt_0_3hrhrl",
+        "exhausted": 0,
+        "transfers": {
+          "opt_1_za9fxb": 2
+        },
+        "transferExhausted": 1
+      },
+      {
+        "round": 2,
+        "tallies": {
+          "opt_1_za9fxb": 5
+        },
+        "exhausted": 1
       }
     ],
-    "totalRounds": 1,
+    "totalRounds": 2,
     "rcvTransferMatrix": {
       "opt_0_3hrhrl": {
-        "total": 2,
+        "total": 3,
         "to": {
-          "opt_1_za9fxb": 1
+          "opt_1_za9fxb": 2
         },
         "exhausted": 1
       },
       "opt_1_za9fxb": {
-        "total": 1,
+        "total": 3,
         "to": {
           "opt_0_3hrhrl": 0
         },
-        "exhausted": 1
+        "exhausted": 3
       }
     },
     "cacheVersion": 2,
     "groupWinners": {
-      "2": "opt_0_3hrhrl",
-      "6": "opt_1_za9fxb"
+      "2": "opt_1_za9fxb",
+      "6": "opt_1_za9fxb",
+      "7": "opt_0_3hrhrl",
+      "9": "opt_1_za9fxb"
     },
     "groupPct": {
       "2": {
-        "opt_0_3hrhrl": 100,
-        "opt_1_za9fxb": 0
+        "opt_0_3hrhrl": 50,
+        "opt_1_za9fxb": 50
       },
       "6": {
         "opt_0_3hrhrl": 50,
         "opt_1_za9fxb": 50
+      },
+      "7": {
+        "opt_0_3hrhrl": 100,
+        "opt_1_za9fxb": 0
+      },
+      "9": {
+        "opt_0_3hrhrl": 0,
+        "opt_1_za9fxb": 100
       }
     },
     "groupBallotCount": {
-      "2": 1,
-      "6": 2
+      "2": 2,
+      "6": 2,
+      "7": 1,
+      "9": 1
     },
     "groupRoundLeaders": {
       "1": {
         "2": "opt_0_3hrhrl",
-        "6": "opt_0_3hrhrl"
+        "6": "opt_0_3hrhrl",
+        "7": "opt_0_3hrhrl",
+        "9": "opt_1_za9fxb"
       },
       "2": {
+        "2": "opt_1_za9fxb",
         "6": "opt_1_za9fxb"
       }
     }

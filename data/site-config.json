@@ -5,10 +5,7 @@
     "Class 1 October 2026 Election",
     "Class 2 October 2026 Special Election"
   ],
-  "activePollsId": [
-    "class1-2026-10",
-    "class2-2026-10"
-  ],
+  "activePollsId": "class1-2026-10",
   "banner": {
     "eyebrow": "BREAKING",
     "headline": "Class 1&2 campaign in full swing, DDTSR to host debate later today",

@@ -25,7 +25,7 @@
   "resultsEmbargoed": false,
   "tally": {
     "method": "rcv",
-    "totalBallots": 6,
+    "totalBallots": 10,
     "finalPct": {
       "opt_0_3hrhrl": 50,
       "opt_1_za9fxb": 50
@@ -34,20 +34,20 @@
       {
         "round": 1,
         "tallies": {
-          "opt_0_3hrhrl": 3,
-          "opt_1_za9fxb": 3
+          "opt_0_3hrhrl": 5,
+          "opt_1_za9fxb": 5
         },
         "eliminated": "opt_0_3hrhrl",
         "exhausted": 0,
         "transfers": {
-          "opt_1_za9fxb": 2
+          "opt_1_za9fxb": 4
         },
         "transferExhausted": 1
       },
       {
         "round": 2,
         "tallies": {
-          "opt_1_za9fxb": 5
+          "opt_1_za9fxb": 9
         },
         "exhausted": 1
       }
@@ -55,16 +55,16 @@
     "totalRounds": 2,
     "rcvTransferMatrix": {
       "opt_0_3hrhrl": {
-        "total": 3,
+        "total": 5,
         "to": {
-          "opt_1_za9fxb": 2
+          "opt_1_za9fxb": 4
         },
         "exhausted": 1
       },
       "opt_1_za9fxb": {
-        "total": 3,
+        "total": 5,
         "to": {
-          "opt_0_3hrhrl": 0
+          "opt_0_3hrhrl": 2
         },
         "exhausted": 3
       }
@@ -72,12 +72,22 @@
     "cacheVersion": 2,
     "groupWinners": {
       "2": "opt_1_za9fxb",
+      "3": "opt_0_3hrhrl",
+      "5": "opt_1_za9fxb",
       "6": "opt_1_za9fxb",
-      "7": "opt_0_3hrhrl",
+      "7": "opt_1_za9fxb",
       "9": "opt_1_za9fxb"
     },
     "groupPct": {
       "2": {
+        "opt_0_3hrhrl": 50,
+        "opt_1_za9fxb": 50
+      },
+      "3": {
+        "opt_0_3hrhrl": 100,
+        "opt_1_za9fxb": 0
+      },
+      "5": {
         "opt_0_3hrhrl": 50,
         "opt_1_za9fxb": 50
       },
@@ -86,8 +96,8 @@
         "opt_1_za9fxb": 50
       },
       "7": {
-        "opt_0_3hrhrl": 100,
-        "opt_1_za9fxb": 0
+        "opt_0_3hrhrl": 50,
+        "opt_1_za9fxb": 50
       },
       "9": {
         "opt_0_3hrhrl": 0,
@@ -96,20 +106,26 @@
     },
     "groupBallotCount": {
       "2": 2,
+      "3": 1,
+      "5": 2,
       "6": 2,
-      "7": 1,
+      "7": 2,
       "9": 1
     },
     "groupRoundLeaders": {
       "1": {
         "2": "opt_0_3hrhrl",
+        "3": "opt_0_3hrhrl",
+        "5": "opt_0_3hrhrl",
         "6": "opt_0_3hrhrl",
         "7": "opt_0_3hrhrl",
         "9": "opt_1_za9fxb"
       },
       "2": {
         "2": "opt_1_za9fxb",
-        "6": "opt_1_za9fxb"
+        "5": "opt_1_za9fxb",
+        "6": "opt_1_za9fxb",
+        "7": "opt_1_za9fxb"
       }
     }
   },

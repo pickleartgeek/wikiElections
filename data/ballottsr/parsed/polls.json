@@ -18,13 +18,13 @@
       "date": "2026-10-20",
       "method": "rcv",
       "status": "open",
-      "ballots": 10,
+      "ballots": 12,
       "included": true,
       "electionId": "class1-2026-10",
       "pollster": "Spinner Insights",
       "shares": {
-        "oc1": 0.5,
-        "dvwb": 0.5
+        "oc1": 0.4167,
+        "dvwb": 0.5833
       }
     },
     {
@@ -34,7 +34,7 @@
       "date": "2026-10-20",
       "method": "rcv",
       "status": "open",
-      "ballots": 10,
+      "ballots": 12,
       "included": false,
       "reason": "options don't match class2-2026-10 field: Junglejumpersfan/Teammomofan, Max_Flares/Max-Flares"
     },
@@ -45,7 +45,7 @@
       "date": "2026-10-20",
       "method": "fptp",
       "status": "open",
-      "ballots": 22,
+      "ballots": 23,
       "included": false,
       "reason": "not a class race poll"
     },

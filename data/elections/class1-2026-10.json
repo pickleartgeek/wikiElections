@@ -10,17 +10,16 @@
   "anticipatedTurnout": 20,
   "electionId": "class1-2026-10",
   "polls": [
-    { 
-    "id": "m-c1-1", 
-    "pollster": "Golden Eagle Gallup", 
-    "date": "2026-10-21", 
-    "sample": 11,
-    "weight": 1.0, 
-    "shares": 
-      { 
-      "oc1": 0.7273, 
-      "dvwb": 0.2727 
-      } 
+    {
+      "id": "m-c1-1",
+      "pollster": "Golden Eagle Gallup",
+      "date": "2026-10-21",
+      "sample": 11,
+      "weight": 1,
+      "shares": {
+        "oc1": 0.7273,
+        "dvwb": 0.2727
+      }
     },
     {
       "id": "bt-1xa7xzl",
@@ -160,11 +159,11 @@
       "id": "bt-1xav0cq",
       "pollster": "Spinner Insights",
       "date": "2026-10-20",
-      "sample": 10,
+      "sample": 12,
       "weight": 1,
       "shares": {
-        "oc1": 0.5,
-        "dvwb": 0.5
+        "oc1": 0.4167,
+        "dvwb": 0.5833
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xav0cq_1792509807616",
@@ -186,6 +185,13 @@
             "dvwb": 0
           }
         },
+        "4": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        },
         "5": {
           "sample": 2,
           "shares": {
@@ -205,6 +211,13 @@
           "shares": {
             "oc1": 0.5,
             "dvwb": 0.5
+          }
+        },
+        "8": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
           }
         },
         "9": {

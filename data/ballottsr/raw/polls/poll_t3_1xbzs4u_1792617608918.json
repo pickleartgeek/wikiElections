@@ -1,0 +1,55 @@
+{
+  "id": "poll_t3_1xbzs4u_1792617608918",
+  "title": "Who do you believe performed better in the Mod Debate (Class 1) - Spinner Insights",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1792617608918,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xbzs4u",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": 1792704008918,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_awm6y4",
+      "name": "u/One-Community-3753",
+      "color": "#0d378a"
+    },
+    {
+      "id": "opt_1_uak11u",
+      "name": "u/Disguised_VW_Beetle",
+      "color": "#ffd500"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 2,
+    "finalPct": {
+      "opt_0_awm6y4": 100,
+      "opt_1_uak11u": 0
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "6": "opt_0_awm6y4",
+      "7": "opt_0_awm6y4"
+    },
+    "groupPct": {
+      "6": {
+        "opt_0_awm6y4": 100,
+        "opt_1_uak11u": 0
+      },
+      "7": {
+        "opt_0_awm6y4": 100,
+        "opt_1_uak11u": 0
+      }
+    },
+    "groupBallotCount": {
+      "6": 1,
+      "7": 1
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

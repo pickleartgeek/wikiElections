@@ -1,6 +1,33 @@
 {
   "polls": [
     {
+      "id": "poll_t3_1xbzs4u_1792617608918",
+      "title": "Who do you believe performed better in the Mod Debate (Class 1) - Spinner Insights",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-10-21",
+      "method": "fptp",
+      "status": "open",
+      "ballots": 2,
+      "included": true,
+      "electionId": "class1-2026-10",
+      "pollster": "Spinner Insights",
+      "shares": {
+        "oc1": 1,
+        "dvwb": 0
+      }
+    },
+    {
+      "id": "poll_t3_1xbztiq_1792617710570",
+      "title": "Who do you believe performed better in the Mod Debate (Class 2)",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-10-21",
+      "method": "star",
+      "status": "open",
+      "ballots": 2,
+      "included": false,
+      "reason": "method star not supported for race polls"
+    },
+    {
       "id": "poll_t3_1xausr9_1792509367954",
       "title": "Pre Debate Poll Class 1 - Spinner Insights",
       "createdBy": "JungleJumpersfan",

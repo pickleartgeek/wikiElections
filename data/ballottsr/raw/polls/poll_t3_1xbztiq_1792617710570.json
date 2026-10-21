@@ -1,0 +1,73 @@
+{
+  "id": "poll_t3_1xbztiq_1792617710570",
+  "title": "Who do you believe performed better in the Mod Debate (Class 2)",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1792617710570,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xbztiq",
+  "method": "star",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": 1792704110570,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_ipivif",
+      "name": "u/Filipinowonderer2442",
+      "color": "#b71212"
+    },
+    {
+      "id": "opt_1_v117k1",
+      "name": "u/Max_flares",
+      "color": "#991a5a"
+    },
+    {
+      "id": "opt_2_y3j5ni",
+      "name": "u/JungleJumpersfan",
+      "color": "#32a852"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "star",
+    "totalBallots": 2,
+    "finalPct": {
+      "opt_0_ipivif": 60,
+      "opt_1_v117k1": 50,
+      "opt_2_y3j5ni": 80
+    },
+    "starAverages": {
+      "opt_0_ipivif": 3,
+      "opt_1_v117k1": 2.5,
+      "opt_2_y3j5ni": 4
+    },
+    "starTotals": {
+      "opt_0_ipivif": 6,
+      "opt_1_v117k1": 5,
+      "opt_2_y3j5ni": 8
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "2": "opt_2_y3j5ni",
+      "6": "opt_0_ipivif"
+    },
+    "groupPct": {
+      "2": {
+        "opt_0_ipivif": 20,
+        "opt_1_v117k1": 40,
+        "opt_2_y3j5ni": 100
+      },
+      "6": {
+        "opt_0_ipivif": 100,
+        "opt_1_v117k1": 60,
+        "opt_2_y3j5ni": 60
+      }
+    },
+    "groupBallotCount": {
+      "2": 1,
+      "6": 1
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

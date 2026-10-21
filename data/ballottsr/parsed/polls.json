@@ -6,7 +6,7 @@
       "createdBy": "JungleJumpersfan",
       "date": "2026-10-20",
       "method": "rcv",
-      "status": "open",
+      "status": "closed",
       "ballots": 0,
       "included": false,
       "reason": "no ballots yet"
@@ -17,7 +17,7 @@
       "createdBy": "JungleJumpersfan",
       "date": "2026-10-20",
       "method": "rcv",
-      "status": "open",
+      "status": "closed",
       "ballots": 12,
       "included": true,
       "electionId": "class1-2026-10",
@@ -45,7 +45,7 @@
       "date": "2026-10-20",
       "method": "fptp",
       "status": "open",
-      "ballots": 23,
+      "ballots": 24,
       "included": false,
       "reason": "not a class race poll"
     },

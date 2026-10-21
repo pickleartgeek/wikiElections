@@ -6,7 +6,7 @@
   "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xausr9",
   "method": "rcv",
   "isOfficialElection": false,
-  "status": "open",
+  "status": "closed",
   "votingClosesAt": 1792595767954,
   "propositionsOnly": false,
   "options": [
@@ -49,6 +49,7 @@
         "tallies": {
           "opt_1_ilyuw8": 0
         },
+        "winner": "opt_1_ilyuw8",
         "exhausted": 0
       }
     ],

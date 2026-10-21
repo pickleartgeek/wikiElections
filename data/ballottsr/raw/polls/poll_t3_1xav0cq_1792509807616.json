@@ -6,7 +6,7 @@
   "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xav0cq",
   "method": "rcv",
   "isOfficialElection": false,
-  "status": "open",
+  "status": "closed",
   "votingClosesAt": 1792596207616,
   "propositionsOnly": false,
   "options": [
@@ -30,6 +30,7 @@
       "opt_0_3hrhrl": 41.66666666666667,
       "opt_1_za9fxb": 58.333333333333336
     },
+    "winnerId": "opt_1_za9fxb",
     "rounds": [
       {
         "round": 1,
@@ -37,6 +38,7 @@
           "opt_0_3hrhrl": 5,
           "opt_1_za9fxb": 7
         },
+        "winner": "opt_1_za9fxb",
         "exhausted": 0
       }
     ],

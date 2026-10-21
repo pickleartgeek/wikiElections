@@ -33,10 +33,16 @@
       "createdBy": "JungleJumpersfan",
       "date": "2026-10-20",
       "method": "rcv",
-      "status": "open",
+      "status": "closed",
       "ballots": 12,
-      "included": false,
-      "reason": "options don't match class2-2026-10 field: Junglejumpersfan/Teammomofan, Max_Flares/Max-Flares"
+      "included": true,
+      "electionId": "class2-2026-10",
+      "pollster": "Spinner Insights",
+      "shares": {
+        "fw2442": 0.25,
+        "tmf": 0.5833,
+        "mf1": 0.1667
+      }
     },
     {
       "id": "poll_t3_1xaymvr_1792517905075",

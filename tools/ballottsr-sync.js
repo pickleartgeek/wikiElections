@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * BallotTSR -> wikiElections sync + parser.   Zero dependencies (Node 18+).
  *

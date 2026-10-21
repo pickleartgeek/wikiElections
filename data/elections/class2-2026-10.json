@@ -11,6 +11,19 @@
   "anticipatedTurnout": 20,
   "electionId": "class2-2026-10",
   "polls": [
+    { 
+    "id": "m-c2-1", 
+    "pollster": "Golden Eagle Gallup", 
+    "date": "2026-10-21", 
+    "sample": 11,
+    "weight": 1.0, 
+    "shares": 
+      { 
+      "fw2442": 0.2727,
+        "tmf": 0.6364,
+        "mf1": 0.0909
+      } 
+    },
     {
       "id": "bt-1xa7z10",
       "pollster": "Representative-Fee65",

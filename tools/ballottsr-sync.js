@@ -73,12 +73,20 @@ async function mirror(stats) {
 /* ------------------------------------------------------------------ 2. parse helpers */
 const registry = readJSON(P('data', 'registries.json'));
 const norm = s => String(s).replace(/\s*\(.*$/, '').toLowerCase().replace(/^\/?u\//, '').replace(/[^a-z0-9]/g, '');   // 'u/Name (Incumbent):' -> name
+
 /** One ballot label can name several handles ("Junglejumpersfan/Teammomofan", "A & B", "A aka B"): every alternative, normalised. */
-const alts = s => [...new Set(String(s).replace(/\s*\(.*$/, '').replace(/^\s*\/?u\//i, '').split(/\s*(?:[\/|&,+]|\baka\b|\ba\.k\.a\.?|\bor\b)\s*/i).map(norm).filter(Boolean))];
+const alts = s => {
+  const cleaned = String(s).replace(/\s*\(.*$/, '').replace(/^\s*\/?u\//i, '');
+  const rawParts = cleaned.split(/\s*(?:[\/|&,+]|\baka\b|\ba\.k\.a\.?|\bor\b)\s*/i);
+  // Keep BOTH the full raw string and individual split parts in alternatives:
+  return [...new Set([cleaned, ...rawParts].map(norm).filter(Boolean))];
+};
+
 const ignoreRx = (cfg.ignoreOptions || []).map(r => new RegExp(r));
 const nameIndex = {};
 Object.entries(registry.candidates).forEach(([id, c]) => { if (id === 'wi') return; (nameIndex[norm(c.name)] = nameIndex[norm(c.name)] || []).push(id); });
 const regNames = Object.keys(nameIndex);
+
 function lev(a, b) {
   const m = a.length, n = b.length; if (Math.abs(m - n) > 3) return 9;
   let prev = Array.from({ length: n + 1 }, (_, j) => j);

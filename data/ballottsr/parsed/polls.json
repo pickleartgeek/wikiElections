@@ -7,13 +7,13 @@
       "date": "2026-10-21",
       "method": "fptp",
       "status": "open",
-      "ballots": 6,
+      "ballots": 7,
       "included": true,
       "electionId": "class1-2026-10",
       "pollster": "Spinner Insights",
       "shares": {
-        "oc1": 0.8333,
-        "dvwb": 0.1667
+        "oc1": 0.8571,
+        "dvwb": 0.1429
       }
     },
     {
@@ -34,13 +34,13 @@
       "date": "2026-10-21",
       "method": "fptp",
       "status": "open",
-      "ballots": 7,
+      "ballots": 9,
       "included": true,
       "electionId": "class1-2026-10",
       "pollster": "One-Community",
       "shares": {
-        "oc1": 0.5714,
-        "dvwb": 0.4286
+        "oc1": 0.5556,
+        "dvwb": 0.4444
       }
     },
     {
@@ -50,14 +50,14 @@
       "date": "2026-10-21",
       "method": "rcv",
       "status": "open",
-      "ballots": 8,
+      "ballots": 9,
       "included": true,
       "electionId": "class2-2026-10",
       "pollster": "One-Community",
       "shares": {
-        "fw2442": 0.25,
-        "tmf": 0.5,
-        "mf1": 0.25
+        "fw2442": 0.3333,
+        "tmf": 0.4444,
+        "mf1": 0.2222
       }
     },
     {

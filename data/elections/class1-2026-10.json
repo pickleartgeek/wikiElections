@@ -233,11 +233,11 @@
       "id": "bt-1xbzs4u",
       "pollster": "Spinner Insights",
       "date": "2026-10-21",
-      "sample": 6,
+      "sample": 7,
       "weight": 1,
       "shares": {
-        "oc1": 0.8333,
-        "dvwb": 0.1667
+        "oc1": 0.8571,
+        "dvwb": 0.1429
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xbzs4u_1792617608918",
@@ -267,7 +267,7 @@
           }
         },
         "7": {
-          "sample": 1,
+          "sample": 2,
           "shares": {
             "oc1": 1,
             "dvwb": 0
@@ -279,11 +279,11 @@
       "id": "bt-1xc30xe",
       "pollster": "One-Community",
       "date": "2026-10-21",
-      "sample": 7,
+      "sample": 9,
       "weight": 1,
       "shares": {
-        "oc1": 0.5714,
-        "dvwb": 0.4286
+        "oc1": 0.5556,
+        "dvwb": 0.4444
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xc30xe_1792625953701",
@@ -306,14 +306,14 @@
           }
         },
         "6": {
-          "sample": 2,
+          "sample": 3,
           "shares": {
-            "oc1": 0.5,
-            "dvwb": 0.5
+            "oc1": 0.3333,
+            "dvwb": 0.6667
           }
         },
         "7": {
-          "sample": 1,
+          "sample": 2,
           "shares": {
             "oc1": 1,
             "dvwb": 0

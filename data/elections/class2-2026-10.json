@@ -161,12 +161,12 @@
       "id": "bt-1xc32j3",
       "pollster": "One-Community",
       "date": "2026-10-21",
-      "sample": 8,
+      "sample": 9,
       "weight": 1,
       "shares": {
-        "fw2442": 0.25,
-        "tmf": 0.5,
-        "mf1": 0.25
+        "fw2442": 0.3333,
+        "tmf": 0.4444,
+        "mf1": 0.2222
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xc32j3_1792626060899",
@@ -191,10 +191,10 @@
           }
         },
         "6": {
-          "sample": 2,
+          "sample": 3,
           "shares": {
-            "fw2442": 0.5,
-            "tmf": 0.5,
+            "fw2442": 0.6667,
+            "tmf": 0.3333,
             "mf1": 0
           }
         },

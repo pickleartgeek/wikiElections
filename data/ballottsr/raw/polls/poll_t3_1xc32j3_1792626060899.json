@@ -30,46 +30,46 @@
   "resultsEmbargoed": false,
   "tally": {
     "method": "rcv",
-    "totalBallots": 8,
+    "totalBallots": 9,
     "finalPct": {
-      "opt_0_ei3c5y": 25,
-      "opt_1_majcl0": 50,
-      "opt_2_qyhffs": 25
+      "opt_0_ei3c5y": 33.33333333333333,
+      "opt_1_majcl0": 44.44444444444444,
+      "opt_2_qyhffs": 22.22222222222222
     },
     "rounds": [
       {
         "round": 1,
         "tallies": {
-          "opt_0_ei3c5y": 2,
+          "opt_0_ei3c5y": 3,
           "opt_1_majcl0": 4,
           "opt_2_qyhffs": 2
         },
-        "eliminated": "opt_0_ei3c5y",
+        "eliminated": "opt_2_qyhffs",
         "exhausted": 0,
         "transfers": {
-          "opt_1_majcl0": 0,
-          "opt_2_qyhffs": 0
+          "opt_0_ei3c5y": 1,
+          "opt_1_majcl0": 1
         },
-        "transferExhausted": 2
+        "transferExhausted": 0
       },
       {
         "round": 2,
         "tallies": {
-          "opt_1_majcl0": 4,
-          "opt_2_qyhffs": 2
+          "opt_0_ei3c5y": 4,
+          "opt_1_majcl0": 5
         },
-        "exhausted": 2
+        "exhausted": 0
       }
     ],
     "totalRounds": 2,
     "rcvTransferMatrix": {
       "opt_0_ei3c5y": {
-        "total": 2,
+        "total": 3,
         "to": {
           "opt_1_majcl0": 0,
           "opt_2_qyhffs": 0
         },
-        "exhausted": 2
+        "exhausted": 3
       },
       "opt_1_majcl0": {
         "total": 4,
@@ -92,7 +92,7 @@
     "groupWinners": {
       "2": "opt_1_majcl0",
       "5": "opt_2_qyhffs",
-      "6": "opt_1_majcl0",
+      "6": "opt_0_ei3c5y",
       "7": "opt_1_majcl0"
     },
     "groupPct": {
@@ -107,8 +107,8 @@
         "opt_2_qyhffs": 100
       },
       "6": {
-        "opt_0_ei3c5y": 50,
-        "opt_1_majcl0": 50,
+        "opt_0_ei3c5y": 66.66666666666666,
+        "opt_1_majcl0": 33.33333333333333,
         "opt_2_qyhffs": 0
       },
       "7": {
@@ -120,7 +120,7 @@
     "groupBallotCount": {
       "2": 2,
       "5": 2,
-      "6": 2,
+      "6": 3,
       "7": 2
     },
     "groupRoundLeaders": {
@@ -131,11 +131,9 @@
         "7": "opt_0_ei3c5y"
       },
       "2": {
-        "6": "opt_0_ei3c5y",
         "7": "opt_0_ei3c5y"
       },
       "3": {
-        "6": "opt_1_majcl0",
         "7": "opt_1_majcl0"
       }
     }

@@ -34,7 +34,7 @@
     {
       "id": "poll_t3_1xbztiq_1792617710570",
       "title": "Who do you believe performed better in the Mod Debate (Class 2)",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1792617710570,
       "method": "star",
       "isOfficialElection": false,
@@ -44,7 +44,7 @@
     {
       "id": "poll_t3_1xbzs4u_1792617608918",
       "title": "Who do you believe performed better in the Mod Debate (Class 1) - Spinner Insights",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1792617608918,
       "method": "fptp",
       "isOfficialElection": false,

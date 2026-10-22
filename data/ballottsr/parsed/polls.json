@@ -1,19 +1,36 @@
 {
   "polls": [
     {
+      "id": "poll_t3_1xct991_1792699597158",
+      "title": "RepresentativePolling - Class 2 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-10-22",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 6,
+      "included": true,
+      "electionId": "class2-2026-10",
+      "pollster": "Representative-Fee65",
+      "shares": {
+        "fw2442": 0.3333,
+        "tmf": 0.6667,
+        "mf1": 0
+      }
+    },
+    {
       "id": "poll_t3_1xbzs4u_1792617608918",
       "title": "Who do you believe performed better in the Mod Debate (Class 1) - Spinner Insights",
       "createdBy": "PickleArtGeek",
       "date": "2026-10-21",
       "method": "fptp",
       "status": "open",
-      "ballots": 7,
+      "ballots": 8,
       "included": true,
       "electionId": "class1-2026-10",
       "pollster": "Spinner Insights",
       "shares": {
-        "oc1": 0.8571,
-        "dvwb": 0.1429
+        "oc1": 0.75,
+        "dvwb": 0.25
       }
     },
     {
@@ -34,13 +51,13 @@
       "date": "2026-10-21",
       "method": "fptp",
       "status": "open",
-      "ballots": 9,
+      "ballots": 10,
       "included": true,
       "electionId": "class1-2026-10",
       "pollster": "One-Community",
       "shares": {
-        "oc1": 0.5556,
-        "dvwb": 0.4444
+        "oc1": 0.6,
+        "dvwb": 0.4
       }
     },
     {
@@ -50,14 +67,14 @@
       "date": "2026-10-21",
       "method": "rcv",
       "status": "open",
-      "ballots": 9,
+      "ballots": 11,
       "included": true,
       "electionId": "class2-2026-10",
       "pollster": "One-Community",
       "shares": {
-        "fw2442": 0.3333,
-        "tmf": 0.4444,
-        "mf1": 0.2222
+        "fw2442": 0.3636,
+        "tmf": 0.3636,
+        "mf1": 0.2727
       }
     },
     {
@@ -110,7 +127,7 @@
       "createdBy": "PickleArtGeek",
       "date": "2026-10-20",
       "method": "fptp",
-      "status": "open",
+      "status": "closed",
       "ballots": 25,
       "included": false,
       "reason": "not a class race poll"

@@ -44,7 +44,7 @@
     {
       "id": "poll_t3_1xaymvr_1792517905075",
       "title": "What's likelier?",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1792517905075,
       "method": "fptp",
       "isOfficialElection": false,

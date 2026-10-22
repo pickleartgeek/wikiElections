@@ -233,11 +233,11 @@
       "id": "bt-1xbzs4u",
       "pollster": "Spinner Insights",
       "date": "2026-10-21",
-      "sample": 2,
+      "sample": 6,
       "weight": 1,
       "shares": {
-        "oc1": 1,
-        "dvwb": 0
+        "oc1": 0.8333,
+        "dvwb": 0.1667
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xbzs4u_1792617608918",
@@ -245,14 +245,81 @@
       "method": "fptp",
       "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xbzs4u",
       "groups": {
-        "6": {
+        "2": {
           "sample": 1,
           "shares": {
             "oc1": 1,
             "dvwb": 0
           }
         },
+        "5": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "6": {
+          "sample": 2,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
         "7": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "bt-1xc30xe",
+      "pollster": "One-Community",
+      "date": "2026-10-21",
+      "sample": 7,
+      "weight": 1,
+      "shares": {
+        "oc1": 0.5714,
+        "dvwb": 0.4286
+      },
+      "source": "ballottsr",
+      "sourceId": "poll_t3_1xc30xe_1792625953701",
+      "status": "open",
+      "method": "fptp",
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xc30xe",
+      "groups": {
+        "2": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        },
+        "5": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "6": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "7": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "8": {
           "sample": 1,
           "shares": {
             "oc1": 1,

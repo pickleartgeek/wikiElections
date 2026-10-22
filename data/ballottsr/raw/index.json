@@ -2,6 +2,26 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xc32j3_1792626060899",
+      "title": "TSR Analytics - Class 2 Poll",
+      "status": "open",
+      "createdAt": 1792626060899,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xc32j3_1792626060899.json"
+    },
+    {
+      "id": "poll_t3_1xc30xe_1792625953701",
+      "title": "TSR Analytics - Class 1 Poll",
+      "status": "open",
+      "createdAt": 1792625953701,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xc30xe_1792625953701.json"
+    },
+    {
       "id": "poll_t3_1xbztiq_1792617710570",
       "title": "Who do you believe performed better in the Mod Debate (Class 2)",
       "status": "open",

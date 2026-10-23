@@ -38,6 +38,13 @@ function CG_rgb(css) {
 const CG_lum = css => { const [r, g, b] = CG_rgb(css).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
 const CG_mix = (css, k) => { const [r, g, b] = CG_rgb(css); return `rgb(${Math.round(r * k)},${Math.round(g * k)},${Math.round(b * k)})`; };
 
+/** Darken a light colour (keeping its hue) until white text on it is comfortably readable. */
+function CG_deepen(css, maxLum = 0.36) {
+  let c = css, k = 1;
+  while (CG_lum(c) > maxLum && k > 0.3) { k -= 0.04; c = CG_mix(css, k); }
+  return c;
+}
+
 function CG_loadImage(src) {
   return new Promise(res => { const i = new Image(); i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 }
@@ -94,7 +101,8 @@ async function CG_render(canvas, spec) {
   await CG_fonts();
   canvas.width = CG_W; canvas.height = CG_H;
   const ctx = canvas.getContext('2d'), cands = spec.candidates || [], two = spec.kind === 'autorunoff' && cands.length > 1;
-  const cols = spec.bg ? [spec.bg] : cands.map(c => c.color);
+  // light candidate colours are deepened (hue kept) so the text can stay white; a background picked by hand is used exactly as given
+  const cols = spec.bg ? [spec.bg] : cands.map(c => CG_deepen(c.color));
   const bgCols = two ? [cols[0], cols[1] || cols[0]] : [cols[0] || '#444'];
 
   // background
@@ -102,10 +110,10 @@ async function CG_render(canvas, spec) {
   if (two) { const g = ctx.createLinearGradient(0, 0, CG_W, 0); g.addColorStop(0, bgCols[0]); g.addColorStop(1, bgCols[1]); ctx.fillStyle = g; }
   else ctx.fillStyle = bgCols[0];
   ctx.fillRect(0, 0, CG_W, areaH);
-  const avgLum = bgCols.reduce((a, c) => a + CG_lum(c), 0) / bgCols.length;
-  const ink = avgLum > 0.5 ? '#111214' : '#ffffff';
+  const ink = '#ffffff';
 
   ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = ink;
+  ctx.shadowColor = 'rgba(0,0,0,0.28)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 3;   // keeps white readable on brighter colours
   // title + subtitle
   const title = spec.title || 'Race', sub = spec.subtitle || '';
   let ts = CG_fit(ctx, title, 700, 195, 880); ctx.font = `700 ${ts}px ${CG_DISPLAY}`; ctx.fillText(title, CG_W / 2, 250);
@@ -138,6 +146,7 @@ async function CG_render(canvas, spec) {
     ctx.fillStyle = '#111214'; ctx.textAlign = 'left'; ctx.font = bf(34); ctx.fillText(label, x + 22 + 55 + 22, py + ph / 2 + 12); ctx.textAlign = 'center';
   }
 
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
   // photos + party badges
   const imgs = await Promise.all(cands.map(c => CG_loadImage(c.photo)));
   if (two) {
@@ -156,7 +165,7 @@ async function CG_render(canvas, spec) {
   }
 
   // names
-  ctx.textAlign = 'center'; ctx.fillStyle = ink;
+  ctx.textAlign = 'center'; ctx.fillStyle = ink; ctx.shadowColor = 'rgba(0,0,0,0.28)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 3;
   if (two) {
     const lines = [cands[0].name, 'and', cands[1].name], base = [1015, 1105, 1200];
     lines.forEach((t, i) => { const s = CG_fit(ctx, t, 500, 78, 840); ctx.font = `500 ${s}px ${CG_DISPLAY}`; ctx.fillText(t, CG_W / 2, base[i]); });
@@ -164,6 +173,7 @@ async function CG_render(canvas, spec) {
     const s = CG_fit(ctx, cands[0].name, 500, 78, 840); ctx.font = `500 ${s}px ${CG_DISPLAY}`; ctx.fillText(cands[0].name, CG_W / 2, 1205);
   }
 
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
   // bottom bar + DDTSR logo
   ctx.fillStyle = '#000'; ctx.fillRect(0, areaH, CG_W, CG_BAR);
   const logo = await CG_loadImage(spec.logo || CG_LOGO);

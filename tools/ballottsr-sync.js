@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * BallotTSR -> wikiElections sync + parser.   Zero dependencies (Node 18+).
  *
@@ -72,20 +73,12 @@ async function mirror(stats) {
 /* ------------------------------------------------------------------ 2. parse helpers */
 const registry = readJSON(P('data', 'registries.json'));
 const norm = s => String(s).replace(/\s*\(.*$/, '').toLowerCase().replace(/^\/?u\//, '').replace(/[^a-z0-9]/g, '');   // 'u/Name (Incumbent):' -> name
-
 /** One ballot label can name several handles ("Junglejumpersfan/Teammomofan", "A & B", "A aka B"): every alternative, normalised. */
-const alts = s => {
-  const cleaned = String(s).replace(/\s*\(.*$/, '').replace(/^\s*\/?u\//i, '');
-  const rawParts = cleaned.split(/\s*(?:[\/|&,+]|\baka\b|\ba\.k\.a\.?|\bor\b)\s*/i);
-  // Keep BOTH the full raw string and individual split parts in alternatives:
-  return [...new Set([cleaned, ...rawParts].map(norm).filter(Boolean))];
-};
-
+const alts = s => [...new Set(String(s).replace(/\s*\(.*$/, '').replace(/^\s*\/?u\//i, '').split(/\s*(?:[\/|&,+]|\baka\b|\ba\.k\.a\.?|\bor\b)\s*/i).map(norm).filter(Boolean))];
 const ignoreRx = (cfg.ignoreOptions || []).map(r => new RegExp(r));
 const nameIndex = {};
 Object.entries(registry.candidates).forEach(([id, c]) => { if (id === 'wi') return; (nameIndex[norm(c.name)] = nameIndex[norm(c.name)] || []).push(id); });
 const regNames = Object.keys(nameIndex);
-
 function lev(a, b) {
   const m = a.length, n = b.length; if (Math.abs(m - n) > 3) return 9;
   let prev = Array.from({ length: n + 1 }, (_, j) => j);
@@ -148,12 +141,16 @@ function parsePolls(raw, report, stats) {
   const elections = loadElections(), parsed = [], byElection = {};
   raw.filter(p => !isOfficial(p)).forEach(p => {
     const rec = { id: p.id, title: p.title, createdBy: p.createdBy, date: isoDate(p.createdAt), method: p.method, status: p.status, ballots: (p.tally || {}).totalBallots || 0, included: false };
-    const skip = why => { rec.reason = why; parsed.push(rec); if (!/^not a class|hypothetical|embargo|already held|no ballots/.test(why)) report.skippedPolls.push(`${p.id} "${p.title}": ${why}`); };
+    const skip = why => { rec.reason = why; parsed.push(rec); if (!/^not a class|hypothetical|embargo|already held|no ballots|excluded|not a vote-intention/.test(why)) report.skippedPolls.push(`${p.id} "${p.title}": ${why}`); };
     const cls = classOf(p.title);
+    const shortId = 'bt-' + p.id.replace(/^poll_t3_/, '').replace(/_\d+$/, '');
+    if ((cfg.exclude || []).some(x => x === p.id || x === shortId)) return skip('excluded in config.json');   // hand-removed from the forecast
     if (p.resultsEmbargoed) return skip('embargoed');
     if (p.propositionsOnly || !p.tally || !rec.ballots) return skip('no ballots yet');
     if (cls == null) return skip('not a class race poll');
     if (/hypothetical|mock/i.test(p.title)) return skip('hypothetical / mock');
+    // debate-performance and similar opinion polls are not vote-intention polls: keep them out of the forecast
+    if (new RegExp((cfg.skipTitles || ['performed better', 'who won', 'who did best', 'won the debate']).join('|'), 'i').test(p.title)) return skip('not a vote-intention poll (debate / opinion)');
     if (!['fptp', 'rcv'].includes(p.method)) return skip(`method ${p.method} not supported for race polls`);
     // the upcoming election of that class: latest-dated file not already over when the poll was made
     const cands = elections.filter(e => classOf(e.data.title) === cls && daysBetween(e.data.electionDate, rec.date) >= -2 && daysBetween(e.data.electionDate, rec.date) <= cfg.pollWindowDays)

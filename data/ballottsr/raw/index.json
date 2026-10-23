@@ -2,6 +2,26 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xdlv73_1792780118400",
+      "title": "Which person would you prefer be Prime Minister?",
+      "status": "open",
+      "createdAt": 1792780118400,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xdlv73_1792780118400.json"
+    },
+    {
+      "id": "poll_t3_1xdloqc_1792779592099",
+      "title": "Which party do you trust more to lead government?",
+      "status": "open",
+      "createdAt": 1792779592099,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xdloqc_1792779592099.json"
+    },
+    {
       "id": "poll_t3_1xdhgth_1792770276796",
       "title": "Official Class 1 Mod Election + Ballot Propositions",
       "status": "open",

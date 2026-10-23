@@ -3,8 +3,7 @@
   "skippedPolls": [
     "poll_t3_1x6whop_1792095771387 \"Class 1 Poll\": options don't match class1-2026-10 field: Junglejumpersfan (=tmf, not in this field), Paleolithic-Money91 (=pm, not in this field)",
     "poll_t3_1x6wjd2_1792095869473 \"Class 2 Poll\": options don't match class2-2026-10 field: Disguised_VW_Beetle (=dvwb, not in this field), One-Community-3753 (=oc, not in this field)",
-    "poll_t3_1x97pls_1792341581310 \"Class 1 Poll\": options don't match class1-2026-10 field: u/JungleJumpersfan (=tmf, not in this field)",
-    "poll_t3_1xbztiq_1792617710570 \"Who do you believe performed better in the Mod Debate (Class 2)\": method star not supported for race polls"
+    "poll_t3_1x97pls_1792341581310 \"Class 1 Poll\": options don't match class1-2026-10 field: u/JungleJumpersfan (=tmf, not in this field)"
   ],
   "skippedElections": [
     "poll_t3_1xdggjc_1792768435389 \"Class 1 Official Mod Election + Ballot Propositions\": resultsEmbargoed -- not published",

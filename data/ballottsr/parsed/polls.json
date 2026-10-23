@@ -25,13 +25,8 @@
       "method": "fptp",
       "status": "closed",
       "ballots": 8,
-      "included": true,
-      "electionId": "class1-2026-10",
-      "pollster": "Spinner Insights",
-      "shares": {
-        "oc1": 0.75,
-        "dvwb": 0.25
-      }
+      "included": false,
+      "reason": "not a vote-intention poll (debate / opinion)"
     },
     {
       "id": "poll_t3_1xbztiq_1792617710570",
@@ -42,7 +37,7 @@
       "status": "closed",
       "ballots": 7,
       "included": false,
-      "reason": "method star not supported for race polls"
+      "reason": "not a vote-intention poll (debate / opinion)"
     },
     {
       "id": "poll_t3_1xc30xe_1792625953701",
@@ -54,7 +49,7 @@
       "ballots": 10,
       "included": true,
       "electionId": "class1-2026-10",
-      "pollster": "One-Community",
+      "pollster": "Spinroom Analytics",
       "shares": {
         "oc1": 0.6,
         "dvwb": 0.4
@@ -70,7 +65,7 @@
       "ballots": 12,
       "included": true,
       "electionId": "class2-2026-10",
-      "pollster": "One-Community",
+      "pollster": "Spinroom Analytics",
       "shares": {
         "fw2442": 0.3333,
         "tmf": 0.4167,

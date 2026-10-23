@@ -230,54 +230,8 @@
       }
     },
     {
-      "id": "bt-1xbzs4u",
-      "pollster": "Spinner Insights",
-      "date": "2026-10-21",
-      "sample": 8,
-      "weight": 1,
-      "shares": {
-        "oc1": 0.75,
-        "dvwb": 0.25
-      },
-      "source": "ballottsr",
-      "sourceId": "poll_t3_1xbzs4u_1792617608918",
-      "status": "closed",
-      "method": "fptp",
-      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xbzs4u",
-      "groups": {
-        "2": {
-          "sample": 2,
-          "shares": {
-            "oc1": 0.5,
-            "dvwb": 0.5
-          }
-        },
-        "5": {
-          "sample": 2,
-          "shares": {
-            "oc1": 0.5,
-            "dvwb": 0.5
-          }
-        },
-        "6": {
-          "sample": 2,
-          "shares": {
-            "oc1": 1,
-            "dvwb": 0
-          }
-        },
-        "7": {
-          "sample": 2,
-          "shares": {
-            "oc1": 1,
-            "dvwb": 0
-          }
-        }
-      }
-    },
-    {
       "id": "bt-1xc30xe",
-      "pollster": "One-Community",
+      "pollster": "Spinroom Analytics",
       "date": "2026-10-21",
       "sample": 10,
       "weight": 1,

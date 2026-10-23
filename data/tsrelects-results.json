@@ -65,8 +65,8 @@
   "title": "Class 1 October 2026 Election",
   "date": "2026-10-23",
   "party": "Regular",
-  "turnout": 0.8,
-  "precincts_reporting": 57,
+  "turnout": 0.9,
+  "precincts_reporting": 66,
   "precincts_total": 100,
   "first_round": {
     "races": {
@@ -96,7 +96,7 @@
           "dvwb": 2
         },
         "7": {
-          "oc1": 2,
+          "oc1": 3,
           "dvwb": 0
         },
         "8": {

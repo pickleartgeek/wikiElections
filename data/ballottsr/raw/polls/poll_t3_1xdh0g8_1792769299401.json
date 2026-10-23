@@ -1,0 +1,69 @@
+{
+  "id": "poll_t3_1xdh0g8_1792769299401",
+  "title": "Official Class 2 Special Mod Election",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1792769299401,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xdh0g8",
+  "method": "rcv",
+  "isOfficialElection": true,
+  "status": "open",
+  "votingClosesAt": 1792942099401,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_k7y28e",
+      "name": "u/Filipinowonderer2442 (The Spinner Party)",
+      "color": "#b71212"
+    },
+    {
+      "id": "opt_1_k5mq8s",
+      "name": "u/Max_flares",
+      "color": "#991a5a"
+    },
+    {
+      "id": "opt_2_5dtv5m",
+      "name": "u/JungleJumpersfan (Union of the Democratic Center)",
+      "color": "#32a852"
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_0_0f5xi1",
+      "number": "0",
+      "name": "Also vote in Class 1+props",
+      "author": "Election Secretary",
+      "text": "The post is pinned.",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Will do."
+        },
+        {
+          "id": "nay",
+          "label": "Will do."
+        }
+      ]
+    }
+  ],
+  "resultsEmbargoed": true,
+  "revealAt": 1792769659401,
+  "exitPoll": {
+    "question": "What is your view on The Spinner Party?",
+    "options": [
+      "Very favourable",
+      "Favourable",
+      "Neutral",
+      "Unfavourable",
+      "Very Unfavourable"
+    ],
+    "counts": [
+      1,
+      1,
+      0,
+      1,
+      1
+    ],
+    "totalResponses": 4
+  }
+}

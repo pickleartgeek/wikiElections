@@ -6,7 +6,12 @@
     "poll_t3_1x97pls_1792341581310 \"Class 1 Poll\": options don't match class1-2026-10 field: u/JungleJumpersfan (=tmf, not in this field)",
     "poll_t3_1xbztiq_1792617710570 \"Who do you believe performed better in the Mod Debate (Class 2)\": method star not supported for race polls"
   ],
-  "skippedElections": [],
+  "skippedElections": [
+    "poll_t3_1xdggjc_1792768435389 \"Class 1 Official Mod Election + Ballot Propositions\": resultsEmbargoed -- not published",
+    "poll_t3_1xdh0g8_1792769299401 \"Official Class 2 Special Mod Election\": resultsEmbargoed -- not published",
+    "poll_t3_1xdh8jo_1792769780435 \"Official Class 1 Election + Ballot Propositions\": resultsEmbargoed -- not published",
+    "poll_t3_1xdhgth_1792770276796 \"Official Class 1 Mod Election + Ballot Propositions\": resultsEmbargoed -- not published"
+  ],
   "crossChecks": [
     "class7-2026-09: known difference (ballottsr's raw count still includes one fraudulent ballot that was removed from the official result; the hand-curated file is correct.) tmf: ballottsr 11 vs site 10"
   ]

@@ -1,0 +1,116 @@
+{
+  "id": "poll_t3_1xdh8jo_1792769780435",
+  "title": "Official Class 1 Election + Ballot Propositions",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1792769780435,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xdh8jo",
+  "method": "fptp",
+  "isOfficialElection": true,
+  "status": "open",
+  "votingClosesAt": null,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_4kz79w",
+      "name": "u/One-Community-3753(New Democrats of TSR,The Spinner Party)",
+      "color": "#1f6480"
+    },
+    {
+      "id": "opt_1_0ipt50",
+      "name": "u/Disguised_VW_Beetle",
+      "color": "#e8b600"
+    }
+  ],
+  "propositions": [
+    {
+      "id": "prop_0_x0zjqf",
+      "number": "59",
+      "name": "Better Elections Act (A Third Time) (BEAATA)",
+      "author": "Represetative-Fee65",
+      "text": "Section I - Bringing Back Mock Elections\nShould this bill pass, mock elections will return to the election schedule, with the election chosen by either the ElSec or the subreddit.\nSection II - New Election Schedule\nShould this bill pass, the election schedule would be as follows after the September Class 7 election:\nNovember: Mock Election\nDecember: Class 2 and Class 3\nJanuary: Mock Election\nFebruary: Class 4 and Class 5\nMarch: Mock Election\nApril: Class 6 and Class 7\nMay: Mock Election\nJune: Class 1 and Class 2\nAnd so on.\nThis is expected to reduce the average term length by approximately 1-2 months and is projected to decrease the number of resignations as well as long periods of inactivity.\nIf a moderator resigns before their next election, the closest election day would be when the seat becomes available for a new election. (Ex: a moderator resigns in January after the last election, the next election would be held on in February, regardless of the mock election)",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_1_nzonxc",
+      "number": "60",
+      "name": "Elected Council Supremacy Amendment",
+      "author": "practicalpurpose",
+      "text": "The Mod Assembly, like the Mod Council, shall make decisions by majority rule, unless an alternative standard is prescribed by law. A majority is achieved when more than 50% of the eligible and participating Assembly voters in attendance cast their vote in the affirmative, provided that a quorum is present, proper notice has been issued, and ample time has been afforded for participation. An Assembly voter that chooses to abstain from a vote shall be counted for the purposes of a quorum but shall not be considered as a participant in the vote and therefore not counted in the total necessary for a majority.\nIf a matter or motion is referred to the Mod Assembly from the Mod Council, the Council's votes automatically carry-over to the Mod Assembly vote.\nRemove \"as an executive matter\" from the line \"The Mod Council may, by majority vote as an executive matter, overrule any Administrative Officer executive action.\"\nAdministrative Officers may nominate their replacements upon their resignation or removal from office, but the Mod Council, by majority assent, must approve the nomination before the nominee can assume the office (in addition to any other rules required).\nA Perma-Mod, upon resignation or removal from office, may nominate their replacement but the Mod Council, by majority assent, must approve the nomination before the nominee can assume the office. If the Mod Council does not approve the nominee, the Perma-Mod position is eliminated. (Does not apply in case in the case of a Conclave)\nFor ceremonial purposes, the Mod Assembly is the upper house of government, and the Mod Council is the lower house of government.",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_2_r6q4bx",
+      "number": "61",
+      "name": "Elections Secretary Conclave Amendment",
+      "author": "practicalpurpose",
+      "text": "The Elections Secretary shall be chosen by a Conclave of all Mods (by the Mod Assembly if the Elected Council Supremacy Amendment is passed) with an approval vote of two-thirds or greater. Once the position is accepted, an approved nominee may immediately assume the role of Elections Secretary and shall automatically be elevated to the rank of Perma-Mod. In the event that the Elections Secretary resigns or is otherwise removed from office, the Secretary must forfeit their Perma-Modship. If the selected is an Elected-Mod, the Elections Secretary automatically resigns their Elected-Mod position upon acceptance of the new position, and may nominate their successor in accordance with the regular resignation procedure. Unlike other Administrative Officers, the Elections Secretary may not be removed from office by a majority vote of the Mod Council, but instead must be impeached or recalled. Once created, the Office may not be eliminated except by a two-thirds vote of the Mod Council.",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "prop_3_og9kgp",
+      "number": "63",
+      "name": "Ron Paul Recognition Act",
+      "author": "practicalpurpose",
+      "text": "While r/thespinroom respects all religions and creeds, this Act recognizes the Church of the Invisible Hand, led by Pope Ron Paul I and his successsors, as the official state quasi-religion of the subreddit.",
+      "textIsLink": false,
+      "choices": [
+        {
+          "id": "aye",
+          "label": "Yes"
+        },
+        {
+          "id": "nay",
+          "label": "No"
+        }
+      ]
+    }
+  ],
+  "resultsEmbargoed": true,
+  "revealAt": 1792770140435,
+  "exitPoll": {
+    "question": "What influenced your vote the most?",
+    "options": [
+      "Subreddit activity",
+      "Candidate experience/past performance",
+      "Party endorsement/ideological alignment",
+      "Other"
+    ],
+    "counts": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalResponses": 0
+  }
+}

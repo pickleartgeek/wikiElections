@@ -2,6 +2,46 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xdhgth_1792770276796",
+      "title": "Official Class 1 Mod Election + Ballot Propositions",
+      "status": "open",
+      "createdAt": 1792770276796,
+      "method": "fptp",
+      "isOfficialElection": true,
+      "resultsEmbargoed": true,
+      "file": "polls/poll_t3_1xdhgth_1792770276796.json"
+    },
+    {
+      "id": "poll_t3_1xdh8jo_1792769780435",
+      "title": "Official Class 1 Election + Ballot Propositions",
+      "status": "open",
+      "createdAt": 1792769780435,
+      "method": "fptp",
+      "isOfficialElection": true,
+      "resultsEmbargoed": true,
+      "file": "polls/poll_t3_1xdh8jo_1792769780435.json"
+    },
+    {
+      "id": "poll_t3_1xdh0g8_1792769299401",
+      "title": "Official Class 2 Special Mod Election",
+      "status": "open",
+      "createdAt": 1792769299401,
+      "method": "rcv",
+      "isOfficialElection": true,
+      "resultsEmbargoed": true,
+      "file": "polls/poll_t3_1xdh0g8_1792769299401.json"
+    },
+    {
+      "id": "poll_t3_1xdggjc_1792768435389",
+      "title": "Class 1 Official Mod Election + Ballot Propositions",
+      "status": "open",
+      "createdAt": 1792768435389,
+      "method": "fptp",
+      "isOfficialElection": true,
+      "resultsEmbargoed": true,
+      "file": "polls/poll_t3_1xdggjc_1792768435389.json"
+    },
+    {
       "id": "poll_t3_1xct991_1792699597158",
       "title": "RepresentativePolling - Class 2 Poll",
       "status": "open",

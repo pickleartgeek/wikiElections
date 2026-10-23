@@ -17,6 +17,10 @@
   },
   "pollsterRules": [
     {
+      "title": "tsr analytics|spinroom analytics",
+      "pollster": "Spinroom Analytics"
+    },
+    {
       "title": "spinner insights|spin\\b|rensenware|ddtsr",
       "pollster": "Spinner Insights"
     },
@@ -30,7 +34,7 @@
     },
     {
       "createdBy": "One-Community-3753",
-      "pollster": "One-Community"
+      "pollster": "Spinroom Analytics"
     }
   ],
   "supersede": [

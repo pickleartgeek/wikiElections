@@ -14,7 +14,7 @@
     {
       "id": "poll_t3_1xc32j3_1792626060899",
       "title": "TSR Analytics - Class 2 Poll",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1792626060899,
       "method": "rcv",
       "isOfficialElection": false,
@@ -24,7 +24,7 @@
     {
       "id": "poll_t3_1xc30xe_1792625953701",
       "title": "TSR Analytics - Class 1 Poll",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1792625953701,
       "method": "fptp",
       "isOfficialElection": false,

@@ -8,14 +8,14 @@
   "activePollsId": "class1-2026-10",
   "banner": {
     "eyebrow": "BREAKING",
-    "headline": "Class 1&2 campaign in full swing, DDTSR to host debate later today",
-    "subtext": "DDTSR forecasts a decisive victory for a returning OneCom in Class 1 at the moment.",
-    "link": "ddtsr"
+    "headline": "Class 1&2 voting in full swing, first results come out after BallotTSR bug",
+    "subtext": "See who's going to become the next Class 1 and 2 moderator.",
+    "link": "elects"
   },
   "liveBox": {
     "label": "LIVE: Class 1&2 October 2026 Elections",
-    "text": "See all the details of the latest DDTSR Forecast",
-    "link": "ddtsr"
+    "text": "See all the details of the latest result release.",
+    "link": "elects"
   },
   "offCycle": {
     "headline": "No elections currently underway",

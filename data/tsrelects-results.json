@@ -5,7 +5,7 @@
   "date": "2026-10-23",
   "party": "Regular",
   "turnout": 1.0,
-  "precincts_reporting": 100,
+  "precincts_reporting": 66,
   "precincts_total": 100,
   "first_round": {
     "races": {
@@ -57,7 +57,7 @@
         }
       }
     },
-    "race_calls": {
+    "race_calls": { null
       }
     }
   }
@@ -68,7 +68,7 @@
   "date": "2026-10-23",
   "party": "Regular",
   "turnout": 0.8,
-  "precincts_reporting": 100,
+  "precincts_reporting": 57,
   "precincts_total": 100,
   "first_round": {
     "races": {
@@ -111,7 +111,7 @@
         }
       }
     },
-    "race_calls": {
+    "race_calls": { null
       }
     }
   }

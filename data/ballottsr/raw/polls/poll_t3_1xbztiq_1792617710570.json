@@ -6,7 +6,7 @@
   "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xbztiq",
   "method": "star",
   "isOfficialElection": false,
-  "status": "open",
+  "status": "closed",
   "votingClosesAt": 1792704110570,
   "propositionsOnly": false,
   "options": [
@@ -36,6 +36,7 @@
       "opt_1_v117k1": 48.57142857142856,
       "opt_2_y3j5ni": 82.85714285714286
     },
+    "winnerId": "opt_2_y3j5ni",
     "starAverages": {
       "opt_0_ipivif": 2.5714285714285716,
       "opt_1_v117k1": 2.4285714285714284,

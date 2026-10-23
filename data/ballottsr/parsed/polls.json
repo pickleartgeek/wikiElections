@@ -7,14 +7,14 @@
       "date": "2026-10-22",
       "method": "rcv",
       "status": "open",
-      "ballots": 6,
+      "ballots": 10,
       "included": true,
       "electionId": "class2-2026-10",
       "pollster": "Representative-Fee65",
       "shares": {
-        "fw2442": 0.3333,
-        "tmf": 0.6667,
-        "mf1": 0
+        "fw2442": 0.2,
+        "tmf": 0.6,
+        "mf1": 0.2
       }
     },
     {
@@ -23,7 +23,7 @@
       "createdBy": "PickleArtGeek",
       "date": "2026-10-21",
       "method": "fptp",
-      "status": "open",
+      "status": "closed",
       "ballots": 8,
       "included": true,
       "electionId": "class1-2026-10",
@@ -39,7 +39,7 @@
       "createdBy": "PickleArtGeek",
       "date": "2026-10-21",
       "method": "star",
-      "status": "open",
+      "status": "closed",
       "ballots": 7,
       "included": false,
       "reason": "method star not supported for race polls"
@@ -50,7 +50,7 @@
       "createdBy": "One-Community-3753",
       "date": "2026-10-21",
       "method": "fptp",
-      "status": "open",
+      "status": "closed",
       "ballots": 10,
       "included": true,
       "electionId": "class1-2026-10",
@@ -66,15 +66,15 @@
       "createdBy": "One-Community-3753",
       "date": "2026-10-21",
       "method": "rcv",
-      "status": "open",
-      "ballots": 11,
+      "status": "closed",
+      "ballots": 12,
       "included": true,
       "electionId": "class2-2026-10",
       "pollster": "One-Community",
       "shares": {
-        "fw2442": 0.3636,
-        "tmf": 0.3636,
-        "mf1": 0.2727
+        "fw2442": 0.3333,
+        "tmf": 0.4167,
+        "mf1": 0.25
       }
     },
     {

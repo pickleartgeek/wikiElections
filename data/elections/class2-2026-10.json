@@ -161,16 +161,16 @@
       "id": "bt-1xc32j3",
       "pollster": "One-Community",
       "date": "2026-10-21",
-      "sample": 11,
+      "sample": 12,
       "weight": 1,
       "shares": {
-        "fw2442": 0.3636,
-        "tmf": 0.3636,
-        "mf1": 0.2727
+        "fw2442": 0.3333,
+        "tmf": 0.4167,
+        "mf1": 0.25
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xc32j3_1792626060899",
-      "status": "open",
+      "status": "closed",
       "method": "rcv",
       "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xc32j3",
       "groups": {
@@ -205,6 +205,14 @@
             "tmf": 0.5,
             "mf1": 0
           }
+        },
+        "8": {
+          "sample": 1,
+          "shares": {
+            "fw2442": 0,
+            "tmf": 1,
+            "mf1": 0
+          }
         }
       }
     },
@@ -212,12 +220,12 @@
       "id": "bt-1xct991",
       "pollster": "Representative-Fee65",
       "date": "2026-10-22",
-      "sample": 6,
+      "sample": 10,
       "weight": 1,
       "shares": {
-        "fw2442": 0.3333,
-        "tmf": 0.6667,
-        "mf1": 0
+        "fw2442": 0.2,
+        "tmf": 0.6,
+        "mf1": 0.2
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xct991_1792699597158",
@@ -233,11 +241,19 @@
             "mf1": 0
           }
         },
-        "5": {
-          "sample": 2,
+        "4": {
+          "sample": 1,
           "shares": {
-            "fw2442": 1,
+            "fw2442": 0,
             "tmf": 0,
+            "mf1": 1
+          }
+        },
+        "5": {
+          "sample": 3,
+          "shares": {
+            "fw2442": 0.6667,
+            "tmf": 0.3333,
             "mf1": 0
           }
         },
@@ -255,6 +271,14 @@
             "fw2442": 0,
             "tmf": 1,
             "mf1": 0
+          }
+        },
+        "8": {
+          "sample": 2,
+          "shares": {
+            "fw2442": 0,
+            "tmf": 0.5,
+            "mf1": 0.5
           }
         }
       }

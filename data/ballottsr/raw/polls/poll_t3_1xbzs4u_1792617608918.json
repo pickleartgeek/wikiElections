@@ -6,7 +6,7 @@
   "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xbzs4u",
   "method": "fptp",
   "isOfficialElection": false,
-  "status": "open",
+  "status": "closed",
   "votingClosesAt": 1792704008918,
   "propositionsOnly": false,
   "options": [
@@ -30,6 +30,7 @@
       "opt_0_awm6y4": 75,
       "opt_1_uak11u": 25
     },
+    "winnerId": "opt_0_awm6y4",
     "cacheVersion": 2,
     "groupWinners": {
       "2": "opt_0_awm6y4",

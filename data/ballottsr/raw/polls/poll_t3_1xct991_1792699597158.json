@@ -30,19 +30,19 @@
   "resultsEmbargoed": false,
   "tally": {
     "method": "rcv",
-    "totalBallots": 6,
+    "totalBallots": 10,
     "finalPct": {
-      "opt_0_a8zilc": 33.33333333333333,
-      "opt_1_qhg22a": 66.66666666666666,
-      "opt_2_559ayk": 0
+      "opt_0_a8zilc": 20,
+      "opt_1_qhg22a": 60,
+      "opt_2_559ayk": 20
     },
     "rounds": [
       {
         "round": 1,
         "tallies": {
           "opt_0_a8zilc": 2,
-          "opt_1_qhg22a": 4,
-          "opt_2_559ayk": 0
+          "opt_1_qhg22a": 6,
+          "opt_2_559ayk": 2
         },
         "exhausted": 0
       }
@@ -58,28 +58,30 @@
         "exhausted": 0
       },
       "opt_1_qhg22a": {
-        "total": 4,
+        "total": 6,
         "to": {
-          "opt_0_a8zilc": 2,
+          "opt_0_a8zilc": 3,
           "opt_2_559ayk": 1
         },
-        "exhausted": 1
+        "exhausted": 2
       },
       "opt_2_559ayk": {
-        "total": 0,
+        "total": 2,
         "to": {
           "opt_0_a8zilc": 0,
           "opt_1_qhg22a": 0
         },
-        "exhausted": 0
+        "exhausted": 2
       }
     },
     "cacheVersion": 2,
     "groupWinners": {
       "2": "opt_1_qhg22a",
+      "4": "opt_2_559ayk",
       "5": "opt_0_a8zilc",
       "6": "opt_1_qhg22a",
-      "7": "opt_1_qhg22a"
+      "7": "opt_1_qhg22a",
+      "8": "opt_2_559ayk"
     },
     "groupPct": {
       "2": {
@@ -87,9 +89,14 @@
         "opt_1_qhg22a": 100,
         "opt_2_559ayk": 0
       },
-      "5": {
-        "opt_0_a8zilc": 100,
+      "4": {
+        "opt_0_a8zilc": 0,
         "opt_1_qhg22a": 0,
+        "opt_2_559ayk": 100
+      },
+      "5": {
+        "opt_0_a8zilc": 66.66666666666666,
+        "opt_1_qhg22a": 33.33333333333333,
         "opt_2_559ayk": 0
       },
       "6": {
@@ -101,20 +108,35 @@
         "opt_0_a8zilc": 0,
         "opt_1_qhg22a": 100,
         "opt_2_559ayk": 0
+      },
+      "8": {
+        "opt_0_a8zilc": 0,
+        "opt_1_qhg22a": 50,
+        "opt_2_559ayk": 50
       }
     },
     "groupBallotCount": {
       "2": 2,
-      "5": 2,
+      "4": 1,
+      "5": 3,
       "6": 1,
-      "7": 1
+      "7": 1,
+      "8": 2
     },
     "groupRoundLeaders": {
       "1": {
         "2": "opt_1_qhg22a",
+        "4": "opt_2_559ayk",
         "5": "opt_0_a8zilc",
         "6": "opt_1_qhg22a",
-        "7": "opt_1_qhg22a"
+        "7": "opt_1_qhg22a",
+        "8": "opt_1_qhg22a"
+      },
+      "2": {
+        "8": "opt_1_qhg22a"
+      },
+      "3": {
+        "8": "opt_2_559ayk"
       }
     }
   },

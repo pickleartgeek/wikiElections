@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wikiElections — Map Maker</title>
+<link rel="icon" type="image/png" href="../assets/img/brand/favicon-ddtsr.png">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+body{background:var(--paper)}
+.mm{display:grid;grid-template-columns:300px 1fr;gap:20px;margin:18px 0 40px;align-items:start}
+@media(max-width:860px){.mm{grid-template-columns:1fr}}
+.mm-panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:14px}
+.mm-panel h3{margin:0 0 10px;font-family:var(--font-elects-display);font-size:15px}
+.mm-panel label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:10px 0 4px}
+.mm-panel select,.mm-panel input[type=text],.mm-panel input[type=number]{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--ink);box-sizing:border-box}
+.mm-row{display:flex;gap:8px}.mm-row>*{flex:1}
+.mm-check{display:flex!important;align-items:center;gap:7px;text-transform:none!important;letter-spacing:0!important;font-size:13px!important;font-weight:500!important;color:var(--ink)!important;margin:6px 0!important}
+.mm-cand{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center;margin:6px 0}
+.mm-cand input[type=color]{width:34px;height:30px;padding:0;border:1px solid var(--line);border-radius:6px;background:none}
+.mm-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.mm-btn{background:var(--brand);color:#fff;border:0;border-radius:var(--radius);padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer}
+.mm-btn.alt{background:var(--bar,#333)}
+.mm-stage{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:10px;overflow:auto}
+.mm-stage svg{display:block;width:100%;height:auto}
+.mm-note{font-size:12px;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="../">
+      <img class="mark" src="../assets/img/brand/wikielections-mark.png" alt="">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <nav class="main-nav-inline" aria-label="Main">
+      <a href="../">Main Page</a>
+      <a href="../ddtsr">Decision Desk TSR</a>
+      <a href="../polls">Spinner Insights Polls</a>
+      <a href="../elects/">TSR Elects</a>
+      <details class="nav-more">
+        <summary class="current">More</summary>
+        <div class="nav-menu">
+          <div class="nav-menu-h">Tools</div>
+          <a href="../elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <a href="../elects/mapmaker" class="current"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <div class="nav-menu-h">Polling</div>
+          <a href="../pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Read</div>
+          <a href="../articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="../guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+        </div>
+      </details>
+    </nav>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+  <div class="wrap" id="lastUpdatedRow" style="padding-top:0;"><span class="last-updated-text" id="lastUpdatedText"></span></div>
+</header>
+
+<main class="wrap">
+  <section class="hero sim-hero">
+    <div>
+      <div class="elects-kicker" style="margin-bottom:8px;background:var(--brand)">wikiElections · Map Maker</div>
+      <h1 style="font-size:clamp(24px,4.5vw,32px);margin:0;font-family:var(--font-elects-display)">Make a Wikipedia-style election map</h1>
+      <p class="small-muted" style="margin:6px 0 0">Pick any TSR election result and download a clean, shaded map of the nine groups as SVG or PNG.</p>
+    </div>
+  </section>
+  <div class="mm">
+    <div class="mm-panel">
+      <h3>Result</h3>
+      <label for="selElection">Election</label><select id="selElection"></select>
+      <div class="mm-row"><div><label for="selRound">Round</label><select id="selRound"></select></div><div><label for="selRace">Race</label><select id="selRace"></select></div></div>
+      <h3 style="margin-top:16px">Candidates</h3>
+      <div id="candBox"></div>
+      <h3 style="margin-top:16px">Shading</h3>
+      <div class="mm-row"><div><label for="binStart">First bin (%)</label><input type="number" id="binStart" step="0.5"></div><div><label for="binStep">Bin width (%)</label><input type="number" id="binStep" step="0.5" min="0.5"></div></div>
+      <button class="mm-btn alt" id="binAuto" style="margin-top:8px">Auto bins</button>
+      <h3 style="margin-top:16px">Display</h3>
+      <label for="selStyle">Text style</label><select id="selStyle"><option value="modern">Modern (clean sans)</option><option value="wiki">Wikipedia (legend under map)</option></select>
+      <label class="mm-check"><input type="checkbox" id="optTitle" checked> Title</label>
+      <label class="mm-check"><input type="checkbox" id="optLegend" checked> Legend</label>
+      <label class="mm-check"><input type="checkbox" id="optLabels"> Group numbers</label>
+      <label class="mm-check"><input type="checkbox" id="optBg"> Transparent background</label>
+      <div class="mm-btns"><button class="mm-btn" id="dlSvg">Download SVG</button><button class="mm-btn" id="dlPng">Download PNG</button><button class="mm-btn alt" id="cpSvg">Copy SVG code</button></div>
+      <div class="mm-note" id="status"></div>
+    </div>
+    <div><div class="mm-stage" id="stage">Loading…</div><div class="mm-note">Each group is coloured by its plurality winner and shaded by that candidate's share of the group vote. Names and colours are editable.</div></div>
+  </div>
+</main>
+<footer class="site-footer"><div class="wrap"><span>wikiElections — maps are built from official TSR election results</span><span><a href="./">Live results</a> <a href="../ddtsr">Decision Desk TSR</a></span></div></footer>
+<script>window.SITE_BASE = '../';</script>
+<script src="../assets/js/election-ids.js"></script>
+<script src="../assets/js/overrides.js"></script>
+<script src="../assets/js/tsrelects.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+initSiteChrome();
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let registry, geo, elections = [], cur = null, cands = [], groupVotes = {}, svgText = '';
+const NO_DATA = '#d9d9d9';
+const MAP_W = 560, MAP_H = 600;
+const FONTS = { modern: 'Liberation Sans, Arial, Helvetica, sans-serif', wiki: 'Open Sans, Noto Sans, Segoe UI, DejaVu Sans, Verdana, sans-serif' };
+
+/* ---- geometry ---- */
+function polys(f) { const g = f.geometry; return g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : []; }
+function buildProjection() {
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  geo.features.forEach(f => { if (!f.geometry || f.geometry.type === 'Point') return; polys(f).forEach(p => p.forEach(r => r.forEach(([x, y]) => { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }))); });
+  const c = Math.cos(((y0 + y1) / 2) * Math.PI / 180), pad = 10;
+  const k = Math.min((MAP_W - 2 * pad) / ((x1 - x0) * c), (MAP_H - 2 * pad) / (y1 - y0));
+  const ox = pad + (MAP_W - 2 * pad - (x1 - x0) * c * k) / 2, oy = pad + (MAP_H - 2 * pad - (y1 - y0) * k) / 2;
+  return ([x, y]) => [ox + (x - x0) * c * k, oy + (y1 - y) * k];
+}
+function ringPath(r, P) { return r.map((pt, i) => { const [x, y] = P(pt); return (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); }).join('') + 'Z'; }
+function ringArea(r) { let a = 0, cx = 0, cy = 0; for (let i = 0; i < r.length - 1; i++) { const [x1, y1] = r[i], [x2, y2] = r[i + 1], f = x1 * y2 - x2 * y1; a += f; cx += (x1 + x2) * f; cy += (y1 + y2) * f; } a /= 2; return { a, c: a ? [cx / (6 * a), cy / (6 * a)] : r[0] }; }
+function groupGeoms() {
+  const P = buildProjection();
+  return geo.features.filter(f => f.geometry && f.geometry.type !== 'Point').map(f => {
+    const id = String((f.properties && (f.properties.id ?? f.properties.group ?? f.properties.name)) ?? f.id);
+    let best = null;
+    const d = polys(f).map(p => { const o = ringArea(p[0].map(P)); if (!best || Math.abs(o.a) > Math.abs(best.a)) best = o; return p.map(r => ringPath(r, P)).join(''); }).join('');
+    return { id, d, center: best ? best.c : [0, 0] };
+  });
+}
+
+/* ---- colour ---- */
+function hexOk(h) { return /^#[0-9a-f]{6}$/i.test(h) ? h : '#888888'; }
+function shade(hex, i, n, wk) { // 0 = lightest, n-1 = darkest, base colour sits at ~40%
+  hex = hexOk(hex); const mid = Math.max(1, Math.round((n - 1) * (wk ? 0.5 : 0.4)));
+  if (i <= mid) return TSR_lightenHex(hex, (wk ? 0.7 : 0.6) * (1 - i / mid));
+  return TSR_darkenHex(hex, (wk ? 0.72 : 0.45) * ((i - mid) / Math.max(1, n - 1 - mid)));
+}
+const toHexStr = s => { const m = s.match(/\d+/g); return m ? '#' + m.slice(0, 3).map(v => (+v).toString(16).padStart(2, '0')).join('') : s; };
+
+/* ---- data ---- */
+function raceVotes() {
+  const rd = TSR_getRoundData(cur, $('selRound').value), races = TSR_getRaces(rd);
+  return races[$('selRace').value] || {};
+}
+function loadCands() {
+  const gv = raceVotes(); groupVotes = gv;
+  const tot = TSR_raceTotals(gv), all = Object.values(tot).reduce((a, b) => a + b, 0) || 1;
+  const old = Object.fromEntries(cands.map(c => [c.key, c]));
+  cands = Object.entries(tot).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).map(([k, v]) => {
+    const rc = TSR_candidate(registry, k), p = TSR_party(registry, rc.party);
+    return { key: k, votes: v, share: v / all * 100, name: (old[k] && old[k].name) || rc.name, color: (old[k] && old[k].color) || hexOk(rc.color), party: p ? (p.shortName || '') : '' };
+  });
+  renderCandBox(); autoBins();
+}
+function winners() {
+  const out = {};
+  Object.entries(groupVotes).forEach(([g, v]) => {
+    const t = Object.values(v).reduce((a, b) => a + b, 0); if (!t) return;
+    const s = Object.entries(v).sort((a, b) => b[1] - a[1]);
+    if (s[1] && s[1][1] === s[0][1]) { out[g] = { tie: true }; return; }
+    out[g] = { key: s[0][0], share: s[0][1] / t * 100 };
+  });
+  return out;
+}
+function autoBins() {
+  const w = Object.values(winners()).filter(x => x.key).map(x => x.share);
+  if (!w.length) { $('binStart').value = 50; $('binStep').value = 5; return; }
+  if (new Set(Object.values(winners()).map(x => x.key).filter(Boolean)).size <= 2 && Math.min(...w) >= 50) { $('binStart').value = 50; $('binStep').value = 5; render(); return; }
+  const lo = Math.min(...w), hi = Math.max(...w), start = Math.max(0, Math.floor(lo / 5) * 5);
+  const step = Math.max(2.5, Math.ceil(((hi - start) / 6) / 2.5) * 2.5);
+  $('binStart').value = start; $('binStep').value = step; render();
+}
+function binOf(share, start, step, n) { return Math.max(0, Math.min(n - 1, Math.floor((share - start) / step))); }
+
+/* ---- svg ---- */
+function build() {
+  const wiki = $('selStyle').value === 'wiki', FONT = FONTS[wiki ? 'wiki' : 'modern'], N = 6, start = +$('binStart').value || 0, step = +$('binStep').value || 5;
+  const showT = $('optTitle').checked, showL = $('optLegend').checked, showN = $('optLabels').checked, transp = $('optBg').checked;
+  const win = winners(), gm = groupGeoms(), used = new Set(Object.values(win).filter(w => w.key).map(w => w.key));
+  const counts = {}; Object.values(win).forEach(w => { if (w.key) counts[w.key] = (counts[w.key] || 0) + 1; });
+  const cmap = Object.fromEntries(cands.map(c => [c.key, c]));
+  const rows = cands.filter(c => used.has(c.key));
+  const topH = showT ? 44 : 0, legW = showL && !wiki ? 360 : 0, legH = showL && wiki ? 34 + rows.length * 58 : 0, W = MAP_W + legW, H = MAP_H + topH + legH;
+  const race = $('selRace').value, round = $('selRound').value === 'runoff_round' ? ' (runoff)' : '';
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="${FONT}">`;
+  if (!transp) s += `<rect width="${W}" height="${H}" fill="#ffffff"/>`;
+  if (showT) s += wiki ? `<text x="14" y="28" font-size="19" font-weight="700" fill="#000">${esc(cur.title)}${esc(round)}</text>` : `<text x="${W / 2}" y="29" text-anchor="middle" font-size="21" font-weight="700" fill="#111">${esc(cur.title)}${esc(round)}</text>`;
+  s += `<g transform="translate(0 ${topH})" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round">`;
+  gm.forEach(g => {
+    const w = win[g.id]; let fill = wiki && w && w.tie ? '#333333' : NO_DATA;
+    if (w && w.key) fill = toHexStr(shade(cmap[w.key] ? cmap[w.key].color : '#888888', binOf(w.share, start, step, N), N, wiki));
+    s += `<path id="group-${esc(g.id)}" d="${g.d}" fill="${fill}"/>`;
+  });
+  s += '</g>';
+  if (showN) { s += `<g transform="translate(0 ${topH})" font-size="22" font-weight="700" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="3" paint-order="stroke">`; gm.forEach(g => { s += `<text x="${g.center[0].toFixed(1)}" y="${(g.center[1] + 7).toFixed(1)}">${esc(g.id)}</text>`; }); s += '</g>'; }
+  if (showL && wiki) {
+    const LW = 250, px = 78, x0 = (MAP_W - (LW + px)) / 2 + px, cw = LW / N; let y = topH + MAP_H + 6;
+    s += `<g font-family="${FONT}">`;
+    for (let i = 0; i < N; i++) { const a = start + i * step; s += `<text x="${(x0 + i * cw + cw / 2).toFixed(1)}" y="${y + 12}" font-size="12.5" fill="#000" text-anchor="middle">${i === N - 1 ? '+' : ''}${+a.toFixed(1)}%</text>`; }
+    y += 20;
+    rows.forEach(c => {
+      for (let i = 0; i < N; i++) s += `<rect x="${(x0 + i * cw).toFixed(1)}" y="${y}" width="${cw.toFixed(1)}" height="8" fill="${toHexStr(shade(c.color, i, N, true))}" stroke="#e6c34a" stroke-width="1.4"/>`;
+      s += `<rect x="${x0}" y="${y + 12}" width="${LW}" height="30" rx="6" fill="${esc(c.color)}"/>`;
+      s += `<text x="${x0 - 8}" y="${y + 34}" font-size="18" font-weight="600" fill="${esc(TSR_darkenHex(hexOk(c.color), 0.15)).replace(/\s/g, '')}" text-anchor="end">${c.share.toFixed(2)}%</text>`;
+      s += `<text x="${x0 + 12}" y="${y + 32}" font-size="14.5" font-weight="600" fill="#fff">${esc(c.party || '')}</text><text x="${x0 + LW - 12}" y="${y + 32}" font-size="14.5" font-weight="600" fill="#fff" text-anchor="end">${esc(c.name)}</text>`;
+      y += 58;
+    });
+    s += '</g>';
+  } else if (showL) {
+    const lx = MAP_W + 10; let y = topH + 40;
+    s += `<g transform="translate(${lx} 0)">`;
+    s += wiki ? `<text x="0" y="${y}" font-size="13" font-weight="700" fill="#000">Vote share by group</text><text x="0" y="${y + 16}" font-size="11" fill="#000">${esc(race)}</text>` : `<text x="0" y="${y}" font-size="15" font-weight="700" fill="#111">Share of the group vote</text><text x="0" y="${y + 17}" font-size="12" fill="#555">${esc(race)}</text>`;
+    y += 36;
+    const sw = 40, gap = 3;
+    rows.forEach(c => {
+      const rl = wiki ? (c.party || c.name) : c.name; s += `<text x="0" y="${y + 15}" font-size="${wiki ? 12 : 11}" fill="${wiki ? '#000' : '#333'}" font-weight="700">${esc(rl.length > 14 ? rl.slice(0, 13) + '…' : rl)}</text>`;
+      for (let i = 0; i < N; i++) s += `<rect x="${86 + i * (sw + gap)}" y="${y}" width="${sw}" height="20" fill="${toHexStr(shade(c.color, i, N))}"${wiki ? ' stroke="#000" stroke-width="0.6"' : ''}/>`;
+      y += 26;
+    });
+    for (let i = 0; i < N; i++) { const a = start + i * step, lab = wiki ? (i === N - 1 ? `≥${+a.toFixed(1)}%` : `${+a.toFixed(1)}%`) : (i === N - 1 ? `${+a.toFixed(1)}%+` : `${+a.toFixed(1)}%`); s += `<text x="${86 + i * (sw + gap) + sw / 2}" y="${y + 12}" font-size="${wiki ? 8.5 : 10.5}" fill="#000" text-anchor="middle">${lab}</text>`; }
+    y += 40;
+    cands.forEach(c => {
+      const g = counts[c.key] || 0;
+      s += `<rect x="0" y="${y}" width="${340}" height="30" rx="${wiki ? 3 : 15}" fill="${esc(c.color)}"/>`;
+      const ink = lum(c.color) > 0.55 ? '#111' : '#fff'; const wtxt = wiki ? ' stroke="#000" stroke-opacity=".35" stroke-width=".5"' : '';
+      s += `<text x="16" y="20" transform="translate(0 ${y})" font-size="${wiki ? 12.5 : 13.5}" font-weight="700" fill="${ink}">${c.share.toFixed(2)}%${c.party ? '  |  ' + esc(c.party) : ''}  |  ${esc(c.name)}</text>`;
+      s += `<text x="324" y="20" transform="translate(0 ${y})" font-size="${wiki ? 12 : 13}" font-weight="700" fill="${ink}" text-anchor="end">${g} gp</text>`;
+      y += 38;
+    });
+    s += '</g>';
+  }
+  return s + '</svg>';
+}
+function lum(h) { h = hexOk(h); const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4)); return .2126 * r + .7152 * g + .0722 * b; }
+function render() { if (!cur) return; svgText = build(); $('stage').innerHTML = svgText; const nd = Object.keys(groupVotes).length; $('status').textContent = nd ? '' : 'No group-level data for this race.'; }
+
+/* ---- UI ---- */
+function renderCandBox() {
+  $('candBox').innerHTML = cands.map((c, i) => `<div class="mm-cand"><input type="color" value="${hexOk(c.color)}" data-i="${i}" data-f="color"><input type="text" value="${esc(c.name)}" data-i="${i}" data-f="name"></div>`).join('') || '<div class="small-muted">No votes recorded.</div>';
+  $('candBox').querySelectorAll('input').forEach(el => el.addEventListener('input', () => { cands[+el.dataset.i][el.dataset.f] = el.value; render(); }));
+}
+function fillRaces() {
+  const rd = TSR_getRoundData(cur, $('selRound').value), names = Object.keys(TSR_getRaces(rd));
+  $('selRace').innerHTML = names.map(n => `<option>${esc(n)}</option>`).join(''); loadCands();
+}
+function fillRounds() {
+  const opts = [['first_round', 'First round']]; if (cur.runoff_round && TSR_roundVoteSum(cur.runoff_round) > 0) opts.push(['runoff_round', 'Runoff']);
+  $('selRound').innerHTML = opts.map(o => `<option value="${o[0]}">${o[1]}</option>`).join(''); $('selRound').value = TSR_defaultRoundKey(cur); fillRaces();
+}
+function download(name, blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }
+const fname = ext => `${cur.id}-${$('selRace').value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.${ext}`;
+
+(async function () {
+  const [reg, hand, g, bt, ] = await Promise.all([
+    fetch('../data/registries.json').then(r => r.json()), fetch('../data/tsrelects-results.json').then(r => r.json()),
+    fetch('../data/groups.geojson').then(r => r.json()), fetch('../data/ballottsr/results.json').then(r => r.json()).catch(() => ({ elections: [] }))
+  ]);
+  registry = reg; geo = g;
+  const base = hand.concat((bt.elections || []).filter(e => !hand.some(h => h.id === e.id)));
+  elections = OVR_getTsrElections(base).filter(e => Object.keys(TSR_getRaces(TSR_getRoundData(e, 'first_round'))).length).sort((a, b) => new Date(b.date) - new Date(a.date));
+  $('selElection').innerHTML = elections.map(e => `<option value="${esc(e.id)}">${esc(e.title)} — ${esc(e.date)}</option>`).join('');
+  const want = new URLSearchParams(location.search).get('e'); if (want) $('selElection').value = EID_canon(want);
+  const pick = () => { cur = elections.find(e => e.id === $('selElection').value) || elections[0]; cands = []; fillRounds(); };
+  $('selElection').onchange = pick; $('selRound').onchange = () => { cands = []; fillRaces(); }; $('selRace').onchange = () => { cands = []; loadCands(); };
+  ['binStart', 'binStep', 'optTitle', 'optLegend', 'optLabels', 'optBg'].forEach(i => $(i).addEventListener('input', render));
+  $('selStyle').addEventListener('change', () => { $('optTitle').checked = $('selStyle').value !== 'wiki'; render(); });
+  $('binAuto').onclick = autoBins;
+  $('dlSvg').onclick = () => download(fname('svg'), new Blob([svgText], { type: 'image/svg+xml' }));
+  $('cpSvg').onclick = () => navigator.clipboard.writeText(svgText).then(() => { $('status').textContent = 'SVG code copied.'; });
+  $('dlPng').onclick = () => {
+    const m = svgText.match(/viewBox="0 0 (\d+) (\d+)"/), w = +m[1], h = +m[2], sc = 3, img = new Image();
+    img.onload = () => { const c = document.createElement('canvas'); c.width = w * sc; c.height = h * sc; const x = c.getContext('2d'); x.drawImage(img, 0, 0, c.width, c.height); c.toBlob(b => download(fname('png'), b)); };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
+  };
+  pick();
+})();
+</script>
+</body>
+</html>

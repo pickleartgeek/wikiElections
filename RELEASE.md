@@ -1,6 +1,6 @@
 # Release checklist
 
-- [ ] Map Maker stays unreleased: no `elects/mapmaker*` files; nav/card entries are commented out in `index.html` and `elects/index.html` (and the nav block of every page). Uncomment together with the page when it ships.
+- [x] Map Maker is released: `elects/mapmaker.html`, linked from the nav of every page and the tool cards on `index.html`.
 - [ ] `tools/backtest.js` is a dev script — delete it from the public deploy if you don't want it served.
 - [ ] `admin/` is gated by a client-side passphrase only; it is not secure. Don't put anything private in it.
 - [ ] Overrides saved in the admin live in the browser (localStorage). Export `tsrelects-results.json` / polls and commit them to `data/` before release.

@@ -1,20 +1,42 @@
 {
   "polls": [
     {
+      "id": "poll_t3_1xdloqc_1792779592099",
+      "title": "Which party do you trust more to lead government?",
+      "createdBy": "wiptes167",
+      "date": "2026-10-23",
+      "method": "fptp",
+      "status": "open",
+      "ballots": 10,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1xdlv73_1792780118400",
+      "title": "Which person would you prefer be Prime Minister?",
+      "createdBy": "wiptes167",
+      "date": "2026-10-23",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 9,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
       "id": "poll_t3_1xct991_1792699597158",
       "title": "RepresentativePolling - Class 2 Poll",
       "createdBy": "Representative-Fee65",
       "date": "2026-10-22",
       "method": "rcv",
       "status": "open",
-      "ballots": 11,
+      "ballots": 12,
       "included": true,
       "electionId": "class2-2026-10",
       "pollster": "Representative-Fee65",
       "shares": {
-        "fw2442": 0.2727,
-        "tmf": 0.5455,
-        "mf1": 0.1818
+        "fw2442": 0.25,
+        "tmf": 0.5833,
+        "mf1": 0.1667
       }
     },
     {
@@ -205,7 +227,7 @@
       "date": "2026-10-15",
       "method": "rcv",
       "status": "open",
-      "ballots": 8,
+      "ballots": 9,
       "included": false,
       "reason": "options don't match class2-2026-10 field: Disguised_VW_Beetle (=dvwb, not in this field), One-Community-3753 (=oc, not in this field)"
     },

@@ -220,12 +220,12 @@
       "id": "bt-1xct991",
       "pollster": "Representative-Fee65",
       "date": "2026-10-22",
-      "sample": 11,
+      "sample": 12,
       "weight": 1,
       "shares": {
-        "fw2442": 0.2727,
-        "tmf": 0.5455,
-        "mf1": 0.1818
+        "fw2442": 0.25,
+        "tmf": 0.5833,
+        "mf1": 0.1667
       },
       "source": "ballottsr",
       "sourceId": "poll_t3_1xct991_1792699597158",
@@ -266,7 +266,7 @@
           }
         },
         "7": {
-          "sample": 1,
+          "sample": 2,
           "shares": {
             "fw2442": 0,
             "tmf": 1,

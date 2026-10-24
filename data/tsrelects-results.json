@@ -109,7 +109,14 @@
         }
       }
     },
-    "race_calls": {}
+    "race_calls": {
+      "Class 1 October 2026 First Round": {
+          "status": "winner",
+          "winners": [
+            "oc1",
+          ]
+        }
+    }
     }
   },
   {

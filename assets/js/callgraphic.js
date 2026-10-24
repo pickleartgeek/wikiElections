@@ -134,7 +134,10 @@ async function CG_render(canvas, spec) {
   } else {
     const label = 'PROJECTED WINNER'; ctx.font = bf(34); const tw = ctx.measureText(label).width;
     const pw = 22 + 55 + 22 + tw + 22, ph = 65, py = spec.flip ? 340 : 360;
-    const fw = 295, gap = 32, total = spec.flip ? fw + gap + pw : pw;
+    // the FLIP pill hugs its text (icon + label + padding) instead of a fixed width, so it never comes out too long
+    ctx.font = bf(50); const fw = spec.flip ? Math.round(92 + ctx.measureText('FLIP').width + 34) : 0;
+    ctx.font = bf(34);
+    const gap = 32, total = spec.flip ? fw + gap + pw : pw;
     let x = (CG_W - total) / 2;
     if (spec.flip) {
       const g = ctx.createLinearGradient(x, 0, x + fw, 0); g.addColorStop(0, '#676ef7'); g.addColorStop(1, '#ed67ca');

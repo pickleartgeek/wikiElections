@@ -54,11 +54,11 @@
     {
       "id": "poll_t3_1xdggjc_1792768435389",
       "title": "Class 1 Official Mod Election + Ballot Propositions",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1792768435389,
       "method": "fptp",
       "isOfficialElection": true,
-      "resultsEmbargoed": true,
+      "resultsEmbargoed": false,
       "file": "polls/poll_t3_1xdggjc_1792768435389.json"
     },
     {

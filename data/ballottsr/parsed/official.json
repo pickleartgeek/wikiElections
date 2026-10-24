@@ -1,6 +1,77 @@
 {
   "elections": [
     {
+      "id": "poll_t3_1xdggjc_1792768435389",
+      "title": "Class 1 Official Mod Election + Ballot Propositions",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-10-23",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 5,
+      "opts": [
+        {
+          "name": "u/One-Community-3753(New Democrats of TSR,The Spinner Party)",
+          "id": "oc1",
+          "firstRound": 4
+        },
+        {
+          "name": "u/Disguised_VW_Beetle",
+          "id": "dvwb",
+          "firstRound": 1
+        }
+      ],
+      "winner": "u/One-Community-3753(New Democrats of TSR,The Spinner Party)",
+      "propositions": [
+        {
+          "number": "59",
+          "name": "Better Elections Act (A Third Time) (BEAATA)",
+          "author": "Representative-Fee65",
+          "result": {
+            "aye": 1,
+            "nay": 3
+          }
+        },
+        {
+          "number": "60",
+          "name": "Elected Council Supremacy Amendment",
+          "author": "practicalpurpose",
+          "result": {
+            "aye": 2,
+            "nay": 2
+          }
+        },
+        {
+          "number": "61",
+          "name": "Elections Secretary Conclave Amendment",
+          "author": "practicalpurpose",
+          "result": {
+            "aye": 4,
+            "nay": 0
+          }
+        },
+        {
+          "number": "63",
+          "name": "Ron Paul Recognition Act",
+          "author": "practicalpurpose",
+          "result": {
+            "aye": 2,
+            "nay": 2
+          }
+        },
+        {
+          "number": "0",
+          "name": "Reminder to also vote in the Class 2 Election, both posts will be pinned",
+          "author": "Elections Secretary",
+          "result": {
+            "aye": 4,
+            "nay": 0
+          }
+        }
+      ],
+      "kind": "race",
+      "resultId": "class1-2026-10"
+    },
+    {
       "id": "poll_t3_1wtsugo_1790733959307",
       "title": "Shall PickleArtGeek be elevated to PermaMod to serve as Election Secretary?",
       "createdBy": "PickleArtGeek",

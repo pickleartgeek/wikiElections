@@ -12,6 +12,6 @@
   ],
   "crossChecks": [
     "class7-2026-09: known difference (ballottsr's raw count still includes one fraudulent ballot that was removed from the official result; the hand-curated file is correct.) tmf: ballottsr 11 vs site 10",
-    "class1-2026-10: MISMATCH oc1: ballottsr 4 vs site 13; dvwb: ballottsr 1 vs site 4"
+    "class1-2026-10: MISMATCH oc1: ballottsr 4 vs site 13; dvwb: ballottsr 1 vs site 5"
   ]
 }

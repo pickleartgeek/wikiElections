@@ -388,7 +388,7 @@ function fixWebmDuration(buf, ms) {
 }
 async function exportVideo() {
   if (!window.MediaRecorder) { $('status').textContent = 'This browser can’t record video — try Chrome, Edge or Firefox.'; return; }
-  const types = ['video/mp4;codecs=avc1', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'], mime = types.find(t => MediaRecorder.isTypeSupported(t));
+  const types = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4;codecs=avc1', 'video/mp4'], mime = types.find(t => MediaRecorder.isTypeSupported(t));
   pause(); recording = true; $('btnExp').disabled = true; $('prog').style.display = 'block'; const len = +$('selLen').value, hold = 2.5, tl = tabLen();
   const chunks = [], rec = new MediaRecorder(cv.captureStream(30), { mimeType: mime, videoBitsPerSecond: 8e6 });
   rec.ondataavailable = e => e.data.size && chunks.push(e.data);

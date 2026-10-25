@@ -151,8 +151,12 @@ function irv(bl, cs) {
     const tallies = {}, gv = {}; let ex = 0; active.forEach(k => { tallies[k] = 0; });
     bl.forEach(b => { const c = b.r.find(x => active.has(x)); if (!c) { ex++; return; } tallies[c]++; (gv[b.g] = gv[b.g] || {})[c] = ((gv[b.g] || {})[c] || 0) + 1; });
     const tot = sum(tallies), sorted = Object.entries(tallies).sort((a, b) => b[1] - a[1]), rd = { tallies, gv, exhausted: ex }; rounds.push(rd);
-    if (active.size <= 2 || sorted[0][1] * 2 > tot) { rd.winner = sorted[0][0]; break; }
-    const low = Object.entries(tallies).sort((a, b) => a[1] - b[1] || (first[a[0]] || 0) - (first[b[0]] || 0))[0][0]; rd.eliminated = low; active = new Set([...active].filter(k => k !== low));
+    if (active.size <= 2) { rd.tied = sorted.length > 1 && sorted[0][1] === sorted[1][1]; rd.winner = rd.tied ? null : sorted[0][0]; break; }
+    const mn = Math.min(...Object.values(tallies)), tied = Object.keys(tallies).filter(k => tallies[k] === mn); let low = tied[0];
+    if (tied.length > 1) {   // tie for last place: lowest in the most recent earlier round where they differ, then lowest Borda score (points for every ranking position), then list order
+      let pool = tied.slice(); for (let i = rounds.length - 2; i >= 0 && pool.length > 1; i--) { const m = Math.min(...pool.map(k => rounds[i].tallies[k] || 0)); pool = pool.filter(k => (rounds[i].tallies[k] || 0) === m); }
+      if (pool.length > 1) { const bs = k => bl.reduce((a, b) => { const j = b.r.indexOf(k); return a + (j < 0 ? 0 : b.r.length - j); }, 0), m = Math.min(...pool.map(bs)); pool = pool.filter(k => bs(k) === m); }
+      low = pool[0]; rd.tieBreak = tied; } rd.eliminated = low; active = new Set([...active].filter(k => k !== low));
   }
   return rounds;
 }
@@ -171,7 +175,7 @@ function tabTarget() {
   const counts = {}; cands.forEach(k => { counts[k] = rd.tallies[k] || 0; }); const elim = new Set(); for (let i = 0; i < idx; i++) elim.add(tab.rounds[i].eliminated);
   const cr = tab.rounds[r];
   return { total: sum(counts), counts, gv: rd.gv, order: cands.slice().sort((a, b) => (elim.has(a) - elim.has(b)) || counts[b] - counts[a]),
-    tab: { idx, r, local, R, elim, exhausted: rd.exhausted, elimNow: cr.eliminated || null, final: r === R - 1, winner: tab.rounds[R - 1].winner } };
+    tab: { idx, r, local, R, elim, exhausted: rd.exhausted, elimNow: cr.eliminated || null, final: r === R - 1, winner: tab.rounds[R - 1].winner, tied: !!tab.rounds[R - 1].tied } };
 }
 async function buildBallots() {
   const rd = TSR_getRoundData(cur, $('selR').value), raceData = TSR_getRaces(rd)[$('selRace').value] || {}, r = rng(cur.id + $('selRace').value + $('selR').value);
@@ -286,9 +290,9 @@ function draw(dt) {
   const rep = Object.keys(T.gv).length;
   ctx.fillStyle = '#171a22'; ctx.fillRect(0, H - 70, W, 70); ctx.fillStyle = '#fff'; ctx.font = `800 22px ${f}`; ctx.textAlign = 'left';
   ctx.fillText(T.tab ? `Round ${T.tab.idx + 1} of ${T.tab.R}` : `${Math.round(a.votes)} votes counted`, 40, H - 38); ctx.fillStyle = '#9aa0ad'; ctx.font = `600 18px ${f}`; ctx.fillText(T.tab ? `${Math.round(a.votes)} votes still in play · ${T.tab.exhausted} exhausted` : `${rep} of ${geoms.length} groups reporting`, 300, H - 38);
-  if (total) { const lead = order[0], second = order[1], mg = ((T.counts[lead] || 0) - (T.counts[second] || 0)) / total * 100; ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = `800 20px ${f}`; ctx.fillText(`${TSR_candidateName(registry, lead)} leads by ${mg.toFixed(1)}`, W - 40, H - 38); }
+  if (total) { const lead = order[0], second = order[1], mg = ((T.counts[lead] || 0) - (T.counts[second] || 0)) / total * 100; ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = `800 20px ${f}`; ctx.fillText(mg < 0.05 ? 'Dead heat' : `${TSR_candidateName(registry, lead)} leads by ${mg.toFixed(1)}`, W - 40, H - 38); }
   if (T.tab) { const t = T.tab, nm = k => TSR_candidateName(registry, k), win = t.final && t.local > .6;
-    const txt = win ? `WINNER · ${nm(t.winner)} wins after ${t.R} rounds` : t.elimNow && t.idx === t.r ? `ROUND ${t.r + 1} · ${nm(t.elimNow)} HAS THE FEWEST VOTES — ELIMINATED` : t.elimNow ? `${nm(t.elimNow)}’S BALLOTS TRANSFER TO THEIR NEXT CHOICE` : `ROUND ${t.idx + 1} · FINAL TALLY`;
+    const txt = win && t.tied ? `TIE · THE FINAL TWO FINISH LEVEL AFTER ${t.R} ROUNDS` : win ? `WINNER · ${nm(t.winner)} wins after ${t.R} rounds` : t.elimNow && t.idx === t.r ? `ROUND ${t.r + 1} · ${nm(t.elimNow)} HAS THE FEWEST VOTES — ELIMINATED` : t.elimNow ? `${nm(t.elimNow)}’S BALLOTS TRANSFER TO THEIR NEXT CHOICE` : `ROUND ${t.idx + 1} · FINAL TALLY`;
     ctx.fillStyle = win ? '#1f8f4e' : '#d3102a'; ctx.fillRect(0, H - 70 - 54, W, 54); ctx.fillStyle = '#fff'; ctx.font = `800 24px ${f}`; ctx.textAlign = 'left'; ctx.fillText(txt.toUpperCase(), 40, H - 70 - 54 + 36); }
   paintTrack(ctx, 40, H - 26, W - 80, 16, false); drawTimeline(T);
 }

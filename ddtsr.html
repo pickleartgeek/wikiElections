@@ -81,7 +81,7 @@
       <div class="picker-row" style="max-width:420px; margin:0;">
         <div class="field-row">
           <label>Election</label>
-          <select id="calcElectionSelect"></select>
+          <div style="display:flex;gap:8px;align-items:stretch"><select id="calcElectionSelect" style="flex:1"></select><button type="button" id="calcCopyLink" class="mm-linkbtn" title="Copy a link to this race" style="border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--radius);padding:0 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Copy link</button></div>
         </div>
       </div>
       <p class="fc-caption">BaseCalc pools <strong>every</strong> pollster tracking a race into one weighted average; ProbCalc turns it into win probabilities.
@@ -239,7 +239,13 @@ async function calcBoot() {
 
   const sel = document.getElementById('calcElectionSelect');
   sel.innerHTML = calcPollsIndex.map(e => `<option value="${e.id}">${e.title}</option>`).join('');
-  sel.onchange = () => calcLoad(sel.value);
+  const syncUrl = () => { try { const u = new URL(location.href); u.searchParams.set('election', sel.value); history.replaceState(null, '', u); } catch (e) {} };
+  sel.onchange = () => { syncUrl(); calcLoad(sel.value); };
+  document.getElementById('calcCopyLink').onclick = e => {
+    const b = e.currentTarget, u = new URL(location.href); u.searchParams.set('election', sel.value); u.hash = '';
+    const done = t => { b.textContent = t; setTimeout(() => { b.textContent = 'Copy link'; }, 1600); };
+    (navigator.clipboard ? navigator.clipboard.writeText(u.href) : Promise.reject()).then(() => done('Copied ✓'), () => { prompt('Copy this link:', u.href); });
+  };
 
   const requested = EID_fromUrl('election');
   const startId = (requested && calcPollsIndex.find(e => e.id === requested)) ? requested : calcPollsIndex[0].id;

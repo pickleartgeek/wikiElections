@@ -56,8 +56,10 @@
     <p class="lede" style="margin:4px 0 0;">Explainers, retrospectives, and write-ups from the wikiElections team.</p>
   </section>
 
+  <div class="art-search"><input type="search" id="artQ" placeholder="Search titles and article text…  ( press / )" aria-label="Search articles" autocomplete="off"><span class="small-muted" id="artCount"></span></div>
   <div class="card-grid" id="articleGrid"></div>
   <p class="small-muted" id="emptyState" style="display:none; padding:20px 0;">No articles published yet.</p>
+  <p class="small-muted" id="noMatch" style="display:none; padding:20px 0;">No articles match that search.</p>
 </main>
 
 <footer class="site-footer">
@@ -75,6 +77,12 @@
 <script src="assets/js/election-ids.js"></script>
 <script src="assets/js/overrides.js"></script>
 <script src="assets/js/main.js"></script>
+<style>
+.art-search { display:flex; align-items:center; gap:12px; margin:6px 0 16px; flex-wrap:wrap; }
+.art-search input { flex:1; min-width:220px; padding:10px 14px; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); color:var(--ink); font-size:14px; }
+.article-card .snip { font-size:12px; color:var(--muted); margin-top:8px; line-height:1.45; }
+mark.hl { background:#ffe36e; color:#111214; padding:0 1px; border-radius:2px; }
+</style>
 <script>
 initSiteChrome();
 
@@ -93,18 +101,45 @@ async function boot() {
   const grid = document.getElementById('articleGrid');
   if (!articles.length) {
     document.getElementById('emptyState').style.display = 'block';
+    document.querySelector('.art-search').style.display = 'none';
     return;
   }
-
-  grid.innerHTML = articles.map(a => `
-    <a class="article-card" href="article?id=${encodeURIComponent(a.id)}">
+  const plain = h => { const d = document.createElement('div'); d.innerHTML = (h || '').replace(/<(\/(?:div|p|li|h\d|tr|td|th|blockquote)|br)[^>]*>/gi, ' $&'); d.querySelectorAll('script,style,svg,canvas,figure,table').forEach(n => n.remove()); return (d.textContent || '').replace(/(?:\d+(?:\.\d+)?%){2,}/g, ' ').replace(/\s+/g, ' ').trim(); };
+  articles.forEach(a => { a._text = plain(a.bodyHtml); a._hay = [a.title, a.author, a.byline, a._text].join(' \u0001 ').toLowerCase(); });
+  const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const hl = (text, terms) => { let h = escapeHtml(text); terms.forEach(t => { h = h.replace(new RegExp('(' + reEsc(escapeHtml(t)) + ')', 'ig'), '<mark class="hl">$1</mark>'); }); return h; };
+  function snippet(a, terms) {
+    const low = a._text.toLowerCase(); let at = -1;
+    for (const t of terms) { const k = low.indexOf(t); if (k >= 0 && (at < 0 || k < at)) at = k; }
+    if (at < 0) return '';
+    const s = Math.max(0, at - 60), e = Math.min(a._text.length, at + 140);
+    return (s ? '…' : '') + hl(a._text.slice(s, e), terms) + (e < a._text.length ? '…' : '');
+  }
+  function draw() {
+    const q = document.getElementById('artQ').value.trim().toLowerCase(), terms = q.split(/\s+/).filter(Boolean);
+    const list = terms.length ? articles.filter(a => terms.every(t => a._hay.includes(t))) : articles;
+    grid.innerHTML = list.map(a => {
+      const sn = terms.length ? snippet(a, terms) : '';
+      return `
+    <a class="article-card" href="article?id=${encodeURIComponent(a.id)}${terms.length ? '&q=' + encodeURIComponent(q) : ''}">
       <div class="thumb" style="background:${a.thumbColor || '#111214'};">${escapeHtml((a.title || '?').slice(0, 1).toUpperCase())}</div>
       <div class="body">
         <div class="eyebrow">${a.date || ''}</div>
-        <div class="title">${escapeHtml(a.title || 'Untitled')}</div>
+        <div class="title">${terms.length ? hl(a.title || 'Untitled', terms) : escapeHtml(a.title || 'Untitled')}</div>
         <div class="byline">${escapeHtml(a.byline || (a.author ? `by ${a.author}` : ''))}</div>
+        ${sn ? `<div class="snip">${sn}</div>` : ''}
       </div>
-    </a>`).join('');
+    </a>`;
+    }).join('');
+    document.getElementById('noMatch').style.display = list.length ? 'none' : 'block';
+    document.getElementById('artCount').textContent = terms.length ? `${list.length} of ${articles.length} articles` : `${articles.length} articles`;
+    try { const u = new URL(location.href); if (q) u.searchParams.set('q', q); else u.searchParams.delete('q'); history.replaceState(null, '', u); } catch (e) {}
+  }
+  const inp = document.getElementById('artQ');
+  inp.value = new URLSearchParams(location.search).get('q') || '';
+  inp.addEventListener('input', draw);
+  document.addEventListener('keydown', e => { if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName)) { e.preventDefault(); inp.focus(); } });
+  draw();
 }
 
 boot();

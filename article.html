@@ -128,6 +128,15 @@ async function boot() {
     <article class="article-body">${article.bodyHtml || ''}</article>
     <p style="margin-top:40px;"><a href="articles">← Back to all articles</a></p>`;
   if (typeof PhotoFilter_applyAll === 'function') PhotoFilter_applyAll('.article-body .white-filter-img');
+  // Arriving from an article search: highlight the matches and jump to the first one.
+  const terms = (new URLSearchParams(location.search).get('q') || '').toLowerCase().split(/\s+/).filter(Boolean);
+  if (terms.length) {
+    const root = document.querySelector('.article-body'), w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), nodes = [];
+    while (w.nextNode()) nodes.push(w.currentNode);
+    const re = new RegExp('(' + terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'ig');
+    nodes.forEach(n => { if (!re.test(n.nodeValue)) return; re.lastIndex = 0; const sp = document.createElement('span'); sp.innerHTML = escapeHtml(n.nodeValue).replace(re, '<mark class="hl" style="background:#ffe36e;color:#111214;border-radius:2px">$1</mark>'); n.replaceWith(sp); });
+    const first = root.querySelector('mark.hl'); if (first) setTimeout(() => first.scrollIntoView({ block: 'center' }), 150);
+  }
 }
 
 boot();

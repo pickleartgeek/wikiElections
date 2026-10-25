@@ -82,7 +82,7 @@ body{background:var(--paper)}
       <label class="mm-check"><input type="checkbox" id="optLegend" checked> Legend</label>
       <label class="mm-check"><input type="checkbox" id="optLabels"> Group numbers</label>
       <label class="mm-check"><input type="checkbox" id="optBg"> Transparent background</label>
-      <div class="mm-btns"><button class="mm-btn" id="dlSvg">Download SVG</button><button class="mm-btn" id="dlPng">Download PNG</button><button class="mm-btn alt" id="cpSvg">Copy SVG code</button></div>
+      <div class="mm-btns"><button class="mm-btn" id="dlSvg">Download SVG</button><button class="mm-btn" id="dlPng">Download PNG</button><button class="mm-btn alt" id="cpSvg">Copy SVG code</button><button class="mm-btn alt" id="cpPng">Copy PNG image</button><button class="mm-btn alt" id="resetCol">Reset colours &amp; names</button></div>
       <div class="mm-note" id="status"></div>
     </div>
     <div><div class="mm-stage" id="stage">Loading…</div><div class="mm-note">Each group is coloured by its plurality winner and shaded by that candidate's share of the group vote. Names and colours are editable.</div></div>
@@ -177,7 +177,9 @@ function build() {
   const counts = {}; Object.values(win).forEach(w => { if (w.key) counts[w.key] = (counts[w.key] || 0) + 1; });
   const cmap = Object.fromEntries(cands.map(c => [c.key, c]));
   const rows = cands.filter(c => used.has(c.key));
-  const topH = showT ? 44 : 0, legW = showL && !wiki ? 360 : 0, legH = showL && wiki ? 34 + rows.length * 58 : 0, W = MAP_W + legW, H = MAP_H + topH + legH;
+  const gids = gm.map(g => g.id), noData = gids.filter(i => !win[i]).length, ties = gids.filter(i => win[i] && win[i].tie).length;
+  const specials = [].concat(noData ? [{ c: NO_DATA, l: 'No data' }] : [], ties ? [{ c: wiki ? '#333333' : NO_DATA, l: 'Tied group' }] : []);
+  const topH = showT ? 44 : 0, legW = showL && !wiki ? 360 : 0, legH = showL && wiki ? 34 + rows.length * 58 + (specials.length ? 26 : 0) : 0, W = MAP_W + legW, H = MAP_H + topH + legH;
   const race = $('selRace').value, round = $('selRound').value === 'runoff_round' ? ' (runoff)' : '';
   let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="${FONT}">`;
   if (!transp) s += `<rect width="${W}" height="${H}" fill="#ffffff"/>`;
@@ -186,7 +188,9 @@ function build() {
   gm.forEach(g => {
     const w = win[g.id]; let fill = wiki && w && w.tie ? '#333333' : NO_DATA;
     if (w && w.key) fill = toHexStr(shade(cmap[w.key] ? cmap[w.key].color : '#888888', binOf(w.share, start, step, N), N, wiki));
-    s += `<path id="group-${esc(g.id)}" d="${g.d}" fill="${fill}"/>`;
+    const gv = groupVotes[g.id] || {}, gt = Object.values(gv).reduce((a, b) => a + b, 0);
+    const tip = !gt ? `Group ${g.id}: no data` : w.tie ? `Group ${g.id}: tie` : `Group ${g.id}: ${(cmap[w.key] || {}).name || w.key} ${w.share.toFixed(1)}% (${gv[w.key]} of ${gt} votes)`;
+    s += `<path id="group-${esc(g.id)}" d="${g.d}" fill="${fill}"><title>${esc(tip)}</title></path>`;
   });
   s += '</g>';
   if (showN) { s += `<g transform="translate(0 ${topH})" font-size="22" font-weight="700" text-anchor="middle" fill="#111" stroke="#fff" stroke-width="3" paint-order="stroke">`; gm.forEach(g => { s += `<text x="${g.center[0].toFixed(1)}" y="${(g.center[1] + 7).toFixed(1)}">${esc(g.id)}</text>`; }); s += '</g>'; }
@@ -202,6 +206,7 @@ function build() {
       s += `<text x="${x0 + 12}" y="${y + 32}" font-size="14.5" font-weight="600" fill="#fff">${esc(c.party || '')}</text><text x="${x0 + LW - 12}" y="${y + 32}" font-size="14.5" font-weight="600" fill="#fff" text-anchor="end">${esc(c.name)}</text>`;
       y += 58;
     });
+    specials.forEach((sp, i) => { s += `<rect x="${x0 + i * 110}" y="${y - 2}" width="14" height="14" fill="${sp.c}" stroke="#999" stroke-width=".6"/><text x="${x0 + i * 110 + 20}" y="${y + 9}" font-size="12" fill="#000">${sp.l}</text>`; });
     s += '</g>';
   } else if (showL) {
     const lx = MAP_W + 10; let y = topH + 40;
@@ -224,12 +229,17 @@ function build() {
       s += `<text x="324" y="20" transform="translate(0 ${y})" font-size="${wiki ? 12 : 13}" font-weight="700" fill="${ink}" text-anchor="end">${g} gp</text>`;
       y += 38;
     });
+    specials.forEach((sp, i) => { s += `<rect x="0" y="${y + i * 20}" width="14" height="14" fill="${sp.c}" stroke="#999" stroke-width=".6"/><text x="20" y="${y + i * 20 + 11}" font-size="12" fill="#333">${sp.l}</text>`; });
     s += '</g>';
   }
   return s + '</svg>';
 }
 function lum(h) { h = hexOk(h); const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4)); return .2126 * r + .7152 * g + .0722 * b; }
-function render() { if (!cur) return; svgText = build(); $('stage').innerHTML = svgText; const nd = Object.keys(groupVotes).length; $('status').textContent = nd ? '' : 'No group-level data for this race.'; }
+function saveState() {
+  try { localStorage.setItem('mm-prefs', JSON.stringify({ style: $('selStyle').value, legend: $('optLegend').checked, labels: $('optLabels').checked, bg: $('optBg').checked })); } catch (e) {}
+  try { const q = new URLSearchParams({ e: cur.id, r: $('selRound').value, race: $('selRace').value, style: $('selStyle').value }); history.replaceState(null, '', '?' + q); } catch (e) {}
+}
+function render() { if (!cur) return; saveState(); svgText = build(); $('stage').innerHTML = svgText; const nd = Object.keys(groupVotes).length; $('status').textContent = nd ? '' : 'No group-level data for this race.'; }
 
 /* ---- UI ---- */
 function renderCandBox() {
@@ -264,12 +274,19 @@ const fname = ext => `${cur.id}-${$('selRace').value.toLowerCase().replace(/[^a-
   $('binAuto').onclick = autoBins;
   $('dlSvg').onclick = () => download(fname('svg'), new Blob([svgText], { type: 'image/svg+xml' }));
   $('cpSvg').onclick = () => navigator.clipboard.writeText(svgText).then(() => { $('status').textContent = 'SVG code copied.'; });
-  $('dlPng').onclick = () => {
+  const pngBlob = () => new Promise(res => {
     const m = svgText.match(/viewBox="0 0 (\d+) (\d+)"/), w = +m[1], h = +m[2], sc = 3, img = new Image();
-    img.onload = () => { const c = document.createElement('canvas'); c.width = w * sc; c.height = h * sc; const x = c.getContext('2d'); x.drawImage(img, 0, 0, c.width, c.height); c.toBlob(b => download(fname('png'), b)); };
+    img.onload = () => { const c = document.createElement('canvas'); c.width = w * sc; c.height = h * sc; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); c.toBlob(res); };
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
-  };
+  });
+  $('dlPng').onclick = () => pngBlob().then(b => download(fname('png'), b));
+  $('cpPng').onclick = () => { try { navigator.clipboard.write([new ClipboardItem({ 'image/png': pngBlob() })]).then(() => { $('status').textContent = 'PNG copied to clipboard.'; }, () => { $('status').textContent = 'Clipboard blocked by the browser — use Download PNG.'; }); } catch (e) { $('status').textContent = 'Clipboard not supported here — use Download PNG.'; } };
+  $('resetCol').onclick = () => { cands = []; loadCands(); };
+  try { const pr = JSON.parse(localStorage.getItem('mm-prefs') || 'null'); if (pr) { $('selStyle').value = pr.style || 'modern'; $('optTitle').checked = $('selStyle').value !== 'wiki'; $('optLegend').checked = pr.legend !== false; $('optLabels').checked = !!pr.labels; $('optBg').checked = !!pr.bg; } } catch (e) {}
+  const qs = new URLSearchParams(location.search); if (qs.get('style')) { $('selStyle').value = qs.get('style'); $('optTitle').checked = qs.get('style') !== 'wiki'; }
   pick();
+  if (qs.get('r') && [...$('selRound').options].some(o => o.value === qs.get('r'))) { $('selRound').value = qs.get('r'); cands = []; fillRaces(); }
+  if (qs.get('race') && [...$('selRace').options].some(o => o.value === qs.get('race'))) { $('selRace').value = qs.get('race'); cands = []; loadCands(); }
 })();
 </script>
 </body>

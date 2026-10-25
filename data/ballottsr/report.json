@@ -1,6 +1,10 @@
 {
   "unmapped": [],
-  "skippedPolls": [],
+  "skippedPolls": [
+    "poll_t3_1x6whop_1792095771387 \"Class 1 Poll\": options don't match class1-2026-10 field: Junglejumpersfan (=tmf, not in this field), Paleolithic-Money91 (=pm, not in this field)",
+    "poll_t3_1x6wjd2_1792095869473 \"Class 2 Poll\": options don't match class2-2026-10 field: Disguised_VW_Beetle (=dvwb, not in this field), One-Community-3753 (=oc, not in this field)",
+    "poll_t3_1x97pls_1792341581310 \"Class 1 Poll\": options don't match class1-2026-10 field: u/JungleJumpersfan (=tmf, not in this field)"
+  ],
   "skippedElections": [
     "poll_t3_1xdh0g8_1792769299401 \"Official Class 2 Special Mod Election\": resultsEmbargoed -- not published",
     "poll_t3_1xdh8jo_1792769780435 \"Official Class 1 Election + Ballot Propositions\": resultsEmbargoed -- not published",

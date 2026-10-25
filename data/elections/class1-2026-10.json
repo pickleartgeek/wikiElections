@@ -20,6 +20,267 @@
         "oc1": 0.7273,
         "dvwb": 0.2727
       }
+    },
+    {
+      "id": "bt-1xa7xzl",
+      "pollster": "Representative-Fee65",
+      "date": "2026-10-19",
+      "sample": 11,
+      "weight": 1,
+      "shares": {
+        "oc1": 0.7273,
+        "dvwb": 0.2727
+      },
+      "source": "ballottsr",
+      "sourceId": "poll_t3_1xa7xzl_1792441381072",
+      "status": "open",
+      "method": "fptp",
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xa7xzl",
+      "groups": {
+        "1": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "2": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "3": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "4": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        },
+        "5": {
+          "sample": 2,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "6": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "7": {
+          "sample": 2,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "bt-1xa9owf",
+      "pollster": "Spinner Insights",
+      "date": "2026-10-19",
+      "sample": 12,
+      "weight": 1,
+      "shares": {
+        "oc1": 0.6667,
+        "dvwb": 0.3333
+      },
+      "source": "ballottsr",
+      "sourceId": "poll_t3_1xa9owf_1792445472930",
+      "status": "closed",
+      "method": "rcv",
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xa9owf",
+      "groups": {
+        "2": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        },
+        "3": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "5": {
+          "sample": 3,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "6": {
+          "sample": 3,
+          "shares": {
+            "oc1": 0.3333,
+            "dvwb": 0.6667
+          }
+        },
+        "7": {
+          "sample": 2,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "8": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "9": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "bt-1xav0cq",
+      "pollster": "Spinner Insights",
+      "date": "2026-10-20",
+      "sample": 12,
+      "weight": 1,
+      "shares": {
+        "oc1": 0.4167,
+        "dvwb": 0.5833
+      },
+      "source": "ballottsr",
+      "sourceId": "poll_t3_1xav0cq_1792509807616",
+      "status": "closed",
+      "method": "rcv",
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xav0cq",
+      "groups": {
+        "2": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "3": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "4": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        },
+        "5": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "6": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "7": {
+          "sample": 2,
+          "shares": {
+            "oc1": 0.5,
+            "dvwb": 0.5
+          }
+        },
+        "8": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        },
+        "9": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "bt-1xc30xe",
+      "pollster": "Spinroom Analytics",
+      "date": "2026-10-21",
+      "sample": 10,
+      "weight": 1,
+      "shares": {
+        "oc1": 0.6,
+        "dvwb": 0.4
+      },
+      "source": "ballottsr",
+      "sourceId": "poll_t3_1xc30xe_1792625953701",
+      "status": "closed",
+      "method": "fptp",
+      "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xc30xe",
+      "groups": {
+        "2": {
+          "sample": 1,
+          "shares": {
+            "oc1": 0,
+            "dvwb": 1
+          }
+        },
+        "5": {
+          "sample": 3,
+          "shares": {
+            "oc1": 0.6667,
+            "dvwb": 0.3333
+          }
+        },
+        "6": {
+          "sample": 3,
+          "shares": {
+            "oc1": 0.3333,
+            "dvwb": 0.6667
+          }
+        },
+        "7": {
+          "sample": 2,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        },
+        "8": {
+          "sample": 1,
+          "shares": {
+            "oc1": 1,
+            "dvwb": 0
+          }
+        }
+      }
     }
   ]
 }

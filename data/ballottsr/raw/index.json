@@ -24,11 +24,11 @@
     {
       "id": "poll_t3_1xdhgth_1792770276796",
       "title": "Official Class 1 Mod Election + Ballot Propositions",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1792770276796,
       "method": "fptp",
       "isOfficialElection": true,
-      "resultsEmbargoed": true,
+      "resultsEmbargoed": false,
       "file": "polls/poll_t3_1xdhgth_1792770276796.json"
     },
     {
@@ -44,11 +44,11 @@
     {
       "id": "poll_t3_1xdh0g8_1792769299401",
       "title": "Official Class 2 Special Mod Election",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1792769299401,
       "method": "rcv",
       "isOfficialElection": true,
-      "resultsEmbargoed": true,
+      "resultsEmbargoed": false,
       "file": "polls/poll_t3_1xdh0g8_1792769299401.json"
     },
     {

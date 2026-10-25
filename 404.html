@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — wikiElections</title>
+<meta name="robots" content="noindex">
+<script>
+  // GitHub Pages serves this file for any missing URL, at any depth, so resolve links from the site root.
+  var seg = location.pathname.split('/')[1], base = /\.github\.io$/.test(location.hostname) && seg ? '/' + seg + '/' : '/';
+  document.write('<base href="' + base + '">');
+  try { var t = localStorage.getItem('wE-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<link rel="icon" type="image/png" href="assets/img/brand/favicon-wiki.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<main class="wrap" style="padding:80px 0;text-align:center">
+  <img src="assets/img/brand/wikielections-mark.png" alt="" style="height:72px;display:block;margin:0 auto">
+  <h1 style="font-family:var(--font-elects-display);font-size:clamp(28px,6vw,44px);margin:18px 0 8px">That page isn’t here</h1>
+  <p class="small-muted" style="margin:0 0 22px">The link may be old or mistyped.</p>
+  <p style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <a class="tool-card" href="./" style="padding:10px 16px;flex:0 0 auto;width:auto;display:inline-flex"><b>Main Page</b></a>
+    <a class="tool-card" href="ddtsr" style="padding:10px 16px;flex:0 0 auto;width:auto;display:inline-flex"><b>Decision Desk TSR</b></a>
+    <a class="tool-card" href="elects/" style="padding:10px 16px;flex:0 0 auto;width:auto;display:inline-flex"><b>TSR Elects</b></a>
+    <a class="tool-card" href="polls" style="padding:10px 16px;flex:0 0 auto;width:auto;display:inline-flex"><b>Polls</b></a>
+  </p>
+</main>
+</body>
+</html>

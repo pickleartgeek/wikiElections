@@ -111,7 +111,7 @@ h1.rp-h{font-family:var(--font-elects-display);font-size:clamp(26px,5vw,38px);ma
 initSiteChrome();
 const $ = id => document.getElementById(id), W = 1280, H = 720, WINDOW_H = 72;
 const cv = $('cv'), ctx = cv.getContext('2d');
-let gaps = [], tab = null, tabT = 0, TAB_RL = 4.2, timelines = {}, realMap = null, registry, geo, elections = [], cur = null, geoms = [], ballots = [], cands = [], races = {}, u = 1, playing = false, last = 0, photos = {}, recording = false;
+let fromBallots = false, gaps = [], tab = null, tabT = 0, TAB_RL = 4.2, timelines = {}, realMap = null, registry, geo, elections = [], cur = null, geoms = [], ballots = [], cands = [], races = {}, u = 1, playing = false, last = 0, photos = {}, recording = false;
 const sum = o => Object.values(o).reduce((a, b) => a + b, 0), hexOk = h => /^#[0-9a-f]{6}$/i.test(h) ? h : '#888888';
 function rng(seed) { let a = 0; for (const ch of seed) a = (Math.imul(a, 31) + ch.charCodeAt(0)) | 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
@@ -175,8 +175,8 @@ function tabTarget() {
 }
 async function buildBallots() {
   const rd = TSR_getRoundData(cur, $('selR').value), raceData = TSR_getRaces(rd)[$('selRace').value] || {}, r = rng(cur.id + $('selRace').value + $('selR').value);
-  realMap = null; tab = null; tabT = 0; gaps = []; let real = false, ranked = false;
-  if ($('selR').value === 'first_round') { const tl = await getTimeline(cur.id); if (tl && tl.source === 'ballots') { rankedBallots(tl); real = ranked = true; } else if (tl) real = realBallots(tl, $('selRace').value); }
+  realMap = null; tab = null; tabT = 0; gaps = []; fromBallots = false; let real = false, ranked = false;
+  if ($('selR').value === 'first_round') { const tl = await getTimeline(cur.id); if (tl && tl.source === 'ballots') { rankedBallots(tl); real = ranked = fromBallots = true; } else if (tl) real = realBallots(tl, $('selRace').value); }
   if (!real) {
     ballots = []; const tot = TSR_raceTotals(raceData);
     cands = Object.entries(tot).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).map(([k]) => k);
@@ -189,7 +189,7 @@ async function buildBallots() {
   }
   ballots.sort((a, b) => a.t - b.t); dedupeColours(); loadPhotos();
   ranked = ranked && !!tab; fitTrack(); renderLog(); $('btnTab').hidden = !tab;
-  $('status').textContent = ranked ? 'Built from the real ballots: every vote at the moment it was cast (long quiet stretches are shortened), followed by the ranked-choice tabulation.' : real ? 'Timeline reconstructed from the site’s real update history (times = when each result was entered; long quiet stretches are shortened).' : 'No recorded update history for this election — vote times are simulated.';
+  $('status').textContent = fromBallots ? 'Built from the real ballots: every vote at the moment it was cast (long quiet stretches are shortened)' + (tab ? ', followed by the ranked-choice tabulation.' : '.') : real ? 'Timeline reconstructed from the site’s real update history (times = when each result was entered; long quiet stretches are shortened).' : 'No recorded update history for this election — vote times are simulated.';
   return real;
 }
 function clockLabel() {
@@ -254,7 +254,7 @@ function draw(dt) {
   ctx.font = `600 18px ${f}`; ctx.fillStyle = '#9aa0ad'; ctx.fillText($('selRace').value + ($('selR').value === 'runoff_round' ? ' · Runoff' : ''), 40, 76);
   ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = `800 30px ${f}`;
   if (T.tab) ctx.font = `800 22px ${f}`; ctx.fillText(T.tab ? 'RANKED-CHOICE TABULATION' : clockLabel(), W - 40, 48);
-  ctx.font = `600 15px ${f}`; ctx.fillStyle = '#9aa0ad'; ctx.fillText(T.tab ? `ROUND ${T.tab.idx + 1} OF ${T.tab.R}` : tab ? 'REAL BALLOT TIMES' : realMap ? 'RECONSTRUCTED FROM UPDATE HISTORY' : 'SIMULATED TIMELINE · EXPERIMENTAL', W - 40, 76);
+  ctx.font = `600 15px ${f}`; ctx.fillStyle = '#9aa0ad'; ctx.fillText(T.tab ? `ROUND ${T.tab.idx + 1} OF ${T.tab.R}` : fromBallots ? 'REAL BALLOT TIMES' : realMap ? 'RECONSTRUCTED FROM UPDATE HISTORY' : 'SIMULATED TIMELINE · EXPERIMENTAL', W - 40, 76);
   // candidate rows (sliding)
   ctx.textAlign = 'left';
   order.slice().sort((x, y) => a.rows[x].y - a.rows[y].y).forEach(k => {

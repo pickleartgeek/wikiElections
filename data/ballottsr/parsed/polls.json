@@ -30,14 +30,8 @@
       "method": "rcv",
       "status": "open",
       "ballots": 12,
-      "included": true,
-      "electionId": "class2-2026-10",
-      "pollster": "Representative-Fee65",
-      "shares": {
-        "fw2442": 0.25,
-        "tmf": 0.5833,
-        "mf1": 0.1667
-      }
+      "included": false,
+      "reason": "election class2-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1xbzs4u_1792617608918",
@@ -69,13 +63,8 @@
       "method": "fptp",
       "status": "closed",
       "ballots": 10,
-      "included": true,
-      "electionId": "class1-2026-10",
-      "pollster": "Spinroom Analytics",
-      "shares": {
-        "oc1": 0.6,
-        "dvwb": 0.4
-      }
+      "included": false,
+      "reason": "election class1-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1xc32j3_1792626060899",
@@ -85,14 +74,8 @@
       "method": "rcv",
       "status": "closed",
       "ballots": 12,
-      "included": true,
-      "electionId": "class2-2026-10",
-      "pollster": "Spinroom Analytics",
-      "shares": {
-        "fw2442": 0.3333,
-        "tmf": 0.4167,
-        "mf1": 0.25
-      }
+      "included": false,
+      "reason": "election class2-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1xausr9_1792509367954",
@@ -113,13 +96,8 @@
       "method": "rcv",
       "status": "closed",
       "ballots": 12,
-      "included": true,
-      "electionId": "class1-2026-10",
-      "pollster": "Spinner Insights",
-      "shares": {
-        "oc1": 0.4167,
-        "dvwb": 0.5833
-      }
+      "included": false,
+      "reason": "election class1-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1xaxqhb_1792515873850",
@@ -129,14 +107,8 @@
       "method": "rcv",
       "status": "closed",
       "ballots": 12,
-      "included": true,
-      "electionId": "class2-2026-10",
-      "pollster": "Spinner Insights",
-      "shares": {
-        "fw2442": 0.25,
-        "tmf": 0.5833,
-        "mf1": 0.1667
-      }
+      "included": false,
+      "reason": "election class2-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1xaymvr_1792517905075",
@@ -157,13 +129,8 @@
       "method": "fptp",
       "status": "open",
       "ballots": 11,
-      "included": true,
-      "electionId": "class1-2026-10",
-      "pollster": "Representative-Fee65",
-      "shares": {
-        "oc1": 0.7273,
-        "dvwb": 0.2727
-      }
+      "included": false,
+      "reason": "election class1-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1xa7z10_1792441452986",
@@ -173,14 +140,8 @@
       "method": "rcv",
       "status": "open",
       "ballots": 11,
-      "included": true,
-      "electionId": "class2-2026-10",
-      "pollster": "Representative-Fee65",
-      "shares": {
-        "fw2442": 0.2727,
-        "tmf": 0.4545,
-        "mf1": 0.2727
-      }
+      "included": false,
+      "reason": "election class2-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1xa9owf_1792445472930",
@@ -190,13 +151,8 @@
       "method": "rcv",
       "status": "closed",
       "ballots": 12,
-      "included": true,
-      "electionId": "class1-2026-10",
-      "pollster": "Spinner Insights",
-      "shares": {
-        "oc1": 0.6667,
-        "dvwb": 0.3333
-      }
+      "included": false,
+      "reason": "election class1-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1x97pls_1792341581310",
@@ -207,7 +163,7 @@
       "status": "open",
       "ballots": 19,
       "included": false,
-      "reason": "options don't match class1-2026-10 field: u/JungleJumpersfan (=tmf, not in this field)"
+      "reason": "election class1-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1x6whop_1792095771387",
@@ -218,7 +174,7 @@
       "status": "open",
       "ballots": 9,
       "included": false,
-      "reason": "options don't match class1-2026-10 field: Junglejumpersfan (=tmf, not in this field), Paleolithic-Money91 (=pm, not in this field)"
+      "reason": "election class1-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1x6wjd2_1792095869473",
@@ -229,7 +185,7 @@
       "status": "open",
       "ballots": 9,
       "included": false,
-      "reason": "options don't match class2-2026-10 field: Disguised_VW_Beetle (=dvwb, not in this field), One-Community-3753 (=oc, not in this field)"
+      "reason": "election class2-2026-10 already held (history frozen)"
     },
     {
       "id": "poll_t3_1wyosdu_1791246391130",

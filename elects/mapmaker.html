@@ -5,6 +5,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>wikiElections — Map Maker</title>
+<meta name="description" content="Make Wikipedia-style election maps of any TSR result and download them as SVG or PNG.">
+<meta name="theme-color" content="#d3102a">
+<meta property="og:site_name" content="wikiElections">
+<meta property="og:type" content="website">
+<meta property="og:title" content="wikiElections — Map Maker">
+<meta property="og:description" content="Make Wikipedia-style election maps of any TSR result and download them as SVG or PNG.">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="../assets/img/brand/favicon-ddtsr.png">
 <link rel="stylesheet" href="../assets/css/style.css">
 <style>
@@ -28,6 +35,7 @@ body{background:var(--paper)}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="masthead">
   <div class="wrap">
     <a class="site-logo" href="../">
@@ -58,7 +66,7 @@ body{background:var(--paper)}
   <div class="wrap" id="lastUpdatedRow" style="padding-top:0;"><span class="last-updated-text" id="lastUpdatedText"></span></div>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="main" tabindex="-1">
   <section class="hero sim-hero">
     <div>
       <div class="elects-kicker" style="margin-bottom:8px;background:var(--brand)">wikiElections · Map Maker</div>

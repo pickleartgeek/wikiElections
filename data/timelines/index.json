@@ -11,6 +11,42 @@
    "title": "Class 2 October 2026 Special Election",
    "date": "2026-10-23",
    "source": "ballots"
+  },
+  {
+   "id": "class5-2026-06",
+   "title": "Class 5 June 2026 Election",
+   "date": "2026-06-15",
+   "source": "ballots"
+  },
+  {
+   "id": "class5-2026-04",
+   "title": "Class 5 April 2026 Election",
+   "date": "2026-04-11",
+   "source": "ballots"
+  },
+  {
+   "id": "class6-2026-07",
+   "title": "Class 6 July 2026 Election",
+   "date": "2026-07-31",
+   "source": "ballots"
+  },
+  {
+   "id": "class3-2026-01",
+   "title": "January 2026 Class 3 Mod Election",
+   "date": "2026-02-01",
+   "source": "ballots"
+  },
+  {
+   "id": "class4-2026-04",
+   "title": "Class 4 April 2026 Election",
+   "date": "2026-04-11",
+   "source": "ballots"
+  },
+  {
+   "id": "class4-2026-03",
+   "title": "Class 4 March 2026 Election",
+   "date": "2026-04-01",
+   "source": "ballots"
   }
  ]
 }

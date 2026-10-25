@@ -45,5 +45,9 @@
   "supersedeNote": "Hand-entered snapshots of polls that ballottsr now supplies automatically. Removed on first sync so they are not double counted.",
   "knownDiscrepancies": {
     "class7-2026-09": "ballottsr's raw count still includes one fraudulent ballot that was removed from the official result; the hand-curated file is correct."
-  }
+  },
+  "managed": [
+    "class1-2026-10",
+    "class2-2026-10"
+  ]
 }

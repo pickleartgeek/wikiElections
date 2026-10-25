@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("wE-theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wikiElections — Election Replay (experimental)</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Make Wikipedia-style election maps of any TSR result and download them as SVG or PNG.">
+<meta name="theme-color" content="#d3102a">
+<meta property="og:site_name" content="wikiElections">
+<meta property="og:type" content="website">
+<meta property="og:title" content="wikiElections — Election Replay (experimental)">
+<meta property="og:description" content="Make Wikipedia-style election maps of any TSR result and download them as SVG or PNG.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="../assets/img/brand/favicon-ddtsr.png">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+body{background:var(--paper)}
+h1.rp-h{font-family:var(--font-elects-display);font-size:clamp(26px,5vw,38px);margin:22px 0 4px}
+.rp-exp{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line);padding:4px 8px;border-radius:6px;vertical-align:middle}
+.rp-ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.rp-ctl label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.rp-ctl select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink);font-size:13px}
+.rp-stage{border-radius:12px;overflow:hidden;border:1px solid #23262f;background:#0f1117}
+.rp-stage canvas{display:block;width:100%;height:auto}
+.rp-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0}
+.rp-bar input[type=range]{flex:1;min-width:200px}
+.rp-btn{background:var(--ink);color:var(--paper);border:0;border-radius:var(--radius);padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer}
+.rp-btn.red{background:#d3102a;color:#fff}.rp-btn:disabled{opacity:.5;cursor:wait}
+.rp-note{font-size:12px;color:var(--muted)}
+.rp-prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:6px;display:none}.rp-prog i{display:block;height:100%;width:0;background:#d3102a}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="masthead">
+  <div class="wrap">
+    <a class="site-logo" href="../">
+      <img class="mark" src="../assets/img/brand/wikielections-mark.png" alt="">
+      <div class="name">wikiElections<small>The place for all things TSR Elections</small></div>
+    </a>
+    <nav class="main-nav-inline" aria-label="Main">
+      <a href="../">Main Page</a>
+      <a href="../ddtsr">Decision Desk TSR</a>
+      <a href="../polls">Spinner Insights Polls</a>
+      <a href="../elects/">TSR Elects</a>
+      <details class="nav-more">
+        <summary class="current">More</summary>
+        <div class="nav-menu">
+          <div class="nav-menu-h">Tools</div>
+          <a href="../elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <a href="../elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <div class="nav-menu-h">Polling</div>
+          <a href="../pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Read</div>
+          <a href="../articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="../guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+        </div>
+      </details>
+    </nav>
+    <span class="mode-pill" id="modePill">…</span>
+  </div>
+  <div class="wrap" id="lastUpdatedRow" style="padding-top:0;"><span class="last-updated-text" id="lastUpdatedText"></span></div>
+</header>
+
+<main class="wrap" id="main" tabindex="-1">
+  <h1 class="rp-h">Election replay <span class="rp-exp">Experimental</span></h1>
+  <p class="rp-note">Watch an election night unfold vote by vote, then export it as a video. Vote times are <b>simulated</b> for now (each group's real totals, spread over the voting window); real timestamps can replace them later.</p>
+  <div class="rp-ctl">
+    <div><label for="selE">Election</label><select id="selE"></select></div>
+    <div><label for="selR">Round</label><select id="selR"></select></div>
+    <div><label for="selRace">Race</label><select id="selRace"></select></div>
+    <div><label for="selLen">Video length</label><select id="selLen"><option value="15">15 seconds</option><option value="30" selected>30 seconds</option><option value="60">60 seconds</option></select></div>
+  </div>
+  <div class="rp-stage"><canvas id="cv" width="1280" height="720"></canvas></div>
+  <div class="rp-bar"><button class="rp-btn" id="btnPlay">▶ Play</button><input type="range" id="sld" min="0" max="1000" value="1000" aria-label="Timeline"><button class="rp-btn red" id="btnExp">Export video</button></div>
+  <div class="rp-prog" id="prog"><i></i></div>
+  <p class="rp-note" id="status"></p>
+</main>
+<footer class="site-footer"><div class="wrap"><span>wikiElections — experimental election replay</span><span><a href="../">Main Page</a> <a href="./">TSR Elects</a></span></div></footer>
+<script>window.SITE_BASE = '../';</script>
+<script src="../assets/js/election-ids.js"></script>
+<script src="../assets/js/overrides.js"></script>
+<script src="../assets/js/tsrelects.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+initSiteChrome();
+const $ = id => document.getElementById(id), W = 1280, H = 720, WINDOW_H = 72;
+const cv = $('cv'), ctx = cv.getContext('2d');
+let registry, geo, elections = [], cur = null, geoms = [], ballots = [], cands = [], races = {}, u = 1, playing = false, last = 0, photos = {}, recording = false;
+const sum = o => Object.values(o).reduce((a, b) => a + b, 0), hexOk = h => /^#[0-9a-f]{6}$/i.test(h) ? h : '#888888';
+function rng(seed) { let a = 0; for (const ch of seed) a = (Math.imul(a, 31) + ch.charCodeAt(0)) | 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ---- geometry (projected once, drawn with Path2D) ---- */
+const MAP_W = 420, MAP_H = 450;
+function polys(f) { const g = f.geometry; return g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : []; }
+function buildGeoms() {
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; const fs = geo.features.filter(f => f.geometry && f.geometry.type !== 'Point');
+  fs.forEach(f => polys(f).forEach(p => p.forEach(r => r.forEach(([x, y]) => { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }))));
+  const c = Math.cos(((y0 + y1) / 2) * Math.PI / 180), pad = 6, k = Math.min((MAP_W - 2 * pad) / ((x1 - x0) * c), (MAP_H - 2 * pad) / (y1 - y0));
+  const ox = pad + (MAP_W - 2 * pad - (x1 - x0) * c * k) / 2, oy = pad + (MAP_H - 2 * pad - (y1 - y0) * k) / 2;
+  geoms = fs.map(f => ({ id: String(f.properties.id), path: new Path2D(polys(f).map(p => p.map(r => r.map((pt, i) => `${i ? 'L' : 'M'}${(ox + (pt[0] - x0) * c * k).toFixed(1)} ${(oy + (y1 - pt[1]) * k).toFixed(1)}`).join('') + 'Z').join('')).join('')) }));
+}
+
+/* ---- simulated ballot timeline ---- */
+function buildBallots() {
+  const rd = TSR_getRoundData(cur, $('selR').value), raceData = TSR_getRaces(rd)[$('selRace').value] || {}, r = rng(cur.id + $('selRace').value + $('selR').value);
+  ballots = []; const tot = TSR_raceTotals(raceData);
+  cands = Object.entries(tot).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).map(([k]) => k);
+  Object.entries(raceData).forEach(([g, votes]) => {
+    const delay = r() * 0.18;
+    Object.entries(votes).forEach(([k, n]) => { for (let i = 0; i < n; i++) {
+      const q = r(); let t = q < .35 ? Math.pow(r(), 2) * .3 : q < .75 ? .3 + r() * .5 : .8 + Math.pow(r(), .6) * .2;
+      ballots.push({ t: Math.min(1, delay + t * (1 - delay)), g, k }); } });
+  });
+  ballots.sort((a, b) => a.t - b.t);
+  cands.forEach(k => { if (photos[k]) return; const p = TSR_candidate(registry, k).photo; if (!p) return; const im = new Image(); im.onload = () => { photos[k] = im; }; im.src = '../assets/img/candidates/' + p; });
+}
+
+/* ---- drawing: a continuous render loop with NBC-style motion (eased bars, sliding rank changes, vote flashes, group pulses, lead-change banner) ---- */
+const FONT = () => getComputedStyle(document.body).fontFamily || 'sans-serif';
+function shade(k, share) { const c = hexOk(TSR_candidateColor(registry, k)); return share < .5 ? TSR_lightenHex(c, .35 * (1 - share / .5) + .1) : TSR_darkenHex(c, Math.min(.5, (share - .5) * 1.1)); }
+function rgbOf(c) { if (c[0] === '#') return [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)); return (c.match(/[\d.]+/g) || [35, 38, 47]).slice(0, 3).map(Number); }
+function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+const ease = t => 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 3);
+let anim = null, snapNext = true, prevTs = 0, uPrev = 0;
+function snap() { snapNext = true; }
+function target() {
+  let n = 0; while (n < ballots.length && ballots[n].t <= u) n++;
+  const counts = {}, gv = {}; for (let i = 0; i < n; i++) { const b = ballots[i]; counts[b.k] = (counts[b.k] || 0) + 1; (gv[b.g] = gv[b.g] || {})[b.k] = ((gv[b.g] || {})[b.k] || 0) + 1; }
+  return { total: n, counts, gv, order: cands.slice().sort((a, b) => (counts[b] || 0) - (counts[a] || 0)) };
+}
+function groupTarget(v) { if (!v) return [35, 38, 47]; const s = Object.entries(v).sort((a, b) => b[1] - a[1]); return rgbOf(s[1] && s[1][1] === s[0][1] ? '#6b6f7a' : shade(s[0][0], s[0][1] / sum(v))); }
+function step(dt) {
+  const T = target(), rowH = Math.min(86, 470 / Math.max(1, cands.length)), top = 130, jump = snapNext || Math.abs(u - uPrev) > .03 && !playing && !recording;
+  if (jump || !anim) { anim = { rows: {}, groups: {}, lead: T.total ? T.order[0] : null, banner: null, bannerT: 0, toast: '', toastT: 0, votes: T.total, last: {} }; }
+  const a = anim, kk = 1 - Math.exp(-dt * 7);
+  T.order.forEach((k, rank) => {
+    const r = a.rows[k] || (a.rows[k] = { y: top + rank * rowH, pct: 0, votes: 0, flash: 0, plus: 0, plusT: 0 }), v = T.counts[k] || 0, tp = T.total ? v / T.total * 100 : 0;
+    if (jump) { r.y = top + rank * rowH; r.pct = tp; r.votes = v; r.flash = 0; r.plusT = 0; }
+    else { if (v > (a.last[k] || 0)) { r.flash = 1; r.plus = v - (a.last[k] || 0) + (r.plusT > 0 ? r.plus : 0); r.plusT = 1.1; }
+      r.y += (top + rank * rowH - r.y) * (1 - Math.exp(-dt * 9)); r.pct += (tp - r.pct) * kk; r.votes += (v - r.votes) * (1 - Math.exp(-dt * 10)); r.flash = Math.max(0, r.flash - dt * 2.2); r.plusT = Math.max(0, r.plusT - dt); }
+    a.last[k] = v;
+  });
+  geoms.forEach(g => { const tc = groupTarget(T.gv[g.id]), o = a.groups[g.id] || (a.groups[g.id] = { col: tc.slice(), pulse: 0, seen: !!T.gv[g.id] });
+    if (jump) { o.col = tc.slice(); o.pulse = 0; o.seen = !!T.gv[g.id]; }
+    else { if (T.gv[g.id] && !o.seen) { o.seen = true; o.pulse = 1; a.toast = `GROUP ${g.id} REPORTING`; a.toastT = 2.4; }
+      o.col = o.col.map((c, i) => c + (tc[i] - c) * (1 - Math.exp(-dt * 6))); o.pulse = Math.max(0, o.pulse - dt * 1.6); } });
+  const lead = T.total ? T.order[0] : null;
+  if (!jump && lead && a.lead && lead !== a.lead && (a.last[lead] || 0) > 0 && T.total >= 6) { a.banner = `LEAD CHANGE · ${TSR_candidateName(registry, lead)} takes the lead`; a.bannerT = 3; }
+  a.lead = lead; a.bannerT = Math.max(0, a.bannerT - dt); a.toastT = Math.max(0, a.toastT - dt);
+  a.votes += (T.total - a.votes) * (1 - Math.exp(-dt * 10)); if (jump) a.votes = T.total;
+  snapNext = false; uPrev = u; return { T, rowH, top };
+}
+function draw(dt) {
+  if (!cur || !cands.length) return; const f = FONT(), { T, rowH, top } = step(dt || 0.016), a = anim, total = T.total, order = T.order;
+  ctx.fillStyle = '#0f1117'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#171a22'; ctx.fillRect(0, 0, W, 92); ctx.fillStyle = '#d3102a'; ctx.fillRect(0, 92, W, 4);
+  ctx.fillStyle = '#fff'; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+  ctx.font = `800 32px ${f}`; ctx.fillText(cur.title.toUpperCase(), 40, 48);
+  ctx.font = `600 18px ${f}`; ctx.fillStyle = '#9aa0ad'; ctx.fillText($('selRace').value + ($('selR').value === 'runoff_round' ? ' · Runoff' : ''), 40, 76);
+  const hour = u * WINDOW_H; ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = `800 30px ${f}`;
+  ctx.fillText(`Day ${1 + Math.floor(Math.min(hour, WINDOW_H - 0.01) / 24)} · ${String(Math.floor(hour % 24)).padStart(2, '0')}:${String(Math.floor((hour % 1) * 60)).padStart(2, '0')}`, W - 40, 48);
+  ctx.font = `600 15px ${f}`; ctx.fillStyle = '#9aa0ad'; ctx.fillText('SIMULATED TIMELINE · EXPERIMENTAL', W - 40, 76);
+  // candidate rows (sliding)
+  ctx.textAlign = 'left';
+  order.slice().sort((x, y) => a.rows[x].y - a.rows[y].y).forEach(k => {
+    const r = a.rows[k], y = r.y, rank = order.indexOf(k), c = hexOk(TSR_candidateColor(registry, k)), cd = TSR_candidate(registry, k), p = TSR_party(registry, cd.party), ph = Math.min(60, rowH - 14), cy = y + rowH / 2;
+    if (r.flash > 0) { const g = ctx.createLinearGradient(0, 0, 680, 0); g.addColorStop(0, `rgba(255,255,255,${0.16 * r.flash})`); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; rr(24, y + 2, 660, rowH - 4, 10); ctx.fill(); }
+    ctx.save(); ctx.beginPath(); ctx.arc(40 + ph / 2, cy, ph / 2, 0, 7); ctx.clip(); ctx.fillStyle = '#2a2e3a'; ctx.fillRect(40, cy - ph / 2, ph, ph);
+    if (photos[k]) ctx.drawImage(photos[k], 40, cy - ph / 2, ph, ph); ctx.restore();
+    ctx.lineWidth = 3 + 2 * r.flash; ctx.strokeStyle = c; ctx.beginPath(); ctx.arc(40 + ph / 2, cy, ph / 2, 0, 7); ctx.stroke();
+    const x = 40 + ph + 16, w = 590 - ph, bw = w - 120;
+    ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.min(24, rowH * .3)}px ${f}`; ctx.fillText(cd.name, x, cy - 8);
+    if (rank === 0 && total) { const tw = ctx.measureText(cd.name).width; ctx.font = `800 ${Math.min(12, rowH * .15)}px ${f}`; const lw = ctx.measureText('LEADING').width + 14; ctx.fillStyle = '#fff'; rr(x + tw + 10, cy - 8 - Math.min(16, rowH * .2), lw, Math.min(18, rowH * .22), 4); ctx.fill(); ctx.fillStyle = '#111'; ctx.fillText('LEADING', x + tw + 17, cy - 8 - Math.min(16, rowH * .2) + Math.min(13, rowH * .16)); }
+    ctx.fillStyle = '#9aa0ad'; ctx.font = `600 ${Math.min(14, rowH * .18)}px ${f}`; ctx.fillText(p ? p.name : '', x, cy + 8);
+    ctx.fillStyle = '#23262f'; rr(x, cy + 16, bw, 10, 5); ctx.fill(); ctx.fillStyle = c; if (r.pct > .05) { rr(x, cy + 16, Math.max(10, bw * r.pct / 100), 10, 5); ctx.fill(); if (r.flash > 0) { ctx.fillStyle = `rgba(255,255,255,${.5 * r.flash})`; rr(x, cy + 16, Math.max(10, bw * r.pct / 100), 10, 5); ctx.fill(); } }
+    ctx.textAlign = 'right'; ctx.fillStyle = r.flash > .05 ? '#ffe36e' : '#fff'; ctx.font = `800 ${Math.min(34, rowH * .42) * (1 + .08 * r.flash)}px ${f}`; ctx.fillText(r.pct.toFixed(1) + '%', x + w, cy + 4);
+    const vv = Math.round(r.votes); ctx.fillStyle = '#9aa0ad'; ctx.font = `600 14px ${f}`; ctx.fillText(vv + (vv === 1 ? ' vote' : ' votes'), x + w, cy + 24);
+    if (r.plusT > 0) { const q = ease(1 - r.plusT / 1.1); ctx.globalAlpha = Math.min(1, r.plusT * 2); ctx.fillStyle = '#7dffb0'; ctx.font = `800 17px ${f}`; ctx.fillText('+' + r.plus, x + w - 92, cy + 24 - q * 16); ctx.globalAlpha = 1; }
+    ctx.textAlign = 'left';
+  });
+  // map (colours cross-fade; newly reporting groups pulse)
+  const sc = 1.1, mx = 720, my = 118; ctx.save(); ctx.translate(mx, my); ctx.scale(sc, sc); ctx.lineJoin = 'round'; ctx.lineWidth = 1.6 / sc; ctx.strokeStyle = '#0f1117';
+  geoms.forEach(g => { const o = a.groups[g.id]; ctx.fillStyle = `rgb(${o.col.map(Math.round).join(',')})`; ctx.fill(g.path); ctx.stroke(g.path); });
+  geoms.forEach(g => { const o = a.groups[g.id]; if (o.pulse > 0) { ctx.save(); ctx.lineWidth = (2 + 4 * o.pulse) / sc; ctx.strokeStyle = `rgba(255,255,255,${o.pulse})`; ctx.stroke(g.path); ctx.restore(); } });
+  ctx.restore();
+  if (a.toastT > 0) { const al = Math.min(1, a.toastT * 2, (2.4 - a.toastT) * 6 + .01); ctx.globalAlpha = Math.max(0, al); ctx.fillStyle = '#fff'; ctx.font = `800 16px ${f}`; const tw = ctx.measureText(a.toast).width + 28; rr(W - 40 - tw, 112, tw, 32, 16); ctx.fill(); ctx.fillStyle = '#111'; ctx.textAlign = 'left'; ctx.fillText(a.toast, W - 40 - tw + 14, 133); ctx.globalAlpha = 1; }
+  // lead-change banner (slides up from the footer)
+  if (a.bannerT > 0) { const slide = ease(Math.min(1, (3 - a.bannerT) * 4)) * ease(Math.min(1, a.bannerT * 4)), by = H - 70 - 54 * slide; ctx.fillStyle = '#d3102a'; ctx.fillRect(0, by, W, 54); ctx.fillStyle = '#fff'; ctx.font = `800 24px ${f}`; ctx.textAlign = 'left'; ctx.fillText(a.banner.toUpperCase(), 40, by + 36); }
+  // footer
+  const rep = Object.keys(T.gv).length;
+  ctx.fillStyle = '#171a22'; ctx.fillRect(0, H - 70, W, 70); ctx.fillStyle = '#fff'; ctx.font = `800 22px ${f}`; ctx.textAlign = 'left';
+  ctx.fillText(`${Math.round(a.votes)} votes counted`, 40, H - 30); ctx.fillStyle = '#9aa0ad'; ctx.font = `600 18px ${f}`; ctx.fillText(`${rep} of ${geoms.length} groups reporting`, 300, H - 30);
+  if (total) { const lead = order[0], second = order[1], mg = ((T.counts[lead] || 0) - (T.counts[second] || 0)) / total * 100; ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = `800 20px ${f}`; ctx.fillText(`${TSR_candidateName(registry, lead)} leads by ${mg.toFixed(1)}`, W - 40, H - 30); }
+  ctx.fillStyle = '#23262f'; ctx.fillRect(0, H - 8, W, 8); ctx.fillStyle = '#d3102a'; ctx.fillRect(0, H - 8, W * u, 8);
+  $('sld').value = Math.round(u * 1000);
+}
+
+/* ---- playback: one always-running frame loop; play just advances the clock ---- */
+function frame(ts) {
+  const dt = Math.min(.1, Math.max(0, (ts - (prevTs || ts)) / 1000)); prevTs = ts;
+  if (playing) { u = Math.min(1, u + dt / +$('selLen').value); if (u >= 1) { playing = false; $('btnPlay').textContent = '▶ Replay'; } }
+  draw(dt); requestAnimationFrame(frame);
+}
+function play() { if (u >= 1) { u = 0; snap(); } playing = true; $('btnPlay').textContent = '❚❚ Pause'; }
+function pause() { playing = false; $('btnPlay').textContent = '▶ Play'; }
+
+/* ---- video export (records the canvas in real time) ---- */
+async function exportVideo() {
+  if (!window.MediaRecorder) { $('status').textContent = 'This browser can’t record video — try Chrome, Edge or Firefox.'; return; }
+  const types = ['video/mp4;codecs=avc1', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'], mime = types.find(t => MediaRecorder.isTypeSupported(t));
+  pause(); recording = true; $('btnExp').disabled = true; $('prog').style.display = 'block'; const len = +$('selLen').value, hold = 2.5;
+  const chunks = [], rec = new MediaRecorder(cv.captureStream(30), { mimeType: mime, videoBitsPerSecond: 8e6 });
+  rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  const done = new Promise(res => rec.onstop = res); rec.start(250); u = 0; snap();
+  const t0 = performance.now();
+  await new Promise(res => { (function step(ts) { const el = (ts - t0) / 1000; u = Math.min(1, el / len); $('prog').firstChild.style.width = Math.min(100, el / (len + hold) * 100) + '%'; $('status').textContent = `Recording… ${Math.min(len + hold, el).toFixed(0)} / ${len + hold}s — keep this tab open`; if (el >= len + hold) res(); else requestAnimationFrame(step); })(t0); });
+  rec.stop(); await done;
+  const ext = mime.startsWith('video/mp4') ? 'mp4' : 'webm', a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(chunks, { type: mime.split(';')[0] }));
+  a.download = `${cur.id}-replay.${ext}`; document.body.appendChild(a); a.click(); a.remove();
+  recording = false; $('btnExp').disabled = false; $('prog').style.display = 'none'; $('status').textContent = `Saved ${a.download}.` + (ext === 'webm' ? ' (WebM — most video editors and Discord play it; use a converter for Reddit/Twitter.)' : '');
+}
+
+/* ---- setup ---- */
+function fillRaces() { const rd = TSR_getRoundData(cur, $('selR').value); $('selRace').innerHTML = Object.keys(TSR_getRaces(rd)).map(n => `<option>${n.replace(/</g, '&lt;')}</option>`).join(''); rebuild(); }
+function fillRounds() { const o = [['first_round', 'First round']]; if (cur.runoff_round && TSR_roundVoteSum(cur.runoff_round) > 0) o.push(['runoff_round', 'Runoff']); $('selR').innerHTML = o.map(x => `<option value="${x[0]}">${x[1]}</option>`).join(''); const q = new URLSearchParams(location.search).get('r'); $('selR').value = o.some(x => x[0] === q) ? q : TSR_defaultRoundKey(cur); fillRaces(); }
+function rebuild() { pause(); buildBallots(); u = 1; snap(); }
+(async function () {
+  const [reg, hand, g, bt] = await Promise.all([fetch('../data/registries.json').then(r => r.json()), fetch('../data/tsrelects-results.json').then(r => r.json()), fetch('../data/groups.geojson').then(r => r.json()), fetch('../data/ballottsr/results.json').then(r => r.json()).catch(() => ({ elections: [] }))]);
+  registry = reg; geo = g; buildGeoms();
+  elections = OVR_getTsrElections(hand.concat((bt.elections || []).filter(e => !hand.some(h => h.id === e.id)))).filter(e => Object.keys(TSR_getRaces(TSR_getRoundData(e, 'first_round'))).length).sort((a, b) => new Date(b.date) - new Date(a.date));
+  $('selE').innerHTML = elections.map(e => `<option value="${e.id}">${e.title} — ${e.date}</option>`).join('');
+  const want = new URLSearchParams(location.search).get('e'); if (want) $('selE').value = EID_canon(want);
+  const pick = () => { cur = elections.find(e => e.id === $('selE').value) || elections[0]; fillRounds(); };
+  $('selE').onchange = pick; $('selR').onchange = fillRaces; $('selRace').onchange = rebuild;
+  $('btnPlay').onclick = () => playing ? pause() : play(); $('btnExp').onclick = exportVideo;
+  $('sld').oninput = () => { pause(); u = +$('sld').value / 1000; snap(); };
+  try { await document.fonts.ready; } catch (e) {}
+  pick(); const uq = parseFloat(new URLSearchParams(location.search).get('u')); if (uq >= 0) { u = Math.min(1, uq); snap(); }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

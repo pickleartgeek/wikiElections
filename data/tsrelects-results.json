@@ -292,7 +292,7 @@
             "nzb": 1,
             "ictoan": 0,
             "mf1": 0,
-            "hkf": 0
+            "hkf": 1
           },
           "6": {
             "wip": 1,
@@ -301,7 +301,7 @@
             "nzb": 0,
             "ictoan": 0,
             "mf1": 1,
-            "hkf": 1
+            "hkf": 0
           },
           "7": {
             "wip": 1,
@@ -340,10 +340,55 @@
             "nzb"
           ]
         }
+      },
+    "runoff_round": 
+      "Class 6 July 2026 Final RCV Round": {
+          "1": {
+            "wip": 1,
+            "nzb": 2
+          },
+          "2": {
+            "wip": 0,
+            "nzb": 0
+          },
+          "3": {
+            "wip": 5,
+            "nzb": 1
+          },
+          "4": {
+            "wip": 1,
+            "nzb": 0
+          },
+          "5": {
+            "wip": 1,
+            "nzb": 2
+          },
+          "6": {
+            "wip": 2,
+            "nzb": 0
+          },
+          "7": {
+            "wip": 1,
+            "nzb": 0
+          },
+          "8": {
+            "wip": 3,
+            "nzb": 0
+          },
+          "9": {
+            "wip": 1,
+            "nzb": 0
+          }
+        },
+      "race_calls": {
+        "Class 6 July 2026 Final RCV Round": {
+          "status": "winner",
+          "winners": [
+            "wip",
+          ]
+        }
       }
     },
-    "runoff_round": null
-  },
   {
     "id": "class5-2026-06",
     "title": "June 2026 Class 5 Mod Election",

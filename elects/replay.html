@@ -363,6 +363,25 @@ function play() { if (u >= 1) { u = 0; tabT = 0; snap(); } playing = true; $('bt
 function pause() { playing = false; $('btnPlay').textContent = '▶ Play'; }
 
 /* ---- video export (records the canvas in real time) ---- */
+/* MediaRecorder WebM has no duration in its header, so players show 0s and can't seek. Writes the real duration (ms) into the Info element. */
+function fixWebmDuration(buf, ms) {
+  const u8 = new Uint8Array(buf), vint = (i, keep) => { let l = 1, m = 0x80; while (l <= 8 && !(u8[i] & m)) { l++; m >>= 1; } let v = keep ? u8[i] : u8[i] & (m - 1), unk = (u8[i] & (m - 1)) === m - 1; for (let k = 1; k < l; k++) { v = v * 256 + u8[i + k]; unk = unk && u8[i + k] === 255; } return { len: l, val: v, unk }; };
+  const rd = (i) => { const id = vint(i, true), sz = vint(i + id.len, false); return { id: id.val, idLen: id.len, szLen: sz.len, size: sz.val, unk: sz.unk, data: i + id.len + sz.len }; };
+  try {
+    let e = rd(0); if (e.id !== 0x1A45DFA3) return buf; let pos = e.data + e.size;       // EBML header
+    const seg = rd(pos); if (seg.id !== 0x18538067) return buf;
+    let i = seg.data; const end = seg.unk ? u8.length : Math.min(u8.length, seg.data + seg.size);
+    while (i < end) { const c = rd(i); if (c.id === 0x1549A966) {                          // Info
+        const info = u8.subarray(c.data, c.data + c.size); let has = false; for (let k = 0; k + 2 < info.length; k++) if (info[k] === 0x44 && info[k + 1] === 0x89) { has = true; break; } if (has) return buf;
+        const dur = new Uint8Array(11); dur[0] = 0x44; dur[1] = 0x89; dur[2] = 0x88; new DataView(dur.buffer).setFloat64(3, ms, false);   // Duration (ms with default 1ms timescale)
+        const newSize = c.size + 11, hdr = new Uint8Array([0x15, 0x49, 0xA9, 0x66, 0x01, 0, 0, 0, 0, 0, 0, 0]); let v = newSize; for (let k = 11; k >= 5; k--) { hdr[k] = v % 256; v = Math.floor(v / 256); }
+        const delta = hdr.length + 11 - (c.idLen + c.szLen), out = new Uint8Array(u8.length + delta + 11 - 11 + 0);
+        out.set(u8.subarray(0, i), 0); out.set(hdr, i); out.set(u8.subarray(c.data, c.data + c.size), i + hdr.length); out.set(dur, i + hdr.length + c.size); out.set(u8.subarray(c.data + c.size), i + hdr.length + c.size + 11);
+        if (!seg.unk) { let sv = seg.size + delta, sp = seg.data - 1; for (let k = 0; k < seg.szLen; k++) { out[sp - k] = sv % 256; sv = Math.floor(sv / 256); } out[seg.data - seg.szLen] = (out[seg.data - seg.szLen] & (0xFF >> seg.szLen)) | (0x80 >> (seg.szLen - 1)); }
+        return out.buffer; }
+      if (c.unk) break; i = c.data + c.size; }
+  } catch (err) {} return buf;
+}
 async function exportVideo() {
   if (!window.MediaRecorder) { $('status').textContent = 'This browser can’t record video — try Chrome, Edge or Firefox.'; return; }
   const types = ['video/mp4;codecs=avc1', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'], mime = types.find(t => MediaRecorder.isTypeSupported(t));
@@ -373,7 +392,7 @@ async function exportVideo() {
   const t0 = performance.now();
   await new Promise(res => { (function step(ts) { const el = (ts - t0) / 1000; u = Math.min(1, el / len); tabT = tab ? Math.max(0, Math.min(tl, el - len)) : 0; const tot = len + tl + hold; $('prog').firstChild.style.width = Math.min(100, el / tot * 100) + '%'; $('status').textContent = `Recording… ${Math.min(tot, el).toFixed(0)} / ${Math.round(tot)}s — keep this tab open`; if (el >= tot) res(); else requestAnimationFrame(step); })(t0); });
   rec.stop(); await done;
-  const ext = mime.startsWith('video/mp4') ? 'mp4' : 'webm', a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(chunks, { type: mime.split(';')[0] }));
+  const ext = mime.startsWith('video/mp4') ? 'mp4' : 'webm', a = document.createElement('a'); let blob = new Blob(chunks, { type: mime.split(';')[0] }); if (ext === 'webm') blob = new Blob([fixWebmDuration(await blob.arrayBuffer(), (performance.now() - t0))], { type: 'video/webm' }); a.href = URL.createObjectURL(blob);
   a.download = `${cur.id}-replay.${ext}`; document.body.appendChild(a); a.click(); a.remove();
   recording = false; $('btnExp').disabled = false; $('prog').style.display = 'none'; $('status').textContent = `Saved ${a.download}.` + (ext === 'webm' ? ' (WebM — most video editors and Discord play it; use a converter for Reddit/Twitter.)' : '');
 }

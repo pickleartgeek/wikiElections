@@ -72,6 +72,127 @@
       "resultId": "class1-2026-10"
     },
     {
+      "id": "poll_t3_1xdh0g8_1792769299401",
+      "title": "Official Class 2 Special Mod Election",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-10-23",
+      "method": "rcv",
+      "status": "closed",
+      "ballots": 22,
+      "opts": [
+        {
+          "name": "u/Filipinowonderer2442 (The Spinner Party)",
+          "id": "fw2442",
+          "firstRound": 8
+        },
+        {
+          "name": "u/Max_flares",
+          "id": "mf1",
+          "firstRound": 5
+        },
+        {
+          "name": "u/JungleJumpersfan (Union of the Democratic Center)",
+          "id": "tmf",
+          "firstRound": 9
+        }
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "tallies": {
+            "u/Filipinowonderer2442 (The Spinner Party)": 8,
+            "u/Max_flares": 5,
+            "u/JungleJumpersfan (Union of the Democratic Center)": 9
+          },
+          "exhausted": 0
+        },
+        {
+          "round": 2,
+          "tallies": {
+            "u/Filipinowonderer2442 (The Spinner Party)": 8,
+            "u/JungleJumpersfan (Union of the Democratic Center)": 10
+          },
+          "exhausted": 4
+        }
+      ],
+      "winner": "u/JungleJumpersfan (Union of the Democratic Center)",
+      "propositions": [
+        {
+          "number": "0",
+          "name": "Also vote in Class 1+props",
+          "author": "Election Secretary",
+          "result": {
+            "aye": 12,
+            "nay": 6
+          }
+        }
+      ],
+      "kind": "race",
+      "resultId": "class2-2026-10"
+    },
+    {
+      "id": "poll_t3_1xdhgth_1792770276796",
+      "title": "Official Class 1 Mod Election + Ballot Propositions",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-10-23",
+      "method": "fptp",
+      "status": "closed",
+      "ballots": 18,
+      "opts": [
+        {
+          "name": "u/One-Community-3753(New Democrats of TSR,The Spinner Party)",
+          "id": "oc1",
+          "firstRound": 13
+        },
+        {
+          "name": "u/Disguised_VW_Beetle",
+          "id": "dvwb",
+          "firstRound": 5
+        }
+      ],
+      "winner": "u/One-Community-3753(New Democrats of TSR,The Spinner Party)",
+      "propositions": [
+        {
+          "number": "59",
+          "name": "Better Elections Act (A Third Time) (BEAATA)",
+          "author": "Representative-Fee65",
+          "result": {
+            "aye": 5,
+            "nay": 11
+          }
+        },
+        {
+          "number": "60",
+          "name": "Elected Council Supremacy Amendment",
+          "author": "practicalpurpose",
+          "result": {
+            "aye": 11,
+            "nay": 5
+          }
+        },
+        {
+          "number": "61",
+          "name": "Elections Secretary Conclave Amendment",
+          "author": "practicalpurpose",
+          "result": {
+            "aye": 13,
+            "nay": 2
+          }
+        },
+        {
+          "number": "63",
+          "name": "Ron Paul Recognition Act",
+          "author": "practicalpurpose",
+          "result": {
+            "aye": 9,
+            "nay": 7
+          }
+        }
+      ],
+      "kind": "race",
+      "resultId": "class1-2026-10"
+    },
+    {
       "id": "poll_t3_1wtsugo_1790733959307",
       "title": "Shall PickleArtGeek be elevated to PermaMod to serve as Election Secretary?",
       "createdBy": "PickleArtGeek",

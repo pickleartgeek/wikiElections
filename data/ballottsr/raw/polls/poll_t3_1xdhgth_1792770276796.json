@@ -6,7 +6,7 @@
   "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xdhgth",
   "method": "fptp",
   "isOfficialElection": true,
-  "status": "open",
+  "status": "closed",
   "votingClosesAt": 1792943076796,
   "propositionsOnly": false,
   "options": [
@@ -95,8 +95,83 @@
       ]
     }
   ],
-  "resultsEmbargoed": true,
-  "revealAt": 1792770636796,
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 18,
+    "finalPct": {
+      "opt_0_7syyq1": 72.22222222222221,
+      "opt_1_08e18a": 27.77777777777778
+    },
+    "winnerId": "opt_0_7syyq1",
+    "cacheVersion": 2,
+    "groupWinners": {
+      "2": "opt_0_7syyq1",
+      "3": "opt_0_7syyq1",
+      "4": "opt_1_08e18a",
+      "5": "opt_0_7syyq1",
+      "6": "opt_1_08e18a",
+      "7": "opt_0_7syyq1",
+      "8": "opt_0_7syyq1"
+    },
+    "groupPct": {
+      "2": {
+        "opt_0_7syyq1": 50,
+        "opt_1_08e18a": 50
+      },
+      "3": {
+        "opt_0_7syyq1": 100,
+        "opt_1_08e18a": 0
+      },
+      "4": {
+        "opt_0_7syyq1": 0,
+        "opt_1_08e18a": 100
+      },
+      "5": {
+        "opt_0_7syyq1": 100,
+        "opt_1_08e18a": 0
+      },
+      "6": {
+        "opt_0_7syyq1": 33.33333333333333,
+        "opt_1_08e18a": 66.66666666666666
+      },
+      "7": {
+        "opt_0_7syyq1": 100,
+        "opt_1_08e18a": 0
+      },
+      "8": {
+        "opt_0_7syyq1": 80,
+        "opt_1_08e18a": 20
+      }
+    },
+    "groupBallotCount": {
+      "2": 2,
+      "3": 1,
+      "4": 1,
+      "5": 2,
+      "6": 3,
+      "7": 4,
+      "8": 5
+    }
+  },
+  "propositionResults": {
+    "prop_0_gfylql": {
+      "aye": 5,
+      "nay": 11
+    },
+    "prop_1_8c9xkz": {
+      "aye": 11,
+      "nay": 5
+    },
+    "prop_2_1mcf4y": {
+      "aye": 13,
+      "nay": 2
+    },
+    "prop_3_piejrf": {
+      "aye": 9,
+      "nay": 7
+    }
+  },
   "exitPoll": {
     "question": "What influenced your vote the most?",
     "options": [

@@ -37,6 +37,104 @@
       }
     },
     {
+      "id": "class2-2026-10",
+      "title": "Class 2 October 2026 Special Election",
+      "date": "2026-10-23",
+      "party": "Regular",
+      "precincts_reporting": 100,
+      "precincts_total": 100,
+      "source": "ballottsr",
+      "first_round": {
+        "races": {
+          "Class 2 October 2026 Special First Round": {
+            "2": {
+              "fw2442": 1,
+              "mf1": 0,
+              "tmf": 2
+            },
+            "3": {
+              "fw2442": 1,
+              "mf1": 0,
+              "tmf": 0
+            },
+            "4": {
+              "fw2442": 1,
+              "mf1": 2,
+              "tmf": 0
+            },
+            "5": {
+              "fw2442": 3,
+              "mf1": 0,
+              "tmf": 1
+            },
+            "6": {
+              "fw2442": 1,
+              "mf1": 0,
+              "tmf": 2
+            },
+            "7": {
+              "fw2442": 1,
+              "mf1": 1,
+              "tmf": 2
+            },
+            "8": {
+              "fw2442": 0,
+              "mf1": 1,
+              "tmf": 2
+            },
+            "9": {
+              "fw2442": 0,
+              "mf1": 1,
+              "tmf": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "class1-2026-10",
+      "title": "Class 1 October 2026 Election",
+      "date": "2026-10-23",
+      "party": "Regular",
+      "precincts_reporting": 100,
+      "precincts_total": 100,
+      "source": "ballottsr",
+      "first_round": {
+        "races": {
+          "Class 1 October 2026 First Round": {
+            "2": {
+              "oc1": 1,
+              "dvwb": 1
+            },
+            "3": {
+              "oc1": 1,
+              "dvwb": 0
+            },
+            "4": {
+              "oc1": 0,
+              "dvwb": 1
+            },
+            "5": {
+              "oc1": 2,
+              "dvwb": 0
+            },
+            "6": {
+              "oc1": 1,
+              "dvwb": 2
+            },
+            "7": {
+              "oc1": 4,
+              "dvwb": 0
+            },
+            "8": {
+              "oc1": 4,
+              "dvwb": 1
+            }
+          }
+        }
+      }
+    },
+    {
       "id": "class7-2026-09",
       "title": "Class 7 September 2026 Election",
       "date": "2026-09-22",

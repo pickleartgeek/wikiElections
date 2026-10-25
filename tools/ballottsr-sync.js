@@ -137,6 +137,8 @@ function firstRound(poll) {
 const r4 = x => Math.round(x * 10000) / 10000;
 
 /* ------------------------------------------------------------------ 3. polls -> elections/<id>.json */
+const isHeld = el => daysBetween(TODAY, el.electionDate) > 1;
+const isManaged = el => (cfg.managed || []).includes(el.id) || (el.polls || []).some(p => p.source === 'ballottsr');
 function parsePolls(raw, report, stats) {
   const elections = loadElections(), parsed = [], byElection = {};
   raw.filter(p => !isOfficial(p)).forEach(p => {
@@ -158,7 +160,9 @@ function parsePolls(raw, report, stats) {
     if (!cands.length) return skip(`no election file for Class ${cls} around ${rec.date}`);
     const el = cands[0], votes = firstRound(p), n = rec.ballots;
     // history is frozen: once an election's date has passed, its hand-curated poll list is never touched
-    if (daysBetween(TODAY, el.data.electionDate) > 1) return skip(`election ${el.data.id} already held (history frozen)`);
+    // ...unless the sync already manages it (it holds ballottsr polls, or it is listed in config.managed): then its polls stay in the file after the vote.
+    if (isHeld(el.data) && !isManaged(el.data)) return skip(`election ${el.data.id} already held (history frozen)`);
+    if (isHeld(el.data) && daysBetween(rec.date, el.data.electionDate) > 1) return skip(`poll made after ${el.data.id} was held`);
     const shares = {}, unmapped = [], considered = p.options.filter(o => !resolve(o.name, el.data).ignored);
     let ok = 0;
     p.options.forEach(o => {
@@ -179,8 +183,9 @@ function parsePolls(raw, report, stats) {
     rec.included = true; rec.electionId = el.data.id; rec.pollster = entry.pollster; rec.shares = shares; parsed.push(rec);
     (byElection[el.data.id] = byElection[el.data.id] || []).push(entry);
   });
-  // merge into each election file: drop previous auto polls + superseded hand-entered snapshots, add fresh ones
+  // merge into each election file: held elections that the sync doesn't manage are never touched; drop previous auto polls + superseded hand-entered snapshots, add fresh ones
   elections.forEach(e => {
+    if (isHeld(e.data) && !isManaged(e.data)) return;
     const fresh = (byElection[e.data.id] || []).sort((a, b) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
     const kept = (e.data.polls || []).filter(p => p.source !== 'ballottsr' && !(cfg.supersede || []).includes(p.id));
     const next = Object.assign({}, e.data, { polls: kept.concat(fresh) });

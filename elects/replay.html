@@ -66,7 +66,7 @@ h1.rp-h{font-family:var(--font-elects-display);font-size:clamp(26px,5vw,38px);ma
 
 <main class="wrap" id="main" tabindex="-1">
   <h1 class="rp-h">Election replay <span class="rp-exp">Experimental</span></h1>
-  <p class="rp-note">Watch an election night unfold vote by vote, then export it as a video. Vote times are <b>simulated</b> for now (each group's real totals, spread over the voting window); real timestamps can replace them later.</p>
+  <p class="rp-note">Watch an election night unfold vote by vote, then export it as a video. Where the site recorded how the count unfolded, the replay uses that real history; otherwise vote times are <b>simulated</b> (each group's real totals spread over the voting window).</p>
   <div class="rp-ctl">
     <div><label for="selE">Election</label><select id="selE"></select></div>
     <div><label for="selR">Round</label><select id="selR"></select></div>
@@ -88,7 +88,7 @@ h1.rp-h{font-family:var(--font-elects-display);font-size:clamp(26px,5vw,38px);ma
 initSiteChrome();
 const $ = id => document.getElementById(id), W = 1280, H = 720, WINDOW_H = 72;
 const cv = $('cv'), ctx = cv.getContext('2d');
-let registry, geo, elections = [], cur = null, geoms = [], ballots = [], cands = [], races = {}, u = 1, playing = false, last = 0, photos = {}, recording = false;
+let tab = null, tabT = 0, TAB_RL = 4.2, timelines = {}, realMap = null, registry, geo, elections = [], cur = null, geoms = [], ballots = [], cands = [], races = {}, u = 1, playing = false, last = 0, photos = {}, recording = false;
 const sum = o => Object.values(o).reduce((a, b) => a + b, 0), hexOk = h => /^#[0-9a-f]{6}$/i.test(h) ? h : '#888888';
 function rng(seed) { let a = 0; for (const ch of seed) a = (Math.imul(a, 31) + ch.charCodeAt(0)) | 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
@@ -103,19 +103,74 @@ function buildGeoms() {
   geoms = fs.map(f => ({ id: String(f.properties.id), path: new Path2D(polys(f).map(p => p.map(r => r.map((pt, i) => `${i ? 'L' : 'M'}${(ox + (pt[0] - x0) * c * k).toFixed(1)} ${(oy + (y1 - pt[1]) * k).toFixed(1)}`).join('') + 'Z').join('')).join('')) }));
 }
 
-/* ---- simulated ballot timeline ---- */
-function buildBallots() {
+/* ---- ballot timeline: real (reconstructed from update history, data/timelines/<id>.json) when available, else simulated ---- */
+async function getTimeline(id) { if (id in timelines) return timelines[id]; try { const r = await fetch(`../data/timelines/${id}.json`); timelines[id] = r.ok ? await r.json() : null; } catch (e) { timelines[id] = null; } return timelines[id]; }
+function loadPhotos() { cands.forEach(k => { if (photos[k]) return; const p = TSR_candidate(registry, k).photo; if (!p) return; const im = new Image(); im.onload = () => { photos[k] = im; }; im.src = '../assets/img/candidates/' + p; }); }
+function realBallots(tl, race) {
+  const snaps = tl.snapshots.filter(sn => sn.races[race]); if (!snaps.length) return false;
+  const CAP = 90 * 60e3, LEAD = 45 * 60e3, T = snaps.map(sn => Date.parse(sn.t)); let pos = [LEAD];
+  for (let i = 1; i < T.length; i++) pos.push(pos[i - 1] + Math.min(T[i] - T[i - 1], CAP));
+  const end = pos[pos.length - 1] + 20 * 60e3; realMap = [{ u: 0, t: T[0] - LEAD }].concat(pos.map((x, i) => ({ u: x / end, t: T[i] }))).concat([{ u: 1, t: T[T.length - 1] + 20 * 60e3 }]);
+  ballots = []; let prev = {}; const tot = {};
+  snaps.forEach((sn, i) => { const cur2 = {}; Object.entries(sn.races[race]).forEach(([g, v]) => Object.entries(v).forEach(([k, n]) => { cur2[g + '|' + k] = n; }));
+    new Set(Object.keys(prev).concat(Object.keys(cur2))).forEach(key => { const d = (cur2[key] || 0) - (prev[key] || 0); if (!d) return; const [g, k] = key.split('|');
+      for (let n = 0; n < Math.abs(d); n++) ballots.push({ t: pos[i] / end, g, k, d: Math.sign(d) }); });
+    prev = cur2; });
+  Object.entries(prev).forEach(([key, n]) => { const k = key.split('|')[1]; tot[k] = (tot[k] || 0) + n; });
+  cands = Object.entries(tot).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).map(([k]) => k); return true;
+}
+const tabLen = () => tab ? tab.rounds.length * TAB_RL + 1.5 : 0;
+function irv(bl, cs) {
+  const first = {}; bl.forEach(b => { first[b.r[0]] = (first[b.r[0]] || 0) + 1; });
+  let active = new Set(cs); const rounds = [];
+  for (;;) {
+    const tallies = {}, gv = {}; let ex = 0; active.forEach(k => { tallies[k] = 0; });
+    bl.forEach(b => { const c = b.r.find(x => active.has(x)); if (!c) { ex++; return; } tallies[c]++; (gv[b.g] = gv[b.g] || {})[c] = ((gv[b.g] || {})[c] || 0) + 1; });
+    const tot = sum(tallies), sorted = Object.entries(tallies).sort((a, b) => b[1] - a[1]), rd = { tallies, gv, exhausted: ex }; rounds.push(rd);
+    if (active.size <= 2 || sorted[0][1] * 2 > tot) { rd.winner = sorted[0][0]; break; }
+    const low = Object.entries(tallies).sort((a, b) => a[1] - b[1] || (first[a[0]] || 0) - (first[b[0]] || 0))[0][0]; rd.eliminated = low; active = new Set([...active].filter(k => k !== low));
+  }
+  return rounds;
+}
+function rankedBallots(tl) {
+  const bs = tl.ballots.slice().sort((a, b) => Date.parse(a.t) - Date.parse(b.t)), T = bs.map(b => Date.parse(b.t)), CAP = 90 * 60e3, LEAD = 20 * 60e3, TAIL = 20 * 60e3, pos = [LEAD];
+  for (let i = 1; i < T.length; i++) pos.push(pos[i - 1] + Math.min(T[i] - T[i - 1], CAP));
+  const end = pos[pos.length - 1] + TAIL; realMap = [{ u: 0, t: T[0] - LEAD }].concat(pos.map((x, i) => ({ u: x / end, t: T[i] }))).concat([{ u: 1, t: T[T.length - 1] + TAIL }]);
+  ballots = bs.map((b, i) => ({ t: pos[i] / end, g: String(b.g), k: b.r[0], d: 1 }));
+  const first = {}; bs.forEach(b => { first[b.r[0]] = (first[b.r[0]] || 0) + 1; });
+  cands = (tl.candidates || Object.keys(first)).slice().sort((a, b) => (first[b] || 0) - (first[a] || 0));
+  const rounds = irv(bs, cands); tab = rounds.length > 1 ? { rounds } : null;
+}
+function tabTarget() {
+  const R = tab.rounds.length, r = Math.min(R - 1, Math.floor(tabT / TAB_RL)), local = tabT - r * TAB_RL, idx = r === R - 1 ? R - 1 : (local < 1.4 ? r : r + 1), rd = tab.rounds[idx];
+  const counts = {}; cands.forEach(k => { counts[k] = rd.tallies[k] || 0; }); const elim = new Set(); for (let i = 0; i < idx; i++) elim.add(tab.rounds[i].eliminated);
+  const cr = tab.rounds[r];
+  return { total: sum(counts), counts, gv: rd.gv, order: cands.slice().sort((a, b) => (elim.has(a) - elim.has(b)) || counts[b] - counts[a]),
+    tab: { idx, r, local, R, elim, exhausted: rd.exhausted, elimNow: cr.eliminated || null, final: r === R - 1, winner: tab.rounds[R - 1].winner } };
+}
+async function buildBallots() {
   const rd = TSR_getRoundData(cur, $('selR').value), raceData = TSR_getRaces(rd)[$('selRace').value] || {}, r = rng(cur.id + $('selRace').value + $('selR').value);
-  ballots = []; const tot = TSR_raceTotals(raceData);
-  cands = Object.entries(tot).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).map(([k]) => k);
-  Object.entries(raceData).forEach(([g, votes]) => {
-    const delay = r() * 0.18;
-    Object.entries(votes).forEach(([k, n]) => { for (let i = 0; i < n; i++) {
-      const q = r(); let t = q < .35 ? Math.pow(r(), 2) * .3 : q < .75 ? .3 + r() * .5 : .8 + Math.pow(r(), .6) * .2;
-      ballots.push({ t: Math.min(1, delay + t * (1 - delay)), g, k }); } });
-  });
-  ballots.sort((a, b) => a.t - b.t);
-  cands.forEach(k => { if (photos[k]) return; const p = TSR_candidate(registry, k).photo; if (!p) return; const im = new Image(); im.onload = () => { photos[k] = im; }; im.src = '../assets/img/candidates/' + p; });
+  realMap = null; tab = null; tabT = 0; let real = false, ranked = false;
+  if ($('selR').value === 'first_round') { const tl = await getTimeline(cur.id); if (tl && tl.source === 'ballots') { rankedBallots(tl); real = ranked = true; } else if (tl) real = realBallots(tl, $('selRace').value); }
+  if (!real) {
+    ballots = []; const tot = TSR_raceTotals(raceData);
+    cands = Object.entries(tot).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).map(([k]) => k);
+    Object.entries(raceData).forEach(([g, votes]) => {
+      const delay = r() * 0.18;
+      Object.entries(votes).forEach(([k, n]) => { for (let i = 0; i < n; i++) {
+        const q = r(); let t = q < .35 ? Math.pow(r(), 2) * .3 : q < .75 ? .3 + r() * .5 : .8 + Math.pow(r(), .6) * .2;
+        ballots.push({ t: Math.min(1, delay + t * (1 - delay)), g, k, d: 1 }); } });
+    });
+  }
+  ballots.sort((a, b) => a.t - b.t); loadPhotos();
+  ranked = ranked && !!tab;
+  $('status').textContent = ranked ? 'Built from the real ballots: every vote at the moment it was cast (long quiet stretches are shortened), followed by the ranked-choice tabulation.' : real ? 'Timeline reconstructed from the site’s real update history (times = when each result was entered; long quiet stretches are shortened).' : 'No recorded update history for this election — vote times are simulated.';
+  return real;
+}
+function clockLabel() {
+  if (!realMap) { const hour = u * WINDOW_H; return `Day ${1 + Math.floor(Math.min(hour, WINDOW_H - 0.01) / 24)} · ${String(Math.floor(hour % 24)).padStart(2, '0')}:${String(Math.floor((hour % 1) * 60)).padStart(2, '0')}`; }
+  let i = 1; while (i < realMap.length - 1 && realMap[i].u < u) i++; const a = realMap[i - 1], b = realMap[i], f = b.u > a.u ? (u - a.u) / (b.u - a.u) : 1;
+  return new Date(a.t + (b.t - a.t) * f).toLocaleString('en-GB', { timeZone: 'Europe/Bratislava', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).replace(',', ' ·');
 }
 
 /* ---- drawing: a continuous render loop with NBC-style motion (eased bars, sliding rank changes, vote flashes, group pulses, lead-change banner) ---- */
@@ -128,8 +183,10 @@ let anim = null, snapNext = true, prevTs = 0, uPrev = 0;
 function snap() { snapNext = true; }
 function target() {
   let n = 0; while (n < ballots.length && ballots[n].t <= u) n++;
-  const counts = {}, gv = {}; for (let i = 0; i < n; i++) { const b = ballots[i]; counts[b.k] = (counts[b.k] || 0) + 1; (gv[b.g] = gv[b.g] || {})[b.k] = ((gv[b.g] || {})[b.k] || 0) + 1; }
-  return { total: n, counts, gv, order: cands.slice().sort((a, b) => (counts[b] || 0) - (counts[a] || 0)) };
+  const counts = {}, gv = {}; let tn = 0; for (let i = 0; i < n; i++) { const b = ballots[i]; tn += b.d; counts[b.k] = (counts[b.k] || 0) + b.d; (gv[b.g] = gv[b.g] || {})[b.k] = ((gv[b.g] || {})[b.k] || 0) + b.d; }
+  Object.keys(gv).forEach(g => { if (sum(gv[g]) <= 0) delete gv[g]; });
+  if (tab && tabT > 0) return tabTarget();
+  return { total: tn, counts, gv, order: cands.slice().sort((a, b) => (counts[b] || 0) - (counts[a] || 0)) };
 }
 function groupTarget(v) { if (!v) return [35, 38, 47]; const s = Object.entries(v).sort((a, b) => b[1] - a[1]); return rgbOf(s[1] && s[1][1] === s[0][1] ? '#6b6f7a' : shade(s[0][0], s[0][1] / sum(v))); }
 function step(dt) {
@@ -148,7 +205,7 @@ function step(dt) {
     else { if (T.gv[g.id] && !o.seen) { o.seen = true; o.pulse = 1; a.toast = `GROUP ${g.id} REPORTING`; a.toastT = 2.4; }
       o.col = o.col.map((c, i) => c + (tc[i] - c) * (1 - Math.exp(-dt * 6))); o.pulse = Math.max(0, o.pulse - dt * 1.6); } });
   const lead = T.total ? T.order[0] : null;
-  if (!jump && lead && a.lead && lead !== a.lead && (a.last[lead] || 0) > 0 && T.total >= 6) { a.banner = `LEAD CHANGE · ${TSR_candidateName(registry, lead)} takes the lead`; a.bannerT = 3; }
+  if (!jump && lead && a.lead && lead !== a.lead && (a.last[lead] || 0) > 0 && T.total >= 6 && !T.tab) { a.banner = `LEAD CHANGE · ${TSR_candidateName(registry, lead)} takes the lead`; a.bannerT = 3; }
   a.lead = lead; a.bannerT = Math.max(0, a.bannerT - dt); a.toastT = Math.max(0, a.toastT - dt);
   a.votes += (T.total - a.votes) * (1 - Math.exp(-dt * 10)); if (jump) a.votes = T.total;
   snapNext = false; uPrev = u; return { T, rowH, top };
@@ -160,26 +217,27 @@ function draw(dt) {
   ctx.fillStyle = '#fff'; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
   ctx.font = `800 32px ${f}`; ctx.fillText(cur.title.toUpperCase(), 40, 48);
   ctx.font = `600 18px ${f}`; ctx.fillStyle = '#9aa0ad'; ctx.fillText($('selRace').value + ($('selR').value === 'runoff_round' ? ' · Runoff' : ''), 40, 76);
-  const hour = u * WINDOW_H; ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = `800 30px ${f}`;
-  ctx.fillText(`Day ${1 + Math.floor(Math.min(hour, WINDOW_H - 0.01) / 24)} · ${String(Math.floor(hour % 24)).padStart(2, '0')}:${String(Math.floor((hour % 1) * 60)).padStart(2, '0')}`, W - 40, 48);
-  ctx.font = `600 15px ${f}`; ctx.fillStyle = '#9aa0ad'; ctx.fillText('SIMULATED TIMELINE · EXPERIMENTAL', W - 40, 76);
+  ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = `800 30px ${f}`;
+  if (T.tab) ctx.font = `800 22px ${f}`; ctx.fillText(T.tab ? 'RANKED-CHOICE TABULATION' : clockLabel(), W - 40, 48);
+  ctx.font = `600 15px ${f}`; ctx.fillStyle = '#9aa0ad'; ctx.fillText(T.tab ? `ROUND ${T.tab.idx + 1} OF ${T.tab.R}` : tab ? 'REAL BALLOT TIMES' : realMap ? 'RECONSTRUCTED FROM UPDATE HISTORY' : 'SIMULATED TIMELINE · EXPERIMENTAL', W - 40, 76);
   // candidate rows (sliding)
   ctx.textAlign = 'left';
   order.slice().sort((x, y) => a.rows[x].y - a.rows[y].y).forEach(k => {
-    const r = a.rows[k], y = r.y, rank = order.indexOf(k), c = hexOk(TSR_candidateColor(registry, k)), cd = TSR_candidate(registry, k), p = TSR_party(registry, cd.party), ph = Math.min(60, rowH - 14), cy = y + rowH / 2;
+    const r = a.rows[k], y = r.y, rank = order.indexOf(k), c = hexOk(TSR_candidateColor(registry, k)), cd = TSR_candidate(registry, k), p = TSR_party(registry, cd.party), ph = Math.min(60, rowH - 14), cy = y + rowH / 2, dim = T.tab && T.tab.elim.has(k); ctx.globalAlpha = dim ? .38 : 1;
     if (r.flash > 0) { const g = ctx.createLinearGradient(0, 0, 680, 0); g.addColorStop(0, `rgba(255,255,255,${0.16 * r.flash})`); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; rr(24, y + 2, 660, rowH - 4, 10); ctx.fill(); }
     ctx.save(); ctx.beginPath(); ctx.arc(40 + ph / 2, cy, ph / 2, 0, 7); ctx.clip(); ctx.fillStyle = '#2a2e3a'; ctx.fillRect(40, cy - ph / 2, ph, ph);
     if (photos[k]) ctx.drawImage(photos[k], 40, cy - ph / 2, ph, ph); ctx.restore();
     ctx.lineWidth = 3 + 2 * r.flash; ctx.strokeStyle = c; ctx.beginPath(); ctx.arc(40 + ph / 2, cy, ph / 2, 0, 7); ctx.stroke();
     const x = 40 + ph + 16, w = 590 - ph, bw = w - 120;
     ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.min(24, rowH * .3)}px ${f}`; ctx.fillText(cd.name, x, cy - 8);
-    if (rank === 0 && total) { const tw = ctx.measureText(cd.name).width; ctx.font = `800 ${Math.min(12, rowH * .15)}px ${f}`; const lw = ctx.measureText('LEADING').width + 14; ctx.fillStyle = '#fff'; rr(x + tw + 10, cy - 8 - Math.min(16, rowH * .2), lw, Math.min(18, rowH * .22), 4); ctx.fill(); ctx.fillStyle = '#111'; ctx.fillText('LEADING', x + tw + 17, cy - 8 - Math.min(16, rowH * .2) + Math.min(13, rowH * .16)); }
+    { const tag = T.tab ? (T.tab.elim.has(k) ? ['ELIMINATED', '#d3102a', '#fff'] : (T.tab.final && T.tab.local > .6 && k === T.tab.winner) ? ['WINNER', '#1f8f4e', '#fff'] : (T.tab.elimNow === k && T.tab.idx === T.tab.r && T.tab.local > .4) ? ['ELIMINATED', '#d3102a', '#fff'] : null) : (rank === 0 && total ? ['LEADING', '#fff', '#111'] : null);
+      if (tag) { const tw = ctx.measureText(cd.name).width; ctx.font = `800 ${Math.min(12, rowH * .15)}px ${f}`; const lw = ctx.measureText(tag[0]).width + 14; ctx.fillStyle = tag[1]; ctx.globalAlpha = 1; rr(x + tw + 10, cy - 8 - Math.min(16, rowH * .2), lw, Math.min(18, rowH * .22), 4); ctx.fill(); ctx.fillStyle = tag[2]; ctx.fillText(tag[0], x + tw + 17, cy - 8 - Math.min(16, rowH * .2) + Math.min(13, rowH * .16)); ctx.globalAlpha = dim ? .38 : 1; } }
     ctx.fillStyle = '#9aa0ad'; ctx.font = `600 ${Math.min(14, rowH * .18)}px ${f}`; ctx.fillText(p ? p.name : '', x, cy + 8);
     ctx.fillStyle = '#23262f'; rr(x, cy + 16, bw, 10, 5); ctx.fill(); ctx.fillStyle = c; if (r.pct > .05) { rr(x, cy + 16, Math.max(10, bw * r.pct / 100), 10, 5); ctx.fill(); if (r.flash > 0) { ctx.fillStyle = `rgba(255,255,255,${.5 * r.flash})`; rr(x, cy + 16, Math.max(10, bw * r.pct / 100), 10, 5); ctx.fill(); } }
     ctx.textAlign = 'right'; ctx.fillStyle = r.flash > .05 ? '#ffe36e' : '#fff'; ctx.font = `800 ${Math.min(34, rowH * .42) * (1 + .08 * r.flash)}px ${f}`; ctx.fillText(r.pct.toFixed(1) + '%', x + w, cy + 4);
     const vv = Math.round(r.votes); ctx.fillStyle = '#9aa0ad'; ctx.font = `600 14px ${f}`; ctx.fillText(vv + (vv === 1 ? ' vote' : ' votes'), x + w, cy + 24);
     if (r.plusT > 0) { const q = ease(1 - r.plusT / 1.1); ctx.globalAlpha = Math.min(1, r.plusT * 2); ctx.fillStyle = '#7dffb0'; ctx.font = `800 17px ${f}`; ctx.fillText('+' + r.plus, x + w - 92, cy + 24 - q * 16); ctx.globalAlpha = 1; }
-    ctx.textAlign = 'left';
+    ctx.textAlign = 'left'; ctx.globalAlpha = 1;
   });
   // map (colours cross-fade; newly reporting groups pulse)
   const sc = 1.1, mx = 720, my = 118; ctx.save(); ctx.translate(mx, my); ctx.scale(sc, sc); ctx.lineJoin = 'round'; ctx.lineWidth = 1.6 / sc; ctx.strokeStyle = '#0f1117';
@@ -192,31 +250,35 @@ function draw(dt) {
   // footer
   const rep = Object.keys(T.gv).length;
   ctx.fillStyle = '#171a22'; ctx.fillRect(0, H - 70, W, 70); ctx.fillStyle = '#fff'; ctx.font = `800 22px ${f}`; ctx.textAlign = 'left';
-  ctx.fillText(`${Math.round(a.votes)} votes counted`, 40, H - 30); ctx.fillStyle = '#9aa0ad'; ctx.font = `600 18px ${f}`; ctx.fillText(`${rep} of ${geoms.length} groups reporting`, 300, H - 30);
+  ctx.fillText(T.tab ? `Round ${T.tab.idx + 1} of ${T.tab.R}` : `${Math.round(a.votes)} votes counted`, 40, H - 30); ctx.fillStyle = '#9aa0ad'; ctx.font = `600 18px ${f}`; ctx.fillText(T.tab ? `${Math.round(a.votes)} votes still in play · ${T.tab.exhausted} exhausted` : `${rep} of ${geoms.length} groups reporting`, 300, H - 30);
   if (total) { const lead = order[0], second = order[1], mg = ((T.counts[lead] || 0) - (T.counts[second] || 0)) / total * 100; ctx.textAlign = 'right'; ctx.fillStyle = '#fff'; ctx.font = `800 20px ${f}`; ctx.fillText(`${TSR_candidateName(registry, lead)} leads by ${mg.toFixed(1)}`, W - 40, H - 30); }
-  ctx.fillStyle = '#23262f'; ctx.fillRect(0, H - 8, W, 8); ctx.fillStyle = '#d3102a'; ctx.fillRect(0, H - 8, W * u, 8);
+  if (T.tab) { const t = T.tab, nm = k => TSR_candidateName(registry, k), win = t.final && t.local > .6;
+    const txt = win ? `WINNER · ${nm(t.winner)} wins after ${t.R} rounds` : t.elimNow && t.idx === t.r ? `ROUND ${t.r + 1} · ${nm(t.elimNow)} HAS THE FEWEST VOTES — ELIMINATED` : t.elimNow ? `${nm(t.elimNow)}’S BALLOTS TRANSFER TO THEIR NEXT CHOICE` : `ROUND ${t.idx + 1} · FINAL TALLY`;
+    ctx.fillStyle = win ? '#1f8f4e' : '#d3102a'; ctx.fillRect(0, H - 70 - 54, W, 54); ctx.fillStyle = '#fff'; ctx.font = `800 24px ${f}`; ctx.textAlign = 'left'; ctx.fillText(txt.toUpperCase(), 40, H - 70 - 54 + 36); }
+  ctx.fillStyle = '#23262f'; ctx.fillRect(0, H - 8, W, 8); ctx.fillStyle = '#d3102a'; ctx.fillRect(0, H - 8, W * (T.tab ? 1 : u), 8);
   $('sld').value = Math.round(u * 1000);
 }
 
 /* ---- playback: one always-running frame loop; play just advances the clock ---- */
 function frame(ts) {
   const dt = Math.min(.1, Math.max(0, (ts - (prevTs || ts)) / 1000)); prevTs = ts;
-  if (playing) { u = Math.min(1, u + dt / +$('selLen').value); if (u >= 1) { playing = false; $('btnPlay').textContent = '▶ Replay'; } }
+  if (playing) { if (u < 1) u = Math.min(1, u + dt / +$('selLen').value); else if (tab && tabT < tabLen()) tabT = Math.min(tabLen(), tabT + dt);
+    if (u >= 1 && (!tab || tabT >= tabLen())) { playing = false; $('btnPlay').textContent = '▶ Replay'; } }
   draw(dt); requestAnimationFrame(frame);
 }
-function play() { if (u >= 1) { u = 0; snap(); } playing = true; $('btnPlay').textContent = '❚❚ Pause'; }
+function play() { if (u >= 1) { u = 0; tabT = 0; snap(); } playing = true; $('btnPlay').textContent = '❚❚ Pause'; }
 function pause() { playing = false; $('btnPlay').textContent = '▶ Play'; }
 
 /* ---- video export (records the canvas in real time) ---- */
 async function exportVideo() {
   if (!window.MediaRecorder) { $('status').textContent = 'This browser can’t record video — try Chrome, Edge or Firefox.'; return; }
   const types = ['video/mp4;codecs=avc1', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'], mime = types.find(t => MediaRecorder.isTypeSupported(t));
-  pause(); recording = true; $('btnExp').disabled = true; $('prog').style.display = 'block'; const len = +$('selLen').value, hold = 2.5;
+  pause(); recording = true; $('btnExp').disabled = true; $('prog').style.display = 'block'; const len = +$('selLen').value, hold = 2.5, tl = tabLen();
   const chunks = [], rec = new MediaRecorder(cv.captureStream(30), { mimeType: mime, videoBitsPerSecond: 8e6 });
   rec.ondataavailable = e => e.data.size && chunks.push(e.data);
-  const done = new Promise(res => rec.onstop = res); rec.start(250); u = 0; snap();
+  const done = new Promise(res => rec.onstop = res); rec.start(250); u = 0; tabT = 0; snap();
   const t0 = performance.now();
-  await new Promise(res => { (function step(ts) { const el = (ts - t0) / 1000; u = Math.min(1, el / len); $('prog').firstChild.style.width = Math.min(100, el / (len + hold) * 100) + '%'; $('status').textContent = `Recording… ${Math.min(len + hold, el).toFixed(0)} / ${len + hold}s — keep this tab open`; if (el >= len + hold) res(); else requestAnimationFrame(step); })(t0); });
+  await new Promise(res => { (function step(ts) { const el = (ts - t0) / 1000; u = Math.min(1, el / len); tabT = tab ? Math.max(0, Math.min(tl, el - len)) : 0; const tot = len + tl + hold; $('prog').firstChild.style.width = Math.min(100, el / tot * 100) + '%'; $('status').textContent = `Recording… ${Math.min(tot, el).toFixed(0)} / ${Math.round(tot)}s — keep this tab open`; if (el >= tot) res(); else requestAnimationFrame(step); })(t0); });
   rec.stop(); await done;
   const ext = mime.startsWith('video/mp4') ? 'mp4' : 'webm', a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(chunks, { type: mime.split(';')[0] }));
   a.download = `${cur.id}-replay.${ext}`; document.body.appendChild(a); a.click(); a.remove();
@@ -224,21 +286,27 @@ async function exportVideo() {
 }
 
 /* ---- setup ---- */
-function fillRaces() { const rd = TSR_getRoundData(cur, $('selR').value); $('selRace').innerHTML = Object.keys(TSR_getRaces(rd)).map(n => `<option>${n.replace(/</g, '&lt;')}</option>`).join(''); rebuild(); }
-function fillRounds() { const o = [['first_round', 'First round']]; if (cur.runoff_round && TSR_roundVoteSum(cur.runoff_round) > 0) o.push(['runoff_round', 'Runoff']); $('selR').innerHTML = o.map(x => `<option value="${x[0]}">${x[1]}</option>`).join(''); const q = new URLSearchParams(location.search).get('r'); $('selR').value = o.some(x => x[0] === q) ? q : TSR_defaultRoundKey(cur); fillRaces(); }
-function rebuild() { pause(); buildBallots(); u = 1; snap(); }
+async function fillRaces() { const rd = TSR_getRoundData(cur, $('selR').value); $('selRace').innerHTML = Object.keys(TSR_getRaces(rd)).map(n => `<option>${n.replace(/</g, '&lt;')}</option>`).join(''); await rebuild(); }
+async function fillRounds() { const o = [['first_round', 'First round']]; if (cur.runoff_round && TSR_roundVoteSum(cur.runoff_round) > 0) o.push(['runoff_round', 'Runoff']); $('selR').innerHTML = o.map(x => `<option value="${x[0]}">${x[1]}</option>`).join(''); const q = new URLSearchParams(location.search).get('r'); const hasTl = !!(await getTimeline(cur.id)); $('selR').value = o.some(x => x[0] === q) ? q : hasTl ? 'first_round' : TSR_defaultRoundKey(cur); await fillRaces(); }
+async function rebuild() { pause(); await buildBallots(); u = 1; tabT = 0; snap(); }
 (async function () {
   const [reg, hand, g, bt] = await Promise.all([fetch('../data/registries.json').then(r => r.json()), fetch('../data/tsrelects-results.json').then(r => r.json()), fetch('../data/groups.geojson').then(r => r.json()), fetch('../data/ballottsr/results.json').then(r => r.json()).catch(() => ({ elections: [] }))]);
   registry = reg; geo = g; buildGeoms();
   elections = OVR_getTsrElections(hand.concat((bt.elections || []).filter(e => !hand.some(h => h.id === e.id)))).filter(e => Object.keys(TSR_getRaces(TSR_getRoundData(e, 'first_round'))).length).sort((a, b) => new Date(b.date) - new Date(a.date));
+  try { const idx = await fetch('../data/timelines/index.json').then(r => r.json());
+    for (const m of (idx.timelines || [])) { if (elections.some(e => e.id === m.id)) continue; const tl = await getTimeline(m.id); if (!tl || tl.source !== 'ballots') continue;
+      const gv = {}; tl.ballots.forEach(b => { const k = b.r[0]; ((gv[b.g] = gv[b.g] || {})[k] = (gv[b.g][k] || 0) + 1); });
+      elections.push({ id: m.id, title: m.title, date: m.date, first_round: { races: { [m.title + ' · first choices']: gv } } }); }
+    elections.sort((a, b) => new Date(b.date) - new Date(a.date)); } catch (e) {}
   $('selE').innerHTML = elections.map(e => `<option value="${e.id}">${e.title} — ${e.date}</option>`).join('');
   const want = new URLSearchParams(location.search).get('e'); if (want) $('selE').value = EID_canon(want);
-  const pick = () => { cur = elections.find(e => e.id === $('selE').value) || elections[0]; fillRounds(); };
+  const pick = async () => { cur = elections.find(e => e.id === $('selE').value) || elections[0]; await fillRounds(); };
   $('selE').onchange = pick; $('selR').onchange = fillRaces; $('selRace').onchange = rebuild;
   $('btnPlay').onclick = () => playing ? pause() : play(); $('btnExp').onclick = exportVideo;
-  $('sld').oninput = () => { pause(); u = +$('sld').value / 1000; snap(); };
+  $('sld').oninput = () => { pause(); tabT = 0; u = +$('sld').value / 1000; snap(); };
   try { await document.fonts.ready; } catch (e) {}
-  pick(); const uq = parseFloat(new URLSearchParams(location.search).get('u')); if (uq >= 0) { u = Math.min(1, uq); snap(); }
+  await pick(); const uq = parseFloat(new URLSearchParams(location.search).get('u')); if (uq >= 0) { u = Math.min(1, uq); snap(); }
+  const tq = parseFloat(new URLSearchParams(location.search).get('tab')); if (tq >= 0 && tab) { u = 1; tabT = tq; snap(); }
   requestAnimationFrame(frame);
 })();
 </script>

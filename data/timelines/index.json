@@ -1,6 +1,12 @@
 {
  "timelines": [
   {
+   "id": "class1-2026-10",
+   "title": "Class 1 October 2026 Election",
+   "date": "2026-10-23",
+   "source": "ballots"
+  },
+  {
    "id": "class2-2026-10",
    "title": "Class 2 October 2026 Special Election",
    "date": "2026-10-23",

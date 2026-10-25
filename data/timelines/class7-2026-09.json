@@ -1,0 +1,887 @@
+{
+ "id": "class7-2026-09",
+ "source": "git-history",
+ "note": "Snapshots of data/tsrelects-results.json taken at each commit; times are when results were entered.",
+ "snapshots": [
+  {
+   "t": "2026-09-20T14:14:22+02:00",
+   "rev": "8d3e85c",
+   "precincts": 22,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "2": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 1
+     },
+     "6": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "7": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-20T16:11:19+02:00",
+   "rev": "6e3003d",
+   "precincts": 30,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 1
+     },
+     "6": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "7": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-20T18:13:46+02:00",
+   "rev": "2cd7314",
+   "precincts": 50,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 2
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-20T18:44:23+02:00",
+   "rev": "14554d2",
+   "precincts": 50,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 2
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-20T21:27:22+02:00",
+   "rev": "b3698b6",
+   "precincts": 50,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-20T22:27:23+02:00",
+   "rev": "211ead4",
+   "precincts": 85,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-20T22:29:03+02:00",
+   "rev": "594f8ec",
+   "precincts": 85,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-20T23:05:25+02:00",
+   "rev": "6695345",
+   "precincts": 85,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 1
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-21T01:02:22+02:00",
+   "rev": "e57818b",
+   "precincts": 95,
+   "turnout": 1,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "8": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 1
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-21T08:25:51+02:00",
+   "rev": "f3a279b",
+   "precincts": 95,
+   "turnout": 2,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 2
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "8": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 2
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-21T08:28:48+02:00",
+   "rev": "ac32e58",
+   "precincts": 95,
+   "turnout": 2,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 2
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "8": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 2
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-21T08:30:30+02:00",
+   "rev": "bb30c2c",
+   "precincts": 95,
+   "turnout": 2,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 2
+     },
+     "2": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "8": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 2
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-21T14:06:21+02:00",
+   "rev": "f33f272",
+   "precincts": 95,
+   "turnout": 2,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 2
+     },
+     "2": {
+      "tmf": 3,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "8": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 2
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-21T17:54:04+02:00",
+   "rev": "5238603",
+   "precincts": 95,
+   "turnout": 2,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 2
+     },
+     "2": {
+      "tmf": 3,
+      "dvwb": 1,
+      "nzb1": 1
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "8": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 0
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 2
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-21T23:42:00+02:00",
+   "rev": "current",
+   "precincts": 100,
+   "turnout": 2.5,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 2
+     },
+     "2": {
+      "tmf": 3,
+      "dvwb": 1,
+      "nzb1": 1
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "8": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 1
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 2
+     }
+    }
+   }
+  },
+  {
+   "t": "2026-09-22T05:30:00+02:00",
+   "rev": "current",
+   "precincts": 100,
+   "turnout": 2.5,
+   "races": {
+    "Class 7 September 2026 First Round": {
+     "1": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 2
+     },
+     "2": {
+      "tmf": 3,
+      "dvwb": 1,
+      "nzb1": 1
+     },
+     "3": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "4": {
+      "tmf": 0,
+      "dvwb": 0,
+      "nzb1": 0
+     },
+     "5": {
+      "tmf": 0,
+      "dvwb": 1,
+      "nzb1": 3
+     },
+     "6": {
+      "tmf": 1,
+      "dvwb": 2,
+      "nzb1": 2
+     },
+     "7": {
+      "tmf": 2,
+      "dvwb": 0,
+      "nzb1": 1
+     },
+     "8": {
+      "tmf": 2,
+      "dvwb": 1,
+      "nzb1": 1
+     },
+     "9": {
+      "tmf": 1,
+      "dvwb": 0,
+      "nzb1": 2
+     }
+    }
+   }
+  }
+ ]
+}

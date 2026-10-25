@@ -146,3 +146,18 @@ function SITE_barMeta(nameHtml, pctNum, fillPct, endColor) {
     `<div class="rcp-bar-meta-clip" aria-hidden="true" style="clip-path:inset(0 ${clip}% 0 0);--clip-ink:${ink}"><div class="rcp-bar-meta">${inner}</div></div>`;
 }
 if (typeof window !== 'undefined') window.SITE_barMeta = SITE_barMeta;
+
+
+/** Back-to-top button on long pages (appears after scrolling a screen or so). */
+(function () {
+  function init() {
+    if (document.querySelector('.to-top')) return;
+    const b = document.createElement('button');
+    b.className = 'to-top'; b.type = 'button'; b.setAttribute('aria-label', 'Back to top'); b.textContent = '↑';
+    b.onclick = () => window.scrollTo({ top: 0 });
+    document.body.appendChild(b);
+    const upd = () => b.classList.toggle('show', window.scrollY > 900);
+    window.addEventListener('scroll', upd, { passive: true }); upd();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();

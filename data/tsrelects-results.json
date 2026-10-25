@@ -340,9 +340,11 @@
             "nzb"
           ]
         }
-      },
-    "runoff_round": 
-      "Class 6 July 2026 Final RCV Round": {
+      }
+    },
+    "runoff_round": {
+      "races": {
+        "Class 6 July 2026 Final RCV Round": {
           "1": {
             "wip": 1,
             "nzb": 2
@@ -379,16 +381,18 @@
             "wip": 1,
             "nzb": 0
           }
-        },
+        }
+      },
       "race_calls": {
         "Class 6 July 2026 Final RCV Round": {
           "status": "winner",
           "winners": [
-            "wip",
+            "wip"
           ]
         }
       }
-    },
+    }
+  },
   {
     "id": "class5-2026-06",
     "title": "June 2026 Class 5 Mod Election",

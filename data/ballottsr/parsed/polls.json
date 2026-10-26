@@ -7,7 +7,7 @@
       "date": "2026-10-23",
       "method": "fptp",
       "status": "open",
-      "ballots": 13,
+      "ballots": 14,
       "included": false,
       "reason": "not a class race poll"
     },
@@ -18,7 +18,7 @@
       "date": "2026-10-23",
       "method": "rcv",
       "status": "open",
-      "ballots": 10,
+      "ballots": 11,
       "included": false,
       "reason": "not a class race poll"
     },
@@ -156,13 +156,13 @@
       "date": "2026-10-19",
       "method": "fptp",
       "status": "open",
-      "ballots": 11,
+      "ballots": 12,
       "included": true,
       "electionId": "class1-2026-10",
       "pollster": "Representative-Fee65",
       "shares": {
-        "oc1": 0.7273,
-        "dvwb": 0.2727
+        "oc1": 0.75,
+        "dvwb": 0.25
       }
     },
     {

@@ -25,17 +25,17 @@
   "resultsEmbargoed": false,
   "tally": {
     "method": "fptp",
-    "totalBallots": 11,
+    "totalBallots": 12,
     "finalPct": {
-      "opt_0_cd556j": 72.72727272727273,
-      "opt_1_qcls5r": 27.27272727272727
+      "opt_0_cd556j": 75,
+      "opt_1_qcls5r": 25
     },
     "cacheVersion": 2,
     "groupWinners": {
       "1": "opt_0_cd556j",
       "2": "opt_0_cd556j",
       "3": "opt_0_cd556j",
-      "4": "opt_1_qcls5r",
+      "4": "opt_0_cd556j",
       "5": "opt_0_cd556j",
       "6": "opt_0_cd556j",
       "7": "opt_0_cd556j"
@@ -54,8 +54,8 @@
         "opt_1_qcls5r": 0
       },
       "4": {
-        "opt_0_cd556j": 0,
-        "opt_1_qcls5r": 100
+        "opt_0_cd556j": 50,
+        "opt_1_qcls5r": 50
       },
       "5": {
         "opt_0_cd556j": 100,
@@ -74,7 +74,7 @@
       "1": 1,
       "2": 2,
       "3": 1,
-      "4": 1,
+      "4": 2,
       "5": 2,
       "6": 2,
       "7": 2

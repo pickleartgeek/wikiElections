@@ -6,7 +6,7 @@
       "createdBy": "wiptes167",
       "date": "2026-10-23",
       "method": "fptp",
-      "status": "open",
+      "status": "closed",
       "ballots": 14,
       "included": false,
       "reason": "not a class race poll"
@@ -17,8 +17,8 @@
       "createdBy": "wiptes167",
       "date": "2026-10-23",
       "method": "rcv",
-      "status": "open",
-      "ballots": 11,
+      "status": "closed",
+      "ballots": 12,
       "included": false,
       "reason": "not a class race poll"
     },

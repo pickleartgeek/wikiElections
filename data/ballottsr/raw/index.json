@@ -2,6 +2,16 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xhkq0m_1793184664966",
+      "title": "How much do you approve of US President Donald Trump?",
+      "status": "open",
+      "createdAt": 1793184664966,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xhkq0m_1793184664966.json"
+    },
+    {
       "id": "poll_t3_1xdlv73_1792780118400",
       "title": "Which person would you prefer be Prime Minister?",
       "status": "closed",

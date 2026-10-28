@@ -1,6 +1,17 @@
 {
   "polls": [
     {
+      "id": "poll_t3_1xhkq0m_1793184664966",
+      "title": "How much do you approve of US President Donald Trump?",
+      "createdBy": "PickleArtGeek",
+      "date": "2026-10-28",
+      "method": "fptp",
+      "status": "open",
+      "ballots": 6,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
       "id": "poll_t3_1xdloqc_1792779592099",
       "title": "Which party do you trust more to lead government?",
       "createdBy": "wiptes167",

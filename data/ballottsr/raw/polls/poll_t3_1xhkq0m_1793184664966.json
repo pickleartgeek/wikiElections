@@ -1,0 +1,106 @@
+{
+  "id": "poll_t3_1xhkq0m_1793184664966",
+  "title": "How much do you approve of US President Donald Trump?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1793184664966,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xhkq0m",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": 1793357464966,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_3szwtk",
+      "name": "Strongly approve",
+      "color": "#345e1e"
+    },
+    {
+      "id": "opt_1_davozp",
+      "name": "Approve",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_2_78ioat",
+      "name": "Unsure / Neutral",
+      "color": "#bcc0c2"
+    },
+    {
+      "id": "opt_3_coyp77",
+      "name": "Disapprove",
+      "color": "#b71212"
+    },
+    {
+      "id": "opt_4_8jg0v9",
+      "name": "Strongly disapprove",
+      "color": "#4d0000"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 6,
+    "finalPct": {
+      "opt_0_3szwtk": 0,
+      "opt_1_davozp": 0,
+      "opt_2_78ioat": 0,
+      "opt_3_coyp77": 0,
+      "opt_4_8jg0v9": 100
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_4_8jg0v9",
+      "3": "opt_4_8jg0v9",
+      "4": "opt_4_8jg0v9",
+      "5": "opt_4_8jg0v9",
+      "6": "opt_4_8jg0v9"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_3szwtk": 0,
+        "opt_1_davozp": 0,
+        "opt_2_78ioat": 0,
+        "opt_3_coyp77": 0,
+        "opt_4_8jg0v9": 100
+      },
+      "3": {
+        "opt_0_3szwtk": 0,
+        "opt_1_davozp": 0,
+        "opt_2_78ioat": 0,
+        "opt_3_coyp77": 0,
+        "opt_4_8jg0v9": 100
+      },
+      "4": {
+        "opt_0_3szwtk": 0,
+        "opt_1_davozp": 0,
+        "opt_2_78ioat": 0,
+        "opt_3_coyp77": 0,
+        "opt_4_8jg0v9": 100
+      },
+      "5": {
+        "opt_0_3szwtk": 0,
+        "opt_1_davozp": 0,
+        "opt_2_78ioat": 0,
+        "opt_3_coyp77": 0,
+        "opt_4_8jg0v9": 100
+      },
+      "6": {
+        "opt_0_3szwtk": 0,
+        "opt_1_davozp": 0,
+        "opt_2_78ioat": 0,
+        "opt_3_coyp77": 0,
+        "opt_4_8jg0v9": 100
+      }
+    },
+    "groupBallotCount": {
+      "1": 1,
+      "3": 1,
+      "4": 1,
+      "5": 2,
+      "6": 1
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

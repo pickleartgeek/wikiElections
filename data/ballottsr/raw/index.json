@@ -4,7 +4,7 @@
     {
       "id": "poll_t3_1xhkq0m_1793184664966",
       "title": "How much do you approve of US President Donald Trump?",
-      "status": "open",
+      "status": "closed",
       "createdAt": 1793184664966,
       "method": "fptp",
       "isOfficialElection": false,

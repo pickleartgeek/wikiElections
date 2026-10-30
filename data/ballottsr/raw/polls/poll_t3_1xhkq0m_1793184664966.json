@@ -40,13 +40,13 @@
   "resultsEmbargoed": false,
   "tally": {
     "method": "fptp",
-    "totalBallots": 17,
+    "totalBallots": 19,
     "finalPct": {
       "opt_0_3szwtk": 0,
-      "opt_1_davozp": 5.88235294117647,
+      "opt_1_davozp": 5.263157894736842,
       "opt_2_78ioat": 0,
-      "opt_3_coyp77": 5.88235294117647,
-      "opt_4_8jg0v9": 88.23529411764706
+      "opt_3_coyp77": 5.263157894736842,
+      "opt_4_8jg0v9": 89.47368421052632
     },
     "cacheVersion": 2,
     "groupWinners": {
@@ -62,10 +62,10 @@
     "groupPct": {
       "1": {
         "opt_0_3szwtk": 0,
-        "opt_1_davozp": 25,
+        "opt_1_davozp": 20,
         "opt_2_78ioat": 0,
         "opt_3_coyp77": 0,
-        "opt_4_8jg0v9": 75
+        "opt_4_8jg0v9": 80
       },
       "3": {
         "opt_0_3szwtk": 0,
@@ -118,13 +118,13 @@
       }
     },
     "groupBallotCount": {
-      "1": 4,
+      "1": 5,
       "3": 1,
       "4": 1,
       "5": 4,
       "6": 3,
       "7": 1,
-      "8": 2,
+      "8": 3,
       "9": 1
     }
   },

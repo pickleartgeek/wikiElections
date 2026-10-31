@@ -146,7 +146,30 @@
         "csuf": 0.027
       }
     },
-    
+
+    {
+      "pollster": "ELECTION",
+      "date": "2026-10-23",
+      "sample": 22,
+      "weight": 0.5,
+      "shares": {
+        "ua": 0.2278,
+        "udc": 0.4091,
+        "tsp": 0.3636
+      }
+    },
+    {
+      "pollster": "ELECTION",
+      "date": "2026-10-23",
+      "sample": 18,
+      "weight": 0.5,
+      "shares": {
+        "ua": 0.2778,
+        "udc": 0.1083,
+        "tsp": 0.2500
+        "ndtsr": 0.3611
+      }
+    },
      {
       "pollster": "ELECTION",
       "date": "2026-09-21",

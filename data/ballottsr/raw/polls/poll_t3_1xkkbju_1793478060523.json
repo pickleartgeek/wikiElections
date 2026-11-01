@@ -1,0 +1,58 @@
+{
+  "id": "poll_t3_1xkkbju_1793478060523",
+  "title": "Who will polls overestimate?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1793478060523,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xkkbju",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": null,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_u3oo08",
+      "name": "Overestimate Democrats by 5 or more",
+      "color": "#e9141d"
+    },
+    {
+      "id": "opt_1_t9vomy",
+      "name": "Overestimate Democrats by 2 or more",
+      "color": "#f2a38f"
+    },
+    {
+      "id": "opt_2_rjnjvt",
+      "name": "No systemic polling error",
+      "color": "#edce2f"
+    },
+    {
+      "id": "opt_3_u31lve",
+      "name": "Overestimate Republicans by 2 or more",
+      "color": "#0087dc"
+    },
+    {
+      "id": "opt_4_xyil61",
+      "name": "Overestimate Republicans by 5 or more",
+      "color": "#0015bc"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 0,
+    "finalPct": {
+      "opt_0_u3oo08": 0,
+      "opt_1_t9vomy": 0,
+      "opt_2_rjnjvt": 0,
+      "opt_3_u31lve": 0,
+      "opt_4_xyil61": 0
+    },
+    "cacheVersion": 2,
+    "groupWinners": {},
+    "groupPct": {},
+    "groupBallotCount": {}
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

@@ -1,0 +1,106 @@
+{
+  "id": "poll_t3_1xkkdta_1793478198233",
+  "title": "Who will polls overestimate?",
+  "createdBy": "PickleArtGeek",
+  "createdAt": 1793478198233,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xkkdta",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": 1793650998233,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_0rcdla",
+      "name": "Overestimate Democrats by 5 or more",
+      "color": "#e9141d"
+    },
+    {
+      "id": "opt_1_rzdl97",
+      "name": "Overestimate Democrats by 2 or more",
+      "color": "#f2a38f"
+    },
+    {
+      "id": "opt_2_1q10mp",
+      "name": "No systemic polling error",
+      "color": "#edce2f"
+    },
+    {
+      "id": "opt_3_lor6bb",
+      "name": "Overestimate Republicans by 2 or more",
+      "color": "#0087dc"
+    },
+    {
+      "id": "opt_4_5py16o",
+      "name": "Overestimate Republicans by 5 or more",
+      "color": "#0015bc"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 13,
+    "finalPct": {
+      "opt_0_0rcdla": 7.6923076923076925,
+      "opt_1_rzdl97": 53.84615384615385,
+      "opt_2_1q10mp": 23.076923076923077,
+      "opt_3_lor6bb": 15.384615384615385,
+      "opt_4_5py16o": 0
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "4": "opt_2_1q10mp",
+      "5": "opt_1_rzdl97",
+      "6": "opt_1_rzdl97",
+      "7": "opt_1_rzdl97",
+      "8": "opt_2_1q10mp"
+    },
+    "groupPct": {
+      "4": {
+        "opt_0_0rcdla": 0,
+        "opt_1_rzdl97": 33.33333333333333,
+        "opt_2_1q10mp": 66.66666666666666,
+        "opt_3_lor6bb": 0,
+        "opt_4_5py16o": 0
+      },
+      "5": {
+        "opt_0_0rcdla": 25,
+        "opt_1_rzdl97": 50,
+        "opt_2_1q10mp": 0,
+        "opt_3_lor6bb": 25,
+        "opt_4_5py16o": 0
+      },
+      "6": {
+        "opt_0_0rcdla": 0,
+        "opt_1_rzdl97": 100,
+        "opt_2_1q10mp": 0,
+        "opt_3_lor6bb": 0,
+        "opt_4_5py16o": 0
+      },
+      "7": {
+        "opt_0_0rcdla": 0,
+        "opt_1_rzdl97": 100,
+        "opt_2_1q10mp": 0,
+        "opt_3_lor6bb": 0,
+        "opt_4_5py16o": 0
+      },
+      "8": {
+        "opt_0_0rcdla": 0,
+        "opt_1_rzdl97": 0,
+        "opt_2_1q10mp": 50,
+        "opt_3_lor6bb": 50,
+        "opt_4_5py16o": 0
+      }
+    },
+    "groupBallotCount": {
+      "4": 3,
+      "5": 4,
+      "6": 3,
+      "7": 1,
+      "8": 2
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

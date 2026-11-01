@@ -296,7 +296,7 @@ function _TK_approval(el, o) {
       <div class="tk-row tk-hd" role="row"><span>Moderator</span><span class="tk-c-bar"><b>Approve</b><b>Disapprove</b></span><span class="tk-c-net">Net</span><span class="tk-c-sp">Trend</span><span class="tk-c-chg">14-day</span></div>
       ${rows.map(r => `
       <a class="tk-row" role="row" href="approval?mod=${encodeURIComponent(r.key)}">
-        <span class="tk-who"><img src="${r.photo}" alt="" loading="lazy"><span class="tk-name">${TK_esc(r.name)}<small>${r.polls.length} poll${r.polls.length === 1 ? '' : 's'}</small></span></span>
+        <span class="tk-who"><img src="${r.photo}" alt="" loading="lazy"><span class="tk-name">${TK_esc(r.name)}<small>${r.seat ? `<b class="tk-seat${r.carryOver ? ' prev' : ''}"${r.carryOver ? ' title="Previous term"' : ''}>${TK_esc(r.seat)}</b> · ` : ''}${r.polls.length} poll${r.polls.length === 1 ? '' : 's'}</small>${r.pending ? `<small class="tk-pend">Now ${TK_esc(r.pending)} · first poll pending</small>` : ''}</span></span>
         <span class="tk-c-bar"><em class="tk-a">${(r.a * 100).toFixed(1)}%</em>${TK_splitBar(r.a, r.d, 'Approve', 'Disapprove')}<em class="tk-d">${(r.d * 100).toFixed(1)}%</em></span>
         <span class="tk-c-net ${r.net < 0 ? 'neg' : ''}">${TK_net(r.net)}</span>
         <span class="tk-c-sp">${TK_spark(r.series, { color: r.net < 0 ? TK_RED : 'var(--ink)', zero: true })}</span>

@@ -268,9 +268,18 @@
       </div>
       <button class="btn secondary" onclick="saveApprovalStatus()">Save status</button>
 
+      <div id="apprTermsBox" style="margin-top:16px;border-top:1px solid var(--line,#ddd);padding-top:12px;">
+        <label style="font-weight:700;">Seats / terms <small style="font-weight:400;color:var(--muted)">— one row per seat the moderator has held, oldest first. Start/end are optional; the chart falls back to the election date.</small></label>
+        <div id="apprTerms"></div>
+        <button class="btn secondary" type="button" onclick="addTermRow()">+ Add term</button>
+        <button class="btn" type="button" onclick="saveApprovalTerms()">Save terms</button>
+        <small id="apprTermsMsg" style="margin-left:8px;color:var(--muted)"></small>
+      </div>
+
       <div class="field-grid" style="margin-top:14px;">
         <div class="field-row"><label>Pollster</label><input id="apprPollster" value="CENSUS"></div>
         <div class="field-row"><label>Date</label><input id="apprDate" type="date"></div>
+        <div class="field-row" id="apprTermRow"><label>Term (moderators)</label><select id="apprPollTerm"></select></div>
         <div class="field-row"><label>Sample size</label><input id="apprSample" type="number" value="15"></div>
         <div class="field-row"><label>Weight</label><input id="apprWeight" type="number" step="0.1" value="1"></div>
       </div>
@@ -780,6 +789,49 @@ function onApprKeyChange() {
     document.getElementById('apprRole').value = entry.role || '';
     document.getElementById('apprTermEnd').value = entry.termEnd || '';
   }
+  renderTermRows(kind === 'moderators' ? getRawApproval().moderators[key] : null);
+}
+
+function getRawApproval() { return OVR_getApprovalData(approvalBase, true); }
+
+const TERM_FIELDS = [['id', 'id (e.g. class2)'], ['seat', 'Seat (e.g. Class 2)'], ['label', 'Label (optional)'], ['role', 'Office title (optional)'], ['start', 'Start', 'date'], ['end', 'End', 'date'], ['electionId', 'Election id (optional)']];
+function termRowHtml(t) {
+  t = t || {};
+  return `<div class="field-grid term-row" style="margin:8px 0;align-items:end;">` + TERM_FIELDS.map(([f, ph, type]) =>
+    `<div class="field-row"><label>${ph}</label><input data-f="${f}" type="${type || 'text'}" value="${esc(t[f] || '')}"></div>`).join('') +
+    `<div class="field-row"><label>Status</label><select data-f="status"><option value="former"${t.status === 'former' ? ' selected' : ''}>Former</option><option value="current"${t.status !== 'former' ? ' selected' : ''}>Current</option></select></div>` +
+    `<div class="field-row"><button class="btn secondary" type="button" onclick="this.closest('.term-row').remove();refreshPollTermSelect()">Remove</button></div></div>`;
+}
+function esc(v) { return String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function renderTermRows(entry) {
+  const box = document.getElementById('apprTermsBox'); if (!box) return;
+  box.style.display = document.getElementById('apprKind').value === 'moderators' ? '' : 'none';
+  document.getElementById('apprTerms').innerHTML = ((entry && entry.terms) || []).map(termRowHtml).join('');
+  document.getElementById('apprTermsMsg').textContent = '';
+  refreshPollTermSelect();
+}
+function addTermRow() { document.getElementById('apprTerms').insertAdjacentHTML('beforeend', termRowHtml({ status: 'current' })); refreshPollTermSelect(); }
+function readTermRows() {
+  return [...document.querySelectorAll('#apprTerms .term-row')].map(r => {
+    const t = {}; r.querySelectorAll('[data-f]').forEach(i => { const v = i.value.trim(); if (v) t[i.dataset.f] = v; });
+    return t;
+  }).filter(t => t.id && t.seat);
+}
+function refreshPollTermSelect() {
+  const sel = document.getElementById('apprPollTerm'), row = document.getElementById('apprTermRow'); if (!sel) return;
+  const terms = readTermRows(), isMod = document.getElementById('apprKind').value === 'moderators';
+  row.style.display = isMod && terms.length ? '' : 'none';
+  sel.innerHTML = '<option value="">Current term (default)</option>' + terms.map(t => `<option value="${esc(t.id)}">${esc(t.label || t.seat)}${t.status === 'current' ? ' — current' : ''}</option>`).join('');
+}
+function saveApprovalTerms() {
+  const key = document.getElementById('apprKey').value, terms = readTermRows(), msg = document.getElementById('apprTermsMsg');
+  const ids = terms.map(t => t.id);
+  if (new Set(ids).size !== ids.length) { msg.textContent = 'Term ids must be unique.'; return; }
+  if (terms.filter(t => t.status === 'current').length > 1) { msg.textContent = 'Only one term can be current.'; return; }
+  if (terms.some(t => t.start && t.end && t.end < t.start)) { msg.textContent = 'A term ends before it starts.'; return; }
+  OVR_setApprovalTerms(key, terms);
+  msg.textContent = terms.length ? 'Terms saved locally.' : 'Terms cleared.';
+  refreshPollTermSelect();
 }
 
 function saveApprovalStatus() {
@@ -807,12 +859,14 @@ function addApprovalPoll() {
       disapprove: Number(document.getElementById('apprNo').value) || 0
     }
   };
+  const pt = document.getElementById('apprPollTerm');
+  if (kind === 'moderators' && pt && pt.value) poll.term = pt.value;
   OVR_addApprovalPoll(kind, key, poll);
   flashStatus('Poll added locally.');
 }
 
 function downloadApprovalData() {
-  download('approval-polls.json', Object.assign({ _comment: approvalBase._comment }, getMergedApproval()));
+  download('approval-polls.json', Object.assign({ _comment: approvalBase._comment }, getRawApproval()));
 }
 
 /* ---------- Party support / membership polling ---------- */

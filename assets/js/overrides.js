@@ -149,11 +149,51 @@ function OVR_setApprovalStatus(kind, key, status, extra) {
   OVR_save(ovr);
 }
 
+/**
+ * Moderator terms. An approval entry may carry `terms` (chronological): {id, seat, label?, role?, status:'current'|'former', end?, electionId?}.
+ * A poll may carry `term` (a term id); an untagged poll belongs to the current term, so new Census polls land on the seat held now.
+ * Returns a copy of the entry viewing ONE term (default: the latest term that has polls): polls/role/seat are that term's, and
+ *   carryOver  -- the person now holds a different (current) term than the one shown
+ *   pending    -- label of the current term when it has no polls yet
+ *   frozenAsOf -- when the viewed term is over, the date its approval is frozen at
+ * Entries without `terms` are returned unchanged.
+ */
+function OVR_viewTerm(entry, termId) {
+  if (!entry || !Array.isArray(entry.terms) || !entry.terms.length) return entry;
+  const all = entry.allPolls || entry.polls, terms = entry.terms;
+  const cur = terms.filter(t => t.status === 'current').pop() || null;
+  const tid = p => p.term || (cur && cur.id) || terms[terms.length - 1].id;
+  const n = {}, last = {};
+  all.forEach(p => { const t = tid(p); p._t = t; n[t] = (n[t] || 0) + 1; if (!last[t] || p.date > last[t]) last[t] = p.date; });
+  let target = termId && terms.find(t => t.id === termId);
+  if (!target) target = terms.filter(t => n[t.id]).sort((a, b) => (last[a.id] || '').localeCompare(last[b.id] || '') || terms.indexOf(a) - terms.indexOf(b)).pop() || cur || terms[terms.length - 1];
+  const out = Object.assign({}, entry), over = target.status === 'former';
+  out.allPolls = all; out.polls = all.filter(p => tid(p) === target.id);
+  out.terms = terms.map(t => Object.assign({}, t, { n: n[t.id] || 0, last: last[t.id] || '' }));
+  if (target.role && !over) out.role = target.role; else delete out.role;   // an office title replaces the handle only while it is the current term
+  out.seat = target.label || target.seat; out.termId = target.id; out.termStatus = target.status;
+  out.carryOver = !!cur && cur.id !== target.id;
+  out.pending = out.carryOver && !n[cur.id] ? (cur.label || cur.seat) : '';
+  out.status = (over && !cur) || entry.status === 'former' ? 'former' : 'current';
+  out.frozenAsOf = over ? (target.end || last[target.id] || '') : '';
+  out.termEnd = over ? (target.end || '') : '';
+  return out;
+}
+
 /** Merge added polls + status overrides on top of the checked-in approval-polls.json. */
-function OVR_getApprovalData(base) {
+function OVR_setApprovalTerms(key, terms) {
+  const ovr = OVR_load();
+  ovr.approvalTerms = ovr.approvalTerms || {};
+  if (terms && terms.length) ovr.approvalTerms[key] = terms; else delete ovr.approvalTerms[key];
+  OVR_save(ovr);
+}
+
+/** raw=true skips the per-term view, returning the plain merged data (what the admin exports). */
+function OVR_getApprovalData(base, raw) {
   const ovr = OVR_load();
   const added = ovr.approvalPollsAdded || {};
   const statusOvr = ovr.approvalStatus || {};
+  const termsOvr = ovr.approvalTerms || {};
   const result = { moderators: {}, questions: {} };
   ['moderators', 'questions'].forEach(kind => {
     const baseGroup = base[kind] || {};
@@ -161,10 +201,11 @@ function OVR_getApprovalData(base) {
     Object.keys(baseGroup).forEach(key => {
       const entry = JSON.parse(JSON.stringify(baseGroup[key]));
       entry.polls = entry.polls.concat((added[kind] && added[kind][key]) || []);
+      if (kind === 'moderators' && termsOvr[key]) entry.terms = JSON.parse(JSON.stringify(termsOvr[key]));
       const so = statusOvr[kind] && statusOvr[kind][key];
       if (so && typeof so === 'object') { ['status', 'role', 'termEnd'].forEach(f => { if (so[f]) entry[f] = so[f]; else if (f !== 'status' && so[f] === '') delete entry[f]; }); }
       else if (so) entry.status = so;
-      result[kind][key] = entry;
+      result[kind][key] = kind === 'moderators' && !raw ? OVR_viewTerm(entry) : entry;
     });
   });
   return result;

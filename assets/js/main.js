@@ -56,28 +56,11 @@ function renderChrome(cfg, base) {
         </div>
       </a>`;
   } else {
-    slot.innerHTML = `
-      <div class="offcycle-strip">
-        <div class="wrap"><span class="dot"></span> Site is currently in off-cycle mode — no elections are actively being called.</div>
-      </div>`;
+    slot.innerHTML = '';   // off-cycle is the normal state: no bar. (The homepage ticker carries the status line.)
   }
 
-  const heroSlot = document.getElementById('heroLiveSlot');
-  if (heroSlot) {
-    if (cfg.mode === 'active') {
-      heroSlot.innerHTML = `
-        <a class="live-box" href="${nActive > 1 ? base + 'elects/' : (SITE_electsIds(cfg).length === 1 ? SITE_electsLink(cfg, base) : base + cfg.liveBox.link)}">
-          <div class="label">${nActive > 1 ? 'LIVE: ' + nActive + ' elections underway' : cfg.liveBox.label}</div>
-          <div class="body">${nActive > 1 ? 'Follow every race as the results come in, live on TSR Elects.' : cfg.liveBox.text}</div>
-        </a>`;
-    } else {
-      heroSlot.innerHTML = `
-        <div class="offcycle-card">
-          <h3>${cfg.offCycle.headline}</h3>
-          <p>${cfg.offCycle.text}</p>
-        </div>`;
-    }
-  }
+  // the hero used to repeat the banner in a second box (live) or a status card (off-cycle); one signal is enough
+  const heroSlot = document.getElementById('heroLiveSlot'); if (heroSlot) heroSlot.innerHTML = '';
 }
 
 
@@ -161,3 +144,15 @@ if (typeof window !== 'undefined') window.SITE_barMeta = SITE_barMeta;
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+
+/* Site-wide UX helpers (search palette, share button, what's-new line). Loaded once, from wherever main.js was loaded. */
+(function () {
+  if (window.__siteUx) return; window.__siteUx = true;
+  const base = window.SITE_BASE || './';
+  const sc = document.createElement('script'); sc.src = base + 'assets/js/site-ux.js'; sc.defer = true;
+  document.head.appendChild(sc);
+})();
+
+/** Party polling only tracks parties that exist: a party with a `dissolved` date (registries.json) drops out of the party trackers after that day. */
+function SITE_partyActive(party, asOf) { return !party || !party.dissolved || party.dissolved >= (asOf || new Date().toISOString().slice(0, 10)); }
+if (typeof window !== 'undefined') window.SITE_partyActive = SITE_partyActive;

@@ -264,18 +264,24 @@
       "name": "The Spinner Party",
       "shortName": "TSP",
       "color": "#b71212",
-      "callColor": "#ff3131"
+      "callColor": "#ff3131",
+      "logo": "tsp.png",
+      "logoStyle": "plain"
     },
     "udc": {
       "name": "Union of the Democratic Center",
       "shortName": "UDC",
       "color": "#32a852",
-      "callColor": "#02bf63"
+      "callColor": "#02bf63",
+      "logo": "udc.png",
+      "logoStyle": "badge-zoom",
+      "logoMono": "udc-mono.png"
     },
     "iltsr": {
       "name": "Iron League of TheSpinRoom",
       "shortName": "ILTSR",
-      "color": "#edce2f"
+      "color": "#edce2f",
+      "dissolved": "2026-09-22"
     },
     "ua": {
       "name": "Unaffiliated",
@@ -285,27 +291,32 @@
     "fumo": {
       "name": "FUMO-UDC",
       "shortName": "FUMO-UDC",
-      "color": "#f2a38f"
+      "color": "#f2a38f",
+      "dissolved": "2025-10-31"
     },
     "sfp": {
       "name": "Straight Frogs Party",
       "shortName": "Straight Frogs",
-      "color": "#0d2622"
+      "color": "#0d2622",
+      "dissolved": "2025-12-27"
     },
     "constar": {
       "name": " Conservative Orthodox Nationalists of the Spinroom's Tradition, Authority and Revival",
       "shortName": "CONSTAR",
-      "color": "#a01f1a"
+      "color": "#a01f1a",
+      "dissolved": "2025-12-27"
     },
     "green": {
       "name": "Green Party",
       "shortName": "Green",
-      "color": "#3a9d23"
+      "color": "#3a9d23",
+      "dissolved": "2025-08-31"
     },
     "csuf": {
       "name": "Common Sense Unity Front",
       "shortName": "CSUF",
-      "color": "#991a5a"
+      "color": "#991a5a",
+      "dissolved": "2026-05-31"
     },
     "tcbp": {
       "name": "Tungsten Cube Bisexual Party",
@@ -315,7 +326,16 @@
     "ndtsr": {
       "name": "New Democrats of TSR",
       "shortName": "NDTSR",
-      "color": "#004e7a"
+      "color": "#004e7a",
+      "logo": "ndtsr.png",
+      "logoStyle": "plain-wide"
+    },
+    "pps": {
+      "name": "People's Party of the Spinroom",
+      "shortName": "PPS",
+      "color": "#edce2f",
+      "logo": "pps.png",
+      "logoStyle": "dark"
     }
   }
 }

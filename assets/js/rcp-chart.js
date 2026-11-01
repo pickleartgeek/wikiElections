@@ -37,7 +37,7 @@ function RCPChart_smoothPath(coords, k = 1) {
   return p;
 }
 
-function RCPChart_render(container, points, candidateIds, registry, opts = {}) {
+function RCPChart_draw(container, points, candidateIds, registry, opts = {}) {
   const width = opts.width || 760;
   const height = opts.height || 300;
   const padL = 40, padR = 16, padT = 16, padB = 30;
@@ -82,7 +82,7 @@ function RCPChart_render(container, points, candidateIds, registry, opts = {}) {
   labelIdxs.forEach(i => {
     const x = xOf(times[i]);
     const d = new Date(points[i].date);
-    const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const label = d.toLocaleDateString('en-US', tSpan > 300 * 864e5 ? { month: 'short', year: '2-digit' } : { month: 'short', day: 'numeric' });
     svg += `<text x="${x}" y="${height - 8}" font-size="10" fill="#8a887c" text-anchor="middle">${label}</text>`;
   });
 
@@ -215,6 +215,37 @@ function RCPChart_render(container, points, candidateIds, registry, opts = {}) {
   window.addEventListener('touchend', onUp);
 
   renderAtIndex(points.length - 1);
+}
+
+/* ---- Time-range selector shared by the long-running trend charts (1M / 3M / 6M / 1Y / All) ---- */
+const RCP_RANGES = [['1M', 30], ['3M', 91], ['6M', 183], ['1Y', 365], ['All', 0]];
+const RCP_RANGE_KEY = 'wE-range';
+function RCP_getRange() { try { const v = localStorage.getItem(RCP_RANGE_KEY); return RCP_RANGES.some(r => r[0] === v) ? v : 'All'; } catch (e) { return 'All'; } }
+function RCP_setRange(v) { try { localStorage.setItem(RCP_RANGE_KEY, v); } catch (e) {} }
+/** Which presets make sense for a series spanning `spanDays` (a preset must hide something to be worth showing). */
+function RCP_rangesFor(spanDays) { return RCP_RANGES.filter(r => !r[1] || spanDays > r[1] * 1.15); }
+/** Resolve the saved choice against what's available: a saved "6M" on a 2-month series falls back to All. */
+function RCP_effectiveRange(spanDays) { const av = RCP_rangesFor(spanDays), want = RCP_getRange(); return av.some(r => r[0] === want) ? want : 'All'; }
+function RCP_rangeBarHtml(spanDays, current) {
+  const av = RCP_rangesFor(spanDays); if (av.length < 3) return '';
+  return `<div class="rcp-range" role="group" aria-label="Chart time range">${av.map(r => `<button type="button" data-r="${r[0]}" aria-pressed="${r[0] === current}">${r[0]}</button>`).join('')}</div>`;
+}
+function RCP_wireRangeBar(root, onPick) {
+  root.querySelectorAll('.rcp-range button').forEach(b => b.onclick = () => { RCP_setRange(b.dataset.r); onPick(b.dataset.r); });
+}
+
+function RCPChart_render(container, points, candidateIds, registry, opts = {}) {
+  if (!points.length) return RCPChart_draw(container, points, candidateIds, registry, opts);
+  const DAY = 864e5, sorted = points.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+  const last = new Date(sorted[sorted.length - 1].date).getTime(), span = (last - new Date(sorted[0].date).getTime()) / DAY;
+  const paint = cur => {
+    const days = (RCP_RANGES.find(r => r[0] === cur) || [0, 0])[1];
+    const vis = days ? sorted.filter(p => new Date(p.date).getTime() >= last - days * DAY) : sorted;
+    container.innerHTML = RCP_rangeBarHtml(span, cur) + '<div class="rcp-range-body"></div>';
+    RCPChart_draw(container.querySelector('.rcp-range-body'), vis.length >= 2 ? vis : sorted, candidateIds, registry, opts);
+    RCP_wireRangeBar(container, paint);
+  };
+  paint(RCP_effectiveRange(span));
 }
 
 if (typeof window !== 'undefined') {

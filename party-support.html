@@ -33,16 +33,20 @@
       <a href="polls" class="current">Spinner Insights Polls</a>
       <a href="elects/">TSR Elects</a>
       <details class="nav-more">
-        <summary class="">More</summary>
+        <summary class="current">More</summary>
         <div class="nav-menu">
-          <div class="nav-menu-h">Tools</div>
-          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
-          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <div class="nav-menu-h">Forecast &amp; trackers</div>
+          <a href="approval"><b>Moderator Approval</b><span>Job approval for every moderator, across all their seats</span></a>
+          <a href="party-support" class="current"><b>Party Support</b><span>Generic-ballot party ID, pooled across pollsters</span></a>
+          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
           <div class="nav-menu-h">Polling</div>
           <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Tools</div>
+          <a href="elects/replay"><b>Election Replay</b><span>Watch a result come in vote by vote, or export it as video</span></a>
+          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
           <div class="nav-menu-h">Read</div>
           <a href="articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
-          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
         </div>
       </details>
     </nav>
@@ -83,6 +87,7 @@
 <script src="assets/js/tsrelects.js"></script>
 <script src="assets/js/basecalc.js"></script>
 <script src="assets/js/rcp-chart.js"></script>
+<script src="assets/js/photo-filter.js"></script>
 <script src="assets/js/tracker.js"></script>
 <script src="assets/js/rcp-donut.js"></script>
 <script>
@@ -105,7 +110,7 @@ async function boot() {
   // out of the parties registry, so this can reuse every existing
   // TSR_candidateName / TSR_candidateColor / BaseCalc / RCPChart helper
   // unmodified instead of writing a parallel set just for parties.
-  const partyIds = Object.keys(registryData.parties || {});
+  const partyIds = Object.keys(registryData.parties || {}).filter(pid => SITE_partyActive(registryData.parties[pid]));  // dissolved parties are no longer tracked
   const partyRegistry = { candidates: {} };
   partyIds.forEach(pid => {
     const p = registryData.parties[pid];
@@ -128,9 +133,17 @@ async function boot() {
   const asOf = todayUTCString();
   const aggOpts = {};
   const agg = BaseCalc_aggregate(polls, partyIds, asOf, aggOpts);
-  const sorted = agg.sorted; // [[partyId, pct], ...] already sorted desc by BaseCalc_aggregate
+  const sorted = agg.sorted.filter(([pid]) => agg.coverage[pid] > 0); // [[partyId, pct], ...] already sorted desc by BaseCalc_aggregate
 
+  // Party mark: a logo if registries.json gives the party a `logo` file (assets/img/parties/<file>), else a monogram badge.
+  const monoOf = pid => { const p = registryData.parties[pid], n = (p.shortName || p.name || pid).trim().replace(/\.$/, ''), w = n.split(/\s+/); return w.length > 1 ? w.map(x => x[0]).join('').slice(0, 4).toUpperCase() : n.slice(0, n.length > 5 ? 4 : 5).replace(/[^A-Za-z0-9]+$/, ''); };
+  const lightFill = hex => { const h = String(hex).replace('#', ''), f = h.length === 3 ? h.replace(/./g, c => c + c) : h, l = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * l(parseInt(f.slice(0, 2), 16)) + .7152 * l(parseInt(f.slice(2, 4), 16)) + .0722 * l(parseInt(f.slice(4, 6), 16)) > .42; };
+  const FILTER = new URLSearchParams(location.search).get('logo') === 'filter';
+  const markOf = pid => { const p = registryData.parties[pid]; if (pid === 'ua') return ''; if (p.logo && FILTER) return `<div class="rcp-bar-photo${p.logoStyle === 'plain-wide' ? ' pty-logo wide' : ''}"><img ${p.logoMono ? '' : 'class="white-filter-img" '}src="assets/img/parties/${p.logoMono || p.logo}" alt=""></div>`; if (p.logo) { const st = p.logoStyle || 'plain', img = `<img src="assets/img/parties/${p.logo}" alt="">`;
+    return `<div class="rcp-bar-photo pty-logo ${st.split('-').join(' ')}">${img}</div>`; }
+    return `<div class="rcp-bar-photo"><span class="pty-mono${lightFill(p.color) ? ' dark' : ''}" data-n="${monoOf(pid).length}">${monoOf(pid)}</span></div>`; };
   let barsHtml = `<div class="rcp-bars-wrap">`;
+  const maxPct = Math.max(...sorted.map(x => x[1]), 0.0001);   // bars are scaled to the leader so the chart uses the full row
   sorted.forEach(([pid, pct], i) => {
     const color = TSR_candidateColor(partyRegistry, pid);
     const name = TSR_candidateName(partyRegistry, pid);
@@ -140,12 +153,12 @@ async function boot() {
     }
     barsHtml += `
       <div class="rcp-bar-row">
-        <div class="rcp-bar-fill" style="width:${Math.max(pct * 100, 6)}%; background:linear-gradient(120deg, ${color}, ${color});"></div>
+        <div class="rcp-bar-fill" style="width:${Math.max(pct / maxPct * 80, 6)}%; background:linear-gradient(120deg, ${color}, ${color});">${markOf(pid)}</div>
         <div class="rcp-bar-remainder"></div>
-        ${SITE_barMeta(name, (pct * 100).toFixed(1), Math.max(pct * 100, 6), color)}
+        ${SITE_barMeta(name, (pct * 100).toFixed(1), Math.max(pct / maxPct * 80, 6), color)}
       </div>`;
   });
-  barsHtml += `</div>`;
+  barsHtml += `<p class="small-muted" style="margin:6px 2px 0;font-size:11px;">Bar lengths are scaled to the leading party; the percentages are the actual weighted shares.</p></div>`;
 
   const points = BaseCalc_weightedTimeline(polls, partyIds, asOf, aggOpts);
 
@@ -177,6 +190,16 @@ async function boot() {
     </div>
     ${tableHtml}`;
 
+  if (FILTER && typeof PhotoFilter_applyAll === 'function') PhotoFilter_applyAll('.ps-top .white-filter-img');
+  // Shrink a logo to fit inside a short bar (a 4% party shouldn't spill its mark onto the white remainder)
+  const fitLogos = () => document.querySelectorAll('.ps-top .rcp-bar-row').forEach(row => {
+    const fill = row.querySelector('.rcp-bar-fill'), box = row.querySelector('.rcp-bar-photo'); if (!fill || !box) return;
+    box.style.width = box.style.height = ''; box.style.left = ''; const K = innerWidth <= 700 ? 0.64 : 0.72;
+    const room = fill.getBoundingClientRect().width - 12, nat = box.getBoundingClientRect().width;
+    if (box.classList.contains('wide') && fill.getBoundingClientRect().width * K < nat) { const w = fill.getBoundingClientRect().width * K; box.style.width = w + 'px'; box.style.left = ((room + 12 - w) / 2) + 'px'; }
+    else if (room < nat + 8) { const w = Math.max(24, room - 6), wide = box.classList.contains('wide'); box.style.width = w + 'px'; if (!wide) box.style.height = w + 'px'; box.style.left = Math.max(3, (room + 12 - w) / 2) + 'px'; }
+  });
+  fitLogos(); addEventListener('resize', fitLogos); document.fonts && document.fonts.ready.then(fitLogos);
   RCPDonut_fromPairs(document.getElementById('partyDonut'), sorted, id => TSR_candidateName(partyRegistry, id), id => TSR_candidateColor(partyRegistry, id), 'Party support', { top: 4, fieldLabel: 'Other parties', size: 280 });
   RCPChart_render(document.getElementById('partyChart'), points, partyIds, partyRegistry);
 }

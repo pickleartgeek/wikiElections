@@ -229,6 +229,9 @@
   .shift-row .n { flex: 1; min-width: 0; }
   .shift-row .v { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; white-space: nowrap; }
   .shift-row .d { font-size: 15px; }
+  .replay-link { display:flex; align-items:center; justify-content:center; gap:8px; box-sizing:border-box; padding:9px 12px; border-radius:var(--radius); background:#0f1117; color:#fff; border-bottom:3px solid #d3102a; font-size:13px; font-weight:800; text-decoration:none; }
+  .replay-link:hover { background:#d3102a; }
+  #replayWrap[hidden] { display:none; }
 </style>
 </head>
 <body>
@@ -248,14 +251,18 @@
       <details class="nav-more">
         <summary class="">More</summary>
         <div class="nav-menu">
-          <div class="nav-menu-h">Tools</div>
-          <a href="../elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
-          <a href="../elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <div class="nav-menu-h">Forecast &amp; trackers</div>
+          <a href="../approval"><b>Moderator Approval</b><span>Job approval for every moderator, across all their seats</span></a>
+          <a href="../party-support"><b>Party Support</b><span>Generic-ballot party ID, pooled across pollsters</span></a>
+          <a href="../guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
           <div class="nav-menu-h">Polling</div>
           <a href="../pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Tools</div>
+          <a href="../elects/replay"><b>Election Replay</b><span>Watch a result come in vote by vote, or export it as video</span></a>
+          <a href="../elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <a href="../elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
           <div class="nav-menu-h">Read</div>
           <a href="../articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
-          <a href="../guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
         </div>
       </details>
     </nav>
@@ -289,6 +296,10 @@
     <div class="field-row" id="roundFieldWrap" style="display:none">
       <label>Round</label>
       <select id="roundSelect"></select>
+    </div>
+    <div class="field-row" id="replayWrap" hidden>
+      <label>Count replay</label>
+      <a class="replay-link" id="replayLink" href="replay">▶ Replay this count</a>
     </div>
   </div>
   <div class="race-tabs" id="raceTabs"></div>
@@ -443,11 +454,15 @@ function renderLiveStrip() {
   strip.querySelectorAll('.live-card').forEach(b => b.onclick = () => openElection(b.dataset.id));
 }
 
+let _replayIds = null;
+function REPLAY_ids() { return _replayIds || (_replayIds = fetch('../data/timelines/index.json').then(r => r.json()).then(d => new Set((d.timelines || []).map(t => t.id))).catch(() => new Set())); }
+
 function openElection(id) {  currentElection = allElections.find(e => e.id === id);
   if (!currentElection) return;
   document.getElementById('electionSelect').value = id;
   try { const u = new URL(location.href); u.searchParams.set('election', id); history.replaceState(null, '', u); } catch (e) {}
   document.querySelectorAll('.live-card').forEach(b => b.classList.toggle('active', b.dataset.id === id));
+  REPLAY_ids().then(ids => { const w = document.getElementById('replayWrap'); w.hidden = !ids.has(id); document.getElementById('replayLink').href = 'replay?e=' + encodeURIComponent(id); });
 
   const roundWrap = document.getElementById('roundFieldWrap');
   const roundSel = document.getElementById('roundSelect');

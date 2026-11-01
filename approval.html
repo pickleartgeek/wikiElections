@@ -40,16 +40,20 @@
       <a href="polls" class="current">Spinner Insights Polls</a>
       <a href="elects/">TSR Elects</a>
       <details class="nav-more">
-        <summary class="">More</summary>
+        <summary class="current">More</summary>
         <div class="nav-menu">
-          <div class="nav-menu-h">Tools</div>
-          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
-          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <div class="nav-menu-h">Forecast &amp; trackers</div>
+          <a href="approval" class="current"><b>Moderator Approval</b><span>Job approval for every moderator, across all their seats</span></a>
+          <a href="party-support"><b>Party Support</b><span>Generic-ballot party ID, pooled across pollsters</span></a>
+          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
           <div class="nav-menu-h">Polling</div>
           <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <div class="nav-menu-h">Tools</div>
+          <a href="elects/replay"><b>Election Replay</b><span>Watch a result come in vote by vote, or export it as video</span></a>
+          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
+          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
           <div class="nav-menu-h">Read</div>
           <a href="articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
-          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
         </div>
       </details>
     </nav>
@@ -94,6 +98,7 @@
 <script src="assets/js/tsrelects.js"></script>
 <script src="assets/js/basecalc.js"></script>
 <script src="assets/js/rcp-chart.js"></script>
+<script src="assets/js/career-chart.js"></script>
 <script src="assets/js/photo-filter.js"></script>
 <script>
 initSiteChrome();
@@ -117,6 +122,8 @@ async function boot() {
   ]);
   registry = regData;
   approvalData = OVR_getApprovalData(apprBase);
+  try { const res = await fetch('data/tsrelects-results.json').then(r => r.json()), dateOf = {}; res.forEach(e => { dateOf[e.id] = e.date; });
+    Object.values(approvalData.moderators || {}).forEach(m => (m.terms || []).forEach(t => { if (!t.start && t.electionId && dateOf[t.electionId]) t._start = dateOf[t.electionId]; })); } catch (e) {}
 
   const modKeys = Object.keys(approvalData.moderators || {});
   const currentModKeys = modKeys.filter(k => (approvalData.moderators[k].status || 'current') !== 'former');
@@ -170,12 +177,14 @@ function todayUTCString() {
 }
 
 function loadEntry(key) {
+  try { const q = new URL(location.href); q.searchParams.set('mod', key); history.replaceState(null, '', q); } catch (e) {}
   const isQuestion = approvalData.questions && Object.prototype.hasOwnProperty.call(approvalData.questions, key);
   const entry = isQuestion ? approvalData.questions[key] : approvalData.moderators[key];
   const label = isQuestion ? entry.name : displayNameFor(entry);
   const yesLabel = isQuestion ? (entry.yesLabel || 'Yes') : 'Approve';
   const noLabel = isQuestion ? (entry.noLabel || 'No') : 'Disapprove';
   document.getElementById('pageTitle').textContent = isQuestion ? label : `${label} — Job Approval`;
+  const multi = !isQuestion && entry.terms && entry.terms.length > 1;
 
   if (!entry.polls.length) {
     document.getElementById('modContent').innerHTML = `
@@ -193,7 +202,7 @@ function loadEntry(key) {
   // A former moderator's approval is frozen at the end of their term (termEnd, else their last poll).
   const wasFormer = !isQuestion && (entry.status || 'current') === 'former';
   const lastPoll = entry.polls.reduce((x, p) => p.date > x ? p.date : x, '');
-  const asOf = wasFormer ? (entry.termEnd || lastPoll) : todayUTCString();
+  const asOf = entry.frozenAsOf || (wasFormer ? (entry.termEnd || lastPoll) : todayUTCString());
   // normalize:false -- these are independently-measured shares, not a vote
   // split, so they shouldn't be forced to sum to 100% (the gap is "no opinion").
   const aggOpts = { normalize: false };
@@ -201,14 +210,14 @@ function loadEntry(key) {
   const latestAgg = BaseCalc_aggregate(entry.polls, ['approve', 'disapprove'], asOf, aggOpts);
   const approve = latestAgg.averages.approve || 0, disapprove = latestAgg.averages.disapprove || 0;
   const photo = isQuestion ? null : photoFor(entry.candidateKey || key);
-  const isFormer = !isQuestion && (entry.status || 'current') === 'former';
+  const isFormer = !isQuestion && ((entry.status || 'current') === 'former' || !!entry.frozenAsOf);
 
   let html = `
     ${photo ? `
     <div class="appr-hero">
       <div class="appr-hero-photo"><img class="white-filter-img" src="${photo}" alt=""></div>
       <div>
-        <div style="font-family:var(--font-spinner-display); font-size:20px; font-weight:900;">${label}${isFormer ? ' <span class="rcp-donut-legend-item" style="background:#efece0; border-radius:999px; padding:2px 10px; font-size:11px; font-weight:700; vertical-align:middle;">Former Moderator</span>' : ''}</div>
+        <div style="font-family:var(--font-spinner-display); font-size:20px; font-weight:900;">${label}${isFormer ? ` <span class="rcp-donut-legend-item" style="background:#efece0; border-radius:999px; padding:2px 10px; font-size:11px; font-weight:700; vertical-align:middle;">${entry.status === 'former' ? 'Former Moderator' : 'Former term'}</span>` : ''}${entry.seat && entry.terms ? ` <span class="rcp-donut-legend-item" style="background:#111214; color:#fff; border-radius:999px; padding:2px 10px; font-size:11px; font-weight:700; vertical-align:middle;">${entry.seat}</span>` : ''}</div>
         <div class="small-muted">${entry.polls.length} approval poll${entry.polls.length === 1 ? '' : 's'} tracked${isFormer ? ` · final approval as of ${asOf}` : ''}</div>
       </div>
     </div>` : `
@@ -236,20 +245,21 @@ function loadEntry(key) {
     </div>
 
     <div class="rcp-chart-panel">
-      <h3>Weighted Average</h3>
-      <p class="small-muted" style="margin:0;">Same alpha-weighted ProbCalc math as every race on this site, recomputed for each day as if it were "election day" — older polls fade themselves out through the 1/days-till term, so a long gap with no new polling shows up honestly as the line decaying back toward zero rather than freezing flat or being silently bridged.</p>
+      <h3>${multi ? 'Career Approval' : 'Weighted Average'}</h3>
+      ${multi ? `<p class="small-muted" style="margin:0;">Every term on one timeline. Each seat is its own line that starts fresh at that term's first poll, so a move to a new seat shows as a reset rather than a blend. Weighted average, same ProbCalc recency math as everywhere else.</p>` : ''}
+      ${multi ? '' : `<p class="small-muted" style="margin:0;">Same alpha-weighted ProbCalc math as every race on this site, recomputed for each day as if it were "election day" — older polls fade themselves out through the 1/days-till term, so a long gap with no new polling shows up honestly as the line decaying back toward zero rather than freezing flat or being silently bridged.</p>`}
       <div id="apprChart"></div>
     </div>
 
     <div class="rcp-table-wrap">
       <table class="rcp-table">
-        <thead><tr><th>Pollster</th><th>Date</th><th>Sample</th><th>${yesLabel}</th><th>${noLabel}</th></tr></thead>
+        <thead><tr><th>Pollster</th>${multi ? '<th>Term</th>' : ''}<th>Date</th><th>Sample</th><th>${yesLabel}</th><th>${noLabel}</th></tr></thead>
         <tbody>
-          <tr class="rcp-average-row"><td>DDTSR Average</td><td>—</td><td>—</td>
+          <tr class="rcp-average-row"><td>DDTSR Average${multi ? ` <small>(${entry.seat})</small>` : ''}</td>${multi ? '<td>—</td>' : ''}<td>—</td><td>—</td>
             <td>${(approve * 100).toFixed(1)}%</td>
             <td>${(disapprove * 100).toFixed(1)}%</td></tr>
-          ${[...entry.polls].sort((a, b) => new Date(b.date) - new Date(a.date)).map(p => `
-            <tr><td><a href="pollster?p=${encodeURIComponent(String(p.pollster).replace(/\s*\(.*?\)/g,'').replace(/^u\//,'').replace(/\s+H2H Poll$/,'').trim())}">${p.pollster}</a></td><td>${p.date}</td><td>${p.sample}</td>
+          ${[...(multi ? entry.allPolls : entry.polls)].sort((a, b) => new Date(b.date) - new Date(a.date)).map(p => `
+            <tr><td><a href="pollster?p=${encodeURIComponent(String(p.pollster).replace(/\s*\(.*?\)/g,'').replace(/^u\//,'').replace(/\s+H2H Poll$/,'').trim())}">${p.pollster}</a></td>${multi ? `<td>${(entry.terms.find(t => t.id === p._t) || {}).label || (entry.terms.find(t => t.id === p._t) || {}).seat || ''}</td>` : ''}<td>${p.date}</td><td>${p.sample}</td>
               <td>${((p.shares.approve || 0) * 100).toFixed(1)}%</td>
               <td>${((p.shares.disapprove || 0) * 100).toFixed(1)}%</td></tr>`).join('')}
         </tbody>
@@ -258,7 +268,8 @@ function loadEntry(key) {
 
   document.getElementById('modContent').innerHTML = html;
   if (typeof PhotoFilter_applyAll === 'function') PhotoFilter_applyAll('#modContent .white-filter-img');
-  RCPChart_render(document.getElementById('apprChart'), points, ['approve', 'disapprove'],
+  if (multi) CareerChart_render(document.getElementById('apprChart'), entry);
+  else RCPChart_render(document.getElementById('apprChart'), points, ['approve', 'disapprove'],
     { candidates: { approve: { name: yesLabel, color: '#111214' }, disapprove: { name: noLabel, color: '#cf1322' } } });
 }
 

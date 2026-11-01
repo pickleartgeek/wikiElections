@@ -1,5 +1,5 @@
 {
-  "_comment": "CENSUS official moderator approval/favorability polling. Current moderators are determined by the latest Census. Only moderators with registry IDs are included. Historical polling is included only when that moderator was actually featured. Favorable is mapped to approve and Unfavorable to disapprove. Neutral/No Opinion is omitted. Rendered as a 90-day rolling average on a donut per moderator on the homepage; the approval.html page shows the full weighted-average trendline per ProbCalc. The `questions` block below uses the exact same {pollster,date,sample,weight,shares:{approve,disapprove}} shape and the same rendering pipeline as `moderators` -- these are generic community track-record questions rather than a specific person, so `approve`/`disapprove` here just mean the Yes/No side of that question (see each entry's `yesLabel`/`noLabel` for the real button text) and there's no CENSUS/registry candidate photo tied to them.",
+  "_comment": "CENSUS official moderator approval/favorability polling. Current moderators are determined by the latest Census. Only moderators with registry IDs are included. Historical polling is included only when that moderator was actually featured. Favorable is mapped to approve and Unfavorable to disapprove. Neutral/No Opinion is omitted. Rendered as a 90-day rolling average on a donut per moderator on the homepage; the approval.html page shows the full weighted-average trendline per ProbCalc. The `questions` block below uses the exact same {pollster,date,sample,weight,shares:{approve,disapprove}} shape and the same rendering pipeline as `moderators` -- these are generic community track-record questions rather than a specific person, so `approve`/`disapprove` here just mean the Yes/No side of that question (see each entry's `yesLabel`/`noLabel` for the real button text) and there's no CENSUS/registry candidate photo tied to them. MODERATOR TERMS: a moderator may carry `terms` (chronological): {id, seat, label?, role?, status:'current'|'former', end?, electionId?}. Each poll may carry `term` (a term id); an untagged poll belongs to the person's current term, so new Census polls land on the seat they hold now. The board shows the latest term that has polls; a person whose current term has no polls yet is shown with their previous term's frozen numbers plus a 'first poll pending' note. `role` on a term replaces the handle as the display name (e.g. Elections Secretary).",
   "moderators": {
     "ip": {
       "name": "Impressive_Plant",
@@ -218,8 +218,21 @@
     },
     "pag": {
       "name": "PickleArtGeek",
+      "terms": [
+        {
+          "id": "class2",
+          "seat": "Class 2",
+          "status": "former"
+        },
+        {
+          "id": "es",
+          "seat": "Elections Secretary",
+          "role": "Elections Secretary",
+          "status": "current"
+        }
+      ],
       "polls": [
-                {
+        {
           "pollster": "CENSUS",
           "date": "2026-10-08",
           "sample": 13,
@@ -227,7 +240,8 @@
           "shares": {
             "approve": 0.5385,
             "disapprove": 0.0769
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -237,7 +251,8 @@
           "shares": {
             "approve": 0.5455,
             "disapprove": 0.0909
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -247,7 +262,8 @@
           "shares": {
             "approve": 0.5333,
             "disapprove": 0.1333
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -257,7 +273,8 @@
           "shares": {
             "approve": 0.5385,
             "disapprove": 0.0769
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -267,7 +284,8 @@
           "shares": {
             "approve": 0.4706,
             "disapprove": 0.0588
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -277,7 +295,8 @@
           "shares": {
             "approve": 0.5,
             "disapprove": 0.0556
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -287,7 +306,8 @@
           "shares": {
             "approve": 0.5263,
             "disapprove": 0.1053
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -297,7 +317,8 @@
           "shares": {
             "approve": 0.3514,
             "disapprove": 0.0541
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -307,7 +328,8 @@
           "shares": {
             "approve": 0.3659,
             "disapprove": 0.0244
-          }
+          },
+          "term": "class2"
         },
         {
           "pollster": "CENSUS",
@@ -317,14 +339,15 @@
           "shares": {
             "approve": 0.5161,
             "disapprove": 0.0
-          }
+          },
+          "term": "class2"
         }
       ]
     },
     "prac": {
       "name": "practicalpurpose",
       "polls": [
-       {
+        {
           "pollster": "CENSUS",
           "date": "2026-10-08",
           "sample": 13,
@@ -653,6 +676,20 @@
     },
     "tmf1": {
       "name": "teammomofan",
+      "terms": [
+        {
+          "id": "class7",
+          "seat": "Class 7",
+          "status": "former",
+          "electionId": "class7-2025-07"
+        },
+        {
+          "id": "class2",
+          "seat": "Class 2",
+          "status": "current",
+          "electionId": "class2-2026-10"
+        }
+      ],
       "polls": [
         {
           "pollster": "CENSUS",
@@ -662,7 +699,8 @@
           "shares": {
             "approve": 0.3636,
             "disapprove": 0.1818
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -672,7 +710,8 @@
           "shares": {
             "approve": 0.3333,
             "disapprove": 0.1333
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -682,7 +721,8 @@
           "shares": {
             "approve": 0.5385,
             "disapprove": 0.1538
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -692,7 +732,8 @@
           "shares": {
             "approve": 0.3529,
             "disapprove": 0.0588
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -702,7 +743,8 @@
           "shares": {
             "approve": 0.4444,
             "disapprove": 0.0556
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -712,7 +754,8 @@
           "shares": {
             "approve": 0.3684,
             "disapprove": 0.1579
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -722,7 +765,8 @@
           "shares": {
             "approve": 0.3243,
             "disapprove": 0.0811
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -732,7 +776,8 @@
           "shares": {
             "approve": 0.2683,
             "disapprove": 0.0244
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -742,7 +787,8 @@
           "shares": {
             "approve": 0.3871,
             "disapprove": 0.0
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -752,7 +798,8 @@
           "shares": {
             "approve": 0.5135,
             "disapprove": 0.027
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -762,7 +809,8 @@
           "shares": {
             "approve": 0.5,
             "disapprove": 0.0526
-          }
+          },
+          "term": "class7"
         },
         {
           "pollster": "CENSUS",
@@ -772,12 +820,39 @@
           "shares": {
             "approve": 0.5,
             "disapprove": 0.0625
-          }
+          },
+          "term": "class7"
         }
       ]
     },
     "oc": {
       "name": "One-Community",
+      "terms": [
+        {
+          "id": "class2a",
+          "seat": "Class 2",
+          "label": "Class 2 · 1st term",
+          "status": "former"
+        },
+        {
+          "id": "class2b",
+          "seat": "Class 2",
+          "label": "Class 2 · 2nd term",
+          "status": "former"
+        },
+        {
+          "id": "es",
+          "seat": "Elections Secretary",
+          "role": "Elections Secretary",
+          "status": "former"
+        },
+        {
+          "id": "class1",
+          "seat": "Class 1",
+          "status": "current",
+          "electionId": "class1-2026-10"
+        }
+      ],
       "polls": [
         {
           "pollster": "CENSUS",
@@ -787,7 +862,8 @@
           "shares": {
             "approve": 0.3636,
             "disapprove": 0.1818
-          }
+          },
+          "term": "es"
         },
         {
           "pollster": "CENSUS",
@@ -797,7 +873,8 @@
           "shares": {
             "approve": 0.1333,
             "disapprove": 0.2
-          }
+          },
+          "term": "es"
         },
         {
           "pollster": "CENSUS",
@@ -807,7 +884,8 @@
           "shares": {
             "approve": 0.4615,
             "disapprove": 0.0
-          }
+          },
+          "term": "es"
         },
         {
           "pollster": "CENSUS",
@@ -817,7 +895,8 @@
           "shares": {
             "approve": 0.3529,
             "disapprove": 0.0
-          }
+          },
+          "term": "es"
         },
         {
           "pollster": "CENSUS",
@@ -827,7 +906,8 @@
           "shares": {
             "approve": 0.5556,
             "disapprove": 0.0556
-          }
+          },
+          "term": "es"
         },
         {
           "pollster": "CENSUS",
@@ -837,7 +917,8 @@
           "shares": {
             "approve": 0.4211,
             "disapprove": 0.1053
-          }
+          },
+          "term": "es"
         },
         {
           "pollster": "CENSUS",
@@ -847,7 +928,8 @@
           "shares": {
             "approve": 0.4324,
             "disapprove": 0.0541
-          }
+          },
+          "term": "es"
         },
         {
           "pollster": "CENSUS",
@@ -857,7 +939,8 @@
           "shares": {
             "approve": 0.2439,
             "disapprove": 0.0244
-          }
+          },
+          "term": "es"
         },
         {
           "pollster": "CENSUS",
@@ -867,7 +950,8 @@
           "shares": {
             "approve": 0.3226,
             "disapprove": 0.0323
-          }
+          },
+          "term": "es"
         }
       ]
     }

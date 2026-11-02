@@ -2,6 +2,16 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xlj5fi_1793579695639",
+      "title": "TSR Party Alignment",
+      "status": "open",
+      "createdAt": 1793579695639,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xlj5fi_1793579695639.json"
+    },
+    {
       "id": "poll_t3_1xkkdta_1793478198233",
       "title": "Who will polls overestimate?",
       "status": "open",

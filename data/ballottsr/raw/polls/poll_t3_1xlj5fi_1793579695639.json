@@ -40,21 +40,23 @@
   "resultsEmbargoed": false,
   "tally": {
     "method": "fptp",
-    "totalBallots": 6,
+    "totalBallots": 11,
     "finalPct": {
-      "opt_0_zka754": 16.666666666666664,
-      "opt_1_3gwml4": 16.666666666666664,
-      "opt_2_2qxq0f": 33.33333333333333,
-      "opt_3_sc7506": 0,
-      "opt_4_lc3j7m": 33.33333333333333
+      "opt_0_zka754": 27.27272727272727,
+      "opt_1_3gwml4": 18.181818181818183,
+      "opt_2_2qxq0f": 18.181818181818183,
+      "opt_3_sc7506": 9.090909090909092,
+      "opt_4_lc3j7m": 27.27272727272727
     },
     "cacheVersion": 2,
     "groupWinners": {
       "1": "opt_2_2qxq0f",
       "2": "opt_2_2qxq0f",
-      "5": "opt_1_3gwml4",
+      "5": "opt_0_zka754",
+      "6": "opt_0_zka754",
       "7": "opt_0_zka754",
-      "8": "opt_4_lc3j7m"
+      "8": "opt_1_3gwml4",
+      "9": "opt_4_lc3j7m"
     },
     "groupPct": {
       "1": {
@@ -72,20 +74,34 @@
         "opt_4_lc3j7m": 0
       },
       "5": {
-        "opt_0_zka754": 0,
-        "opt_1_3gwml4": 50,
+        "opt_0_zka754": 33.33333333333333,
+        "opt_1_3gwml4": 33.33333333333333,
         "opt_2_2qxq0f": 0,
         "opt_3_sc7506": 0,
-        "opt_4_lc3j7m": 50
+        "opt_4_lc3j7m": 33.33333333333333
       },
-      "7": {
+      "6": {
         "opt_0_zka754": 100,
         "opt_1_3gwml4": 0,
         "opt_2_2qxq0f": 0,
         "opt_3_sc7506": 0,
         "opt_4_lc3j7m": 0
       },
+      "7": {
+        "opt_0_zka754": 50,
+        "opt_1_3gwml4": 0,
+        "opt_2_2qxq0f": 0,
+        "opt_3_sc7506": 50,
+        "opt_4_lc3j7m": 0
+      },
       "8": {
+        "opt_0_zka754": 0,
+        "opt_1_3gwml4": 50,
+        "opt_2_2qxq0f": 0,
+        "opt_3_sc7506": 0,
+        "opt_4_lc3j7m": 50
+      },
+      "9": {
         "opt_0_zka754": 0,
         "opt_1_3gwml4": 0,
         "opt_2_2qxq0f": 0,
@@ -96,9 +112,11 @@
     "groupBallotCount": {
       "1": 1,
       "2": 1,
-      "5": 2,
-      "7": 1,
-      "8": 1
+      "5": 3,
+      "6": 1,
+      "7": 2,
+      "8": 2,
+      "9": 1
     }
   },
   "propositionResults": {},

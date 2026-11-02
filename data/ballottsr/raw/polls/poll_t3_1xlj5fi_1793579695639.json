@@ -1,0 +1,106 @@
+{
+  "id": "poll_t3_1xlj5fi_1793579695639",
+  "title": "TSR Party Alignment",
+  "createdBy": "Impressive_Plant4418",
+  "createdAt": 1793579695639,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xlj5fi",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": null,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_zka754",
+      "name": "The Spinner Party (TSP)",
+      "color": "#b71212"
+    },
+    {
+      "id": "opt_1_3gwml4",
+      "name": "Union of the Democratic Center",
+      "color": "#32a852"
+    },
+    {
+      "id": "opt_2_2qxq0f",
+      "name": "People's Party of the Spinroom (PPS)",
+      "color": "#edce2f"
+    },
+    {
+      "id": "opt_3_sc7506",
+      "name": "New Democrats of the Spinroom (NDTSR)",
+      "color": "#565b99"
+    },
+    {
+      "id": "opt_4_lc3j7m",
+      "name": "Unaffiliated",
+      "color": "#bcc0c2"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 6,
+    "finalPct": {
+      "opt_0_zka754": 16.666666666666664,
+      "opt_1_3gwml4": 16.666666666666664,
+      "opt_2_2qxq0f": 33.33333333333333,
+      "opt_3_sc7506": 0,
+      "opt_4_lc3j7m": 33.33333333333333
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "1": "opt_2_2qxq0f",
+      "2": "opt_2_2qxq0f",
+      "5": "opt_1_3gwml4",
+      "7": "opt_0_zka754",
+      "8": "opt_4_lc3j7m"
+    },
+    "groupPct": {
+      "1": {
+        "opt_0_zka754": 0,
+        "opt_1_3gwml4": 0,
+        "opt_2_2qxq0f": 100,
+        "opt_3_sc7506": 0,
+        "opt_4_lc3j7m": 0
+      },
+      "2": {
+        "opt_0_zka754": 0,
+        "opt_1_3gwml4": 0,
+        "opt_2_2qxq0f": 100,
+        "opt_3_sc7506": 0,
+        "opt_4_lc3j7m": 0
+      },
+      "5": {
+        "opt_0_zka754": 0,
+        "opt_1_3gwml4": 50,
+        "opt_2_2qxq0f": 0,
+        "opt_3_sc7506": 0,
+        "opt_4_lc3j7m": 50
+      },
+      "7": {
+        "opt_0_zka754": 100,
+        "opt_1_3gwml4": 0,
+        "opt_2_2qxq0f": 0,
+        "opt_3_sc7506": 0,
+        "opt_4_lc3j7m": 0
+      },
+      "8": {
+        "opt_0_zka754": 0,
+        "opt_1_3gwml4": 0,
+        "opt_2_2qxq0f": 0,
+        "opt_3_sc7506": 0,
+        "opt_4_lc3j7m": 100
+      }
+    },
+    "groupBallotCount": {
+      "1": 1,
+      "2": 1,
+      "5": 2,
+      "7": 1,
+      "8": 1
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

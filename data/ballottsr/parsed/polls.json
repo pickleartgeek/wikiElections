@@ -1,6 +1,17 @@
 {
   "polls": [
     {
+      "id": "poll_t3_1xlj5fi_1793579695639",
+      "title": "TSR Party Alignment",
+      "createdBy": "Impressive_Plant4418",
+      "date": "2026-11-02",
+      "method": "fptp",
+      "status": "open",
+      "ballots": 6,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
       "id": "poll_t3_1xkkbju_1793478060523",
       "title": "Who will polls overestimate?",
       "createdBy": "PickleArtGeek",
@@ -18,7 +29,7 @@
       "date": "2026-10-31",
       "method": "fptp",
       "status": "open",
-      "ballots": 17,
+      "ballots": 18,
       "included": false,
       "reason": "not a class race poll"
     },

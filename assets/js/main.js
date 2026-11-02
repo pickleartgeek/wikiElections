@@ -153,6 +153,21 @@ if (typeof window !== 'undefined') window.SITE_barMeta = SITE_barMeta;
   document.head.appendChild(sc);
 })();
 
-/** Party polling only tracks parties that exist: a party with a `dissolved` date (registries.json) drops out of the party trackers after that day. */
-function SITE_partyActive(party, asOf) { return !party || !party.dissolved || party.dissolved >= (asOf || new Date().toISOString().slice(0, 10)); }
+/** Party polling only tracks parties that exist: a party with a `dissolved` date (registries.json) drops out of the party trackers after that day, and one with a `founded` date only appears from that day (or its first poll, if later). */
+function SITE_partyActive(party, asOf) { const d = asOf || new Date().toISOString().slice(0, 10); return !party || ((!party.dissolved || party.dissolved >= d) && (!party.founded || party.founded <= d)); }
 if (typeof window !== 'undefined') window.SITE_partyActive = SITE_partyActive;
+
+/**
+ * Party "eras": the stretches of time with a fixed set of live parties. A party with a `dissolved` date stays in the averages up to and including
+ * that day, then drops out (the remaining parties are re-averaged without it). Returns [{from, to, ids}] with from exclusive, to inclusive.
+ */
+function SITE_partyEras(parties, asOf) {
+  const all = Object.keys(parties || {}), cut = [...new Set(all.map(k => parties[k].dissolved).filter(d => d && d < (asOf || '9999')))].sort();
+  const bounds = ['', ...cut, '9999-12-31'], eras = [];
+  for (let i = 1; i < bounds.length; i++) {
+    const to = bounds[i], ids = all.filter(k => !parties[k].dissolved || parties[k].dissolved >= to);
+    if (ids.length) eras.push({ from: bounds[i - 1], to, ids });
+  }
+  return eras;
+}
+if (typeof window !== 'undefined') window.SITE_partyEras = SITE_partyEras;

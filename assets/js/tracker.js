@@ -344,7 +344,7 @@ function TK_leadBadge(name, color, margin) {
 function _TK_parties(el, o) {
   const asOf = o.asOf || TK_dayStr(), ids = Object.keys(o.parties);
   if (!o.polls.length) { el.innerHTML = '<div class="small-muted" style="padding:16px">No party support polling logged yet.</div>'; return; }
-  const tl = TK_asOfSeries(o.polls, ids, asOf, {});
+  const tl = SITE_partyEras(o.parties, asOf).flatMap(e => TK_asOfSeries(o.polls, e.ids, asOf, {}).filter(p => p.date > e.from && p.date <= e.to));
   const last = tl[tl.length - 1].averages;
   const show = ids.filter(i => (last[i] || 0) >= 0.03).sort((a, b) => last[b] - last[a]).slice(0, 6);
   const lead = show[0], second = show[1];

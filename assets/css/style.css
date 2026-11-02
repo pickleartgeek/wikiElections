@@ -1359,3 +1359,5 @@ html.sx-open { overflow: hidden; }
 .pty-logo.zoom { overflow: hidden; padding: 0; }
 .pty-logo.zoom img { transform: scale(1.38); }
 @media (max-width: 700px) { .ps-top .pty-logo.wide { width: 50px; } .ps-top .rcp-bar-fill:has(.pty-logo.wide) { padding-left: 80px; } .ps-top .pty-logo { height: 34px; } .ps-top .pty-logo:not(.wide) { width: 34px; } .ps-top .rcp-bar-photo:not(.pty-logo) { width: 34px; height: 34px; } .ps-top .pty-mono { font-size: 11px; } }
+/* the one-row masthead rule above must not leak into the More menu's own links */
+.main-nav-inline .nav-menu a { white-space: normal; padding: 8px 16px; }

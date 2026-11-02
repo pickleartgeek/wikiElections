@@ -530,7 +530,7 @@ async function renderOffCycleHub(hub, registry) {
     TK_renderQuestions(document.getElementById('tkQuestions'), {
       asOf, questions: questionKeys.map(k => Object.assign({ key: k }, approvalData.questions[k]))
     });
-    const parties = {}; Object.keys(registry.parties || {}).forEach(pid => { if (SITE_partyActive(registry.parties[pid], asOf)) parties[pid] = registry.parties[pid]; });
+    const parties = {}; Object.keys(registry.parties || {}).forEach(pid => { parties[pid] = registry.parties[pid]; });
     TK_renderParties(document.getElementById('tkParties'), { asOf, polls: partyPollsFile.polls, parties, href: 'party-support' });
     return;
   }

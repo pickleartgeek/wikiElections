@@ -59,7 +59,7 @@ function RCPChart_draw(container, points, candidateIds, registry, opts = {}) {
     const v = p.averages[id];
     if (typeof v === 'number') maxVal = Math.max(maxVal, v);
   }));
-  const yMax = Math.max(0.2, Math.ceil((maxVal * 100 + 5) / 10) * 10 / 100);
+  const yMax = Math.min(1, Math.max(0.2, Math.ceil((maxVal * 100 + 5) / 10) * 10 / 100));   // a share can't exceed 100%
 
   const xOf = t => padL + ((t - tMin) / tSpan) * plotW;
   const yOf = v => padT + plotH - (v / yMax) * plotH;

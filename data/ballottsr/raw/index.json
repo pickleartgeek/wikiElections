@@ -2,39 +2,9 @@
   "subreddit": "thespinroom",
   "polls": [
     {
-      "id": "poll_t3_1xlj5fi_1793579695639",
-      "title": "TSR Party Alignment",
-      "status": "open",
-      "createdAt": 1793579695639,
-      "method": "fptp",
-      "isOfficialElection": false,
-      "resultsEmbargoed": false,
-      "file": "polls/poll_t3_1xlj5fi_1793579695639.json"
-    },
-    {
-      "id": "poll_t3_1xkkdta_1793478198233",
-      "title": "Who will polls overestimate?",
-      "status": "open",
-      "createdAt": 1793478198233,
-      "method": "fptp",
-      "isOfficialElection": false,
-      "resultsEmbargoed": false,
-      "file": "polls/poll_t3_1xkkdta_1793478198233.json"
-    },
-    {
-      "id": "poll_t3_1xkkbju_1793478060523",
-      "title": "Who will polls overestimate?",
-      "status": "open",
-      "createdAt": 1793478060523,
-      "method": "fptp",
-      "isOfficialElection": false,
-      "resultsEmbargoed": false,
-      "file": "polls/poll_t3_1xkkbju_1793478060523.json"
-    },
-    {
       "id": "poll_t3_1xhkq0m_1793184664966",
       "title": "How much do you approve of US President Donald Trump?",
-      "status": "closed",
+      "status": "open",
       "createdAt": 1793184664966,
       "method": "fptp",
       "isOfficialElection": false,

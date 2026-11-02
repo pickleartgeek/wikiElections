@@ -112,7 +112,8 @@ async function boot() {
   // unmodified instead of writing a parallel set just for parties.
   const partyIds = Object.keys(registryData.parties || {}).filter(pid => SITE_partyActive(registryData.parties[pid]));  // dissolved parties are no longer tracked
   const partyRegistry = { candidates: {} };
-  partyIds.forEach(pid => {
+  const allPartyIds = Object.keys(registryData.parties || {});   // dissolved parties keep their colours/names for the history
+  allPartyIds.forEach(pid => {
     const p = registryData.parties[pid];
     partyRegistry.candidates[pid] = { name: p.shortName || p.name, color: p.color };
   });
@@ -138,8 +139,8 @@ async function boot() {
   // Party mark: a logo if registries.json gives the party a `logo` file (assets/img/parties/<file>), else a monogram badge.
   const monoOf = pid => { const p = registryData.parties[pid], n = (p.shortName || p.name || pid).trim().replace(/\.$/, ''), w = n.split(/\s+/); return w.length > 1 ? w.map(x => x[0]).join('').slice(0, 4).toUpperCase() : n.slice(0, n.length > 5 ? 4 : 5).replace(/[^A-Za-z0-9]+$/, ''); };
   const lightFill = hex => { const h = String(hex).replace('#', ''), f = h.length === 3 ? h.replace(/./g, c => c + c) : h, l = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * l(parseInt(f.slice(0, 2), 16)) + .7152 * l(parseInt(f.slice(2, 4), 16)) + .0722 * l(parseInt(f.slice(4, 6), 16)) > .42; };
-  const FILTER = new URLSearchParams(location.search).get('logo') === 'filter';
-  const markOf = pid => { const p = registryData.parties[pid]; if (pid === 'ua') return ''; if (p.logo && FILTER) return `<div class="rcp-bar-photo${p.logoStyle === 'plain-wide' ? ' pty-logo wide' : ''}"><img ${p.logoMono ? '' : 'class="white-filter-img" '}src="assets/img/parties/${p.logoMono || p.logo}" alt=""></div>`; if (p.logo) { const st = p.logoStyle || 'plain', img = `<img src="assets/img/parties/${p.logo}" alt="">`;
+  const FILTER = new URLSearchParams(location.search).get('logo') !== 'badge';   // candidate-style mono marks by default; ?logo=badge shows the full-colour discs
+  const markOf = pid => { const p = registryData.parties[pid]; if (pid === 'ua') return ''; if (p.logo && FILTER) return `<div class="rcp-bar-photo${p.logoStyle === 'plain-wide' ? ' pty-logo wide' : ''}"><img ${p.logoMono ? '' : 'class="white-filter-img" '}src="assets/img/parties/${p.logoMono || p.logo}?v=3" alt=""></div>`; if (p.logo) { const st = p.logoStyle || 'plain', img = `<img src="assets/img/parties/${p.logo}?v=3" alt="">`;
     return `<div class="rcp-bar-photo pty-logo ${st.split('-').join(' ')}">${img}</div>`; }
     return `<div class="rcp-bar-photo"><span class="pty-mono${lightFill(p.color) ? ' dark' : ''}" data-n="${monoOf(pid).length}">${monoOf(pid)}</span></div>`; };
   let barsHtml = `<div class="rcp-bars-wrap">`;
@@ -160,7 +161,13 @@ async function boot() {
   });
   barsHtml += `<p class="small-muted" style="margin:6px 2px 0;font-size:11px;">Bar lengths are scaled to the leading party; the percentages are the actual weighted shares.</p></div>`;
 
-  const points = BaseCalc_weightedTimeline(polls, partyIds, asOf, aggOpts);
+  // Dissolved parties stay in the average until the day they dissolve, then the rest are re-averaged without them
+  const points = SITE_partyEras(registryData.parties, asOf).flatMap(e => BaseCalc_weightedTimeline(polls, e.ids, asOf, aggOpts).filter(p => p.date > e.from && p.date <= e.to));
+
+  // a party only has a line from its first poll onwards (no flat 0% for parties nobody has polled yet)
+  const firstShare = {};
+  polls.forEach(p => Object.keys(p.shares || {}).forEach(k => { if (typeof p.shares[k] === 'number' && (!firstShare[k] || p.date < firstShare[k])) firstShare[k] = p.date; }));
+  points.forEach(pt => Object.keys(pt.averages).forEach(id => { const f = registryData.parties[id].founded; if (!firstShare[id] || firstShare[id] > pt.date || (f && f > pt.date)) delete pt.averages[id]; }));
 
   let tableHtml = `<div class="rcp-table-wrap"><table class="rcp-table"><thead><tr><th>Pollster</th><th>Date</th><th>Sample</th>`;
   partyIds.forEach(pid => { tableHtml += `<th>${TSR_candidateName(partyRegistry, pid)}</th>`; });
@@ -201,7 +208,7 @@ async function boot() {
   });
   fitLogos(); addEventListener('resize', fitLogos); document.fonts && document.fonts.ready.then(fitLogos);
   RCPDonut_fromPairs(document.getElementById('partyDonut'), sorted, id => TSR_candidateName(partyRegistry, id), id => TSR_candidateColor(partyRegistry, id), 'Party support', { top: 4, fieldLabel: 'Other parties', size: 280 });
-  RCPChart_render(document.getElementById('partyChart'), points, partyIds, partyRegistry);
+  RCPChart_render(document.getElementById('partyChart'), points, allPartyIds, partyRegistry);
 }
 
 boot();

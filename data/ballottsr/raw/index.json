@@ -2,6 +2,16 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xmbqp3_1793658836326",
+      "title": "Way Too Early Class 2 Poll",
+      "status": "open",
+      "createdAt": 1793658836326,
+      "method": "rcv",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xmbqp3_1793658836326.json"
+    },
+    {
       "id": "poll_t3_1xlj5fi_1793579695639",
       "title": "TSR Party Alignment",
       "status": "open",

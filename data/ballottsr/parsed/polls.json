@@ -12,6 +12,17 @@
       "reason": "not a class race poll"
     },
     {
+      "id": "poll_t3_1xmbqp3_1793658836326",
+      "title": "Way Too Early Class 2 Poll",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-11-02",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 7,
+      "included": false,
+      "reason": "no election file for Class 2 around 2026-11-02"
+    },
+    {
       "id": "poll_t3_1xkkbju_1793478060523",
       "title": "Who will polls overestimate?",
       "createdBy": "PickleArtGeek",

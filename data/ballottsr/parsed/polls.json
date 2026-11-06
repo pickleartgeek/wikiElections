@@ -7,7 +7,7 @@
       "date": "2026-11-06",
       "method": "fptp",
       "status": "open",
-      "ballots": 19,
+      "ballots": 22,
       "included": false,
       "reason": "not a class race poll"
     },
@@ -18,7 +18,7 @@
       "date": "2026-11-06",
       "method": "rcv",
       "status": "open",
-      "ballots": 12,
+      "ballots": 13,
       "included": false,
       "reason": "not a class race poll"
     },

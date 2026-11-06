@@ -1,0 +1,121 @@
+{
+  "id": "poll_t3_1xp32tf_1793937111228",
+  "title": "2026 United States Senate election in Maine",
+  "createdBy": "JCEurovision",
+  "createdAt": 1793937111228,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xp32tf",
+  "method": "rcv",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": null,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_ffgjxl",
+      "name": "Troy Jackson",
+      "color": "#0015bc"
+    },
+    {
+      "id": "opt_1_kko7rx",
+      "name": "Susan Collins",
+      "color": "#e9141d"
+    },
+    {
+      "id": "opt_2_4rpxky",
+      "name": "Graham Platner",
+      "color": "#8e8e8e"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "rcv",
+    "totalBallots": 5,
+    "finalPct": {
+      "opt_0_ffgjxl": 80,
+      "opt_1_kko7rx": 20,
+      "opt_2_4rpxky": 0
+    },
+    "rounds": [
+      {
+        "round": 1,
+        "tallies": {
+          "opt_0_ffgjxl": 4,
+          "opt_1_kko7rx": 1,
+          "opt_2_4rpxky": 0
+        },
+        "exhausted": 0
+      }
+    ],
+    "totalRounds": 1,
+    "rcvTransferMatrix": {
+      "opt_0_ffgjxl": {
+        "total": 4,
+        "to": {
+          "opt_1_kko7rx": 2,
+          "opt_2_4rpxky": 0
+        },
+        "exhausted": 2
+      },
+      "opt_1_kko7rx": {
+        "total": 1,
+        "to": {
+          "opt_0_ffgjxl": 1,
+          "opt_2_4rpxky": 0
+        },
+        "exhausted": 0
+      },
+      "opt_2_4rpxky": {
+        "total": 0,
+        "to": {
+          "opt_0_ffgjxl": 0,
+          "opt_1_kko7rx": 0
+        },
+        "exhausted": 0
+      }
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "5": "opt_1_kko7rx",
+      "6": "opt_0_ffgjxl",
+      "9": "opt_0_ffgjxl"
+    },
+    "groupPct": {
+      "5": {
+        "opt_0_ffgjxl": 50,
+        "opt_1_kko7rx": 50,
+        "opt_2_4rpxky": 0
+      },
+      "6": {
+        "opt_0_ffgjxl": 100,
+        "opt_1_kko7rx": 0,
+        "opt_2_4rpxky": 0
+      },
+      "9": {
+        "opt_0_ffgjxl": 100,
+        "opt_1_kko7rx": 0,
+        "opt_2_4rpxky": 0
+      }
+    },
+    "groupBallotCount": {
+      "5": 2,
+      "6": 1,
+      "9": 2
+    },
+    "groupRoundLeaders": {
+      "1": {
+        "5": "opt_0_ffgjxl",
+        "6": "opt_0_ffgjxl",
+        "9": "opt_0_ffgjxl"
+      },
+      "2": {
+        "5": "opt_0_ffgjxl"
+      },
+      "3": {
+        "5": "opt_1_kko7rx"
+      }
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

@@ -1,6 +1,28 @@
 {
   "polls": [
     {
+      "id": "poll_t3_1xp17gn_1793931410748",
+      "title": "2025 New York City Mayoral Mock Election Democratic Primary",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-11-06",
+      "method": "fptp",
+      "status": "open",
+      "ballots": 9,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
+      "id": "poll_t3_1xp32tf_1793937111228",
+      "title": "2026 United States Senate election in Maine",
+      "createdBy": "JCEurovision",
+      "date": "2026-11-06",
+      "method": "rcv",
+      "status": "open",
+      "ballots": 5,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
       "id": "poll_t3_1xlj5fi_1793579695639",
       "title": "TSR Party Alignment",
       "createdBy": "Impressive_Plant4418",

@@ -1,0 +1,73 @@
+{
+  "id": "poll_t3_1xp17gn_1793931410748",
+  "title": "2025 New York City Mayoral Mock Election Democratic Primary",
+  "createdBy": "Representative-Fee65",
+  "createdAt": 1793931410748,
+  "permalink": "https://reddit.com/r/thespinroom/comments/t3_1xp17gn",
+  "method": "fptp",
+  "isOfficialElection": false,
+  "status": "open",
+  "votingClosesAt": null,
+  "propositionsOnly": false,
+  "options": [
+    {
+      "id": "opt_0_qpombj",
+      "name": "Andrew Cuomo",
+      "color": "#0015bc"
+    },
+    {
+      "id": "opt_1_pll94e",
+      "name": "Alexandria Ocasio-Cortez",
+      "color": "#32a852"
+    }
+  ],
+  "propositions": [],
+  "resultsEmbargoed": false,
+  "tally": {
+    "method": "fptp",
+    "totalBallots": 9,
+    "finalPct": {
+      "opt_0_qpombj": 11.11111111111111,
+      "opt_1_pll94e": 88.88888888888889
+    },
+    "cacheVersion": 2,
+    "groupWinners": {
+      "5": "opt_1_pll94e",
+      "6": "opt_0_qpombj",
+      "7": "opt_1_pll94e",
+      "8": "opt_1_pll94e",
+      "9": "opt_1_pll94e"
+    },
+    "groupPct": {
+      "5": {
+        "opt_0_qpombj": 0,
+        "opt_1_pll94e": 100
+      },
+      "6": {
+        "opt_0_qpombj": 100,
+        "opt_1_pll94e": 0
+      },
+      "7": {
+        "opt_0_qpombj": 0,
+        "opt_1_pll94e": 100
+      },
+      "8": {
+        "opt_0_qpombj": 0,
+        "opt_1_pll94e": 100
+      },
+      "9": {
+        "opt_0_qpombj": 0,
+        "opt_1_pll94e": 100
+      }
+    },
+    "groupBallotCount": {
+      "5": 4,
+      "6": 1,
+      "7": 1,
+      "8": 1,
+      "9": 2
+    }
+  },
+  "propositionResults": {},
+  "exitPoll": null
+}

@@ -2,6 +2,16 @@
   "subreddit": "thespinroom",
   "polls": [
     {
+      "id": "poll_t3_1xp17gn_1793931410748",
+      "title": "2025 New York City Mayoral Mock Election Democratic Primary",
+      "status": "open",
+      "createdAt": 1793931410748,
+      "method": "fptp",
+      "isOfficialElection": false,
+      "resultsEmbargoed": false,
+      "file": "polls/poll_t3_1xp17gn_1793931410748.json"
+    },
+    {
       "id": "poll_t3_1xmbqp3_1793658836326",
       "title": "Way Too Early Class 2 Poll",
       "status": "open",

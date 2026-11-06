@@ -7,7 +7,7 @@
       "date": "2026-11-06",
       "method": "fptp",
       "status": "open",
-      "ballots": 9,
+      "ballots": 19,
       "included": false,
       "reason": "not a class race poll"
     },
@@ -18,7 +18,7 @@
       "date": "2026-11-06",
       "method": "rcv",
       "status": "open",
-      "ballots": 5,
+      "ballots": 12,
       "included": false,
       "reason": "not a class race poll"
     },
@@ -40,7 +40,7 @@
       "date": "2026-11-02",
       "method": "rcv",
       "status": "open",
-      "ballots": 8,
+      "ballots": 9,
       "included": false,
       "reason": "no election file for Class 2 around 2026-11-02"
     },

@@ -3,6 +3,9 @@
  * path back to the repo root, e.g. "./" or "../") before loading this
  * script, then calls initSiteChrome().
  */
+/** HTML-escape for text and double-quoted attributes. The one shared copy for every page. */
+function esc(v) { return v == null ? '' : String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
 function initSiteChrome() {
   const base = window.SITE_BASE || './';
   fetch(base + 'data/site-config.json')
@@ -93,7 +96,7 @@ function renderChrome(cfg, base) {
 
 /* ---------- Dark-mode logos: swap in the dark wikiElections marks instead of boxing the light ones on white ---------- */
 (function initLogos() {
-  const MAP = { 'wikielections-mark.png': 'wikielections-mark-dark.png', 'wikielections-wordmark.png': 'wikielections-wordmark-dark.png' };
+  const MAP = { 'wikielections-mark.png': 'wikielections-mark-dark.png', 'wikielections-wordmark.png': 'wikielections-wordmark-dark.png', 'replay-logo.png': 'replay-logo-dark.png' };
   function apply() {
     const dark = document.documentElement.dataset.theme === 'dark';
     document.querySelectorAll('img').forEach(img => {

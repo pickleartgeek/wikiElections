@@ -121,17 +121,35 @@ async function boot() {
     fetch('data/approval-polls.json').then(r => r.json())
   ]);
   registry = regData;
-  approvalData = OVR_getApprovalData(apprBase);
+  // Fold each office's approval into its holders' own pages as extra terms (derived, nothing duplicated in the data file)
+  const mergedBase = JSON.parse(JSON.stringify(apprBase));
+  Object.entries(apprBase.moderators || {}).forEach(([ok, o]) => {
+    if (o.kind !== 'office' || !(o.polls || []).length) return;
+    const tdefs = o.terms && o.terms.length ? o.terms : [{ id: ok, status: 'current', candidateKey: o.candidateKey }];
+    tdefs.forEach(t => {
+      const holder = mergedBase.moderators[t.candidateKey || o.candidateKey]; if (!holder) return;
+      const tp = o.polls.filter(p => (p.term || tdefs[tdefs.length - 1].id) === t.id); if (!tp.length) return;
+      const tid = 'off-' + ok + '-' + t.id;
+      if (!holder.terms) holder.terms = [{ id: 'own', seat: 'Moderator', status: holder.status === 'former' ? 'former' : 'current' }];
+      { const cur = holder.terms.filter(x => x.status === 'current').pop() || holder.terms[holder.terms.length - 1]; holder.polls.forEach(p => { if (!p.term) p.term = cur.id; }); }
+      holder.terms.push({ id: tid, seat: o.name, label: o.name, role: o.name, status: t.status || 'current' });
+      tp.forEach(p => holder.polls.push(Object.assign({}, p, { term: tid })));
+    });
+  });
+  approvalData = OVR_getApprovalData(mergedBase);
   try { const res = await fetch('data/tsrelects-results.json').then(r => r.json()), dateOf = {}; res.forEach(e => { dateOf[e.id] = e.date; });
     Object.values(approvalData.moderators || {}).forEach(m => (m.terms || []).forEach(t => { if (!t.start && t.electionId && dateOf[t.electionId]) t._start = dateOf[t.electionId]; })); } catch (e) {}
 
   const modKeys = Object.keys(approvalData.moderators || {});
-  const currentModKeys = modKeys.filter(k => (approvalData.moderators[k].status || 'current') !== 'former');
-  const formerModKeys = modKeys.filter(k => (approvalData.moderators[k].status || 'current') === 'former');
-  const questionKeys = Object.keys(approvalData.questions || {});
+  const isOffice = k => approvalData.moderators[k].kind === 'office';
+  const officeKeys = modKeys.filter(isOffice);
+  const currentModKeys = modKeys.filter(k => !isOffice(k) && (approvalData.moderators[k].status || 'current') !== 'former');
+  const formerModKeys = modKeys.filter(k => !isOffice(k) && (approvalData.moderators[k].status || 'current') === 'former');
+  const allQuestionKeys = Object.keys(approvalData.questions || {});
+  const questionKeys = allQuestionKeys.filter(k => !approvalData.questions[k].closed), closedQKeys = allQuestionKeys.filter(k => approvalData.questions[k].closed);
   const sel = document.getElementById('modSelect');
 
-  if (!modKeys.length && !questionKeys.length) {
+  if (!modKeys.length && !allQuestionKeys.length) {
     document.getElementById('pageTitle').textContent = 'No approval polling yet';
     sel.style.display = 'none';
     document.getElementById('modContent').innerHTML = `
@@ -145,6 +163,8 @@ async function boot() {
   }
 
   let optionsHtml = '';
+  if (officeKeys.length) optionsHtml += `<optgroup label="Offices">${officeKeys.map(k =>
+    `<option value="${k}">${displayNameFor(approvalData.moderators[k])}</option>`).join('')}</optgroup>`;
   if (currentModKeys.length) {
     optionsHtml += `<optgroup label="Moderators">${currentModKeys.map(k =>
       `<option value="${k}">${displayNameFor(approvalData.moderators[k])}</option>`).join('')}</optgroup>`;
@@ -159,7 +179,9 @@ async function boot() {
   }
   sel.innerHTML = optionsHtml;
   sel.onchange = () => loadEntry(sel.value);
-  const allKeys = [...modKeys, ...questionKeys];
+  if (closedQKeys.length) optionsHtml += `<optgroup label="Closed Questions">${closedQKeys.map(k =>
+      `<option value="${k}">${approvalData.questions[k].name}</option>`).join('')}</optgroup>`;
+  const allKeys = [...modKeys, ...allQuestionKeys];
   const requested = params.get('mod');
   const startKey = (requested && allKeys.includes(requested)) ? requested : allKeys[0];
   sel.value = startKey;
@@ -270,7 +292,7 @@ function loadEntry(key) {
   if (typeof PhotoFilter_applyAll === 'function') PhotoFilter_applyAll('#modContent .white-filter-img');
   if (multi) CareerChart_render(document.getElementById('apprChart'), entry);
   else RCPChart_render(document.getElementById('apprChart'), points, ['approve', 'disapprove'],
-    { candidates: { approve: { name: yesLabel, color: '#111214' }, disapprove: { name: noLabel, color: '#cf1322' } } });
+    { candidates: { approve: { name: yesLabel, color: '#111214' }, disapprove: { name: noLabel, color: '#cf1322' } } }, { polls: entry.polls });
 }
 
 boot();

@@ -1,0 +1,20 @@
+name: Smoke test
+
+# Loads every page in headless Chromium and walks the election-night flow (call alert, windows, live refresh).
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node tools/check-data.js
+      - run: npm i --no-save playwright && npx playwright install --with-deps chromium
+      - run: node tools/smoke-test.js

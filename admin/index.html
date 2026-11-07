@@ -137,6 +137,11 @@
             <option value="runoff">Runoff — leader advances</option>
           </select>
         </div>
+        <div class="field-row" id="coBox" hidden>
+          <label>Call assist</label>
+          <div><div id="coText" class="desc" style="margin:0 0 6px;"></div><button type="button" class="btn" id="coPropose" hidden>Propose this call</button>
+          <p class="desc" style="margin:6px 0 0;">The model only suggests: it never saves a call. You still review and press Save call.</p></div>
+        </div>
         <div class="field-row">
           <label>Winner(s) / leader(s)</label>
           <select id="callWinner" multiple size="4"></select>
@@ -153,7 +158,7 @@
         <div class="field-row"><label>Title</label><input id="cgTitle" oninput="cgRefresh()" placeholder="Class 7"></div>
         <div class="field-row"><label>Subtitle</label><input id="cgSub" oninput="cgRefresh()" value="moderator"></div>
         <div class="field-row"><label>Override colour</label><input id="cgBg" type="color" value="#444444" oninput="cgBgOn=true;cgRefresh()"> <label style="font-weight:400"><input type="checkbox" id="cgBgUse" onchange="cgRefresh()"> use</label></div>
-        <div class="field-row"><label>Flip</label><label style="font-weight:400"><input type="checkbox" id="cgFlip" onchange="cgRefresh()"> This is a flip</label></div>
+        <div class="field-row"><label>Flip</label><label style="font-weight:400"><input type="checkbox" id="cgFlip" onchange="cgRefresh()"> This is a flip <span class="desc">(saved with the call; shows the FLIP pill on the homepage alert)</span></label></div>
         <div class="field-row"><label>Candidates (max 2)</label><select id="cgCands" multiple size="4" onchange="cgRefresh()"></select></div>
       </div>
       <canvas id="cgCanvas" style="width:100%;max-width:340px;border-radius:8px;border:1px solid var(--border,#ccc);display:block;margin:10px 0"></canvas>
@@ -321,6 +326,10 @@
 <script src="../assets/js/main.js"></script>
 <script src="../assets/js/tsrelects.js"></script>
 <script src="../assets/js/callgraphic.js"></script>
+<script src="../assets/js/basecalc.js"></script>
+<script src="../assets/js/groupcalc.js"></script>
+<script src="../assets/js/electsim.js"></script>
+<script src="../assets/js/nightodds.js"></script>
 
 <script>
 const ADMIN_PASS = 'ddtsr';
@@ -503,6 +512,25 @@ function loadRaceEditors() {
 }
 
 
+/* ---------- Call assist (NightOdds) ---------- */
+let coGeo = null;
+async function coRefresh() {
+  const box = document.getElementById('coBox'), txt = document.getElementById('coText'), btn = document.getElementById('coPropose'), token = coRefresh.t = {};
+  box.hidden = true; btn.hidden = true;
+  try {
+    const race = TSR_getRaces(TSR_getRoundData(currentElection, currentRoundKey))[currentRaceName]; if (!race) return;
+    const totals = TSR_raceTotals(race), keys = Object.keys(totals), N = Object.values(totals).reduce((a, b) => a + b, 0); if (!N) return;
+    coGeo = coGeo || await (await fetch('../data/groups.geojson')).json();
+    const pf = await (await fetch(`../data/elections/${currentElection.id}.json`)).json().catch(() => null);
+    if (coRefresh.t !== token) return;
+    const ctx = NO_prepare({ pf, geo: coGeo, elections: getMergedElections().filter(e => e.id !== currentElection.id && e.date < currentElection.date), date: currentElection.date, keys });
+    const o = NO_run(ctx, NO_counts(race, ctx), { sims: 4000, final: (Date.now() - Date.parse(currentElection.date)) > 4 * 864e5 }), fav = o.favorite, st = o.status, nm = TSR_candidateName(registry, fav);
+    txt.innerHTML = `<b>${nm}</b> has a <b>${NO_pct(o.lead[fav])}%</b> chance to lead (${st.text.toLowerCase()}) after ${o.N} ballot${o.N === 1 ? '' : 's'}${o.runoff > 0.05 ? ` · ${Math.round(o.runoff * 100)}% chance nobody tops 50%` : ''}. First-choice model; transfers not simulated.`;
+    box.hidden = false;
+    if (st.key === 'call' && o.majority[fav] >= 0.99) { btn.hidden = false; btn.textContent = `Propose: ${nm} wins`; btn.onclick = () => { [...document.getElementById('callWinner').options].forEach(op => { op.selected = op.value === fav; }); const sel = document.getElementById('callStatus'); if (sel) sel.value = 'winner'; }; }
+  } catch (e) { console.warn('call assist', e); }
+}
+
 /* ---------- Call graphic ---------- */
 let cgBgOn = false;
 function cgInit() {
@@ -517,9 +545,9 @@ function cgInit() {
   document.getElementById('cgKind').value = (call?.status === 'runoff' && winners.length > 1) ? 'autorunoff' : 'winner';
   const m = String(currentElection.title || '').match(/Class\s*\d+/i);
   document.getElementById('cgTitle').value = m ? m[0] : (currentElection.title || '');
-  document.getElementById('cgFlip').checked = false;
+  document.getElementById('cgFlip').checked = !!(call && call.flip);
   document.getElementById('cgBgUse').checked = false;
-  cgRefresh();
+  cgRefresh(); coRefresh();
 }
 let cgTimer;
 function cgRefresh() {
@@ -550,7 +578,7 @@ async function cgBatch() {
     Object.keys(TSR_getRaces(rd)).forEach(rn => {
       const call = TSR_getRaceCall(rd, rn), w = TSR_callWinners(call);
       if (!call || !call.status || !w.length) return;
-      jobs.push({ rk, rn, kind: call.status === 'runoff' && w.length > 1 ? 'autorunoff' : 'winner', keys: w.slice(0, 2) });
+      jobs.push({ rk, rn, kind: call.status === 'runoff' && w.length > 1 ? 'autorunoff' : 'winner', keys: w.slice(0, 2), flip: !!call.flip });
     });
   });
   if (!jobs.length) { flashStatus('No called races in this election yet.'); return; }
@@ -560,7 +588,7 @@ async function cgBatch() {
     const cands = j.keys.map(k => { const c = (registry.candidates || {})[k] || {};
       return { name: TSR_candidateName(registry, k), color: CG_candidateColor(registry, k), partyLabel: CG_candidateParty(registry, k),
         photo: c.photo ? '../assets/img/candidates/' + c.photo : '../assets/img/bust-silhouette.svg' }; });
-    await CG_render(cv, { title, subtitle: document.getElementById('cgSub').value, kind: j.kind, flip: false, candidates: cands });
+    await CG_render(cv, { title, subtitle: document.getElementById('cgSub').value, kind: j.kind, flip: j.flip, candidates: cands });
     const a = document.createElement('a');
     a.download = `${title}-${j.rk === 'runoff_round' ? 'runoff' : 'first-round'}-${j.kind}.png`.replace(/\s+/g, '-').toLowerCase();
     a.href = cv.toDataURL('image/png'); a.click();
@@ -597,13 +625,15 @@ function saveRaceCall() {
     // field is itself an object/array (it recurses and returns the old
     // value unchanged) -- an empty array is what actually overwrites a
     // previously-saved winners list, whereas `winners: null` here would not.
-    OVR_setTsrRaceCall(currentElection.id, currentRoundKey, currentRaceName, { status: null, winner: null, winners: [] });
+    OVR_setTsrRaceCall(currentElection.id, currentRoundKey, currentRaceName, { status: null, winner: null, winners: [], flip: false, calledAt: '' });
   } else {
     const winners = Array.from(document.getElementById('callWinner').selectedOptions).map(o => o.value);
     // Explicitly null out the old singular `winner` field too -- without
     // this, a race called before the multi-winner update could end up with
     // both a stale `winner` and a fresh `winners` sitting side by side.
-    OVR_setTsrRaceCall(currentElection.id, currentRoundKey, currentRaceName, { status, winner: null, winners });
+    // flip + calledAt feed the homepage: the FLIP pill on the call graphic, and how fresh the call is for the first-visit alert
+    const prev = TSR_getRaceCall(TSR_getRoundData(currentElection, currentRoundKey), currentRaceName), same = prev && prev.status === status && JSON.stringify(TSR_callWinners(prev)) === JSON.stringify(winners);
+    OVR_setTsrRaceCall(currentElection.id, currentRoundKey, currentRaceName, { status, winner: null, winners, flip: document.getElementById('cgFlip').checked, calledAt: (same && prev.calledAt) || new Date().toISOString() });
   }
   flashStatus('Call saved locally. TSR Elects will show it on next load.');
 }
@@ -794,7 +824,7 @@ function onApprKeyChange() {
 
 function getRawApproval() { return OVR_getApprovalData(approvalBase, true); }
 
-const TERM_FIELDS = [['id', 'id (e.g. class2)'], ['seat', 'Seat (e.g. Class 2)'], ['label', 'Label (optional)'], ['role', 'Office title (optional)'], ['start', 'Start', 'date'], ['end', 'End', 'date'], ['electionId', 'Election id (optional)']];
+const TERM_FIELDS = [['id', 'id (e.g. class2)'], ['seat', 'Seat (e.g. Class 2)'], ['label', 'Label (optional)'], ['role', 'Office title (optional)'], ['candidateKey', 'Holder key (offices)'], ['start', 'Start', 'date'], ['end', 'End', 'date'], ['electionId', 'Election id (optional)']];
 function termRowHtml(t) {
   t = t || {};
   return `<div class="field-grid term-row" style="margin:8px 0;align-items:end;">` + TERM_FIELDS.map(([f, ph, type]) =>
@@ -802,7 +832,6 @@ function termRowHtml(t) {
     `<div class="field-row"><label>Status</label><select data-f="status"><option value="former"${t.status === 'former' ? ' selected' : ''}>Former</option><option value="current"${t.status !== 'former' ? ' selected' : ''}>Current</option></select></div>` +
     `<div class="field-row"><button class="btn secondary" type="button" onclick="this.closest('.term-row').remove();refreshPollTermSelect()">Remove</button></div></div>`;
 }
-function esc(v) { return String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 function renderTermRows(entry) {
   const box = document.getElementById('apprTermsBox'); if (!box) return;
   box.style.display = document.getElementById('apprKind').value === 'moderators' ? '' : 'none';

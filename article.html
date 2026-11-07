@@ -98,12 +98,6 @@
 <script>
 initSiteChrome();
 
-function escapeHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
 async function boot() {
   const params = new URLSearchParams(location.search);
   const id = params.get('id');
@@ -124,9 +118,9 @@ async function boot() {
   document.title = `${article.title} — wikiElections`;
   slot.innerHTML = `
     <section class="article-hero">
-      <div class="kicker">${escapeHtml(article.date || '')}</div>
-      <h1>${escapeHtml(article.title || 'Untitled')}</h1>
-      <div class="article-byline">${escapeHtml(article.byline || '')}${article.author ? (article.byline ? ' · ' : '') + 'by ' + escapeHtml(article.author) : ''}</div>
+      <div class="kicker">${esc(article.date || '')}</div>
+      <h1>${esc(article.title || 'Untitled')}</h1>
+      <div class="article-byline">${esc(article.byline || '')}${article.author ? (article.byline ? ' · ' : '') + 'by ' + esc(article.author) : ''}</div>
       <div class="article-thumb-bar" style="background:${article.thumbColor || '#111214'};"></div>
     </section>
     <article class="article-body">${article.bodyHtml || ''}</article>
@@ -138,7 +132,7 @@ async function boot() {
     const root = document.querySelector('.article-body'), w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), nodes = [];
     while (w.nextNode()) nodes.push(w.currentNode);
     const re = new RegExp('(' + terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'ig');
-    nodes.forEach(n => { if (!re.test(n.nodeValue)) return; re.lastIndex = 0; const sp = document.createElement('span'); sp.innerHTML = escapeHtml(n.nodeValue).replace(re, '<mark class="hl" style="background:#ffe36e;color:#111214;border-radius:2px">$1</mark>'); n.replaceWith(sp); });
+    nodes.forEach(n => { if (!re.test(n.nodeValue)) return; re.lastIndex = 0; const sp = document.createElement('span'); sp.innerHTML = esc(n.nodeValue).replace(re, '<mark class="hl" style="background:#ffe36e;color:#111214;border-radius:2px">$1</mark>'); n.replaceWith(sp); });
     const first = root.querySelector('mark.hl'); if (first) setTimeout(() => first.scrollIntoView({ block: 'center' }), 150);
   }
 }

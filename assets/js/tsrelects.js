@@ -14,6 +14,11 @@ function TSR_normalizeKey(k) {
 function TSR_candidate(registry, key) {
   return (registry.candidates && registry.candidates[key]) || { name: key, color: '#888888', party: null };
 }
+/** Candidate photo path (silhouette when none). `base` is the relative path back to the site root: '' on the homepage, '../' in subfolders. */
+function TSR_candidatePhoto(registry, key, base = '') {
+  const c = registry && registry.candidates && registry.candidates[key];
+  return base + (c && c.photo ? 'assets/img/candidates/' + c.photo : 'assets/img/bust-silhouette.svg');
+}
 function TSR_candidateName(registry, key) { return TSR_candidate(registry, key).name; }
 function TSR_candidateColor(registry, key) { return TSR_candidate(registry, key).color; }
 function TSR_candidateParty(registry, key) { return TSR_candidate(registry, key).party; }

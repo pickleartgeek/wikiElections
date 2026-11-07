@@ -8,7 +8,6 @@
 (function () {
   const BASE = window.SITE_BASE || './';
   const $ = (s, r) => (r || document).querySelector(s);
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const J = u => fetch(BASE + u).then(r => { if (!r.ok) throw new Error(u); return r.json(); });
   const store = {
     get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },

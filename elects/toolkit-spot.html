@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wikiElections — Toolkit</title>
+<link rel="icon" type="image/png" href="../assets/img/brand/favicon-wiki.png">
+<style>html,body{margin:0;background:#0b0c10;height:100%}body{display:flex;align-items:center;justify-content:center}canvas{max-width:100vw;max-height:100vh;aspect-ratio:16/9;width:100%;height:auto}</style>
+</head><body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="../assets/js/toolkit-spot.js"></script>
+<script>
+const q=new URLSearchParams(location.search), cv=document.getElementById('c'), ctx=cv.getContext('2d');
+ToolkitSpot.init({base:'../'}).then(()=>{
+  window.drawAt=t=>ToolkitSpot.draw(ctx,t,1920,1080); window.spotReady=true;
+  if(q.has('t')){drawAt(parseFloat(q.get('t')));return}
+  if(q.has('capture'))return;
+  const t0=performance.now(); (function loop(n){drawAt(((n-t0)/1000)%ToolkitSpot.DURATION);requestAnimationFrame(loop)})(t0);
+});
+</script></body></html>

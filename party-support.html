@@ -208,7 +208,7 @@ async function boot() {
   });
   fitLogos(); addEventListener('resize', fitLogos); document.fonts && document.fonts.ready.then(fitLogos);
   RCPDonut_fromPairs(document.getElementById('partyDonut'), sorted, id => TSR_candidateName(partyRegistry, id), id => TSR_candidateColor(partyRegistry, id), 'Party support', { top: 4, fieldLabel: 'Other parties', size: 280 });
-  RCPChart_render(document.getElementById('partyChart'), points, allPartyIds, partyRegistry);
+  RCPChart_render(document.getElementById('partyChart'), points, allPartyIds, partyRegistry, { polls });
 }
 
 boot();

@@ -2,6 +2,32 @@
   "polls": [
     {
       "pollster": "CENSUS",
+      "date": "2026-11-04",
+      "sample": 24,
+      "weight": 1,
+      "shares": {
+        "ua": 0.375,
+        "tsp": 0.2917,
+        "udc": 0.2083,
+        "ndtsr": 0.0833,
+        "pps": 0.0417
+      }
+    },
+    {
+      "pollster": "Golden Eagle Gallup",
+      "date": "2026-11-01",
+      "sample": 11,
+      "weight": 1,
+      "shares": {
+        "tsp": 0.2727,
+        "udc": 0.1818,
+        "pps": 0.1818,
+        "ndtsr": 0.0909,
+        "ua": 0.2727
+      }
+    },
+    {
+      "pollster": "CENSUS",
       "date": "2026-10-09",
       "sample": 13,
       "weight": 1,

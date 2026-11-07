@@ -59,6 +59,9 @@ function RCPChart_draw(container, points, candidateIds, registry, opts = {}) {
     const v = p.averages[id];
     if (typeof v === 'number') maxVal = Math.max(maxVal, v);
   }));
+  // optional: individual polls plotted as dots on each line (opts.polls = [{pollster, date, sample, shares:{id:fraction}}])
+  const dotPolls = (opts.polls || []).filter(p => p && p.shares && !isNaN(new Date(p.date).getTime())).filter(p => { const t = new Date(p.date).getTime(); return t >= tMin - 864e5 && t <= tMax + 864e5; });
+  dotPolls.forEach(p => candidateIds.forEach(id => { const v = p.shares[id]; if (typeof v === 'number') maxVal = Math.max(maxVal, v); }));
   const yMax = Math.min(1, Math.max(0.2, Math.ceil((maxVal * 100 + 5) / 10) * 10 / 100));   // a share can't exceed 100%
 
   const xOf = t => padL + ((t - tMin) / tSpan) * plotW;
@@ -123,13 +126,25 @@ function RCPChart_draw(container, points, candidateIds, registry, opts = {}) {
     <rect id="rcp-capture-${instanceId}" x="${padL}" y="${padT}" width="${plotW}" height="${plotH}" fill="transparent" style="cursor:ew-resize;"/>
   `;
 
+  if (dotPolls.length) {
+    let dots = '';
+    const items = [];
+    dotPolls.forEach(p => candidateIds.forEach(id => { const v = p.shares[id]; if (typeof v !== 'number' || !seriesColors[id]) return; items.push({ p, id, v }); }));
+    items.sort((a, b) => (b.p.sample || 0) - (a.p.sample || 0)).forEach(({ p, id, v }) => {
+      const t = new Date(p.date).getTime(), x = Math.min(width - padR, Math.max(padL, xOf(t))), y = yOf(v), r = Math.min(6.5, 3 + Math.sqrt(p.sample || 0) * 0.18);
+      const label = `${nameOf(id)} ${(v * 100).toFixed(1)}% · ${p.pollster || 'poll'} · ${new Date(p.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}${p.sample ? ' · n=' + p.sample : ''}`;
+      dots += `<circle class="rcp-poll-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${seriesColors[id]}" fill-opacity="0.55" stroke="${seriesColors[id]}" stroke-width="1.25"><title>${label.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</title></circle>`;
+    });
+    svg += `<g id="rcp-polls-${instanceId}" style="cursor:ew-resize;">${dots}</g>`;
+  }
+
   svg += `</svg>`;
 
   container.innerHTML = `
     <div class="rcp-chart-lead" id="rcp-lead-${instanceId}"></div>
     <div class="rcp-chart-wrap">${svg}</div>
     <div class="rcp-legend" id="rcp-legend-${instanceId}"></div>
-    <div class="small-muted rcp-scrub-hint">Drag the line along the chart to see standings on any date.</div>`;
+    <div class="small-muted rcp-scrub-hint">Drag the line along the chart to see standings on any date.${dotPolls.length ? ' Dots are individual polls (bigger = larger sample); hover one for details.' : ''}</div>`;
 
   function renderAtIndex(idx) {
     const p = points[idx];
@@ -206,6 +221,8 @@ function RCPChart_draw(container, points, candidateIds, registry, opts = {}) {
 
   capture.addEventListener('pointerdown', onDown);
   scrubberEl.addEventListener('pointerdown', onDown);
+  const pollsG = document.getElementById(`rcp-polls-${instanceId}`);
+  if (pollsG) { pollsG.addEventListener('pointerdown', onDown); pollsG.addEventListener('touchstart', onDown, { passive: false }); }
   window.addEventListener('pointermove', onMove);
   window.addEventListener('pointerup', onUp);
   // touch fallback for browsers without full pointer events on SVG

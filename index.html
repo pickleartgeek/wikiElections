@@ -14,8 +14,10 @@
 <meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="assets/img/brand/favicon-wiki.png">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/home.css">
 </head>
 <body>
+<noscript><p class="noscript">wikiElections needs JavaScript for its live results, maps and trackers. The <a href="elects/">TSR Elects archive</a> and <a href="articles">articles</a> are the places to start.</p></noscript>
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="masthead">
@@ -64,12 +66,12 @@
     <div id="heroLiveSlot"></div>
   </section>
 
-  <div class="since-wrap" style="text-align:center"><div class="since" id="sinceLine" hidden></div></div>
-  <div class="hub-buttons" id="hubButtons"><div class="skel" style="min-height:220px"></div><div class="skel" style="min-height:220px"></div><div class="skel" style="min-height:220px"></div></div>
+  <div class="since-wrap"><div class="since" id="sinceLine" hidden></div></div>
+  <div class="hub-buttons" id="hubButtons"><div class="skel skel-hub"></div><div class="skel skel-hub"></div><div class="skel skel-hub"></div></div>
 
 <section class="stage" id="stage" aria-label="On the desk">
     <div class="stage-rail" id="stageRail" role="tablist" aria-label="Channels"></div>
-    <div class="stage-view" id="stageView"><div class="skel" style="min-height:420px;margin:24px;background-color:#1a1d26" aria-hidden="true"></div></div>
+    <div class="stage-view" id="stageView"><div class="skel skel-stage" aria-hidden="true"></div></div>
   </section>
 
   <section class="strip" id="deskStrip" hidden aria-labelledby="stripTitle">
@@ -85,13 +87,13 @@
   </section>
 
 
-<div id="rcpHub"><div class="skel" style="height:260px" aria-hidden="true"></div></div>
+<div id="rcpHub"><div class="skel skel-tracker" aria-hidden="true"></div></div>
 
 
   <h2 class="section-title">Must-see pages in and out</h2>
   <div class="card-grid">
     <a class="article-card" href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">
-      <div class="thumb thumb-banner" style="background-image:url('assets/img/brand/reddit-thumb-fade.png');"></div>
+      <div class="thumb thumb-banner thumb-reddit"></div>
       <div class="body">
         <div class="eyebrow">Community</div>
         <div class="title">r/thespinroom</div>
@@ -133,433 +135,17 @@
 <script src="assets/js/overrides.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/tsrelects.js"></script>
+<script src="assets/js/callgraphic.js"></script>
+<script src="assets/js/electionnight.js"></script>
+<script src="assets/js/callalert.js"></script>
+<script src="assets/js/nightfx.js"></script>
 <script src="assets/js/basecalc.js"></script>
+<script src="assets/js/groupcalc.js"></script>
+<script src="assets/js/electsim.js"></script>
+<script src="assets/js/nightodds.js"></script>
 <script src="assets/js/rcp-donut.js"></script>
 <script src="assets/js/tracker.js"></script>
 <script src="assets/js/pollsters.js"></script>
-<style>
-/* ---- The Wire (ticker) ---- */
-.wire { background:#111214; color:#fff; border-bottom:3px solid #d3102a; font-family:var(--font-elects-body); }
-.wire .wrap { display:flex; align-items:center; gap:14px; height:40px; }
-.wire-label { flex-shrink:0; background:#d3102a; font-weight:800; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; padding:4px 9px; border-radius:3px; }
-.wire-item { flex:1; min-width:0; color:#fff; text-decoration:none; font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:opacity .35s ease, transform .35s ease; }
-.wire-item.out { opacity:0; transform:translateY(7px); }
-.wire-item:hover { text-decoration:underline; }
-.wire-item b { color:#ff8a98; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; margin-right:9px; }
-.wire-dots { flex-shrink:0; display:flex; gap:5px; }
-.wire-dots i { width:6px; height:6px; border-radius:50%; background:#444a58; transition:background .3s; }
-.wire-dots i.on { background:#fff; }
-.wire-pause, .stage-pause { background:transparent; border:1px solid #3a3f4c; color:#c9cdd8; font:700 10px var(--font-elects-body); letter-spacing:.08em; border-radius:3px; padding:3px 7px; cursor:pointer; }
-.wire-pause:hover, .stage-pause:hover { color:#fff; border-color:#8a90a0; }
-.stage { position:relative; }
-.stage-pause { position:absolute; right:14px; bottom:12px; z-index:3; }
-
-/* ---- The Stage: one live window at a time ---- */
-.stage { display:grid; grid-template-columns:292px minmax(0,1fr); min-height:576px; margin:10px 0 46px; border-radius:16px; overflow:hidden; background:#0d0f14; color:#fff; border-bottom:5px solid #d3102a; box-shadow:0 22px 50px rgba(0,0,0,.24); }
-.stage-rail { display:flex; flex-direction:column; justify-content:center; padding:14px 0; background:linear-gradient(180deg,#141821,#0d0f14); border-right:1px solid #1d212b; }
-.rail-tab { position:relative; display:grid; grid-template-columns:30px 1fr; column-gap:10px; align-items:center; text-align:left; padding:17px 22px 17px 19px; border:0; border-left:3px solid transparent; background:none; color:#8a90a0; font:inherit; cursor:pointer; transition:background .15s, color .15s; }
-.rail-tab:hover { color:#d6d9e2; background:rgba(255,255,255,.025); }
-.rail-tab:focus-visible { outline:2px solid #ff8a98; outline-offset:-2px; }
-.rail-tab .n { grid-row:1/3; font-family:var(--font-elects-display); font-size:12px; opacity:.55; letter-spacing:.04em; }
-.rail-tab b { font-family:var(--font-elects-body); font-weight:800; font-size:15px; color:inherit; line-height:1.15; }
-.rail-tab small { font-size:12px; font-weight:600; opacity:.7; margin-top:2px; }
-.rail-tab[aria-selected="true"] { color:#fff; background:rgba(255,255,255,.045); border-left-color:#d3102a; }
-.rail-tab[aria-selected="true"] .n { opacity:1; color:#ff8a98; }
-.rail-tab .bar { position:absolute; left:0; right:0; bottom:0; height:2px; background:#d3102a; transform:scaleX(0); transform-origin:left; }
-.stage.auto .rail-tab[aria-selected="true"] .bar { animation:railFill var(--dur,9s) linear forwards; }
-.stage.hold .rail-tab[aria-selected="true"] .bar { animation-play-state:paused; }
-@keyframes railFill { to { transform:scaleX(1); } }
-
-.stage-view { position:relative; padding:30px 36px 28px; min-width:0; display:flex; }
-.stage-view::before { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(900px 340px at 85% -10%, rgba(211,16,42,.13), transparent 70%); }
-.sp { position:relative; display:flex; flex-direction:column; width:100%; min-width:0; animation:spIn .45s ease both; }
-.sp[hidden] { display:none; }
-@keyframes spIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
-.sp-head { display:flex; justify-content:space-between; align-items:flex-end; gap:18px; margin-bottom:22px; }
-.sp-head > div { flex:1; min-width:0; }
-.sp-kick { font-family:var(--font-elects-body); font-size:11px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:#ff8a98; }
-.sp-head h3 { font-family:var(--font-elects-display); font-size:clamp(22px,2.6vw,31px); line-height:1.08; letter-spacing:-.01em; margin:8px 0 0; color:#fff; border:0; padding:0; }
-.sp-cta { flex-shrink:0; white-space:nowrap; color:#fff; text-decoration:none; font-weight:800; font-size:13px; padding:10px 16px; border:1.5px solid rgba(255,255,255,.28); border-radius:999px; transition:background .15s, border-color .15s; }
-.sp-cta:hover { background:#d3102a; border-color:#d3102a; }
-.sp-body { flex:1; min-height:0; display:flex; flex-direction:column; }
-.sp-note { margin-top:auto; padding-top:18px; display:flex; flex-wrap:wrap; gap:6px 20px; font-size:12px; color:#8a90a0; font-weight:600; }
-.sp-note a { color:#c3c8d4; text-decoration:none; } .sp-note a:hover { color:#fff; text-decoration:underline; }
-
-/* replay */
-.sp-screen { position:relative; display:block; flex:1; min-height:290px; border-radius:12px; overflow:hidden; background:#0f1117; border:1px solid #232733; }
-.sp-screen iframe { position:absolute; inset:0; width:100%; height:100%; border:0; pointer-events:none; }
-.sp-screen .pill { position:absolute; right:14px; bottom:14px; display:inline-flex; gap:8px; align-items:center; background:rgba(13,15,20,.85); color:#fff; font-size:12px; font-weight:800; padding:7px 13px; border-radius:999px; border:1px solid rgba(255,255,255,.18); }
-.sp-screen .pill b { color:#ff5468; font-size:10px; } .sp-screen:hover .pill { background:#d3102a; } .sp-screen:hover .pill b { color:#fff; }
-
-/* forecast */
-.fcl { display:flex; flex-direction:column; gap:28px; margin:auto 0; }
-.fcl-row { display:grid; grid-template-columns:76px minmax(0,1fr) auto; gap:20px; align-items:center; }
-.fcl-row img { width:76px; height:76px; border-radius:50%; object-fit:cover; background:#232733; border:3px solid var(--c,#888); }
-.fcl-name { font-size:20px; font-weight:800; line-height:1.1; } .fcl-name small { display:block; margin-top:4px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#8a90a0; }
-.fcl-bar { height:10px; border-radius:5px; background:#1d212b; margin-top:12px; overflow:hidden; } .fcl-bar i { display:block; height:100%; border-radius:5px; background:var(--c,#888); }
-.fcl-pct { font-family:var(--font-elects-display); font-size:clamp(40px,5vw,60px); line-height:1; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
-.fcl-pct small { font-size:.45em; opacity:.6; }
-
-/* map */
-.mpv { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:28px; align-items:center; flex:1; }
-.mpv-svg svg { width:100%; max-height:340px; display:block; } .mpv-svg path { stroke:#0d0f14; stroke-width:1.6; stroke-linejoin:round; }
-.mpv-leg { list-style:none; margin:0; padding:0; display:grid; gap:20px; }
-.mpv-leg li { display:grid; grid-template-columns:14px minmax(0,1fr) 62px; gap:12px; align-items:center; } .mpv-leg i { width:14px; height:14px; border-radius:4px; }
-.mpv-leg .nm { font-size:15.5px; font-weight:800; line-height:1.15; min-width:0; overflow-wrap:anywhere; } .mpv-leg .nm small { display:block; font-size:12px; color:#8a90a0; font-weight:700; margin-top:3px; }
-.mpv-leg .ct { font-family:var(--font-elects-display); font-size:44px; line-height:1; display:flex; flex-direction:column; align-items:flex-end; } .mpv-leg .ct small { font-family:var(--font-elects-body); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0; margin-top:6px; }
-
-/* ratings + approval lists */
-.rl { list-style:none; margin:0; padding:0; border-top:1px solid #1d212b; }
-.rl a { display:grid; grid-template-columns:30px minmax(0,1fr) auto 52px; gap:16px; align-items:center; padding:15px 2px; border-bottom:1px solid #1d212b; color:#fff; text-decoration:none; }
-.rl a:hover .rl-name { text-decoration:underline; }
-.rl-rank { font-family:var(--font-elects-display); color:#5d6475; font-size:15px; } .rl-name { font-size:18px; font-weight:800; } .rl-meta { font-size:12px; font-weight:700; color:#8a90a0; letter-spacing:.04em; text-transform:uppercase; }
-.rl-grade { width:46px; height:46px; border-radius:10px; display:grid; place-items:center; color:#fff; font-family:var(--font-elects-display); font-size:19px; }
-.al a { grid-template-columns:30px 46px minmax(0,1fr) 150px 76px; }
-.al img { width:46px; height:46px; border-radius:50%; object-fit:cover; background:#232733; }
-.al-bar { height:8px; border-radius:4px; background:#1d212b; overflow:hidden; } .al-bar i { display:block; height:100%; background:linear-gradient(90deg,#d3102a,#ff6b7d); border-radius:4px; }
-.al-net { font-family:var(--font-elects-display); font-size:30px; text-align:right; font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
-
-/* ---- From the Desk: a quiet editorial strip ---- */
-.strip { margin:0 0 30px; }
-.strip-head { display:flex; justify-content:space-between; align-items:baseline; gap:14px; border-bottom:3px solid var(--ink); padding-bottom:9px; }
-.strip-head h2 { font-family:var(--font-elects-display); font-size:24px; margin:0; padding:0; border:0; letter-spacing:-.01em; }
-.strip-head a { font-size:12.5px; font-weight:800; color:var(--ink); text-decoration:none; } .strip-head a:hover { text-decoration:underline; }
-.strip-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr; }
-.strip-item { display:block; padding:24px 26px 22px; border-left:1px solid var(--line); color:var(--ink); text-decoration:none; }
-.strip-item:first-child { border-left:0; padding-left:0; }
-.strip-item .k { font-family:var(--font-elects-body); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--elects-pink); }
-.strip-item h3 { font-family:var(--font-elects-display); font-size:20px; line-height:1.15; letter-spacing:-.01em; margin:10px 0 8px; color:inherit; border:0; padding:0; }
-.strip-item:first-child h3 { font-size:30px; line-height:1.08; }
-.strip-item p { margin:0; font-size:13.5px; line-height:1.55; color:var(--muted); max-width:56ch; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-.strip-item:hover h3 { text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:3px; }
-.tools-line { display:flex; flex-wrap:wrap; align-items:center; gap:8px 26px; padding:14px 0 0; border-top:1px solid var(--line); font-size:13px; }
-.tools-line span { font-family:var(--font-elects-body); font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
-.tools-line a { color:var(--ink); font-weight:800; text-decoration:none; } .tools-line a::after { content:' →'; color:var(--elects-pink); } .tools-line a:hover { text-decoration:underline; }
-
-@media (max-width: 900px) {
-  .stage { grid-template-columns:1fr; min-height:0; }
-  .stage-rail { flex-direction:row; overflow-x:auto; padding:0; border-right:0; border-bottom:1px solid #1d212b; scrollbar-width:none; }
-  .stage-rail::-webkit-scrollbar { display:none; }
-  .rail-tab { flex:0 0 auto; grid-template-columns:auto; padding:14px 16px; border-left:0; border-bottom:3px solid transparent; white-space:nowrap; }
-  .rail-tab .n, .rail-tab small { display:none; }
-  .rail-tab[aria-selected="true"] { border-bottom-color:#d3102a; }
-  .stage-view { padding:22px 18px 20px; min-height:470px; }
-  .sp-head { flex-wrap:wrap; }
-  .sp-screen { flex:none; aspect-ratio:16/9; min-height:0; }
-  .mpv { grid-template-columns:1fr; gap:18px; } .mpv-svg svg { max-height:260px; }
-  .fcl-row { grid-template-columns:52px minmax(0,1fr) auto; gap:14px; } .fcl-row img { width:52px; height:52px; } .fcl-name { font-size:16px; }
-  .al a { grid-template-columns:24px 40px minmax(0,1fr) 62px; } .al-bar { display:none; } .al img { width:40px; height:40px; }
-  .rl a { grid-template-columns:24px minmax(0,1fr) 46px; } .rl-meta { display:none; }
-  .strip-grid { grid-template-columns:1fr; } .strip-item, .strip-item:first-child { border-left:0; padding:20px 0; border-bottom:1px solid var(--line); } .strip-item:first-child h3 { font-size:25px; }
-}
-@media (prefers-reduced-motion: reduce) { .sp { animation:none; } .stage.auto .rail-tab[aria-selected="true"] .bar { animation:none; } }
-</style>
-<script>
-initSiteChrome();
-
-/* ---- The Control Room + The Wire ---- */
-const J = u => fetch(u).then(r => r.json());
-const esc = t => { const d = document.createElement('div'); d.textContent = t == null ? '' : t; return d.innerHTML; };
-const shortTitle = t => String(t || '').replace(/ Election$/, '');
-const WIRE = [];
-function wireAdd(tag, text, href) { WIRE.push({ tag, text, href }); }
-function startWire() {
-  const box = document.getElementById('wire'), el = document.getElementById('wireItem'), dots = document.getElementById('wireDots');
-  if (!WIRE.length) return;
-  const order = ['Replay', 'Forecast', 'Desk', 'Ratings', 'Status']; WIRE.sort((a, b) => order.indexOf(a.tag) - order.indexOf(b.tag));
-  dots.innerHTML = WIRE.map(() => '<i></i>').join(''); box.hidden = false;
-  let i = 0, hold = false, paused = false;
-  const show = () => { const w = WIRE[i]; el.innerHTML = `<b>${esc(w.tag)}</b>${esc(w.text)}`; el.href = w.href; [...dots.children].forEach((d, k) => d.classList.toggle('on', k === i)); };
-  show();
-  if (WIRE.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  box.addEventListener('mouseenter', () => hold = true); box.addEventListener('mouseleave', () => hold = false); box.addEventListener('focusin', () => hold = true); box.addEventListener('focusout', () => hold = false);
-  const pb = document.getElementById('wirePause'); pb.hidden = false;
-  pb.onclick = () => { paused = !paused; pb.textContent = paused ? '▶' : '❚❚'; pb.setAttribute('aria-label', paused ? 'Resume rotation' : 'Pause rotation'); };
-  setInterval(() => { if (hold || paused) return; el.classList.add('out'); setTimeout(() => { i = (i + 1) % WIRE.length; show(); el.classList.remove('out'); }, 350); }, 5000);
-}
-
-/* ---- The Stage: one live window at a time, chosen from a channel rail ---- */
-const GRADE_BG = g => ({ a: '#1f9d63', b: '#4a8fd9', c: '#d79a1e', d: '#d9631e', f: '#c0262d' }[String(g)[0].toLowerCase()] || '#8a8a82');
-const photoOf = (registry, k) => { const c = TSR_candidate(registry, k); return c && c.photo ? `assets/img/candidates/${c.photo}` : 'assets/img/bust-silhouette.svg'; };
-
-async function chReplay(tl) {
-  const list = (tl.timelines || []).slice().sort((a, b) => new Date(b.date) - new Date(a.date)); if (!list.length) return null;
-  const url = id => 'elects/replay?e=' + encodeURIComponent(id), latest = list[0];
-  wireAdd('Replay', `Relive the ${shortTitle(latest.title)} count, vote by vote`, url(latest.id));
-  return { id: 'replay', title: 'Election Replay', sub: 'Watch the count unfold', kick: 'Election Replay', head: 'Watch every vote come in', cta: { href: url(latest.id), label: 'Open the replay' },
-    body: `<a class="sp-screen" href="${url(latest.id)}" aria-label="Open the Election Replay"><span class="pill"><b>▶</b> ${esc(shortTitle(latest.title))}</span></a>`,
-    note: `<span>Also:</span>${list.slice(1, 4).map(m => `<a href="${url(m.id)}">${esc(shortTitle(m.title).replace(/ 20\d\d/, ''))}</a>`).join('')}<a href="elects/replay">All replays →</a>`,
-    onShow(p) { const f = document.createElement('iframe'); f.src = 'elects/replay?embed=1'; f.title = 'Election Replay preview'; f.tabIndex = -1; f.setAttribute('aria-hidden', 'true'); p.querySelector('.sp-screen').prepend(f); },
-    onHide(p) { const f = p.querySelector('iframe'); if (f) f.remove(); } };
-}
-
-async function chForecast(cfg, registry, pidx) {
-  const act = cfg.mode === 'active' && SITE_activeList(cfg).length, id = act ? SITE_activeList(cfg)[0].pollsId : pidx.elections[0].id;
-  const f = await J(`data/elections/${id}.json`); if (!f.polls || !f.polls.length) return null;
-  const today = todayUTCString(), done = f.electionDate && f.electionDate < today, asOf = done ? f.electionDate : today;
-  const ids = BaseCalc_currentCandidates(f.polls, f.candidateIds), agg = BaseCalc_aggregate(f.polls, ids, asOf, { anticipatedTurnout: f.anticipatedTurnout });
-  const top = agg.sorted.slice(0, 3), tot = agg.sorted.reduce((a, x) => a + x[1], 0) || 1, dates = f.polls.map(p => p.date).sort(), pols = new Set(f.polls.map(p => p.pollster));
-  const rows = top.map(([k, v]) => { const pa = TSR_party(registry, TSR_candidateParty(registry, k)), pct = v / tot * 100;
-    return `<div class="fcl-row" style="--c:${esc(TSR_candidateColor(registry, k))}"><img src="${photoOf(registry, k)}" alt=""><div><div class="fcl-name">${esc(TSR_candidateName(registry, k))}${pa && pa.name ? `<small>${esc(pa.name)}</small>` : ''}</div><div class="fcl-bar"><i style="width:${pct.toFixed(1)}%"></i></div></div><div class="fcl-pct">${Math.round(pct)}<small>%</small></div></div>`; }).join('');
-  wireAdd('Forecast', `${f.title}: ${TSR_candidateName(registry, top[0][0])} ${Math.round(top[0][1] / tot * 100)}%${top[1] ? ' · ' + TSR_candidateName(registry, top[1][0]) + ' ' + Math.round(top[1][1] / tot * 100) + '%' : ''} in the polling average`, `ddtsr?election=${id}#probcalc`);
-  return { id: 'forecast', title: 'Forecast', sub: 'Polling average', kick: `Decision Desk TSR · ${done ? 'Final polling average' : act ? 'Live polling average' : 'Polling average'}`, head: f.title, cta: { href: `ddtsr?election=${id}#probcalc`, label: 'Full forecast' },
-    body: `<div class="fcl">${rows}</div>`, note: `<span>${f.polls.length} polls · ${pols.size} pollsters · latest ${esc(dates[dates.length - 1])}</span><a href="guide">How is this calculated?</a>` , ids };
-}
-
-async function chMap(registry, hand, geo) {
-  const els = OVR_getTsrElections(hand).filter(e => Object.keys(TSR_getRaces(TSR_getRoundData(e, 'first_round'))).length).sort((a, b) => new Date(b.date) - new Date(a.date)), e = els[0]; if (!e) return null;
-  const race = Object.values(TSR_getRaces(TSR_getRoundData(e, 'first_round')))[0];
-  const polys = f => f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [];
-  const fs = geo.features.filter(f => f.geometry && f.geometry.type !== 'Point');
-  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
-  fs.forEach(f => polys(f).forEach(p => p.forEach(r => r.forEach(([x, y]) => { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }))));
-  const W = 420, H = 450, pad = 6, c = Math.cos(((y0 + y1) / 2) * Math.PI / 180), k = Math.min((W - 2 * pad) / ((x1 - x0) * c), (H - 2 * pad) / (y1 - y0));
-  const ox = pad + (W - 2 * pad - (x1 - x0) * c * k) / 2, oy = pad + (H - 2 * pad - (y1 - y0) * k) / 2;
-  const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]), pal = ['#2f80ed', '#f2994a', '#27ae60', '#9b51e0', '#f2c94c', '#00b8d9', '#eb5757'], used = [], cmap = {}, tot = TSR_raceTotals(race);
-  Object.entries(tot).filter(q => q[1] > 0).sort((a, b) => b[1] - a[1]).forEach(([q]) => { let col = TSR_candidateColor(registry, q); if (!/^#[0-9a-f]{6}$/i.test(col)) col = '#888888';
-    if (used.some(u => dist(rgb(col), rgb(u)) < 70)) col = pal.map(pc => [pc, Math.min(...used.map(u => dist(rgb(pc), rgb(u))))]).sort((x, y) => y[1] - x[1])[0][0]; used.push(col); cmap[q] = col; });
-  const wins = {};
-  const paths = fs.map(f => { const v = race[String(f.properties.id)], d = polys(f).map(p => p.map(r => r.map((pt, i) => `${i ? 'L' : 'M'}${(ox + (pt[0] - x0) * c * k).toFixed(1)} ${(oy + (y1 - pt[1]) * k).toFixed(1)}`).join('') + 'Z').join('')).join('');
-    let fill = '#2a2e3a', op = 1;
-    if (v) { const s = Object.entries(v).sort((a, b) => b[1] - a[1]), t = s.reduce((a, x) => a + x[1], 0);
-      if (s[0] && !(s[1] && s[1][1] === s[0][1])) { fill = cmap[s[0][0]]; op = .6 + .4 * (s[0][1] / t); wins[s[0][0]] = (wins[s[0][0]] || 0) + 1; } else fill = '#8f95a3'; }
-    return `<path d="${d}" fill="${esc(fill)}" fill-opacity="${op.toFixed(2)}"/>`; }).join('');
-  const names = Object.keys(tot).filter(q => tot[q] > 0).sort((a, b) => tot[b] - tot[a]).slice(0, 3);
-  return { id: 'map', title: 'Results Map', sub: 'Group by group', kick: 'Map Maker', head: shortTitle(e.title), cta: { href: 'elects/mapmaker', label: 'Make your own map' },
-    body: `<div class="mpv"><div class="mpv-svg"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Map of ${esc(e.title)}">${paths}</svg></div><ul class="mpv-leg">${names.map(q => { const pa = TSR_party(registry, TSR_candidateParty(registry, q)); return `<li><i style="background:${esc(cmap[q])}"></i><span class="nm">${esc(TSR_candidateName(registry, q))}<small>${pa && pa.name ? esc(pa.name) + ' · ' : ''}${tot[q]} votes</small></span><span class="ct">${wins[q] || 0}<small>groups</small></span></li>`; }).join('')}</ul></div>`,
-    note: `<span>Download any result as a clean SVG or PNG.</span>` };
-}
-
-async function chRatings() {
-  const d = await PG_load('./'), ranked = d.pollsters.filter(p => p.grade && p.grade.n >= 2 && !p.grade.provisional).sort((a, b) => b.grade.score - a.grade.score).slice(0, 5);
-  const rows = ranked.length >= 3 ? ranked : d.pollsters.filter(p => p.grade).sort((a, b) => b.grade.score - a.grade.score).slice(0, 5); if (!rows.length) return null;
-  wireAdd('Ratings', `${rows[0].name} tops the pollster ratings with a ${rows[0].grade.grade}`, 'pollsters');
-  return { id: 'ratings', title: 'Pollster Ratings', sub: 'Who called it', kick: 'Spinner Insights', head: 'Who actually called it?', cta: { href: 'pollsters', label: 'All grades' },
-    body: `<ol class="rl">${rows.map((p, i) => `<li><a href="pollster?p=${PG_slug(p.name)}"><span class="rl-rank">${i + 1}</span><span class="rl-name">${esc(p.name)}</span><span class="rl-meta">${p.grade.n} poll${p.grade.n === 1 ? '' : 's'}</span><span class="rl-grade" style="background:${GRADE_BG(p.grade.grade)}">${esc(p.grade.grade)}</span></a></li>`).join('')}</ol>`,
-    note: `<span>Graded on how close each outlet landed to the logged result.</span><a href="polls">Spinner Insights polls →</a>` };
-}
-
-async function chApproval(registry) {
-  const base = await J('data/approval-polls.json'), data = OVR_getApprovalData(base), today = todayUTCString();
-  const rows = Object.entries(data.moderators || {}).filter(([, m]) => m.polls.length).map(([k, m]) => { const agg = BaseCalc_aggregate(m.polls, ['approve', 'disapprove'], m.frozenAsOf || today, { normalize: false });
-    return { k, name: (m.role || m.name), net: ((agg.averages.approve || 0) - (agg.averages.disapprove || 0)) * 100, seat: m.terms ? m.seat : '' }; }).sort((a, b) => b.net - a.net).slice(0, 5);
-  if (!rows.length) return null;
-  const mx = Math.max(60, ...rows.map(r => r.net)), ph = k => { const c = registry.candidates && registry.candidates[k]; return c && c.photo ? `assets/img/candidates/${c.photo}` : 'assets/img/bust-silhouette.svg'; };
-  return { id: 'approval', title: 'Moderator Approval', sub: 'Net approval ranking', kick: 'CENSUS polling', head: 'How the mods are doing', cta: { href: 'approval', label: 'Full tracker' },
-    body: `<ol class="rl al">${rows.map((r, i) => `<li><a href="approval?mod=${encodeURIComponent(r.k)}"><span class="rl-rank">${i + 1}</span><img src="${ph(r.k)}" alt=""><span class="rl-name">${esc(r.name)}</span><span class="al-bar"><i style="width:${Math.max(4, r.net / mx * 100).toFixed(0)}%"></i></span><span class="al-net">${r.net >= 0 ? '+' : '−'}${Math.abs(r.net).toFixed(0)}</span></a></li>`).join('')}</ol>`,
-    note: `<span>Net approval = approve minus disapprove, ProbCalc-weighted as of today.</span>` };
-}
-
-function buildStage(chs) {
-  const stage = document.getElementById('stage'), rail = document.getElementById('stageRail'), view = document.getElementById('stageView');
-  if (!chs.length) { stage.hidden = true; return; }
-  rail.innerHTML = chs.map((c, i) => `<button type="button" class="rail-tab" role="tab" id="tab-${c.id}" aria-controls="sp-${c.id}" aria-selected="false" tabindex="-1" data-i="${i}"><span class="n">${String(i + 1).padStart(2, '0')}</span><b>${esc(c.title)}</b><small>${esc(c.sub)}</small><span class="bar"></span></button>`).join('');
-  view.innerHTML = chs.map(c => `<div class="sp" id="sp-${c.id}" role="tabpanel" aria-labelledby="tab-${c.id}" hidden><div class="sp-head"><div><span class="sp-kick">${esc(c.kick)}</span><h3>${esc(c.head)}</h3></div><a class="sp-cta" href="${c.cta.href}">${esc(c.cta.label)} →</a></div><div class="sp-body">${c.body}</div><div class="sp-note">${c.note || ''}</div></div>`).join('');
-  const tabs = [...rail.children], panels = [...view.children], reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let cur = -1, auto = !reduce && chs.length > 1;
-  const syncPb = () => { const b = stage.querySelector('.stage-pause'); if (b) { b.textContent = auto ? '❚❚ Pause' : '▶ Autoplay'; b.setAttribute('aria-label', auto ? 'Pause automatic channel changes' : 'Resume automatic channel changes'); } };
-  function show(i) {
-    if (cur === i) return;
-    if (cur >= 0) { panels[cur].hidden = true; tabs[cur].setAttribute('aria-selected', 'false'); tabs[cur].tabIndex = -1; chs[cur].onHide && chs[cur].onHide(panels[cur]); }
-    cur = i; panels[i].hidden = false; tabs[i].setAttribute('aria-selected', 'true'); tabs[i].tabIndex = 0; chs[i].onShow && chs[i].onShow(panels[i]);
-    stage.classList.remove('auto'); void stage.offsetWidth; if (auto) stage.classList.add('auto');
-  }
-  tabs.forEach((t, i) => { t.onclick = () => { auto = false; syncPb(); stage.classList.remove('auto'); show(i); };
-    t.onkeydown = e => { const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (!d) return; e.preventDefault(); const n = (cur + d + chs.length) % chs.length; auto = false; syncPb(); stage.classList.remove('auto'); show(n); tabs[n].focus(); }; });
-  rail.addEventListener('animationend', e => { if (e.animationName === 'railFill' && auto) show((cur + 1) % chs.length); });
-  ['mouseenter', 'focusin'].forEach(ev => stage.addEventListener(ev, () => stage.classList.add('hold')));
-  ['mouseleave', 'focusout'].forEach(ev => stage.addEventListener(ev, () => stage.classList.remove('hold')));
-  if (auto) {
-    const pb = document.createElement('button'); pb.type = 'button'; pb.className = 'stage-pause'; pb.textContent = '❚❚ Pause'; pb.setAttribute('aria-label', 'Pause automatic channel changes');
-    pb.onclick = () => { auto = !auto; pb.textContent = auto ? '❚❚ Pause' : '▶ Autoplay'; pb.setAttribute('aria-label', auto ? 'Pause automatic channel changes' : 'Resume automatic channel changes'); stage.classList.remove('auto'); void stage.offsetWidth; if (auto) stage.classList.add('auto'); };
-    stage.appendChild(pb);
-  }
-  show(0);
-}
-
-async function renderDeskStrip(arts) {
-  const list = OVR_getArticles(arts.articles || []).filter(a => a.published).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3); if (!list.length) return;
-  document.getElementById('deskGrid').innerHTML = list.map(a => `<a class="strip-item" href="article?id=${encodeURIComponent(a.id)}"><span class="k">${esc(a.date || '')}${a.author ? ' · ' + esc(a.author) : ''}</span><h3>${esc(a.title)}</h3>${a.byline ? `<p>${esc(a.byline)}</p>` : ''}</a>`).join('');
-  document.getElementById('deskStrip').hidden = false; wireAdd('Desk', list[0].title, `article?id=${encodeURIComponent(list[0].id)}`);
-}
-
-async function renderStage() {
-  const [cfgBase, registry, pidx, tl, arts, hand, geo] = await Promise.all([J('data/site-config.json'), J('data/registries.json'), J('data/polls-index.json'), J('data/timelines/index.json').catch(() => ({ timelines: [] })), J('data/articles.json').catch(() => ({ articles: [] })), J('data/tsrelects-results.json'), J('data/groups.geojson')]);
-  const cfg = OVR_getSiteConfig(cfgBase), live = cfg.mode === 'active' && SITE_activeList(cfg).length, ok = p => p.catch(e => { console.warn('stage channel failed', e); return null; });
-  const got = await Promise.all([ok(chReplay(tl)), ok(chForecast(cfg, registry, pidx)), ok(chMap(registry, hand, geo)), ok(chRatings()), ok(chApproval(registry)), ok(renderDeskStrip(arts))]);
-  let chs = got.slice(0, 5).filter(Boolean);
-  if (live) chs.sort((a, b) => (b.id === 'forecast') - (a.id === 'forecast'));          // election on: the forecast leads
-  if (!live) wireAdd('Status', `${cfg.offCycle.headline} · ${cfg.offCycle.text}`, 'elects/');
-  buildStage(chs); if (!live) startWire();   // while an election is live the red banner is the one bar
-}
-function loadFail(el, what, retry) {
-  el.innerHTML = `<div class="load-err">Couldn’t load ${what}. Check your connection and <button type="button">try again</button></div>`;
-  el.querySelector('button').onclick = retry;
-}
-function runStage() { renderStage().catch(e => { console.warn(e); loadFail(document.getElementById('stageView'), 'the live windows', runStage); }); }
-runStage();
-
-
-async function renderHub() {
-  const cfgBase = await fetch('data/site-config.json').then(r => r.json());
-  const cfg = OVR_getSiteConfig(cfgBase);
-  const registry = await fetch('data/registries.json').then(r => r.json());
-
-  renderHubButtons(cfg);
-
-  const hub = document.getElementById('rcpHub');
-  if (cfg.mode === 'active' && SITE_activeList(cfg).length) {
-    await renderActiveHub(hub, cfg, registry);
-  } else {
-    await renderOffCycleHub(hub, registry);
-  }
-}
-
-function renderHubButtons(cfg) {
-  const wrap = document.getElementById('hubButtons');
-  const electsActive = cfg.mode === 'active';
-  const electsLink = electsActive ? SITE_electsLink(cfg, '') : 'elects/';
-  const electsSub = electsActive ? 'Live results, right now →' : 'Browse race history & results →';
-  let html = `
-      <a class="hub-btn elects" href="${electsLink}">
-        <img class="hub-btn-wordmark" src="assets/img/brand/tsr-elects-full-logo-white.png" alt="TSR Elects">
-        <div class="hub-btn-sub">${electsSub}</div>
-      </a>`;
-  html += `
-      <a class="hub-btn ddtsr" href="ddtsr">
-        <img class="hub-btn-wordmark" src="assets/img/brand/ddtsr-full-logo.png" alt="Decision Desk TSR">
-        <div class="hub-btn-sub">BaseCalc · ProbCalc · Race Calls →</div>
-      </a>
-      <a class="hub-btn spin" href="polls">
-        <img class="hub-btn-wordmark" src="assets/img/brand/spinner-insights-lockup.png" alt="Spinner Insights">
-        <div class="hub-btn-sub">Our polling →</div>
-      </a>`;
-  wrap.innerHTML = html;
-}
-
-async function renderActiveHub(hub, cfg, registry) {
-  const list = SITE_activeList(cfg);
-  const many = list.length > 1;
-  const today = todayUTCString();
-  const files = await Promise.all(list.map(e => fetch(`data/elections/${e.pollsId}.json`).then(r => r.json()).then(f => ({ e, f }))));
-  hub.innerHTML = `
-    <h2 class="section-title">On the Radar</h2>
-    <p class="hub-note">Live composite polling average (all pollsters) for ${many ? 'each of the ' + list.length + ' current races' : 'the current race'}.
-      Full breakdown on <a href="ddtsr#probcalc">DDTSR's BaseCalc &amp; ProbCalc</a>.</p>
-    ${files.map(({ e }, i) => `<div class="tk-card" id="tkRace${i}"${i ? ' style="margin-top:18px"' : ''}></div>`).join('')}`;
-  files.forEach(({ e, f }, i) => {
-    // As-of today, not the (often still-future) election date -- matches ddtsr.html's calcLoad.
-    const asOfDate = f.electionDate && f.electionDate < today ? f.electionDate : today;
-    TK_renderRace(document.getElementById('tkRace' + i), {
-      title: f.title, polls: f.polls, ids: BaseCalc_currentCandidates(f.polls, f.candidateIds), registry, asOf: asOfDate,
-      opts: { anticipatedTurnout: f.anticipatedTurnout }, href: `ddtsr?election=${e.pollsId}#probcalc`
-    });
-  });
-}
-
-function todayUTCString() {
-  const now = new Date();
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString().slice(0, 10);
-}
-
-function TSR_approvalDisplayName(entry) {
-  // Some entries (currently the Elections Secretary) get a role title shown
-  // in place of their handle everywhere approval data is displayed -- the
-  // underlying `name` (real username, used for the photo lookup and the
-  // admin panel) is untouched, this only swaps what's rendered.
-  return (entry && entry.role) || (entry && entry.name) || '';
-}
-
-function renderPartyDonut(container, registry, partyPollsFile, asOf) {
-  const partyIds = Object.keys(registry.parties || {}).filter(pid => SITE_partyActive(registry.parties[pid], asOf));
-  const partyRegistry = { candidates: {} };
-  partyIds.forEach(pid => {
-    const p = registry.parties[pid];
-    partyRegistry.candidates[pid] = { name: p.shortName || p.name, color: p.color };
-  });
-  if (!partyPollsFile.polls.length) {
-    container.innerHTML = '<div class="small-muted" style="padding:16px;">No party support polling logged yet.</div>';
-    return;
-  }
-  const agg = BaseCalc_aggregate(partyPollsFile.polls, partyIds, asOf, {});
-  RCPDonut_fromAggregate(container, agg, partyRegistry, 'Generic Ballot', 'party-support');
-}
-
-async function renderOffCycleHub(hub, registry) {
-  const [approvalDataBase, partyPollsBase] = await Promise.all([
-    fetch('data/approval-polls.json').then(r => r.json()).catch(() => ({ moderators: {}, questions: {} })),
-    fetch('data/party-polls.json').then(r => r.json()).catch(() => ({ polls: [] }))
-  ]);
-  const approvalData = OVR_getApprovalData(approvalDataBase);
-  const partyPollsFile = OVR_getPartyPolls(partyPollsBase);
-  const modKeys = Object.keys(approvalData.moderators || {})
-    .filter(k => (approvalData.moderators[k].status || 'current') !== 'former');
-  const formerKeys = Object.keys(approvalData.moderators || {})
-    .filter(k => (approvalData.moderators[k].status || 'current') === 'former' && approvalData.moderators[k].polls.length);
-  const questionKeys = Object.keys(approvalData.questions || {});
-  const asOf = todayUTCString();
-
-  if (modKeys.length > 0) {
-    hub.innerHTML = `<h2 class="section-title">Moderator Approval</h2>
-      <p class="hub-note">ProbCalc-weighted job approval as of today (UTC). Net approval is Approve minus Disapprove. Click a moderator for their full polling history.</p>
-      <div class="tk-card" id="tkApproval"></div>
-      ${formerKeys.length ? `<details class="tk-former"><summary>Former moderators <small>${formerKeys.length} · final approval at end of term</small></summary><div class="tk-card" id="tkFormer"></div></details>` : ''}
-      <h2 class="section-title" style="margin-top:34px;">Community Track Record</h2>
-      <p class="hub-note">Off-cycle sentiment questions, tracked the same way as moderator approval. Click any question for its full polling history.</p>
-      <div id="tkQuestions"></div>
-      <h2 class="section-title" style="margin-top:34px;">Party Support</h2>
-      <p class="hub-note">Generic-ballot party ID, pooled across every tracked party. See the full breakdown on <a href="party-support">Party Support</a>.</p>
-      <div class="tk-card" id="tkParties"></div>`;
-    const photoOf = key => { const c = registry.candidates && registry.candidates[key]; return c && c.photo ? `assets/img/candidates/${c.photo}` : 'assets/img/bust-silhouette.svg'; };
-    const palette = ['#e5484d', '#3b82f6', '#22b573', '#f2a900', '#a678e8', '#ec5f9a', '#14b8c4', '#8f9296'];
-    TK_renderApproval(document.getElementById('tkApproval'), {
-      asOf, registry,
-      mods: modKeys.map(k => { const e = approvalData.moderators[k]; return { key: k, name: TSR_approvalDisplayName(e), photo: photoOf(k), polls: e.polls, seat: e.terms ? e.seat : '', carryOver: e.carryOver, pending: e.pending, asOf: e.frozenAsOf || undefined }; }).filter(m => m.polls.length),
-      colorFor: (k, i) => { const c = registry.candidates && registry.candidates[k] && registry.candidates[k].color; return c || palette[i % palette.length]; }
-    });
-    if (formerKeys.length) {
-      const lastOf = k => approvalData.moderators[k].polls.reduce((x, p) => p.date > x ? p.date : x, '');
-      const endOf = k => approvalData.moderators[k].termEnd || lastOf(k);
-      TK_renderApproval(document.getElementById('tkFormer'), {
-        asOf: formerKeys.map(endOf).sort().pop(), registry, frozen: true,
-        mods: formerKeys.map(k => ({ key: k, name: TSR_approvalDisplayName(approvalData.moderators[k]), photo: photoOf(k), asOf: endOf(k),
-          polls: approvalData.moderators[k].polls.filter(p => p.date <= endOf(k)) })),
-        colorFor: (k, i) => { const c = registry.candidates && registry.candidates[k] && registry.candidates[k].color; return c || palette[i % palette.length]; }
-      });
-    }
-    TK_renderQuestions(document.getElementById('tkQuestions'), {
-      asOf, questions: questionKeys.map(k => Object.assign({ key: k }, approvalData.questions[k]))
-    });
-    const parties = {}; Object.keys(registry.parties || {}).forEach(pid => { parties[pid] = registry.parties[pid]; });
-    TK_renderParties(document.getElementById('tkParties'), { asOf, polls: partyPollsFile.polls, parties, href: 'party-support' });
-    return;
-  }
-
-
-  const idx = await fetch('data/polls-index.json').then(r => r.json());
-  hub.innerHTML = `<h2 class="section-title">Recent Polling Snapshots</h2>
-    <p class="hub-note">No moderator approval polling has been logged yet, so this scrolls through
-      the final composite average for each recently-tracked race instead. Once approval polling
-      exists (see <code>data/approval-polls.json</code>), this becomes an approval-rating carousel.
-      Click any race for its full DDTSR breakdown.</p>
-    <div class="hub-scroll" id="hubScroll"></div>`;
-  const scroll = document.getElementById('hubScroll');
-  // fetch every election file in parallel, then render in order
-  const electionFiles = await Promise.all(idx.elections.map(e => fetch(`data/elections/${e.id}.json`).then(r => r.json())));
-  for (const [i, entry] of idx.elections.entries()) {
-    const election = electionFiles[i], pollsFile = structuredClone(election);
-    if (!pollsFile.polls.length) continue;
-    const currentIds = BaseCalc_currentCandidates(pollsFile.polls, election.candidateIds);
-    const entryAsOfDate = election.electionDate && election.electionDate < asOf ? election.electionDate : asOf;
-    const agg = BaseCalc_aggregate(pollsFile.polls, currentIds, entryAsOfDate, { anticipatedTurnout: election.anticipatedTurnout });
-    const card = document.createElement('div');
-    scroll.appendChild(card);
-    RCPDonut_fromAggregate(card, agg, registry, election.title, `ddtsr?election=${entry.id}#probcalc`);
-  }
-}
-
-function runHub() { renderHub().catch(e => { console.warn(e); loadFail(document.getElementById('rcpHub'), 'the trackers', runHub); }); }
-runHub();
-</script>
+<script src="assets/js/home.js"></script>
 </body>
 </html>

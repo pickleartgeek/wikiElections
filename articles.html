@@ -90,12 +90,6 @@ mark.hl { background:#ffe36e; color:#111214; padding:0 1px; border-radius:2px; }
 <script>
 initSiteChrome();
 
-function escapeHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
 async function boot() {
   const base = await fetch('data/articles.json').then(r => r.json());
   const articles = OVR_getArticles(base.articles || [])
@@ -111,7 +105,7 @@ async function boot() {
   const plain = h => { const d = document.createElement('div'); d.innerHTML = (h || '').replace(/<(\/(?:div|p|li|h\d|tr|td|th|blockquote)|br)[^>]*>/gi, ' $&'); d.querySelectorAll('script,style,svg,canvas,figure,table').forEach(n => n.remove()); return (d.textContent || '').replace(/(?:\d+(?:\.\d+)?%){2,}/g, ' ').replace(/\s+/g, ' ').trim(); };
   articles.forEach(a => { a._text = plain(a.bodyHtml); a._hay = [a.title, a.author, a.byline, a._text].join(' \u0001 ').toLowerCase(); });
   const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const hl = (text, terms) => { let h = escapeHtml(text); terms.forEach(t => { h = h.replace(new RegExp('(' + reEsc(escapeHtml(t)) + ')', 'ig'), '<mark class="hl">$1</mark>'); }); return h; };
+  const hl = (text, terms) => { let h = esc(text); terms.forEach(t => { h = h.replace(new RegExp('(' + reEsc(esc(t)) + ')', 'ig'), '<mark class="hl">$1</mark>'); }); return h; };
   function snippet(a, terms) {
     const low = a._text.toLowerCase(); let at = -1;
     for (const t of terms) { const k = low.indexOf(t); if (k >= 0 && (at < 0 || k < at)) at = k; }
@@ -126,11 +120,11 @@ async function boot() {
       const sn = terms.length ? snippet(a, terms) : '';
       return `
     <a class="article-card" href="article?id=${encodeURIComponent(a.id)}${terms.length ? '&q=' + encodeURIComponent(q) : ''}">
-      <div class="thumb" style="background:${a.thumbColor || '#111214'};">${escapeHtml((a.title || '?').slice(0, 1).toUpperCase())}</div>
+      <div class="thumb" style="background:${a.thumbColor || '#111214'};">${esc((a.title || '?').slice(0, 1).toUpperCase())}</div>
       <div class="body">
         <div class="eyebrow">${a.date || ''}</div>
-        <div class="title">${terms.length ? hl(a.title || 'Untitled', terms) : escapeHtml(a.title || 'Untitled')}</div>
-        <div class="byline">${escapeHtml(a.byline || (a.author ? `by ${a.author}` : ''))}</div>
+        <div class="title">${terms.length ? hl(a.title || 'Untitled', terms) : esc(a.title || 'Untitled')}</div>
+        <div class="byline">${esc(a.byline || (a.author ? `by ${a.author}` : ''))}</div>
         ${sn ? `<div class="snip">${sn}</div>` : ''}
       </div>
     </a>`;

@@ -471,7 +471,7 @@ function calcRenderBars(polls, currentIds, asOfDate, calcOpts = {}) {
 function calcRenderChart(polls, currentIds, asOfDate, calcOpts = {}) {
 
   const points = BaseCalc_weightedTimeline(polls, currentIds, asOfDate, calcOpts);
-  RCPChart_render(document.getElementById('calcChart'), points, currentIds, calcRegistry);
+  RCPChart_render(document.getElementById('calcChart'), points, currentIds, calcRegistry, { polls });
 }
 
 function calcRenderProbCalc(polls, currentIds, electionDate, calcOpts = {}) {

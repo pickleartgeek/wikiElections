@@ -3,6 +3,7 @@
   "moderators": {
     "ip": {
       "name": "Impressive_Plant",
+      "status": "former",
       "polls": [
         {
           "pollster": "CENSUS",
@@ -223,12 +224,6 @@
           "id": "class2",
           "seat": "Class 2",
           "status": "former"
-        },
-        {
-          "id": "es",
-          "seat": "Elections Secretary",
-          "role": "Elections Secretary",
-          "status": "current"
         }
       ],
       "polls": [
@@ -240,8 +235,7 @@
           "shares": {
             "approve": 0.5385,
             "disapprove": 0.0769
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -251,8 +245,7 @@
           "shares": {
             "approve": 0.5455,
             "disapprove": 0.0909
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -262,8 +255,7 @@
           "shares": {
             "approve": 0.5333,
             "disapprove": 0.1333
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -273,8 +265,7 @@
           "shares": {
             "approve": 0.5385,
             "disapprove": 0.0769
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -284,8 +275,7 @@
           "shares": {
             "approve": 0.4706,
             "disapprove": 0.0588
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -295,8 +285,7 @@
           "shares": {
             "approve": 0.5,
             "disapprove": 0.0556
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -306,8 +295,7 @@
           "shares": {
             "approve": 0.5263,
             "disapprove": 0.1053
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -317,8 +305,7 @@
           "shares": {
             "approve": 0.3514,
             "disapprove": 0.0541
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -328,8 +315,7 @@
           "shares": {
             "approve": 0.3659,
             "disapprove": 0.0244
-          },
-          "term": "class2"
+          }
         },
         {
           "pollster": "CENSUS",
@@ -339,14 +325,24 @@
           "shares": {
             "approve": 0.5161,
             "disapprove": 0.0
-          },
-          "term": "class2"
+          }
         }
-      ]
+      ],
+      "status": "former"
     },
     "prac": {
       "name": "practicalpurpose",
       "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5,
+            "disapprove": 0.0
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-10-08",
@@ -434,6 +430,16 @@
       "polls": [
         {
           "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.2917,
+            "disapprove": 0.0833
+          }
+        },
+        {
+          "pollster": "CENSUS",
           "date": "2026-10-08",
           "sample": 13,
           "weight": 1,
@@ -499,6 +505,16 @@
       "polls": [
         {
           "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4167,
+            "disapprove": 0.1667
+          }
+        },
+        {
+          "pollster": "CENSUS",
           "date": "2026-10-08",
           "sample": 13,
           "weight": 1,
@@ -542,6 +558,16 @@
     "wip": {
       "name": "wiptes167",
       "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5,
+            "disapprove": 0.0
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-10-08",
@@ -693,6 +719,16 @@
       "polls": [
         {
           "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.3333,
+            "disapprove": 0.0833
+          }
+        },
+        {
+          "pollster": "CENSUS",
           "date": "2026-09-06",
           "sample": 11,
           "weight": 1,
@@ -841,12 +877,6 @@
           "status": "former"
         },
         {
-          "id": "es",
-          "seat": "Elections Secretary",
-          "role": "Elections Secretary",
-          "status": "former"
-        },
-        {
           "id": "class1",
           "seat": "Class 1",
           "status": "current",
@@ -856,6 +886,65 @@
       "polls": [
         {
           "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.625,
+            "disapprove": 0.0
+          }
+        }
+      ]
+    },
+    "nzb": {
+      "name": "Nazibol1234",
+      "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 16,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4375,
+            "disapprove": 0.125
+          }
+        }
+      ]
+    },
+    "elsec": {
+      "name": "Elections Secretary",
+      "kind": "office",
+      "candidateKey": "pag",
+      "terms": [
+        {
+          "id": "es-oc",
+          "seat": "Elections Secretary",
+          "label": "One-Community",
+          "candidateKey": "oc",
+          "status": "former"
+        },
+        {
+          "id": "es-pag",
+          "seat": "Elections Secretary",
+          "label": "PickleArtGeek",
+          "candidateKey": "pag",
+          "status": "current"
+        }
+      ],
+      "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.625,
+            "disapprove": 0.0417
+          },
+          "term": "es-pag"
+        },
+        {
+          "pollster": "CENSUS",
           "date": "2026-09-06",
           "sample": 11,
           "weight": 1,
@@ -863,7 +952,7 @@
             "approve": 0.3636,
             "disapprove": 0.1818
           },
-          "term": "es"
+          "term": "es-oc"
         },
         {
           "pollster": "CENSUS",
@@ -874,7 +963,7 @@
             "approve": 0.1333,
             "disapprove": 0.2
           },
-          "term": "es"
+          "term": "es-oc"
         },
         {
           "pollster": "CENSUS",
@@ -885,7 +974,7 @@
             "approve": 0.4615,
             "disapprove": 0.0
           },
-          "term": "es"
+          "term": "es-oc"
         },
         {
           "pollster": "CENSUS",
@@ -896,7 +985,7 @@
             "approve": 0.3529,
             "disapprove": 0.0
           },
-          "term": "es"
+          "term": "es-oc"
         },
         {
           "pollster": "CENSUS",
@@ -907,7 +996,7 @@
             "approve": 0.5556,
             "disapprove": 0.0556
           },
-          "term": "es"
+          "term": "es-oc"
         },
         {
           "pollster": "CENSUS",
@@ -918,7 +1007,7 @@
             "approve": 0.4211,
             "disapprove": 0.1053
           },
-          "term": "es"
+          "term": "es-oc"
         },
         {
           "pollster": "CENSUS",
@@ -929,7 +1018,7 @@
             "approve": 0.4324,
             "disapprove": 0.0541
           },
-          "term": "es"
+          "term": "es-oc"
         },
         {
           "pollster": "CENSUS",
@@ -940,7 +1029,7 @@
             "approve": 0.2439,
             "disapprove": 0.0244
           },
-          "term": "es"
+          "term": "es-oc"
         },
         {
           "pollster": "CENSUS",
@@ -951,7 +1040,24 @@
             "approve": 0.3226,
             "disapprove": 0.0323
           },
-          "term": "es"
+          "term": "es-oc"
+        }
+      ]
+    },
+    "pm": {
+      "name": "Prime Minister",
+      "kind": "office",
+      "candidateKey": "prac",
+      "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.4583,
+            "disapprove": 0.0833
+          }
         }
       ]
     }
@@ -962,6 +1068,16 @@
       "yesLabel": "Right Track",
       "noLabel": "Wrong Track",
       "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5,
+            "disapprove": 0.125
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-10-08",
@@ -1099,6 +1215,16 @@
       "yesLabel": "Yes",
       "noLabel": "No",
       "polls": [
+        {
+          "pollster": "CENSUS",
+          "date": "2026-11-04",
+          "sample": 24,
+          "weight": 1,
+          "shares": {
+            "approve": 0.625,
+            "disapprove": 0.125
+          }
+        },
         {
           "pollster": "CENSUS",
           "date": "2026-10-08",
@@ -1316,7 +1442,8 @@
             "disapprove": 0.6216
           }
         }
-      ]
+      ],
+      "closed": true
     }
   }
 }

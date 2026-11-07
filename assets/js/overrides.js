@@ -166,11 +166,12 @@ function OVR_viewTerm(entry, termId) {
   const n = {}, last = {};
   all.forEach(p => { const t = tid(p); p._t = t; n[t] = (n[t] || 0) + 1; if (!last[t] || p.date > last[t]) last[t] = p.date; });
   let target = termId && terms.find(t => t.id === termId);
-  if (!target) target = terms.filter(t => n[t.id]).sort((a, b) => (last[a.id] || '').localeCompare(last[b.id] || '') || terms.indexOf(a) - terms.indexOf(b)).pop() || cur || terms[terms.length - 1];
+  if (!target) target = terms.filter(t => n[t.id]).sort((a, b) => (last[a.id] || '').localeCompare(last[b.id] || '') || ((b.role ? 1 : 0) - (a.role ? 1 : 0)) || terms.indexOf(a) - terms.indexOf(b)).pop() || cur || terms[terms.length - 1];
   const out = Object.assign({}, entry), over = target.status === 'former';
   out.allPolls = all; out.polls = all.filter(p => tid(p) === target.id);
   out.terms = terms.map(t => Object.assign({}, t, { n: n[t.id] || 0, last: last[t.id] || '' }));
   if (target.role && !over) out.role = target.role; else delete out.role;   // an office title replaces the handle only while it is the current term
+  if (target.candidateKey) out.candidateKey = target.candidateKey;
   out.seat = target.label || target.seat; out.termId = target.id; out.termStatus = target.status;
   out.carryOver = !!cur && cur.id !== target.id;
   out.pending = out.carryOver && !n[cur.id] ? (cur.label || cur.seat) : '';

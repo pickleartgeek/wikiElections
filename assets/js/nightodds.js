@@ -21,7 +21,7 @@
  * Tuned against the nine past elections that have ballot-by-ballot timelines (tools/backtest-live.js).
  * It models FIRST-CHOICE votes: ranked-choice / STAR transfers are not simulated, so with 3+ candidates "lead" means the first-choice count.
  */
-const NO_TUNE = { histDecay: 0.6, sims: 4000, concMult: 2, swingMult: 3, minAlpha: 0.05, tfSdMin: 1, tfSdFrac: 0.05, vapBlend: 0.4, minN: 3, priorFloor: 0.02 };
+const NO_TUNE = { sharpen: 1.5, histDecay: 0.7, sims: 4000, concMult: 10, swingMult: 30, minAlpha: 0.05, tfSdMin: 1, tfSdFrac: 0.05, vapBlend: 0.2, minN: 3, priorFloor: 0.02 };
 const NO_G = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 function NO_lgamma(x) {
@@ -77,6 +77,7 @@ function NO_run(ctx, counts, opts = {}) {
   let seed = 2166136261; JSON.stringify([ids, nGc]).split('').forEach(ch => { seed = Math.imul(seed ^ ch.charCodeAt(0), 16777619); });
   const r = ES_rng(seed >>> 0), H = ctx.hist;
   const leadW = ids.map(() => 0), majW = ids.map(() => 0), top2W = ids.map(() => 0), shW = [], runoffW = { v: 0 }, remG = {}, tipG = {}; NO_G.forEach(g => { remG[g] = 0; tipG[g] = 0; });
+  const gLeadW = {}, gMajW = {}; NO_G.forEach(g => { gLeadW[g] = ids.map(() => 0); gMajW[g] = 0; });
   const ws = new Float64Array(S), shares = ids.map(() => new Float64Array(S)), lead = new Int16Array(S);
   const logws = new Float64Array(S); let maxLw = -Infinity; const sims = [];
   for (let s = 0; s < S; s++) {
@@ -99,26 +100,51 @@ function NO_run(ctx, counts, opts = {}) {
   for (let s = 0; s < S; s++) {
     const alpha = sims[s], p = {};
     NO_G.forEach(g => { const d = alpha[g].map((a, j) => ES_gamma(a + nGc[g][j], r)), z = d.reduce((a, b) => a + b, 0) || 1; p[g] = d.map(x => x / z); });
-    let Tf = N; if (!opts.final) { Tf = 0; for (let tries = 0; tries < 8 && Tf < N; tries++) Tf = Math.round(H.mean + H.sd * ES_norm(r)); if (Tf < N) Tf = N + (r() < 0.5 ? 0 : 1); }
+    // total ballots: history says ~H.mean; when the % reporting is known, only the unreported share of that is still to come (100% reporting = the count is final)
+    let Tf = N; if (!opts.final) { const rep = opts.reporting > 0 ? Math.min(1, opts.reporting) : null, m = rep == null ? H.mean : N + (1 - rep) * H.mean, sd = rep == null ? H.sd : H.sd * (1 - rep);
+      Tf = 0; for (let tries = 0; tries < 8 && Tf < N; tries++) Tf = Math.round(m + sd * ES_norm(r)); if (Tf < N) Tf = N + (rep != null && rep >= 1 ? 0 : r() < 0.5 ? 0 : 1); }
     const R = Tf - N, rem = NO_G.map(g => Math.max(0.3, Tf * wv[g] - nG[g])), remZ = rem.reduce((a, b) => a + b, 0), tot = nTot.slice(), addG = {};
-    NO_G.forEach(g => { addG[g] = 0; });
+    const gTot = {}; NO_G.forEach(g => { addG[g] = 0; gTot[g] = nGc[g].slice(); });
     for (let v = 0; v < R; v++) {
       let u = r() * remZ, gi = 0; while (gi < 8 && u > rem[gi]) { u -= rem[gi]; gi++; } const g = NO_G[gi]; addG[g]++;
-      let uc = r(), j = 0; const pg = p[g]; while (j < k - 1 && uc > pg[j]) { uc -= pg[j]; j++; } tot[j]++;
+      let uc = r(), j = 0; const pg = p[g]; while (j < k - 1 && uc > pg[j]) { uc -= pg[j]; j++; } tot[j]++; gTot[g][j]++;
     }
     const T2 = tot.reduce((a, b) => a + b, 0) || 1; let best = 0, bv = -1, second = -1, sv = -1;
     tot.forEach((v, j) => { shares[j][s] = v / T2; const tb = v + r() * 0.01; if (tb > bv) { second = best; sv = bv; bv = tb; best = j; } else if (tb > sv) { second = j; sv = tb; } });
     lead[s] = best; const w = ws[s];
     leadW[best] += w; top2W[best] += w; if (second >= 0 && k > 1) top2W[second] += w; if (tot[best] / T2 > 0.5) majW[best] += w; else runoffW.v += w;
+    NO_G.forEach(g => { let gb = 0, gv = -1; gTot[g].forEach((v, j) => { const tb = v + r() * 0.01; if (tb > gv) { gv = tb; gb = j; } }); gLeadW[g][gb] += w; gMajW[g] += w * (gTot[g][gb] / (gTot[g].reduce((a, b) => a + b, 0) || 1) > 0.5 ? 1 : 0); });
     NO_G.forEach(g => { remG[g] += w * addG[g]; if (k > 1 && addG[g]) { const o = lead[s] === 0 ? 1 : 0, tr = second >= 0 ? second : o; tipG[g] += w * addG[g] * (p[g][tr] - p[g][best]); } });
   }
-  const out = { ids, N, final: !!opts.final, expectedTotal: opts.final ? N : H.mean, ess, sims: S, lead: {}, majority: {}, top2: {}, share: {}, runoff: runoffW.v / sw, remaining: {}, tipping: null, cState: M.cState };
+  const out = { ids, N, final: !!opts.final, expectedTotal: opts.final || opts.reporting >= 1 ? N : opts.reporting > 0 ? N + (1 - opts.reporting) * H.mean : H.mean, ess, sims: S, lead: {}, majority: {}, top2: {}, share: {}, runoff: runoffW.v / sw, remaining: {}, tipping: null, cState: M.cState };
   ids.forEach((id, j) => { out.lead[id] = leadW[j] / sw; out.majority[id] = majW[j] / sw; out.top2[id] = Math.min(1, top2W[j] / sw);
     out.share[id] = { mean: shares[j].reduce((a, v, s) => a + v * ws[s], 0) / sw, lo: NO_wquant(Array.from(shares[j]), Array.from(ws), .1), hi: NO_wquant(Array.from(shares[j]), Array.from(ws), .9) }; });
   NO_G.forEach(g => { out.remaining[g] = remG[g] / sw; });
   const fav = ids.reduce((b, id) => out.lead[id] > out.lead[b] ? id : b, ids[0]);
   const tp = NO_G.map(g => [g, tipG[g] / sw]).sort((a, b) => b[1] - a[1])[0]; if (tp && tp[1] > 0.05) out.tipping = { group: tp[0], expectedVotes: out.remaining[tp[0]], gain: tp[1] };
+  out.groups = {}; NO_G.forEach(g => { const lead = {}; ids.forEach((id, j) => { lead[id] = gLeadW[g][j] / sw; }); const top = ids.reduce((b, id) => lead[id] > lead[b] ? id : b, ids[0]);
+    out.groups[g] = { counted: nG[g], expected: remG[g] / sw + nG[g], lead, top, p: lead[top], counts: ids.map((id, j) => nGc[g][j]), none: nG[g] === 0 }; });
+  const sharp = (o, ks) => { const g = T.sharpen; if (!g || g === 1) return; const z = ks.reduce((a, k) => a + Math.pow(o[k], g), 0) || 1; ks.forEach(k => { o[k] = Math.pow(o[k], g) / z; }); };
+  sharp(out.lead, ids); NO_G.forEach(g => sharp(out.groups[g].lead, ids)); NO_G.forEach(g => { const gg = out.groups[g]; gg.top = ids.reduce((b, id) => gg.lead[id] > gg.lead[b] ? id : b, ids[0]); gg.p = gg.lead[gg.top]; });
   out.favorite = fav; out.status = NO_label(out.lead[fav], N); return out;
+}
+
+
+/** Prior from a ready-made group forecast: mu[g][id] = expected split in group g, weights[g] = each group's share of the electorate, total = { mean, sd } of ballots. Candidate ids are used as-is. */
+function NO_prepareFrom({ ids, mu, weights, total, conc = 30, cState = 10 }) {
+  const s = {}; ids.forEach(i => { s[i] = NO_G.reduce((a, g) => a + (weights[g] || 0) * (mu[g][i] || 0), 0); });
+  const z = ids.reduce((a, i) => a + s[i], 0) || 1; ids.forEach(i => { s[i] /= z; });
+  const info = {}; NO_G.forEach(g => { info[g] = { conc }; }); const toId = {}; ids.forEach(i => { toId[i] = i; });
+  const wz = NO_G.reduce((a, g) => a + (weights[g] || 0), 0) || 1, gs = {}; NO_G.forEach(g => { gs[g] = (weights[g] || 0) / wz; });
+  return { ids, toId, canon: x => x, M: { s, mu, info, cState }, hist: { mean: total.mean, sd: Math.max(1, total.sd), groupShare: gs, n: 0 }, vap: gs, hasPolls: false };
+}
+
+/** Simulator prior (elects/simulate.html): the simulator's own pre-election expectation per group, built from the same score + group affinity it draws the election from (no shocks). */
+function NO_prepareSim({ L, cands, T }) {
+  const mu = {};
+  NO_G.forEach(g => { const lg = cands.map(c => ES_TUNE.scale * ES_score(L, c.canon, c.party).score + ES_TUNE.aff * ES_affinity(L, c.canon, g)), m = Math.max(...lg), ex = lg.map(x => Math.exp(x - m)), z = ex.reduce((a, b) => a + b);
+    mu[g] = {}; cands.forEach((c, i) => { mu[g][c.id] = ex[i] / z; }); });
+  return NO_prepareFrom({ ids: cands.map(c => c.id), mu, weights: L.weights, total: { mean: T.mu * T.E, sd: T.sd * T.E } });
 }
 
 /** TV wording for a chance. */
@@ -126,6 +152,17 @@ function NO_label(p, N) {
   if (N < NO_TUNE.minN) return { key: 'early', text: 'Too early' };
   if (p >= 0.99) return { key: 'call', text: 'Call-ready' }; if (p >= 0.95) return { key: 'vlikely', text: 'Very likely' };
   if (p >= 0.85) return { key: 'likely', text: 'Likely' }; if (p >= 0.65) return { key: 'lean', text: 'Leaning' }; return { key: 'toss', text: 'Toss-up' };
+}
+/** Per-group chances as plain data: [{ g, top, p, counted, expected, none, lead }] in group order. */
+const NO_groupList = o => NO_G.map(g => Object.assign({ g }, o.groups[g]));
+/** The by-group meter: one tile per group with the likeliest group winner, its chance, and a stacked bar of every candidate's chance to carry that group. nameOf/colorOf map a candidate id. */
+function NO_groupsHTML(o, nameOf, colorOf) {
+  const e = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  return `<div class="gm"><div class="gm-t">By group <small>chance to carry each group</small></div><div class="gm-grid">${NO_groupList(o).map(x => {
+    const rank = o.ids.slice().sort((a, b) => x.lead[b] - x.lead[a]).slice(0, 4);
+    return `<div class="gm-tile${x.none ? ' gm-none' : ''}" title="Group ${x.g}: ${x.counted} counted, ~${Math.round(x.expected)} expected${x.none ? ' (no ballots yet: forecast only)' : ''}"><div class="gm-h"><b>Group ${x.g}</b><span>${x.none ? 'forecast' : x.counted + ' in'}</span></div>`
+      + `<div class="gm-who" style="--c:${e(colorOf(x.top))}"><i></i><span>${e(nameOf(x.top))}</span><b>${NO_pct(x.p)}%</b></div>`
+      + `<div class="gm-bar" aria-hidden="true">${rank.map(id => `<i style="width:${(x.lead[id] * 100).toFixed(1)}%;background:${e(colorOf(id))}"></i>`).join('')}</div></div>`; }).join('')}</div></div>`;
 }
 const NO_pct = p => p >= 0.995 ? '>99' : p > 0 && p < 0.005 ? '<1' : String(Math.round(p * 100));
 
@@ -137,4 +174,7 @@ function NO_historyFromTimeline(ctx, timeline, sims = 800) {
   return out;
 }
 
-if (typeof window !== 'undefined') Object.assign(window, { NO_prepare, NO_counts, NO_run, NO_label, NO_pct, NO_historyFromTimeline, NO_TUNE });
+// ?sharpen=2 on any page overrides the sharpening for testing (1 = raw model, 1.5 = tuned default; >2 is over-confident on past data)
+try { const q = new URLSearchParams(location.search).get('sharpen'); if (q != null && +q > 0 && +q <= 6) NO_TUNE.sharpen = +q; } catch (e) { /* not in a browser */ }
+
+if (typeof window !== 'undefined') Object.assign(window, { NO_groupsHTML, NO_groupList, NO_prepareFrom, NO_prepareSim, NO_prepare, NO_counts, NO_run, NO_label, NO_pct, NO_historyFromTimeline, NO_TUNE });

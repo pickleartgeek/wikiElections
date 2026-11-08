@@ -71,4 +71,35 @@ function CareerChart_render(el, entry, rangeKey) {
     <div class="cc-legend"><span><i style="background:var(--ink)"></i>Approve</span><span><i style="background:${RED}"></i>Disapprove</span><span><i class="ring"></i>Individual poll (sized by sample)</span><span><i class="band"></i>Shaded / flagged = a term · dashed divider = seat change</span></div>
     ${noPoll.length ? `<p class="small-muted cc-none">No approval polling logged for: ${noPoll.map(t => `<b>${label(t)}</b>`).join(', ')}.</p>` : ''}`;
   RCP_wireRangeBar(el, k => CareerChart_render(el, entry, k));
+
+  // scrubber: drag (or hover / tap) along the timeline; the chip shows that day's weighted approval for the seat held then
+  const svg = el.querySelector('svg'); if (!svg) return;
+  const wrap = document.createElement('div'); wrap.style.cssText = 'position:relative;touch-action:pan-y;'; svg.parentNode.insertBefore(wrap, svg); wrap.appendChild(svg);
+  const NS = 'http://www.w3.org/2000/svg', mk = (n, a) => { const e = document.createElementNS(NS, n); Object.entries(a).forEach(([k, v]) => e.setAttribute(k, v)); return e; };
+  const line = mk('line', { y1: pT, y2: pT + plotH, 'stroke-width': 1.5, 'stroke-dasharray': '3 3' }), dA = mk('circle', { r: 5, 'stroke-width': 2 }), dD = mk('circle', { r: 4.6, 'stroke-width': 2, fill: RED }), hd = mk('circle', { cy: pT, r: 7 });
+  line.style.stroke = 'var(--ink)'; dA.style.fill = 'var(--ink)'; dA.style.stroke = 'var(--paper)'; dD.style.stroke = 'var(--paper)'; hd.style.fill = 'var(--ink)';
+  const sc = mk('g', { style: 'cursor:ew-resize', 'aria-hidden': 'true' }); [line, dA, dD, hd].forEach(n => sc.appendChild(n)); svg.appendChild(sc);
+  const chip = document.createElement('div'); chip.setAttribute('role', 'status'); chip.style.cssText = 'position:absolute;top:0;pointer-events:none;background:var(--paper);color:var(--ink);border:1.5px solid var(--ink);border-radius:10px;padding:6px 10px;font-size:12px;line-height:1.35;box-shadow:0 4px 14px rgba(0,0,0,.18);white-space:nowrap;z-index:2;';
+  wrap.appendChild(chip);
+  const lastT = Date.parse(series[series.length - 1].pts[series[series.length - 1].pts.length - 1].date);
+  const at = t => { let i = polled.findIndex((o, k) => t >= starts[k] && t < ends[k]); if (i < 0) i = t < starts[0] ? 0 : polled.length - 1;
+    const pts = series[i].pts; let hit = null; pts.forEach(p => { if (Date.parse(p.date) <= t) hit = p; });
+    return { i, a: hit ? hit.averages.approve || 0 : null, d: hit ? hit.averages.disapprove || 0 : null, hit, term: polled[i].t }; };
+  const set = t => {
+    t = Math.min(Math.max(t, tMin), Math.min(tMax, Math.max(lastT, polled[polled.length - 1].last))); const r = at(t), x = X(t);
+    [line].forEach(n => { n.setAttribute('x1', x); n.setAttribute('x2', x); }); hd.setAttribute('cx', x);
+    const has = r.a != null; dA.style.display = dD.style.display = has ? '' : 'none';
+    if (has) { dA.setAttribute('cx', x); dA.setAttribute('cy', Y(r.a)); dD.setAttribute('cx', x); dD.setAttribute('cy', Y(r.d)); }
+    chip.innerHTML = `<b>${new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</b> · <span style="color:var(--muted)">${label(r.term)}</span><br>`
+      + (has ? `<b>${(r.a * 100).toFixed(1)}%</b> approve &nbsp;<b style="color:${RED}">${(r.d * 100).toFixed(1)}%</b> disapprove<br><span style="color:var(--muted)">Spread</span> <b>${r.a >= r.d ? '+' : '−'}${(Math.abs(r.a - r.d) * 100).toFixed(1)}</b>` : '<span style="color:var(--muted)">No poll yet for this term</span>');
+    const w = wrap.clientWidth, cw = chip.offsetWidth, px = x / W * w; chip.style.left = Math.max(0, Math.min(w - cw, px - cw / 2)) + 'px';
+  };
+  const toT = ev => { const b = svg.getBoundingClientRect(), vx = (ev.clientX - b.left) / b.width * W; return tMin + (vx - pL) / plotW * (tMax - tMin); };
+  let drag = false;
+  svg.addEventListener('pointerdown', ev => { drag = true; try { svg.setPointerCapture(ev.pointerId); } catch (e) { /* ignore */ } set(toT(ev)); });
+  svg.addEventListener('pointermove', ev => { if (drag || ev.pointerType === 'mouse') set(toT(ev)); });
+  ['pointerup', 'pointercancel'].forEach(n => svg.addEventListener(n, () => { drag = false; }));
+  svg.style.cursor = 'ew-resize'; svg.style.touchAction = 'pan-y';
+  el.querySelector('.cc-legend').insertAdjacentHTML('afterend', '<div class="small-muted rcp-scrub-hint">Drag along the chart to see approval on any date.</div>');
+  set(lastT);
 }

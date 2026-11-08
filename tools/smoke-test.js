@@ -62,8 +62,23 @@ const htmlPages = (dir = '') => fs.readdirSync(path.join(ROOT, dir), { withFileT
   p = await open('/index.html?demo=night'); await p.keyboard.press('Escape');
   ok(/Win Probability/.test(await p.locator('#stageRail').innerText()), 'Win Probability window is in the rail');
   await p.click('#stageRail .rail-tab:has-text("Win Probability")'); await p.waitForTimeout(2400);
-  ok(await p.locator('.sp:not([hidden]) .od-row').count() >= 2 && await p.locator('.sp:not([hidden]) .od-st').count() >= 1, 'odds rows and status pills render');
+  ok(await p.locator('.sp:not([hidden]) .od-row').count() >= 2 && await p.locator('.sp:not([hidden]) .od-st').count() >= 1, 'odds rows and status pills render'); ok(await p.locator('.sp:not([hidden]) .gm-tile').count() >= 9, 'by-group meter renders a tile for every group');
   ok(await p.evaluate(() => WIRE.some(w => w.tag === 'Odds')), 'Wire has an Odds item'); ok(!p.errs.length, 'no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  p = await open('/elects/?election=class2-2026-10', D, async page => page.route('**/data/tsrelects-results.json*', async r => { const j = await (await r.fetch()).json(); j.forEach(e => { if (e.id === 'class2-2026-10') e.date = new Date().toISOString().slice(0, 10); }); r.fulfill({ json: j }); }));
+  ok(await p.locator('#oddsPanel:not([hidden]) .odds-row').count() >= 2, 'Elects page shows the win-probability meter for a fresh election'); ok(!p.errs.length, 'no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+  p = await open('/elects/?election=class2-2026-10'); ok(await p.locator('#oddsPanel:not([hidden])').count() === 0, 'meter stays hidden for an old, settled election'); await p.ctx.close();
+
+  p = await open('/elects/simulate.html');
+  for (let i = 0; i < 3; i++) { await p.locator('#candGrid > *').nth(i).click(); await p.waitForTimeout(150); }
+  await p.click('#runBtn'); await p.waitForTimeout(800); await p.click('#skipBtn'); await p.waitForTimeout(1200);
+  ok(await p.locator('#oddsPanel:not([hidden]) .odds-pill').count() === 1 && /final/i.test(await p.locator('#oddsPanel .odds-pill').innerText()), 'Simulator shows the win-probability meter and settles on Final'); ok(!p.errs.length, 'no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  console.log('3c. approval pages');
+  p = await open('/approval.html?mod=pag'); ok(/PickleArtGeek/.test(await p.locator('#pageTitle').innerText()), "Pickle's page is named after him, not the office");
+  await p.locator('.rcp-chart-panel svg').scrollIntoViewIfNeeded(); const bb = await p.locator('.rcp-chart-panel svg').boundingBox(); await p.mouse.move(bb.x + bb.width * .3, bb.y + bb.height * .5); await p.waitForTimeout(250);
+  ok(/Class 2/.test(await p.locator('.rcp-chart-panel [role=status]').innerText()), 'career chart scrubber chip shows the term and approval at that date');
+  await p.mouse.move(bb.x + bb.width * .96, bb.y + bb.height * .5); await p.waitForTimeout(250); ok(/Elections Secretary/.test(await p.locator('.rcp-chart-panel [role=status]').innerText()), 'scrubbing to the latest date switches to the current seat'); ok(!p.errs.length, 'no errors'); await p.ctx.close();
 
   console.log('4. seen-memory (election dated today)');
   const today = new Date().toISOString().slice(0, 10);

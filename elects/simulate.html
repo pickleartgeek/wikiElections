@@ -170,6 +170,30 @@
   }
 
   .sim-badge { background: var(--yellow); font-size: 12px; font-weight: 800; text-align: center; padding: 6px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-fixed); }
+  /* Win probability meter (NightOdds) */
+  .odds-panel { margin: 14px 0 8px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 14px 16px 12px; }
+  .odds-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 10px; }
+  .odds-head h3 { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: .02em; }
+  .odds-head small { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .odds-pill { margin-left: auto; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; background: var(--line); color: var(--muted); }
+  .odds-pill.call, .odds-pill.vlikely { background: #ffefaf; color: #111214; } .odds-pill.likely { background: #1f6b4d; color: #fff; } .odds-pill.lean { background: #3b4a8f; color: #fff; }
+  .odds-meter { display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px; margin-bottom: 10px; background: var(--line); } .odds-meter i { display: block; height: 100%; min-width: 3px; transition: width .6s cubic-bezier(.2,.8,.2,1); }
+  .odds-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px; align-items: baseline; padding: 4px 0; }
+  .odds-row .nm { font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 8px; } .odds-row .nm i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; background: var(--c); flex-shrink: 0; }
+  .odds-row .nm small { color: var(--muted); font-weight: 600; font-size: 12px; }
+  .odds-row .pc { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 800; }
+/* by-group probability meter (NightOdds) */
+  .gm { margin-top: 14px; } .gm-t { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; } .gm-t small { font-weight: 600; letter-spacing: 0; text-transform: none; opacity: .65; margin-left: 6px; }
+  .gm-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .gm-tile { border: 1px solid rgba(128,128,128,.35); border-radius: 8px; padding: 7px 9px 8px; min-width: 0; } .gm-tile.gm-none { border-style: dashed; opacity: .72; }
+  .gm-h { display: flex; justify-content: space-between; align-items: baseline; font-size: 11px; opacity: .75; } .gm-h b { font-weight: 800; }
+  .gm-who { display: flex; align-items: center; gap: 6px; margin: 3px 0 5px; font-size: 13px; font-weight: 700; min-width: 0; } .gm-who i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); flex: none; }
+  .gm-who span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .gm-who b { font-variant-numeric: tabular-nums; font-weight: 800; }
+  .gm-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; background: rgba(128,128,128,.25); } .gm-bar i { display: block; height: 100%; min-width: 2px; }
+  @media (max-width: 560px) { .gm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .odds-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+  .odds-spark { display: block; width: 100%; height: 96px; margin: 8px 0 2px; } .odds-spark text { fill: var(--muted); font-size: 9px; font-weight: 700; }
+  .odds-verdict { margin: 10px 0 0; padding: 8px 10px; border-radius: 8px; background: var(--line); font-size: 13px; font-weight: 600; }
   .sim-setup { border: 2px solid var(--ink); border-radius: var(--radius); background: var(--surface); padding: 16px 18px; margin: 18px 0 22px; }
   .cand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; max-height: 340px; overflow: auto; margin: 10px 0 14px; padding: 2px; }
   .sim-cand { display: flex; gap: 8px; align-items: center; border: 2px solid var(--line); border-radius: var(--radius); padding: 6px 8px; cursor: pointer; background: var(--surface); }
@@ -258,6 +282,7 @@
       <div class="nbc-head"><div class="h-cand">Candidate</div><div class="h-votes">Votes</div><div class="h-bar"></div><div class="h-pct">Percentage</div></div>
       <div id="nbcChart"></div>
     </div>
+    <section class="odds-panel" id="oddsPanel" hidden aria-label="Win probability"></section>
     <div id="smBar"></div>
     <div class="map-section">
       <div id="map"></div>
@@ -274,6 +299,7 @@
 <script src="../assets/leaflet/leaflet.js"></script>
 <script src="../assets/js/groupcalc.js"></script>
 <script src="../assets/js/electsim.js"></script>
+<script src="../assets/js/nightodds.js"></script>
 <script src="../assets/js/shiftmap.js"></script>
 <script>
 initSiteChrome();
@@ -355,7 +381,7 @@ function run(seed) {
   clearInterval(timer); const cs = candList(), T = tParams(), sd = (seed >>> 0) || ((Math.random() * 4294967296) >>> 0), r = ES_rng(sd);
   const sim = ES_simulate(Lr, cs, T, r), gids = Lr.geoIds, mk = (key, name, votes, cids) => ({ key, name, votes, cids, tau: 0, done: false, st: Object.fromEntries(gids.map(g => [g, r() * .55])), du: Object.fromEntries(gids.map(g => [g, .25 + r() * .2])) });
   const finalists = sim.runoff ? Object.keys(sim.runoff[gids[0]]) : null;
-  S = { sim, cs, T, seed: sd, view: 0, rounds: [mk('first', 'First Round', sim.first, cs.map(c => c.id))] };
+  S = { sim, cs, T, seed: sd, hist: {}, view: 0, rounds: [mk('first', 'First Round', sim.first, cs.map(c => c.id))] };
   if (sim.runoff) S.rounds.push(mk('runoff', 'Runoff', sim.runoff, finalists));
   S.rounds[0].started = true; mapSel = null;
   $('night').style.display = 'block'; $('raceTitle').textContent = 'Custom Election — Simulated'; $('night').scrollIntoView({ behavior: 'smooth' });
@@ -398,11 +424,51 @@ function paint() {
   $('nbcChart').innerHTML = Object.entries(t.tot).sort((a, b) => b[1] - a[1]).map(([id, v]) => { const c = C(id), p = T ? v / T : 0, lead = st.w === id;
     return `<div class="nbc-row ${lead ? 'leading' : ''}" style="${lead ? 'background:' + c.color : ''}"><div class="nbc-avatar"><img src="${photo(id)}" alt=""></div><div class="nbc-cand"><span class="nbc-name">${c.name}</span> <span class="nbc-party">(${party(id)})</span>${lead ? '<span class="nbc-check">✓</span>' : ''}</div>
       <div class="nbc-votes">${v}</div><div class="nbc-bar-track"><div class="nbc-bar-fill" style="width:${p * 100}%;background:${lead ? '#fff' : c.color}"></div></div><div class="nbc-pct">${pct(p)}</div></div>`; }).join('');
-  lastGv = t.gv;
+  lastGv = t.gv; renderOdds(rd, t);
   if (SMi && SMi.active()) { SMi.refresh(); return; }
   if (layer) layer.eachLayer(l => l.setStyle({ fillColor: TSR_marginColor(registry, t.gv[l.feature.properties.id]), fillOpacity: .9, weight: String(mapSel) === String(l.feature.properties.id) ? 3 : 1.2, color: '#fff' }));
   panel(t);
 }
+/** Win probability for the simulated count. Same NightOdds model as live election night: prior = the simulator's own pre-election group expectation, then every counted vote updates it.
+ *  The meter never sees the hidden final result, so you can watch it be right (or wrong) and compare with the verdict once the round is done. */
+let oddsAt = 0, oddsBusy = null;
+function oddsCtx(rd) {
+  if (!S.octx) S.octx = {};
+  if (S.octx[rd.key]) return S.octx[rd.key];
+  let ctx;
+  if (rd.key === 'first') ctx = NO_prepareSim({ L: Lr, cands: S.cs, T: S.T });
+  else {   // runoff: prior = first-round group split among the two finalists, expected turnout = the first round's
+    const first = S.rounds[0], mu = {}, ids = rd.cids;
+    Lr.geoIds.forEach(g => { const z = ids.reduce((a, id) => a + first.votes[g][id] + .5, 0); mu[g] = {}; ids.forEach(id => { mu[g][id] = (first.votes[g][id] + .5) / z; }); });
+    const tot = Object.values(first.votes).reduce((a, g) => a + Object.values(g).reduce((x, y) => x + y, 0), 0);
+    ctx = NO_prepareFrom({ ids, mu, weights: Lr.weights, total: { mean: tot * .97, sd: Math.max(2, tot * .1) }, conc: 20, cState: 8 });
+  }
+  return (S.octx[rd.key] = ctx);
+}
+function renderOdds(rd, t, force) {
+  const box = $('oddsPanel'); if (!window.NO_run || !S) return;
+  const now = Date.now(), H = (S.hist = S.hist || {})[rd.key] = (S.hist || {})[rd.key] || [], sig = rd.key + ':' + Object.values(t.tot).join(',') + ':' + rd.done;
+  if (!force && sig === S.osig) return; if (!force && !rd.done && now - oddsAt < 500) return; oddsAt = now; S.osig = sig;
+  const ctx = oddsCtx(rd), groups = {}; Lr.geoIds.forEach(g => { groups[g] = {}; });
+  Object.entries(t.gv).forEach(([g, v]) => { groups[g] = v; });
+  const o = NO_run(ctx, NO_counts(groups, ctx), { sims: 1500, final: rd.done, reporting: t.rep }), early = o.N < NO_TUNE.minN, C = id => registry.candidates[id];
+  if (!early && (!H.length || H[H.length - 1].n !== o.N || rd.done)) H.push({ n: o.N, rep: t.rep, lead: Object.assign({}, o.lead) });
+  const rank = ctx.ids.slice().sort((a, b) => o.lead[b] - o.lead[a]), lab = o.status, winner = rd.done ? Object.entries(t.tot).sort((a, b) => b[1] - a[1])[0][0] : null;
+  const spark = () => { if (H.length < 2) return ''; const W = 600, Hh = 96, x = i => 6 + (W - 12) * i / (H.length - 1), y = p => Hh - 6 - (Hh - 12) * p;
+    return `<svg class="odds-spark" viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none" role="img" aria-label="Chance to lead over the count"><line x1="6" x2="${W - 6}" y1="${y(.5)}" y2="${y(.5)}" stroke="currentColor" stroke-opacity=".15" stroke-dasharray="3 4"/>`
+      + rank.slice(0, 4).map(id => `<polyline fill="none" stroke="${C(id).color}" stroke-width="2.4" stroke-linejoin="round" points="${H.map((h, i) => x(i).toFixed(1) + ',' + y(h.lead[id] || 0).toFixed(1)).join(' ')}"/>`).join('') + `<text x="8" y="10">100%</text><text x="8" y="${Hh - 1}">0%</text></svg>`; };
+  let verdict = '';
+  if (rd.done && H.length) { const mid = H.reduce((b, h) => Math.abs(h.rep - .5) < Math.abs(b.rep - .5) ? h : b), p = mid.lead[winner] || 0;
+    verdict = `<p class="odds-verdict">At about half reporting the model gave <b>${esc2(C(winner).name)}</b>, who finished first, a <b>${NO_pct(p)}%</b> chance to lead${p < .4 ? ' — an upset against what the early count suggested.' : p > .9 ? ' — the early count already pointed that way.' : '.'}</p>`; }
+  box.innerHTML = `<div class="odds-head"><h3>Win probability</h3><small>${o.N} vote${o.N === 1 ? '' : 's'} counted${rd.done ? '' : ` · ~${Math.round(o.expectedTotal)} expected`}</small><span class="odds-pill ${rd.done ? 'call' : lab.key}">${rd.done ? 'Final' : lab.text}</span></div>`
+    + (early ? `<p class="odds-note">Only ${o.N} vote${o.N === 1 ? '' : 's'} counted so far — too early for a meaningful chance (odds appear from ${NO_TUNE.minN}).</p>`
+      : `<div class="odds-meter" aria-hidden="true">${rank.slice(0, 5).map(id => `<i style="width:${(o.lead[id] * 100).toFixed(1)}%;background:${C(id).color}"></i>`).join('')}</div>`
+        + rank.slice(0, 5).map(id => `<div class="odds-row" style="--c:${C(id).color}"><span class="nm"><i></i>${esc2(C(id).name)}<small>${Math.round(o.share[id].mean * 100)}% proj. share</small></span><span class="pc">${NO_pct(o.lead[id])}%</span></div>`).join('') + spark() + NO_groupsHTML(o, id => C(id).name, id => C(id).color))
+    + verdict + `<p class="odds-note">${!early && !rd.done && o.runoff > 0.05 && ctx.ids.length > 2 ? `${Math.round(o.runoff * 100)}% chance nobody tops 50% · ` : ''}${!early && !rd.done && o.tipping ? `Group ${o.tipping.group} decides it · ` : ''}Chance to finish first on first-choice votes. Starts from the simulator's own forecast and updates as groups report; it can't see the hidden result.</p>`;
+  box.hidden = false;
+}
+const esc2 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
 function panel(t) {
   const rows = (o, hdr, sub) => `<div class="dtitle">${hdr}</div>` + Object.entries(o).sort((a, b) => b[1] - a[1]).map(([id, v], i) => { const T = Object.values(o).reduce((a, b) => a + b, 0);
     return `<div class="district-row ${i === 0 && v > 0 ? 'leader' : ''}"><span class="swatch" style="background:${registry.candidates[id].color}"></span><span class="n">${registry.candidates[id].name}</span><span class="v">${v} · ${T ? pct(v / T, 0) : '—'}</span><div class="bar-track"><div class="bar-fill" style="width:${T ? v / T * 100 : 0}%;background:${registry.candidates[id].color}"></div></div></div>`; }).join('') + `<div class="district-total">${sub}</div>`;

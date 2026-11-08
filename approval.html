@@ -112,7 +112,8 @@ function displayNameFor(entry) {
   // title shown in place of their handle everywhere approval data is
   // rendered -- `entry.name` (real username, still used for the photo
   // lookup) stays untouched, this only swaps what's displayed.
-  return (entry && entry.role) || (entry && entry.name) || '';
+  // An office page is named for the office; a person's own page keeps their handle (the office they hold now shows as the seat badge and as the latest term on their career chart).
+  return entry && entry.kind === 'office' ? (entry.role || entry.name || '') : (entry && entry.name) || '';
 }
 
 async function boot() {
@@ -222,7 +223,7 @@ function loadEntry(key) {
   // date (UTC) stands in as the reference point: the closer a poll is to
   // today, the more it counts, same recency model as everywhere else.
   // A former moderator's approval is frozen at the end of their term (termEnd, else their last poll).
-  const wasFormer = !isQuestion && (entry.status || 'current') === 'former';
+  const wasFormer = !isQuestion && (entry.status || 'current') === 'former' && !entry.role;   // holding an office right now = not frozen
   const lastPoll = entry.polls.reduce((x, p) => p.date > x ? p.date : x, '');
   const asOf = entry.frozenAsOf || (wasFormer ? (entry.termEnd || lastPoll) : todayUTCString());
   // normalize:false -- these are independently-measured shares, not a vote
@@ -232,7 +233,7 @@ function loadEntry(key) {
   const latestAgg = BaseCalc_aggregate(entry.polls, ['approve', 'disapprove'], asOf, aggOpts);
   const approve = latestAgg.averages.approve || 0, disapprove = latestAgg.averages.disapprove || 0;
   const photo = isQuestion ? null : photoFor(entry.candidateKey || key);
-  const isFormer = !isQuestion && ((entry.status || 'current') === 'former' || !!entry.frozenAsOf);
+  const isFormer = !isQuestion && (((entry.status || 'current') === 'former' && !entry.role) || !!entry.frozenAsOf);
 
   let html = `
     ${photo ? `
@@ -240,7 +241,7 @@ function loadEntry(key) {
       <div class="appr-hero-photo"><img class="white-filter-img" src="${photo}" alt=""></div>
       <div>
         <div style="font-family:var(--font-spinner-display); font-size:20px; font-weight:900;">${label}${isFormer ? ` <span class="rcp-donut-legend-item" style="background:#efece0; border-radius:999px; padding:2px 10px; font-size:11px; font-weight:700; vertical-align:middle;">${entry.status === 'former' ? 'Former Moderator' : 'Former term'}</span>` : ''}${entry.seat && entry.terms ? ` <span class="rcp-donut-legend-item" style="background:#111214; color:#fff; border-radius:999px; padding:2px 10px; font-size:11px; font-weight:700; vertical-align:middle;">${entry.seat}</span>` : ''}</div>
-        <div class="small-muted">${entry.polls.length} approval poll${entry.polls.length === 1 ? '' : 's'} tracked${isFormer ? ` · final approval as of ${asOf}` : ''}</div>
+        <div class="small-muted">${(multi ? entry.allPolls : entry.polls).length} approval poll${(multi ? entry.allPolls : entry.polls).length === 1 ? '' : 's'} tracked${isFormer ? ` · final approval as of ${asOf}` : ''}</div>
       </div>
     </div>` : `
     <div class="appr-hero">

@@ -908,6 +908,16 @@
             "approve": 0.4375,
             "disapprove": 0.125
           }
+        },
+        {
+          "pollster": "CENSUS",
+          "date": "2026-10-09",
+          "sample": 13,
+          "weight": 1,
+          "shares": {
+            "approve": 0.5383,
+            "disapprove": 0.1538
+          }
         }
       ]
     },

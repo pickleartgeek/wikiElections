@@ -1,13 +1,24 @@
 {
   "polls": [
     {
+      "id": "poll_t3_1xsw00e_1794338596333",
+      "title": "2025 New York City Mock Election",
+      "createdBy": "Representative-Fee65",
+      "date": "2026-11-10",
+      "method": "fptp",
+      "status": "open",
+      "ballots": 25,
+      "included": false,
+      "reason": "not a class race poll"
+    },
+    {
       "id": "poll_t3_1xp17gn_1793931410748",
       "title": "2025 New York City Mayoral Mock Election Democratic Primary",
       "createdBy": "Representative-Fee65",
       "date": "2026-11-06",
       "method": "fptp",
       "status": "open",
-      "ballots": 41,
+      "ballots": 42,
       "included": false,
       "reason": "not a class race poll"
     },

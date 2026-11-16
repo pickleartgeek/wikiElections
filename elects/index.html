@@ -79,6 +79,21 @@
   .gm-who span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .gm-who b { font-variant-numeric: tabular-nums; font-weight: 800; }
   .gm-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; background: rgba(128,128,128,.25); } .gm-bar i { display: block; height: 100%; min-width: 2px; }
   @media (max-width: 560px) { .gm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* "what it takes" box (NightOdds) */
+  .nd { margin-top: 14px; border: 1px solid rgba(128,128,128,.35); border-left: 4px solid currentColor; border-radius: 8px; padding: 9px 12px 6px; }
+  .nd-h { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 10px; margin-bottom: 6px; } .nd-h b { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; } .nd-h span { font-size: 12px; opacity: .7; }
+  .nd-row { display: grid; grid-template-columns: 10px minmax(0, 1fr); column-gap: 8px; align-items: center; padding: 5px 0 7px; border-top: 1px solid rgba(128,128,128,.2); } .nd-row > i { width: 10px; height: 10px; border-radius: 50%; }
+  .nd-nm { font-weight: 800; font-size: 14px; } .nd-tx { grid-column: 2; font-size: 12.5px; opacity: .85; line-height: 1.4; } .nd-tx b { font-weight: 800; }
+  .nd-bar { grid-column: 2; position: relative; height: 6px; margin-top: 5px; border-radius: 3px; background: rgba(128,128,128,.25); } .nd-bar u { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; opacity: .85; }
+  .nd-bar s { position: absolute; top: -3px; bottom: -3px; width: 2px; background: currentColor; } .nd-out .nd-nm, .nd-out .nd-tx { opacity: .55; }
+.gm-vs { display: flex; justify-content: space-between; gap: 6px; margin-top: 5px; font-size: 10.5px; line-height: 1.3; opacity: .85; } .gm-vs span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .gm-vs em { font-style: normal; opacity: .65; } .gm-vs b { font-weight: 800; white-space: nowrap; }
+  .gm-vs.up b { color: #1f9d63; } .gm-vs.dn b { color: #d63a3a; }
+  .rc-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 10px; } .rc-head h3 { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: .02em; } .rc-head small { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .rc-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; margin-bottom: 12px; } .rc-tile { flex: 1 1 110px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; } .rc-tile span { font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); } .rc-tile b { font-family: var(--font-mono); font-size: 24px; font-weight: 800; } .rc-tile small { color: var(--muted); font-size: 11px; }
+  .rc-spark-wrap { flex: 2 1 260px; display: flex; flex-direction: column; justify-content: center; gap: 2px; } .rc-spark { width: 100%; max-width: 360px; height: auto; } .rc-spark-wrap small { color: var(--muted); font-size: 11px; }
+  .rc-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 6px 22px; } .rc-cols h4 { margin: 8px 0 4px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); } .rc-cols p, .rc-cols li { font-size: 13.5px; line-height: 1.45; margin: 0 0 4px; } .rc-cols ul { margin: 0; padding-left: 18px; } .rc-cols small { color: var(--muted); }
+  .rc-up { color: #1f9d63; font-weight: 800; } .rc-dn { color: #d63a3a; font-weight: 800; } .rc-eq { color: var(--muted); font-weight: 800; }
+  .fl-share { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; } .fl-share button { font: inherit; font-size: 12.5px; font-weight: 700; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); cursor: pointer; } .fl-share button:hover { border-color: var(--ink); } .fl-share-msg { font-size: 12px; color: var(--muted); }
   .odds-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
   .nbc-chart { margin: 18px 0 8px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
 
@@ -274,17 +289,17 @@
         <summary class="">More</summary>
         <div class="nav-menu">
           <div class="nav-menu-h">Forecast &amp; trackers</div>
-          <a href="../approval"><b>Moderator Approval</b><span>Job approval for every moderator, across all their seats</span></a>
-          <a href="../party-support"><b>Party Support</b><span>Generic-ballot party ID, pooled across pollsters</span></a>
-          <a href="../guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+          <a href="../approval"><b>Moderator Approval</b></a>
+          <a href="../party-support"><b>Party Support</b></a>
+          <a href="../guide"><b>Understanding ProbCalc</b></a>
           <div class="nav-menu-h">Polling</div>
-          <a href="../pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <a href="../pollsters"><b>Pollster Ratings</b></a>
           <div class="nav-menu-h">Tools</div>
-          <a href="../elects/replay"><b>Election Replay</b><span>Watch a result come in vote by vote, or export it as video</span></a>
-          <a href="../elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
-          <a href="../elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <a href="../elects/replay"><b>Election Replay</b></a>
+          <a href="../elects/simulate"><b>Election Simulator</b></a>
+          <a href="../elects/mapmaker"><b>Map Maker</b></a>
           <div class="nav-menu-h">Read</div>
-          <a href="../articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="../articles"><b>Articles</b></a>
         </div>
       </details>
     </nav>
@@ -319,6 +334,10 @@
       <label>Round</label>
       <select id="roundSelect"></select>
     </div>
+    <div class="field-row" id="wallWrap">
+      <label>Magic Wall</label>
+      <a class="replay-link" id="wallLink" href="wall">▦ Open the Wall</a>
+    </div>
     <div class="field-row" id="replayWrap" hidden>
       <label>Count replay</label>
       <a class="replay-link" id="replayLink" href="replay">▶ Replay this count</a>
@@ -348,6 +367,7 @@
   </div>
 
   <section class="odds-panel" id="oddsPanel" hidden aria-label="Win probability"></section>
+  <section class="odds-panel recap-panel" id="recapPanel" hidden aria-label="Election recap"></section>
 
   <div class="map-controls" id="mapControls">
     <div class="seg" id="viewSeg"><button data-v="results" class="on">Results</button><button data-v="shift">Shift</button></div>
@@ -387,6 +407,8 @@
 <script src="../assets/js/groupcalc.js"></script>
 <script src="../assets/js/electsim.js"></script>
 <script src="../assets/js/nightodds.js"></script>
+<script src="../assets/js/graphmaker.js"></script>
+<script src="../assets/js/forecastlab.js"></script>
 <script src="../assets/leaflet/leaflet.js"></script>
 <script>
 initSiteChrome();
@@ -421,7 +443,9 @@ async function load() {
 
   const cfg = (typeof OVR_getSiteConfig === 'function') ? OVR_getSiteConfig(siteCfg) : siteCfg;
   // live = listed in site-config, or still open on BallotTSR (voting hasn't closed)
-  liveIds = [...new Set([...SITE_electsIds(cfg).filter(id => allElections.some(e => e.id === id)), ...allElections.filter(e => e.live).map(e => e.id)])];
+  liveIds = [...new Set([...SITE_electsIds(cfg).filter(id => allElections.some(e => e.id === id)), ...allElections.filter(e => e.live || TSR_isOpen(e)).map(e => e.id)])];
+  // Election night: the Magic Wall takes over from this page until the election is over. ?classic=1 keeps the standard view.
+  if (liveIds.length && !params.has('classic')) { const want = params.get('election'); if (!want || liveIds.includes(want)) { location.replace('wall?election=' + encodeURIComponent(want || liveIds[0])); return; } }
   const isLive = e => liveIds.includes(e.id);
   const ordered = [...allElections.filter(isLive), ...allElections.filter(e => !isLive(e))];   // live races first, each group newest-first
 
@@ -490,6 +514,7 @@ function openElection(id) {  currentElection = allElections.find(e => e.id === i
   document.getElementById('electionSelect').value = id;
   try { const u = new URL(location.href); u.searchParams.set('election', id); history.replaceState(null, '', u); } catch (e) {}
   document.querySelectorAll('.live-card').forEach(b => b.classList.toggle('active', b.dataset.id === id));
+  document.getElementById('wallLink').href = 'wall?election=' + encodeURIComponent(id);
   REPLAY_ids().then(ids => { const w = document.getElementById('replayWrap'); w.hidden = !ids.has(id); document.getElementById('replayLink').href = 'replay?e=' + encodeURIComponent(id); });
 
   const roundWrap = document.getElementById('roundFieldWrap');
@@ -563,6 +588,7 @@ function render() {
 
   renderChart(totals, call);
   renderOdds();
+  renderRecap();
   refreshMap();
 }
 
@@ -573,22 +599,43 @@ async function renderOdds() {
   box.hidden = true;
   try {
     const e = currentElection, race = TSR_getRaces(TSR_getRoundData(e, currentRoundKey))[currentRaceName], age = (Date.now() - Date.parse(e.date)) / 864e5;
-    if (!race || !window.NO_run || !(liveIds.includes(e.id) || (age >= 0 && age <= 3))) return;
-    const totals = TSR_raceTotals(race), votes = Object.values(totals).reduce((a, b) => a + b, 0); if (!votes) return;
+    const totals = race ? TSR_raceTotals(race) : {}, votes = Object.values(totals).reduce((a, b) => a + b, 0), preview = !!race && !votes && (liveIds.includes(e.id) || (age > -60 && age <= 3));
+    if (!race || !window.NO_run || !(liveIds.includes(e.id) || (age >= 0 && age <= 3) || preview)) return;
+    if (!votes && !preview) return;
     if (!(e.id in ODDS_POLLS)) ODDS_POLLS[e.id] = await fetch(`../data/elections/${e.id}.json`).then(r => r.json()).catch(() => null);
     if (renderOdds.t !== token) return;
+    if (preview) {   // nothing counted yet: forecast from the polls alone
+      if (!ODDS_POLLS[e.id] || !(ODDS_POLLS[e.id].polls || []).length) return;
+      const x = FL_preview({ pf: ODDS_POLLS[e.id], geo: geojsonCache, elections: allElections.filter(y => y.id !== e.id), date: e.date, keys: Object.keys(totals) }); x.title = e.title || e.id;
+      box.innerHTML = FL_previewHTML(x, k => TSR_candidateName(registry, k), k => TSR_candidateColor(registry, k)); box.hidden = false; return;
+    }
     const live = liveIds.includes(e.id), call = TSR_getRaceCall(TSR_getRoundData(e, currentRoundKey), currentRaceName), keys = Object.keys(totals);
     const ctx = NO_prepare({ pf: ODDS_POLLS[e.id], geo: geojsonCache, elections: allElections.filter(x => x.id !== e.id && x.date < e.date), date: e.date, keys });
     const o = NO_run(ctx, NO_counts(race, ctx), { sims: 3000, final: !live }), early = o.N < NO_TUNE.minN, lab = call && call.status ? { key: 'call', text: 'Called' } : o.status;
     const rank = ctx.ids.slice().sort((a, b) => o.lead[b] - o.lead[a]).slice(0, 4), col = k => TSR_candidateColor(registry, k), esc2 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     box.innerHTML = `<div class="odds-head"><h3>Win probability</h3><small>${o.N} ballot${o.N === 1 ? '' : 's'} ${live ? `in · ~${Math.round(o.expectedTotal)} expected` : 'counted'}</small><span class="odds-pill ${lab.key}">${lab.text}</span></div>`
       + (early ? `<p class="odds-note">Only ${o.N} ballot${o.N === 1 ? '' : 's'} counted so far — too early for a meaningful chance (odds appear from ${NO_TUNE.minN}).</p>`
-        : `<div class="odds-meter" aria-hidden="true">${rank.map(k => `<i style="width:${(o.lead[k] * 100).toFixed(1)}%;background:${col(k)}"></i>`).join('')}</div>`
+        : `<div class="odds-meter" role="img" aria-label="Chance to finish first: ${rank.map(k => esc2(TSR_candidateName(registry, k)) + ' ' + NO_pct(o.lead[k]) + '%').join(', ')}">${rank.map(k => `<i style="width:${(o.lead[k] * 100).toFixed(1)}%;background:${col(k)}"></i>`).join('')}</div>`
           + rank.map(k => `<div class="odds-row" style="--c:${col(k)}"><span class="nm"><i></i>${esc2(TSR_candidateName(registry, k))}<small>${Math.round(o.share[k].mean * 100)}% proj. share</small></span><span class="pc">${NO_pct(o.lead[k])}%</span></div>`).join('')
-          + NO_groupsHTML(o, k => TSR_candidateName(registry, k), col)
+          + NO_needsHTML(o, k => TSR_candidateName(registry, k), col) + NO_groupsHTML(o, k => TSR_candidateName(registry, k), col)
           + `<p class="odds-note">${o.runoff > 0.05 && ctx.ids.length > 2 ? `${Math.round(o.runoff * 100)}% chance nobody tops 50% · ` : ''}${o.tipping ? `Group ${o.tipping.group} decides it · ` : ''}Chance to finish first on first-choice votes, from the DDTSR group forecast updated by the count. A model estimate, not a call.</p>`);
+    if (!early) box.insertAdjacentHTML('beforeend', FL_shareBar((e.title || e.id) + ': ' + TSR_candidateName(registry, rank[0]) + ' ' + NO_pct(o.lead[rank[0]]) + '% to finish first', rank.map(k => ({ name: TSR_candidateName(registry, k), color: col(k), value: Math.round(o.lead[k] * 100) })), live ? 'Chance to finish first, live' : 'Chance to finish first'));
     box.hidden = false;
   } catch (err) { console.warn('win probability', err); }
+}
+
+/** Recap of a finished election that has a ballot-by-ballot timeline: forecast vs result, lead changes, group gaps. */
+let _flD = null;
+async function renderRecap() {
+  const box = document.getElementById('recapPanel'), token = renderRecap.t = {}; box.hidden = true;
+  try {
+    const e = currentElection; if (!e || !window.FL_recap || liveIds.includes(e.id) || currentRoundKey !== 'first_round') return;
+    const ids = await REPLAY_ids(); if (!ids.has(e.id)) return;
+    box.innerHTML = '<div class="skel" style="height:150px" role="status" aria-label="Loading recap"></div>'; box.hidden = false;
+    _flD = _flD || await FL_load('../', { elections: allElections }); const R = await FL_recap(_flD, e.id, { sims: 400 });
+    if (renderRecap.t !== token) return; if (!R) { box.hidden = true; return; }
+    box.innerHTML = FL_recapHTML(R, k => TSR_candidateName(registry, k), k => TSR_candidateColor(registry, k)); box.hidden = false;
+  } catch (err) { console.warn('recap', err); }
 }
 
 function nbcApplyView() {

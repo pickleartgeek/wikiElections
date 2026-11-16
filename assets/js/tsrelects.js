@@ -60,6 +60,15 @@ function TSR_getRaces(roundData) {
   return (roundData && (roundData.races || roundData)) || {};
 }
 
+/**
+ * An election may carry `opens` and `closes` (ISO 8601 with offset). Between the two it is live, with no config flip needed.
+ * Both are required: a lone `opens` is ignored so a half-filled record never sticks a finished election in live mode.
+ */
+function TSR_isOpen(e, now) {
+  if (!e) return false; const t = now == null ? Date.now() : now, o = Date.parse(e.opens), c = Date.parse(e.closes);
+  return isFinite(o) && isFinite(c) && t >= o && t < c;
+}
+
 function TSR_getRaceCall(roundData, raceName) {
   if (!roundData) return null;
   const calls = roundData.race_calls || roundData.calls || null;

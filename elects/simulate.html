@@ -191,6 +191,16 @@
   .gm-who span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .gm-who b { font-variant-numeric: tabular-nums; font-weight: 800; }
   .gm-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; background: rgba(128,128,128,.25); } .gm-bar i { display: block; height: 100%; min-width: 2px; }
   @media (max-width: 560px) { .gm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* "what it takes" box (NightOdds) */
+  .nd { margin-top: 14px; border: 1px solid rgba(128,128,128,.35); border-left: 4px solid currentColor; border-radius: 8px; padding: 9px 12px 6px; }
+  .nd-h { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 10px; margin-bottom: 6px; } .nd-h b { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; } .nd-h span { font-size: 12px; opacity: .7; }
+  .nd-row { display: grid; grid-template-columns: 10px minmax(0, 1fr); column-gap: 8px; align-items: center; padding: 5px 0 7px; border-top: 1px solid rgba(128,128,128,.2); } .nd-row > i { width: 10px; height: 10px; border-radius: 50%; }
+  .nd-nm { font-weight: 800; font-size: 14px; } .nd-tx { grid-column: 2; font-size: 12.5px; opacity: .85; line-height: 1.4; } .nd-tx b { font-weight: 800; }
+  .nd-bar { grid-column: 2; position: relative; height: 6px; margin-top: 5px; border-radius: 3px; background: rgba(128,128,128,.25); } .nd-bar u { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; opacity: .85; }
+  .nd-bar s { position: absolute; top: -3px; bottom: -3px; width: 2px; background: currentColor; } .nd-out .nd-nm, .nd-out .nd-tx { opacity: .55; }
+.gm-vs { display: flex; justify-content: space-between; gap: 6px; margin-top: 5px; font-size: 10.5px; line-height: 1.3; opacity: .85; } .gm-vs span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .gm-vs em { font-style: normal; opacity: .65; } .gm-vs b { font-weight: 800; white-space: nowrap; }
+  .gm-vs.up b { color: #1f9d63; } .gm-vs.dn b { color: #d63a3a; }
+  .odds-log { margin-top: 10px; font-size: 12.5px; border-left: 3px solid var(--ink); padding: 2px 0 2px 10px; } .odds-log b { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; display: block; margin-bottom: 2px; } .odds-log span { font-weight: 800; font-variant-numeric: tabular-nums; margin-right: 4px; }
   .odds-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
   .odds-spark { display: block; width: 100%; height: 96px; margin: 8px 0 2px; } .odds-spark text { fill: var(--muted); font-size: 9px; font-weight: 700; }
   .odds-verdict { margin: 10px 0 0; padding: 8px 10px; border-radius: 8px; background: var(--line); font-size: 13px; font-weight: 600; }
@@ -225,17 +235,17 @@
         <summary class="current">More</summary>
         <div class="nav-menu">
           <div class="nav-menu-h">Forecast &amp; trackers</div>
-          <a href="../approval"><b>Moderator Approval</b><span>Job approval for every moderator, across all their seats</span></a>
-          <a href="../party-support"><b>Party Support</b><span>Generic-ballot party ID, pooled across pollsters</span></a>
-          <a href="../guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+          <a href="../approval"><b>Moderator Approval</b></a>
+          <a href="../party-support"><b>Party Support</b></a>
+          <a href="../guide"><b>Understanding ProbCalc</b></a>
           <div class="nav-menu-h">Polling</div>
-          <a href="../pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <a href="../pollsters"><b>Pollster Ratings</b></a>
           <div class="nav-menu-h">Tools</div>
-          <a href="../elects/replay"><b>Election Replay</b><span>Watch a result come in vote by vote, or export it as video</span></a>
+          <a href="../elects/replay"><b>Election Replay</b></a>
           <a href="../elects/simulate" class="current"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
-          <a href="../elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <a href="../elects/mapmaker"><b>Map Maker</b></a>
           <div class="nav-menu-h">Read</div>
-          <a href="../articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="../articles"><b>Articles</b></a>
         </div>
       </details>
     </nav>
@@ -453,6 +463,7 @@ function renderOdds(rd, t, force) {
   Object.entries(t.gv).forEach(([g, v]) => { groups[g] = v; });
   const o = NO_run(ctx, NO_counts(groups, ctx), { sims: 1500, final: rd.done, reporting: t.rep }), early = o.N < NO_TUNE.minN, C = id => registry.candidates[id];
   if (!early && (!H.length || H[H.length - 1].n !== o.N || rd.done)) H.push({ n: o.N, rep: t.rep, lead: Object.assign({}, o.lead) });
+  const ev = (S.events = S.events || {})[rd.key] = (S.events || {})[rd.key] || [], msg = rd.done ? '' : NO_change(S.snap && S.snap[rd.key], o, id => C(id).name); if (msg) ev.push({ n: o.N, msg }); (S.snap = S.snap || {})[rd.key] = NO_snap(o);
   const rank = ctx.ids.slice().sort((a, b) => o.lead[b] - o.lead[a]), lab = o.status, winner = rd.done ? Object.entries(t.tot).sort((a, b) => b[1] - a[1])[0][0] : null;
   const spark = () => { if (H.length < 2) return ''; const W = 600, Hh = 96, x = i => 6 + (W - 12) * i / (H.length - 1), y = p => Hh - 6 - (Hh - 12) * p;
     return `<svg class="odds-spark" viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none" role="img" aria-label="Chance to lead over the count"><line x1="6" x2="${W - 6}" y1="${y(.5)}" y2="${y(.5)}" stroke="currentColor" stroke-opacity=".15" stroke-dasharray="3 4"/>`
@@ -463,8 +474,8 @@ function renderOdds(rd, t, force) {
   box.innerHTML = `<div class="odds-head"><h3>Win probability</h3><small>${o.N} vote${o.N === 1 ? '' : 's'} counted${rd.done ? '' : ` · ~${Math.round(o.expectedTotal)} expected`}</small><span class="odds-pill ${rd.done ? 'call' : lab.key}">${rd.done ? 'Final' : lab.text}</span></div>`
     + (early ? `<p class="odds-note">Only ${o.N} vote${o.N === 1 ? '' : 's'} counted so far — too early for a meaningful chance (odds appear from ${NO_TUNE.minN}).</p>`
       : `<div class="odds-meter" aria-hidden="true">${rank.slice(0, 5).map(id => `<i style="width:${(o.lead[id] * 100).toFixed(1)}%;background:${C(id).color}"></i>`).join('')}</div>`
-        + rank.slice(0, 5).map(id => `<div class="odds-row" style="--c:${C(id).color}"><span class="nm"><i></i>${esc2(C(id).name)}<small>${Math.round(o.share[id].mean * 100)}% proj. share</small></span><span class="pc">${NO_pct(o.lead[id])}%</span></div>`).join('') + spark() + NO_groupsHTML(o, id => C(id).name, id => C(id).color))
-    + verdict + `<p class="odds-note">${!early && !rd.done && o.runoff > 0.05 && ctx.ids.length > 2 ? `${Math.round(o.runoff * 100)}% chance nobody tops 50% · ` : ''}${!early && !rd.done && o.tipping ? `Group ${o.tipping.group} decides it · ` : ''}Chance to finish first on first-choice votes. Starts from the simulator's own forecast and updates as groups report; it can't see the hidden result.</p>`;
+        + rank.slice(0, 5).map(id => `<div class="odds-row" style="--c:${C(id).color}"><span class="nm"><i></i>${esc2(C(id).name)}<small>${Math.round(o.share[id].mean * 100)}% proj. share</small></span><span class="pc">${NO_pct(o.lead[id])}%</span></div>`).join('') + spark() + NO_needsHTML(o, id => C(id).name, id => C(id).color) + NO_groupsHTML(o, id => C(id).name, id => C(id).color))
+    + (ev.length ? `<div class="odds-log"><b>Lead changes</b>${ev.slice(-5).map(x => `<div><span>${x.n} votes</span> ${esc2(x.msg)}</div>`).join('')}</div>` : '') + verdict + `<p class="odds-note">${!early && !rd.done && o.runoff > 0.05 && ctx.ids.length > 2 ? `${Math.round(o.runoff * 100)}% chance nobody tops 50% · ` : ''}${!early && !rd.done && o.tipping ? `Group ${o.tipping.group} decides it · ` : ''}Chance to finish first on first-choice votes. Starts from the simulator's own forecast and updates as groups report; it can't see the hidden result.</p>`;
   box.hidden = false;
 }
 const esc2 = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

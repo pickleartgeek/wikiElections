@@ -98,10 +98,52 @@ function TK_valueAt(pts, t) {
  * cfg: { series:[{id,name,short,color,pts:[{d,v}],dots:[{d,v,n}],faint}], yFmt, tipFmt, zero, height,
  *        yMin, yMax, ranges:[days...] (0 = all), range, labelMode:'name'|'value' }
  */
+/* ---------- "art" mode helpers: reveal-on-scroll + number count-up ---------- */
+let TK_uid = 0;
+const TK_reduced = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function TK_reveal(root) {
+  if (!root || root.dataset.reveal) return;
+  root.dataset.reveal = '1'; root.classList.add('tk-art');
+  const go = () => { root.classList.add('in'); setTimeout(() => root.classList.add('done'), 3600); };
+  if (TK_reduced() || !('IntersectionObserver' in window)) { go(); return; }
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { go(); io.disconnect(); } }, { threshold: 0.2 });
+  io.observe(root);
+}
+function TK_countUp(root, sel) {
+  if (!root || TK_reduced() || root.classList.contains('done') || !('IntersectionObserver' in window)) return;
+  const items = [];
+  root.querySelectorAll(sel || '.tk-tile-v,.tk-q-net,.tk-score-v,.tk-pod-net').forEach(n => {
+    const t = [...n.childNodes].find(c => c.nodeType === 3 && /\d/.test(c.nodeValue)); if (!t) return;
+    const m = t.nodeValue.match(/^(\s*[+−-]?)(\d+(?:\.\d+)?)([\s\S]*)$/); if (!m) return;
+    items.push({ t, pre: m[1], val: parseFloat(m[2]), dec: (m[2].split('.')[1] || '').length, post: m[3] });
+  });
+  if (!items.length) return;
+  const put = k => items.forEach(i => { i.t.nodeValue = i.pre + (i.val * k).toFixed(i.dec) + i.post; });
+  put(0);
+  const run = () => { const t0 = performance.now(); const step = now => { const k = Math.min(1, (now - t0) / 1300); put(1 - Math.pow(1 - k, 3)); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); };
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); run(); } }, { threshold: 0.2 });
+  io.observe(root);
+}
+/** Party logo treatment from registries.json (logo, logoStyle): returns {src, bg, zoom, wide} or null. */
+function TK_partyMark(party, color, base) {
+  if (!party || !party.logo) return null;
+  const st = String(party.logoStyle || 'plain'), wide = st.includes('wide');
+  return { src: (base || 'assets/img/parties/') + party.logo + '?v=3', wide, zoom: st.includes('zoom') ? 1.38 : 1,
+    bg: st.includes('dark') ? '#111214' : st.includes('badge') ? '#ffffff' : color };
+}
+const TK_lightCol = hex => { const h = TK_hexToHsl(hex); return !!h && h[2] > 0.62; };
+
+/** White luminance-cutout version of candidate photos (the site's duotone look); resolves to the original on failure. */
+function TK_filterSrc(src) { return (typeof PhotoFilter_process === 'function' && src) ? PhotoFilter_process(src).catch(() => src) : Promise.resolve(src); }
+
 function TK_trend(el, cfg) {
+  if (cfg.art && !cfg._f && cfg.series.some(s => s.icon)) {
+    Promise.all(cfg.series.map(s => s.icon ? TK_filterSrc(s.icon).then(v => ({ ...s, icon: v })) : s)).then(series => TK_trend(el, { ...cfg, series, _f: 1 }));
+    return;
+  }
   const state = { range: cfg.range != null ? cfg.range : 0 };
   const series = cfg.series.map(s => ({
-    ...s, color: TK_col(s.color),
+    ...s, raw: s.color, color: TK_col(s.color),
     pts: (s.pts || []).map(p => ({ t: TK_t(p.d), d: p.d, v: p.v })).sort((a, b) => a.t - b.t),
     dots: (s.dots || []).map(p => ({ t: TK_t(p.d), d: p.d, v: p.v, n: p.n, pl: p.pl })),
   })).filter(s => s.pts.length);
@@ -117,15 +159,17 @@ function TK_trend(el, cfg) {
     '<div class="tk-plot"></div><div class="tk-tip" hidden></div>';
   const plot = el.querySelector('.tk-plot'), tip = el.querySelector('.tk-tip');
   el.querySelectorAll('.tk-ranges button').forEach(b => b.onclick = () => {
-    state.range = +b.dataset.r; el.querySelectorAll('.tk-ranges button').forEach(x => x.classList.toggle('on', x === b)); draw();
+    state.range = +b.dataset.r; el.querySelectorAll('.tk-ranges button').forEach(x => x.classList.toggle('on', x === b));
+    const rt = el.closest('.tk-art'); if (rt && !TK_reduced()) { rt.classList.remove('done'); clearTimeout(rt._dn); rt._dn = setTimeout(() => rt.classList.add('done'), 2600); }
+    draw();
   });
 
   function draw() {
     const W = Math.max(280, plot.clientWidth || el.clientWidth || 640);
     const narrow = W < 540;
-    const H = cfg.height || (narrow ? 250 : 330);
+    const H = cfg.height || (cfg.art ? (narrow ? 320 : 470) : (narrow ? 250 : 330));
     const lblMode = cfg.labelMode || (narrow ? 'value' : 'name');
-    const m = { t: 12, r: lblMode === 'name' ? 172 : 46, b: 28, l: narrow ? 36 : 42 };
+    const m = { t: 12, r: lblMode === 'name' ? (cfg.art ? 214 : 172) : (cfg.art ? 64 : 46), b: 28, l: narrow ? 36 : 42 };
     const t0 = state.range ? Math.max(tAll, tEnd - state.range * TK_DAY) : tAll;
     const t1 = tEnd, span = Math.max(TK_DAY, t1 - t0);
     const X = t => m.l + ((t - t0) / span) * (W - m.l - m.r);
@@ -167,22 +211,43 @@ function TK_trend(el, cfg) {
         g += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${s.color}" fill-opacity="${s.faint ? .12 : .3}" stroke="${s.color}" stroke-opacity="${s.faint ? .3 : .75}" stroke-width="1" style="pointer-events:none"/>`;
         if (p.pl) dotLinks += `<a href="${TK_esc(TK_pollsterHref(p.pl))}"><circle cx="${cx}" cy="${cy}" r="${Math.max(r, 7)}" fill="transparent" style="cursor:pointer"><title>${TK_esc(p.pl)} · ${TK_esc(tipFmt(p.v))} · ${TK_esc(p.d)}${p.n ? ' · n=' + p.n : ''} — open pollster rating</title></circle></a>`; });
     });
-    order.forEach(s => {
-      const d = TK_smoothPath(s.vp.map(p => [X(p.t), Y(p.v)]));
-      g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.faint ? 1.6 : 3}" stroke-opacity="${s.faint ? .55 : 1}" stroke-linejoin="round" stroke-linecap="round"/>`;
+    const uid = ++TK_uid;
+    if (cfg.art) g = `<defs><filter id="tkg${uid}" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>` +
+      order.map((s, i) => `<linearGradient id="tkf${uid}-${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.color}" stop-opacity=".2"/><stop offset="1" stop-color="${s.color}" stop-opacity="0"/></linearGradient>`).join('') + '</defs>' + g;
+    order.forEach((s, i) => {
+      const pts = s.vp.map(p => [X(p.t), Y(p.v)]), d = TK_smoothPath(pts);
+      if (cfg.art && cfg.area && !s.faint) { const yb = cfg.zero ? Y(0) : H - m.b; g += `<path class="tk-area" d="${d} L ${pts[pts.length - 1][0]} ${yb} L ${pts[0][0]} ${yb} Z" fill="url(#tkf${uid}-${i})" style="--i:${i}"/>`; }
+      g += `<path ${cfg.art ? `class="tk-draw" pathLength="1" style="--i:${i}" ${s.faint ? '' : `filter="url(#tkg${uid})"`}` : ''} d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.faint ? 1.6 : (cfg.art ? 4.5 : 3)}" stroke-opacity="${s.faint ? .55 : 1}" stroke-linejoin="round" stroke-linecap="round"/>`;
     });
+
     // end labels with simple vertical dodge
     const labs = vis.filter(s => !s.faint).map(s => { const p = s.vp[s.vp.length - 1]; return { s, p, y: Y(p.v) }; }).sort((a, b) => a.y - b.y);
     { // spread end labels: push down to clear neighbours, then pull back up if the stack hits the bottom edge
-      const GAP = 15, top = m.t + 8, bot = H - m.b - 2;
+      const GAP = cfg.art ? 42 : 15, top = m.t + (cfg.art ? 22 : 8), bot = H - m.b - (cfg.art ? 22 : 2);
       labs.forEach((l, i) => { l.y = Math.max(l.y, i ? labs[i - 1].y + GAP : top); });
       if (labs.length) { labs[labs.length - 1].y = Math.min(labs[labs.length - 1].y, bot); for (let i = labs.length - 2; i >= 0; i--) labs[i].y = Math.min(labs[i].y, labs[i + 1].y - GAP); }
     }
-    labs.forEach(l => {
+    if (cfg.art) labs.forEach((l, i) => {
+      const x = X(l.p.t), ay = Y(l.p.v), my = l.y, c = l.s.color, cid = `tkc${uid}-${i}`, ink = TK_lightCol(l.s.raw) ? '#111214' : '#fff', mk = l.s.mark;
+      g += (Math.abs(my - ay) > 1 ? `<line x1="${x}" y1="${ay}" x2="${x}" y2="${my}" stroke="${c}" stroke-width="2" stroke-opacity=".55"/>` : '') +
+        `<circle cx="${x}" cy="${ay}" r="4.5" fill="${c}"/>` +
+        `<g class="tk-pop" style="--i:${i}">${i === 0 ? `<circle class="tk-pulse" cx="${x}" cy="${my}" r="19" fill="none" stroke="${c}" stroke-width="2"/>` : ''}` +
+        (mk ? (mk.wide ? `<rect x="${x - 22}" y="${my - 17}" width="84" height="34" rx="17" fill="${mk.bg}"/><image href="${TK_esc(mk.src)}" x="${x - 12}" y="${my - 8}" width="64" height="16" preserveAspectRatio="xMidYMid meet"/>`
+          : `<circle cx="${x}" cy="${my}" r="20" fill="${mk.bg}" stroke="${c}" stroke-width="2.5"/><clipPath id="${cid}"><circle cx="${x}" cy="${my}" r="17.5"/></clipPath><image href="${TK_esc(mk.src)}" x="${x - 17.5 * mk.zoom}" y="${my - 17.5 * mk.zoom}" width="${35 * mk.zoom}" height="${35 * mk.zoom}" preserveAspectRatio="xMidYMid meet" clip-path="url(#${cid})"/>`)
+        : `<circle cx="${x}" cy="${my}" r="20" fill="${c}"/>`) +
+        (mk ? '' : l.s.icon ? `<clipPath id="${cid}"><circle cx="${x}" cy="${my}" r="17"/></clipPath><image href="${TK_esc(l.s.icon)}" x="${x - 17}" y="${my - 17}" width="34" height="34" preserveAspectRatio="xMidYMid slice" clip-path="url(#${cid})"/>`
+          : `<text x="${x}" y="${my + 4}" text-anchor="middle" class="tk-badge" style="font-size:${String(l.s.badge || l.s.short || l.s.name).length > 3 ? 9.5 : 12}px" fill="${ink}">${TK_esc(TK_clip(String(l.s.badge || l.s.short || l.s.name), 5))}</text>`) + '</g>' +
+        `<text x="${x + (mk && mk.wide ? 72 : 30)}" y="${my - 2}" class="tk-end tk-end-art" fill="${c}">${TK_esc(TK_clip(l.s.short || l.s.name, 19))}</text>` +
+        `<text x="${x + (mk && mk.wide ? 72 : 30)}" y="${my + 15}" class="tk-end-val">${TK_esc(yFmt(Math.round(l.p.v * 10) / 10))}</text>`;
+    });
+
+    else labs.forEach(l => {
       const x = X(l.p.t);
       g += `<circle cx="${x}" cy="${Y(l.p.v)}" r="4.2" fill="${l.s.color}" stroke="var(--surface,#fff)" stroke-width="2"/>` +
         `<text x="${x + 10}" y="${l.y + 4}" class="tk-end" fill="${l.s.color}">${lblMode === 'name' ? TK_esc(TK_clip(l.s.short || l.s.name, 21)) + ' ' : ''}${TK_esc(yFmt(Math.round(l.p.v * 10) / 10))}</text>`;
     });
+    vis.filter(s => s.faint && s.former).forEach(s => { const p = s.vp[s.vp.length - 1], x = X(p.t), y = Y(p.v);   // a former mod's line stops where the term ended: mark and name it there
+      g += `<circle cx="${x}" cy="${y}" r="3.4" fill="var(--surface,#fff)" stroke="${s.color}" stroke-width="2"/><text x="${x}" y="${y - 9}" text-anchor="${x > W - m.r - 90 ? 'end' : 'middle'}" class="tk-end" fill="${s.color}" style="font-size:10px;opacity:.85">${TK_esc(TK_clip(s.short || s.name, 16))} · ${s.tag || 'former'}</text>`; });
     g += `<line class="tk-cross" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" style="display:none"/><rect class="tk-hit" x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${H - m.t - m.b}" fill="transparent"/>${dotLinks}`;
     plot.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${TK_esc(cfg.label || 'Polling trend chart')}">${g}</svg>`;
 
@@ -285,34 +350,52 @@ function _TK_approval(el, o) {
   const nPolls = rows.reduce((s, r) => s + r.polls.length, 0);
   const tile = (k, v, sub, cls = '') => `<div class="tk-tile"><div class="tk-tile-k">${k}</div><div class="tk-tile-v ${cls}">${v}</div><div class="tk-tile-s">${sub}</div></div>`;
   const top = rows[0], bot = rows[rows.length - 1];
-  el.innerHTML = `
+  const tg = o.toggle, tgHtml = tg ? `<label class="tk-toggle"><input type="checkbox" ${tg.on ? 'checked' : ''}><span class="tk-sw" aria-hidden="true"></span><span>${TK_esc(tg.label)}</span></label>` : '';
+  const art = !!o.art;
+  const podium = art ? `<div class="tk-podium">${rows.slice(0, 3).map((r, i) => `
+      <a class="tk-pod" href="approval?mod=${encodeURIComponent(r.key)}" style="--c:${TK_col(o.colorFor(r.key, i))}">
+        <span class="tk-pod-rank">${i + 1}</span>
+        <img class="white-filter-img" src="${r.photo}" alt="" loading="lazy">
+        <span class="tk-pod-name">${TK_esc(r.name)}</span>
+        <span class="tk-pod-net ${r.net < 0 ? 'neg' : ''}">${TK_net(r.net)}</span>
+        <span class="tk-pod-bar"><i style="--w:${Math.max(0, Math.min(100, r.a * 100))}%"></i></span>
+        <small>${(r.a * 100).toFixed(1)}% approve · ${(r.d * 100).toFixed(1)}% disapprove</small>
+      </a>`).join('')}</div>` : '';
+  const chartPanel = `<div class="tk-panel">
+      <div class="tk-panel-h"><h3>Net approval over time</h3><span>Approve minus disapprove, in points</span></div>
+      <div id="tkApprChart"></div>
+    </div>`;
+  el.innerHTML = `${tgHtml}
     <div class="tk-tiles">
       ${tile('Average net approval', TK_net(avgNet), `across ${rows.length} moderators`, avgNet < 0 ? 'neg' : '')}
       ${tile('Highest net', TK_net(top.net), TK_esc(top.name), top.net < 0 ? 'neg' : '')}
       ${tile('Lowest net', TK_net(bot.net), TK_esc(bot.name), bot.net < 0 ? 'neg' : '')}
       ${tile('Polls tracked', nPolls, `latest ${newest}`)}
     </div>
+    ${art ? podium + chartPanel : ''}
     <div class="tk-board" role="table" aria-label="Moderator approval">
       <div class="tk-row tk-hd" role="row"><span>Moderator</span><span class="tk-c-bar"><b>Approve</b><b>Disapprove</b></span><span class="tk-c-net">Net</span><span class="tk-c-sp">Trend</span><span class="tk-c-chg">14-day</span></div>
       ${rows.map(r => `
       <a class="tk-row" role="row" href="approval?mod=${encodeURIComponent(r.key)}">
-        <span class="tk-who"><img src="${r.photo}" alt="" loading="lazy"><span class="tk-name">${TK_esc(r.name)}<small>${r.seat ? `<b class="tk-seat${r.carryOver ? ' prev' : ''}"${r.carryOver ? ' title="Previous term"' : ''}>${TK_esc(r.seat)}</b> · ` : ''}${r.polls.length} poll${r.polls.length === 1 ? '' : 's'}</small>${r.pending ? `<small class="tk-pend">Now ${TK_esc(r.pending)} · first poll pending</small>` : ''}</span></span>
+        <span class="tk-who"><img src="${r.photo}" alt="" loading="lazy"><span class="tk-name">${TK_esc(r.name)}<small>${r.former ? `<b class="tk-seat prev" title="Final approval at end of term">Former</b> · ` : ''}${r.seat ? `<b class="tk-seat${r.carryOver ? ' prev' : ''}"${r.carryOver ? ' title="Previous term"' : ''}>${TK_esc(r.seat)}</b> · ` : ''}${r.polls.length} poll${r.polls.length === 1 ? '' : 's'}</small>${r.pending ? `<small class="tk-pend">Now ${TK_esc(r.pending)} · first poll pending</small>` : ''}</span></span>
         <span class="tk-c-bar"><em class="tk-a">${(r.a * 100).toFixed(1)}%</em>${TK_splitBar(r.a, r.d, 'Approve', 'Disapprove')}<em class="tk-d">${(r.d * 100).toFixed(1)}%</em></span>
         <span class="tk-c-net ${r.net < 0 ? 'neg' : ''}">${TK_net(r.net)}</span>
         <span class="tk-c-sp">${TK_spark(r.series, { color: r.net < 0 ? TK_RED : 'var(--ink)', zero: true })}</span>
         <span class="tk-c-chg">${TK_changeHtml(r.chg)}</span>
       </a>`).join('')}
     </div>
-    <div class="tk-panel">
-      <div class="tk-panel-h"><h3>Net approval over time</h3><span>Approve minus disapprove, in points</span></div>
-      <div id="tkApprChart"></div>
-    </div>`;
+    ${art ? '' : chartPanel}`;
   const reg = o.registry;
+  if (tg) el.querySelector('.tk-toggle input').addEventListener('change', ev => tg.onChange(ev.target.checked));
+  const cur = rows.filter(r => !r.former), old = rows.filter(r => r.former);
   TK_trend(el.querySelector('#tkApprChart'), {
-    label: 'Net approval over time for each moderator', zero: true, ranges: [90, 180, 0], range: 180,
+    label: 'Net approval over time for each moderator', zero: true, ranges: [90, 180, 0], range: old.length ? 0 : 180,
     yFmt: v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v), tipFmt: v => TK_net(v),
-    series: rows.slice(0, 8).map((r, i) => ({ id: r.key, name: r.name, short: r.name, color: o.colorFor(r.key, i), pts: r.series, faint: false }))
+    art, area: false, series: cur.slice(0, 8).map((r, i) => ({ id: r.key, name: r.name, short: r.name, icon: r.photo, color: o.colorFor(r.key, i), pts: r.series, faint: false }))
+      .concat(cur.slice(0, 8).flatMap((r, i) => (r.earlier || []).filter(t => t.polls.length).map(t => ({ id: r.key + ':' + t.label, name: `${r.name} · ${t.label}`, short: t.label, tag: 'earlier tenure', color: o.colorFor(r.key, i), pts: TK_netSeries(t.polls, t.asOf || asOf), faint: true, former: true }))))
+      .concat(old.slice(0, 8).map((r, i) => ({ id: r.key, name: r.name + ' (former)', short: r.name, color: o.colorFor(r.key, cur.length + i), pts: r.series, faint: true, former: true })))
   });
+  if (art) { TK_reveal(el); TK_countUp(el); if (typeof PhotoFilter_applyAll === 'function') PhotoFilter_applyAll('.tk-pod .white-filter-img'); }
 }
 
 /* ---------- Community track record (yes/no questions) ---------- */
@@ -326,12 +409,20 @@ function _TK_questions(el, o) {
     const lead = a >= d ? yes : no;
     return `<a class="tk-q" href="approval?mod=${encodeURIComponent(q.key)}">
       <div class="tk-q-t">${TK_esc(q.name)}</div>
+      ${o.art ? TK_gauge(a, d) : ''}
       <div class="tk-q-main"><div><div class="tk-q-lead">${TK_esc(lead)}</div><div class="tk-q-net ${net < 0 ? 'neg' : ''}">${TK_net(Math.abs(net))}</div></div>${TK_spark(series, { w: 130, h: 44, color: net < 0 ? TK_RED : 'var(--ink)', zero: true, days: 180 })}</div>
       ${TK_splitBar(a, d, yes, no)}
       <div class="tk-q-lg"><span><i class="a"></i>${TK_esc(yes)} <b>${(a * 100).toFixed(1)}%</b></span><span><i class="d"></i>${TK_esc(no)} <b>${(d * 100).toFixed(1)}%</b></span></div>
       <div class="tk-q-ft">${q.polls.length} polls · ${TK_changeHtml(TK_change(series, 30))} <small>30-day net</small></div>
     </a>`;
   }).join('') + '</div>';
+  if (o.art) { TK_reveal(el); TK_countUp(el); }
+}
+/** Semicircle gauge: yes share fills from the left (ink), no share from the right (red). */
+function TK_gauge(a, d) {
+  const tot = a + d || 1, ys = a / tot, ns = d / tot, arc = 'M 10 66 A 56 56 0 0 1 122 66', rev = 'M 122 66 A 56 56 0 0 1 10 66';
+  return `<svg class="tk-gauge" viewBox="0 0 132 74" aria-hidden="true"><path d="${arc}" class="tk-gauge-t" pathLength="1"/>` +
+    `<path d="${arc}" class="tk-gauge-y" pathLength="1" style="--s:${ys.toFixed(4)}"/><path d="${rev}" class="tk-gauge-n" pathLength="1" style="--s:${Math.max(0, ns - 0.012).toFixed(4)}"/></svg>`;
 }
 
 /* ---------- Generic-ballot style party tracker ---------- */
@@ -353,16 +444,98 @@ function _TK_parties(el, o) {
     pts: tl.filter(p => p.coverage[i] > 0).map(p => ({ d: p.date, v: p.averages[i] * 100 })),
     dots: o.polls.filter(p => p.shares && typeof p.shares[i] === 'number').map(p => ({ d: p.date, v: p.shares[i] * 100, n: p.sample, pl: p.pollster }))
   }));
-  el.innerHTML = `
+  const art = !!o.art, code = i => o.parties[i].shortName || o.parties[i].name;
+  const scores = art ? `<div class="tk-scores">${show.map((i, k) => `<div class="tk-score" style="--c:${TK_col(o.parties[i].color)};--k:${k}">
+      <span class="tk-score-top">${(mk => mk ? `<span class="tk-score-logo${mk.wide ? ' wide' : ''}" style="background:${mk.bg}"><img src="${TK_esc(mk.src)}" alt="" style="${mk.zoom > 1 ? 'transform:scale(' + mk.zoom + ')' : ''}"></span>` : `<span class="tk-score-badge" style="background:${TK_col(o.parties[i].color)};color:${TK_lightCol(o.parties[i].color) ? '#111214' : '#fff'}">${TK_esc(TK_clip(code(i), 4))}</span>`)(TK_partyMark(o.parties[i], TK_col(o.parties[i].color)))}<span class="tk-score-n">${TK_esc(o.parties[i].name)}</span></span>
+      <span class="tk-score-v">${(last[i] * 100).toFixed(1)}<small>%</small></span>
+      <span class="tk-score-bar"><i style="--w:${(last[i] / last[lead] * 100).toFixed(1)}%"></i></span></div>`).join('')}
+</div>` : '';
+  el.innerHTML = art ? `${scores}
+    <div class="tk-panel"><div class="tk-panel-h"><h3>Party support over time</h3><span>Lines are the weighted average · dots are individual polls, sized by sample</span>${second ? TK_leadBadge(code(lead), o.parties[lead].color, (last[lead] - last[second]) * 100) : ''}</div><div id="tkPartyChart"></div></div>
+    <a class="tk-more" href="${o.href || 'party-support'}">Full party breakdown →</a>` : `
     <div class="tk-chips">${show.map(i => `<div class="tk-chip" style="--c:${TK_col(o.parties[i].color)}"><span class="tk-chip-n">${TK_esc(o.parties[i].shortName || o.parties[i].name)}</span><span class="tk-chip-v">${(last[i] * 100).toFixed(1)}<small>%</small></span></div>`).join('')}
       ${second ? TK_leadBadge(o.parties[lead].shortName || o.parties[lead].name, o.parties[lead].color, (last[lead] - last[second]) * 100) : ''}</div>
     <div class="tk-panel"><div class="tk-panel-h"><h3>Party support over time</h3><span>Lines are the weighted average · dots are individual polls, sized by sample</span></div><div id="tkPartyChart"></div></div>
     <a class="tk-more" href="${o.href || 'party-support'}">Full party breakdown →</a>`;
-  TK_trend(el.querySelector('#tkPartyChart'), { label: 'Party support over time', series, ranges: [90, 180, 0], range: 180, yMin: 0 });
+  TK_trend(el.querySelector('#tkPartyChart'), { label: 'Party support over time', series: art ? series.map(x => ({ ...x, badge: x.short, mark: TK_partyMark(o.parties[x.id], TK_col(o.parties[x.id].color)) })) : series, ranges: [90, 180, 0], range: 180, yMin: 0, art, area: art });
+  if (art) { TK_reveal(el); TK_countUp(el); }
+}
+
+/* ---------- Election-season "arena" tracker: dark stage, jagged daily lines, scrubbable giant numbers ---------- */
+function TK_bright(hex) {   // lift dark party/candidate colours so they glow on the dark stage
+  const h = TK_hexToHsl(hex); if (!h) return hex;
+  const l = Math.max(h[2], 0.6), s = Math.min(1, Math.max(h[1], 0.55) + (h[2] < 0.35 ? 0.1 : 0));
+  return `hsl(${h[0].toFixed(0)} ${(s * 100).toFixed(0)}% ${(Math.min(l, 0.72) * 100).toFixed(0)}%)`;
+}
+function TK_arena(el, o) {
+  const reg = o.registry, ids = o.ids, asOf = o.asOf || TK_dayStr();
+  const agg = BaseCalc_aggregate(o.polls, ids, asOf, o.opts || {});
+  const tl = TK_asOfSeries(o.polls, ids, asOf, o.opts || {});
+  const order = agg.sorted.map(x => x[0]);
+  const S = order.map(i => ({
+    id: i, name: TSR_candidateName(reg, i), color: TK_bright(TSR_candidateColor(reg, i)), raw: TSR_candidateColor(reg, i), photo: TSR_candidatePhoto(reg, i),
+    pts: tl.filter(p => p.coverage[i] > 0).map(p => ({ t: TK_t(p.date), v: p.averages[i] * 100 }))
+  })).filter(s => s.pts.length);
+  if (!S.length) { el.innerHTML = '<div class="small-muted" style="padding:16px">No polling logged yet.</div>'; return; }
+  const tEnd = Math.max(...S.map(s => s.pts[s.pts.length - 1].t)), tStart = Math.min(...S.map(s => s.pts[0].t));
+  const sparse = a => a;                         // (series are per poll-date already)
+  el.classList.add('ar-card');
+  el.innerHTML = `<div class="ar-head"><div class="ar-kicker">Polling average</div><h2 class="ar-title">${TK_esc(o.title)}</h2>
+      <a class="ar-btn" href="${TK_esc(o.href || '#')}"><span>View Polls</span><b aria-hidden="true">→</b></a></div>
+    <div class="ar-plot"><div class="ar-badge" hidden></div><div class="ar-svgbox"></div></div>
+    <div class="ar-foot">Hover or drag across the chart to scrub through time · dots in the chart are individual polls</div>`;
+  const box = el.querySelector('.ar-svgbox'), badge = el.querySelector('.ar-badge');
+  const valAt = (s, t) => TK_linAt(s.pts.map(p => ({ t: p.t, v: p.v })), t);
+  let cursor = null, lay = null;
+  const filtered = Promise.all(S.map(s => TK_filterSrc(s.photo).then(v => { s.photo = v; })));
+  function draw() {
+    const W = Math.max(300, box.clientWidth || 700), narrow = W < 560, H = narrow ? 420 : 520;
+    const m = { t: 56, r: narrow ? 118 : 232, b: 30, l: 14 };
+    let lo = Infinity, hi = -Infinity; S.forEach(s => s.pts.forEach(p => { lo = Math.min(lo, p.v); hi = Math.max(hi, p.v); }));
+    const pad = (hi - lo) * .1 || 4; lo = Math.max(0, Math.floor((lo - pad) / 10) * 10); hi = Math.min(100, Math.ceil((hi + pad) / 10) * 10); const step = (hi - lo) > 60 ? 20 : 10;
+    const X = t => m.l + ((t - tStart) / Math.max(1, tEnd - tStart)) * (W - m.l - m.r), Y = v => m.t + (1 - (v - lo) / (hi - lo)) * (H - m.t - m.b);
+    const uid = ++TK_uid; let g = `<defs>` + S.map((s, i) => `<linearGradient id="arf${uid}-${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.color}" stop-opacity=".42"/><stop offset="1" stop-color="${s.color}" stop-opacity="0"/></linearGradient>`).join('') + '</defs>';
+    for (let v = lo; v <= hi; v += step) g += `<line x1="${m.l}" x2="${W - 6}" y1="${Y(v)}" y2="${Y(v)}" class="ar-grid"/><text x="${m.l + 2}" y="${Y(v) - 5}" class="ar-ax">${v}%</text>`;
+    const days = Math.max(1, Math.round((tEnd - tStart) / TK_DAY)), nx = Math.min(narrow ? 4 : 7, days); for (let i = 0; i <= nx; i++) { const t = tStart + (tEnd - tStart) * i / nx; g += `<line x1="${X(t)}" x2="${X(t)}" y1="${m.t - 20}" y2="${H - m.b}" class="ar-vgrid"/><text x="${X(t)}" y="${H - 8}" text-anchor="${i === 0 ? 'start' : i === nx ? 'end' : 'middle'}" class="ar-ax">${TK_dateLabel(t, (tEnd - tStart) > 300 * TK_DAY)}</text>`; }
+    S.forEach((s, i) => {
+      const line = s.pts.map((p, k) => (k ? 'L' : 'M') + X(p.t).toFixed(1) + ' ' + Y(p.v).toFixed(1)).join(' ');
+      const f = s.pts[0], l = s.pts[s.pts.length - 1];
+      g += `<path class="tk-area" style="--i:${i}" d="${line} L ${X(l.t)} ${H - m.b} L ${X(f.t)} ${H - m.b} Z" fill="url(#arf${uid}-${i})"/>`;
+      g += `<path class="tk-draw" pathLength="1" style="--i:${i}" d="${line}" fill="none" stroke="${s.color}" stroke-width="${narrow ? 3 : 4}" stroke-linejoin="round" stroke-linecap="round"/>`;
+    });
+    const tt = cursor == null ? tEnd : Math.min(tEnd, Math.max(tStart, cursor)), cx = X(tt);
+    const lab = S.map(s => ({ s, v: valAt(s, tt), y: Y(valAt(s, tt)) })).sort((a, b) => a.y - b.y);
+    const GAP = Math.max(narrow ? 52 : 58, Math.min(narrow ? 66 : 78, (H - m.t - m.b - 30) / Math.max(1, lab.length))), big = narrow ? (GAP > 60 ? 30 : 26) : (GAP > 70 ? 48 : GAP > 62 ? 40 : 34); lab.forEach((l, i) => { l.my = Math.max(l.y, i ? lab[i - 1].my + GAP : m.t + 10); });
+    const bot = H - m.b - 20; lab[lab.length - 1].my = Math.min(lab[lab.length - 1].my, bot); for (let i = lab.length - 2; i >= 0; i--) lab[i].my = Math.min(lab[i].my, lab[i + 1].my - GAP);
+    g += `<line x1="${cx}" x2="${cx}" y1="${m.t - 30}" y2="${H - m.b}" class="ar-cursor"/>`;
+    lab.forEach((l, i) => {
+      const { s } = l, R = narrow ? 17 : 23, id = `arc${uid}-${i}`;
+      g += (Math.abs(l.my - l.y) > 1 ? `<line x1="${cx}" x2="${cx}" y1="${l.y}" y2="${l.my}" stroke="${s.color}" stroke-width="3"/>` : '') + `<circle cx="${cx}" cy="${l.y}" r="5" fill="${s.color}"/>` +
+        `<g class="tk-pop" style="--i:${i}"><circle cx="${cx}" cy="${l.my}" r="${R + 3}" fill="${s.color}"/><clipPath id="${id}"><circle cx="${cx}" cy="${l.my}" r="${R}"/></clipPath>` +
+        `<image href="${TK_esc(s.photo)}" x="${cx - R}" y="${l.my - R}" width="${R * 2}" height="${R * 2}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/></g>` +
+        `<text x="${cx + R + 16}" y="${l.my + big * .16}" class="ar-big" fill="${s.color}" style="font-size:${big}px">${l.v.toFixed(1)}<tspan class="ar-pct" style="font-size:${Math.round(big * .58)}px">%</tspan></text>` +
+        `<text x="${cx + R + 16}" y="${l.my + big * .16 + 17}" class="ar-name">${TK_esc(TK_clip(s.name, narrow ? 12 : 20))}</text>`;
+    });
+    g += `<rect class="ar-hit" x="${m.l}" y="${m.t - 30}" width="${W - m.l - m.r + 20}" height="${H - m.t + 30 - m.b}" fill="transparent"/>`;
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${TK_esc(o.title)} polling average">${g}</svg>`;
+    // lead badge above the cursor
+    const a = lab[0].v >= lab[lab.length - 1].v ? lab[0] : lab[lab.length - 1], top2 = [...lab].sort((p, q) => q.v - p.v), lead = top2[0], runner = top2[1];
+    if (runner) { const hsl = TK_hexToHsl(lead.s.raw); badge.hidden = false; badge.style.left = Math.min(W - 150, Math.max(80, cx)) + 'px';
+      badge.innerHTML = `${TK_esc(TK_clip(lead.s.name, 18))}<span style="background:${lead.s.color};color:${(hsl && hsl[2] > .62) ? '#111214' : '#fff'}">+${(lead.v - runner.v).toFixed(1)}</span>`;
+      badge.title = cursor == null ? 'Latest average' : TK_dateLabel(tt, false); } else badge.hidden = true;
+    lay = { W, m };
+  }
+  let busy = false; const redrawLive = () => { if (busy) return; busy = true; requestAnimationFrame(() => { busy = false; el.classList.add('done'); draw(); }); };
+  const mv = ev => { const svg = box.querySelector('svg'); if (!svg || !lay) return; const r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) * (lay.W / r.width);
+    if (px < lay.m.l - 4 || px > lay.W - lay.m.r + 24) return; cursor = tStart + ((px - lay.m.l) / (lay.W - lay.m.l - lay.m.r)) * (tEnd - tStart); redrawLive(); };
+  box.addEventListener('pointermove', mv); box.addEventListener('pointerdown', mv); box.addEventListener('pointerleave', () => { cursor = null; redrawLive(); });
+  filtered.then(() => { draw(); TK_reveal(el); });
+  let lw = box.clientWidth; window.addEventListener('resize', () => { if (box.clientWidth && box.clientWidth !== lw) { lw = box.clientWidth; draw(); } });
 }
 
 /* ---------- Live race tracker ---------- */
 function _TK_race(el, o) {
+  if (o.arena !== false && typeof TK_linAt === 'function') { TK_arena(el, o); return; }
   const asOf = o.asOf || TK_dayStr(), ids = o.ids;
   const agg = BaseCalc_aggregate(o.polls, ids, asOf, o.opts || {});
   const tl = TK_asOfSeries(o.polls, ids, asOf, o.opts || {});
@@ -404,4 +577,4 @@ if (typeof MutationObserver !== 'undefined') {
     .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 }
 
-if (typeof window !== 'undefined') Object.assign(window, { TK_leadBadge, TK_trend, TK_spark, TK_renderApproval, TK_renderQuestions, TK_renderParties, TK_renderRace });
+if (typeof window !== 'undefined') Object.assign(window, { TK_arena, TK_partyMark, TK_leadBadge, TK_trend, TK_spark, TK_renderApproval, TK_renderQuestions, TK_renderParties, TK_renderRace });

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magic Wall — TSR Elects</title>
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+  :root, [data-wt="slate"] { --w-bg: #12151b; --w-empty: #272c36; --w-grad: radial-gradient(120% 90% at 80% -10%, #343b49 0%, #1d222b 48%, #12151b 100%); --w-card: rgba(255,255,255,.06); }
+  [data-wt="graphite"] { --w-bg: #0d0d0e; --w-empty: #262628; --w-grad: radial-gradient(120% 90% at 80% -10%, #35353a 0%, #1a1a1c 48%, #0d0d0e 100%); }
+  [data-wt="purple"] { --w-bg: #120626; --w-empty: #2a2147; --w-grad: radial-gradient(120% 90% at 80% -10%, #3a1473 0%, #14171d 45%, #120626 100%); }
+  :root { --w-card: rgba(255,255,255,.06); --w-line: rgba(255,255,255,.14); --w-dim: rgba(255,255,255,.58); --w-gold: #ffd84d; }
+  html { background: var(--w-bg); } html, body { margin: 0; min-height: 100%; }
+  body.wall { background: var(--w-grad); color: #fff; font-family: var(--font-elects-body, system-ui, sans-serif); overflow-x: hidden; }
+  .wall a { color: inherit; }
+  .w-app { display: grid; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+
+  /* header */
+  .w-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 14px 22px; border-bottom: 1px solid var(--w-line); }
+  .w-exit { text-decoration: none; font-weight: 700; font-size: 13px; padding: 7px 14px; border: 1px solid var(--w-line); border-radius: 999px; color: var(--w-dim); }
+  .w-exit:hover { color: #fff; border-color: #fff; }
+  .w-brand { display: flex; flex-direction: column; margin-right: auto; }
+  .w-brand small { font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--w-gold); }
+  .w-brand h1 { margin: 0; font-family: var(--font-elects-display, inherit); font-size: clamp(22px, 3.2vw, 38px); line-height: 1.05; }
+  .w-ctl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .w-ctl select, .w-seg button, .w-btn { font: inherit; font-size: 13px; font-weight: 700; color: #fff; background: var(--w-card); border: 1px solid var(--w-line); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+  .w-ctl select { appearance: none; padding-right: 14px; max-width: 210px; text-overflow: ellipsis; }
+  .w-ctl select option { color: #111; }
+  .w-seg { display: inline-flex; border: 1px solid var(--w-line); border-radius: 999px; overflow: hidden; }
+  .w-seg button { border: 0; border-radius: 0; background: transparent; }
+  .w-seg button.on { background: #fff; color: #14171d; }
+  .w-btn:hover, .w-ctl select:hover { border-color: #fff; }
+  .w-btn.gold { background: var(--w-gold); color: #14171d; border-color: var(--w-gold); }
+
+  /* stage */
+  .w-main { display: grid; grid-template-columns: 300px minmax(0, 1fr) 340px; gap: 18px; padding: 18px 22px 8px; min-height: 0; }
+  .w-rail, .w-side { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+  .w-h { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--w-dim); margin: 2px 2px 2px; display: flex; justify-content: space-between; align-items: center; }
+  .w-cand { --c: #888; position: relative; display: grid; grid-template-columns: 54px 1fr; gap: 4px 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--w-line); border-left: 5px solid var(--c); border-radius: 14px; background: linear-gradient(90deg, color-mix(in srgb, var(--c) 18%, transparent), var(--w-card) 70%); cursor: pointer; text-align: left; color: #fff; font: inherit; transition: transform .15s, border-color .15s, box-shadow .15s; }
+  .w-cand:hover { transform: translateX(3px); }
+  .w-cand.on { border-color: var(--c); box-shadow: 0 0 0 2px var(--c), 0 10px 30px color-mix(in srgb, var(--c) 40%, transparent); }
+  .w-cand.dim { opacity: .5; }
+  .w-face { width: 54px; height: 54px; border-radius: 50%; background: var(--c); border: 3px solid var(--c); grid-row: span 2; object-fit: cover; box-shadow: 0 0 0 3px rgba(255,255,255,.12); }
+  .w-cname { font-weight: 800; font-size: 15px; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .w-cpct { font-family: var(--font-elects-display, inherit); font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .w-cpct small { font-size: 20px; }
+  .w-cvotes { font-size: 12px; color: var(--w-dim); font-variant-numeric: tabular-nums; }
+  .w-tag { position: absolute; right: 14px; bottom: 24px; font-size: 10px; font-weight: 800; letter-spacing: .1em; padding: 3px 8px; border-radius: 99px; background: var(--w-gold); color: #14171d; }
+  .w-bar { grid-column: 1 / -1; height: 6px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; margin-top: 4px; }
+  .w-bar i { display: block; height: 100%; background: var(--c); border-radius: 99px; transition: width .5s cubic-bezier(.2,.8,.2,1); }
+  .w-whatif { padding: 12px 14px; border-radius: 14px; border: 1px dashed var(--w-gold); background: rgba(255,216,77,.08); font-size: 14px; line-height: 1.35; }
+  .w-whatif b { color: var(--w-gold); }
+
+  .w-mapwrap { position: relative; border: 1px solid var(--w-line); border-radius: 18px; background: rgba(0,0,0,.18); overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 420px; }
+  .w-map { width: 100%; height: 100%; max-height: 72vh; display: block; }
+  .w-grp path { stroke: rgba(255,255,255,.55); stroke-width: 1.4; stroke-linejoin: round; cursor: pointer; transition: fill .5s, fill-opacity .5s, stroke-width .15s; vector-effect: non-scaling-stroke; }
+  .w-grp:hover path { stroke: #fff; stroke-width: 3; }
+  .w-grp.sel path { stroke: var(--w-gold); stroke-width: 4; }
+  .w-grp.flip path { stroke-dasharray: 6 5; stroke: var(--w-gold); stroke-width: 3; }
+  .w-grp.empty path { fill: var(--w-empty); fill-opacity: .85; stroke-dasharray: 3 4; }
+  .w-glab { pointer-events: none; font-family: var(--font-elects-display, inherit); text-anchor: middle; fill: #fff; paint-order: stroke; stroke: rgba(10,4,24,.75); stroke-width: 4px; stroke-linejoin: round; }
+  .w-glab .n { font-size: 24px; } .w-glab .m { font-size: 17px; font-family: var(--font-elects-body, inherit); font-weight: 800; }
+  .w-legend { position: absolute; left: 14px; bottom: 12px; font-size: 11px; color: var(--w-dim); max-width: 60%; }
+  .w-callout { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); padding: 7px 18px; border-radius: 99px; background: var(--w-gold); color: #14171d; font-family: var(--font-elects-display, inherit); font-size: 20px; box-shadow: 0 6px 24px rgba(0,0,0,.4); white-space: nowrap; }
+  .w-callout[hidden] { display: none; }
+
+  .w-panel { border: 1px solid var(--w-line); border-radius: 16px; background: var(--w-card); padding: 16px; }
+  .w-panel h3 { margin: 0 0 2px; font-family: var(--font-elects-display, inherit); font-size: 30px; line-height: 1; }
+  .w-sub { font-size: 12px; color: var(--w-dim); margin-bottom: 10px; }
+  .w-row { --c: #888; display: grid; grid-template-columns: 34px 1fr auto; gap: 4px 10px; align-items: center; margin: 9px 0; }
+  .w-row img { width: 34px; height: 34px; border-radius: 50%; background: var(--c); border: 2px solid var(--c); object-fit: cover; grid-row: span 2; }
+  .w-row .nm { font-weight: 700; font-size: 13px; } .w-row .pc { font-family: var(--font-elects-display, inherit); font-size: 22px; font-variant-numeric: tabular-nums; }
+  .w-row .bar { grid-column: 2 / 4; height: 5px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; } .w-row .bar i { display: block; height: 100%; background: var(--c); transition: width .5s; }
+  .w-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .w-stat { padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.06); }
+  .w-stat b { display: block; font-family: var(--font-elects-display, inherit); font-size: 26px; line-height: 1.05; } .w-stat span { font-size: 11px; color: var(--w-dim); }
+  .w-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .w-chip { --c: #888; font: inherit; font-size: 12px; font-weight: 700; padding: 7px 11px; border-radius: 99px; border: 1.5px solid var(--c); background: transparent; color: #fff; cursor: pointer; }
+  .w-chip:hover, .w-chip.on { background: var(--c); color: #111; }
+  .w-hint { font-size: 12px; color: var(--w-dim); line-height: 1.45; }
+
+  /* scrubber */
+  .w-foot { padding: 8px 22px 18px; }
+  .w-scrub { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; border: 1px solid var(--w-line); border-radius: 16px; background: var(--w-card); padding: 12px 18px; }
+  .w-play { width: 46px; height: 46px; border-radius: 50%; border: 0; background: var(--w-gold); color: #14171d; font-size: 18px; cursor: pointer; }
+  .w-track { position: relative; }
+  .w-ticks { display: flex; gap: 2px; height: 14px; align-items: flex-end; margin-bottom: 4px; }
+  .w-ticks i { flex: 1; min-width: 2px; border-radius: 2px; background: var(--c, #888); opacity: .35; height: 55%; transition: opacity .2s, height .2s; }
+  .w-ticks i.in { opacity: 1; height: 100%; }
+  .w-track input { width: 100%; accent-color: var(--w-gold); margin: 0; }
+  .w-time { text-align: right; font-size: 13px; font-variant-numeric: tabular-nums; min-width: 200px; } .w-time b { display: block; font-family: var(--font-elects-display, inherit); font-size: 22px; }
+  .w-scrub.static { opacity: .55; pointer-events: none; }
+
+  #wSide { display: flex; flex-direction: column; gap: 10px; }
+  .w-live { display: inline-block; margin-left: 8px; padding: 2px 9px; border-radius: 99px; background: #e0242f; color: #fff; letter-spacing: .1em; animation: wBlink 1.6s ease-in-out infinite; }
+  @keyframes wBlink { 50% { opacity: .55; } }
+  .w-livechips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; } .w-livechips:empty { display: none; }
+  .w-livechips button { font: inherit; font-size: 12px; font-weight: 800; color: #fff; background: rgba(224,36,47,.18); border: 1px solid rgba(224,36,47,.7); border-radius: 99px; padding: 4px 11px; cursor: pointer; } .w-livechips button.on { background: #e0242f; }
+  .w-livebar { grid-column: 1 / -1; display: none; align-items: center; gap: 14px; font-size: 14px; } .w-scrub.live .w-livebar { display: flex; }
+  .w-scrub.live > :not(.w-livebar) { display: none; }
+  .w-scrub.live { grid-template-columns: 1fr; }
+  .w-livebar .dot { width: 12px; height: 12px; border-radius: 50%; background: #e0242f; animation: wBlink 1.2s infinite; } .w-livebar b { font-family: var(--font-elects-display, inherit); font-size: 22px; } .w-livebar span { color: var(--w-dim); } .w-livebar .sp { flex: 1; }
+  .w-grp.fresh path { animation: wFlash 1.8s ease-out; } @keyframes wFlash { 0% { filter: brightness(2.4) saturate(1.4); } 100% { filter: none; } }
+  .w-callout.called { background: #fff; color: #14171d; } .w-callout.open { background: rgba(255,255,255,.14); color: #fff; font-size: 16px; backdrop-filter: blur(6px); }
+  .w-odds .w-orow { --c: #888; display: grid; grid-template-columns: 34px 1fr auto; gap: 2px 10px; align-items: center; margin: 9px 0; }
+  .w-odds .w-orow img { width: 34px; height: 34px; border-radius: 50%; background: var(--c); border: 2px solid var(--c); grid-row: span 2; object-fit: cover; }
+  .w-odds .w-orow .nm { font-weight: 700; font-size: 13px; } .w-odds .w-orow .pc { font-family: var(--font-elects-display, inherit); font-size: 28px; font-variant-numeric: tabular-nums; line-height: 1; }
+  .w-odds .w-orow .bar { grid-column: 2 / 4; height: 6px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; } .w-odds .w-orow .bar i { display: block; height: 100%; background: var(--c); transition: width .6s; }
+  .w-odds button.tip { font: inherit; font-size: 12px; font-weight: 800; color: var(--w-gold); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+  .w-callbanner { position: fixed; left: 50%; top: 18%; transform: translate(-50%, -30px); opacity: 0; z-index: 70; width: min(760px, calc(100vw - 28px)); display: grid; grid-template-columns: 150px 1fr; gap: 22px; align-items: center; padding: 26px 32px; border-radius: 24px; color: #fff; background: linear-gradient(120deg, color-mix(in srgb, var(--c, #36a) 60%, #0a1a30), #0a1a30); border: 2px solid var(--c, #fff); box-shadow: 0 30px 90px rgba(0,0,0,.65); cursor: pointer; transition: opacity .5s, transform .5s cubic-bezier(.2,1.2,.3,1); }
+  .w-callbanner.show { opacity: 1; transform: translate(-50%, 0); } .w-callbanner[hidden] { display: none; }
+  .w-callbanner img { width: 150px; height: 150px; border-radius: 50%; border: 6px solid #fff; background: var(--c); object-fit: cover; }
+  .w-callbanner small { display: block; font-size: 13px; font-weight: 800; letter-spacing: .16em; color: var(--w-gold); } html[data-live="1"] #wSide > .w-panel.w-hint { display: none; }
+  .w-callbanner h2 { overflow-wrap: normal; word-break: keep-all; text-wrap: balance; margin: 4px 0 6px; font-family: var(--font-elects-display, inherit); font-size: clamp(30px, 5vw, 52px); line-height: 1; } .w-callbanner p { margin: 0; font-size: 16px; opacity: .85; }
+  @media (max-width: 560px) { .w-callbanner { grid-template-columns: 1fr; text-align: center; justify-items: center; } .w-callbanner img { width: 96px; height: 96px; } }
+  #wInk { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none; touch-action: none; }
+  #wInk.on { pointer-events: auto; cursor: crosshair; }
+  .w-pen { position: fixed; left: 50%; bottom: 112px; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; background: rgba(12,14,18,.92); border: 1px solid var(--w-line); box-shadow: 0 12px 40px rgba(0,0,0,.55); backdrop-filter: blur(8px); max-width: calc(100vw - 20px); flex-wrap: wrap; justify-content: center; }
+  .w-pen[hidden] { display: none; }
+  .w-pen button { font: inherit; font-size: 12px; font-weight: 800; color: #fff; background: rgba(255,255,255,.08); border: 1px solid var(--w-line); border-radius: 99px; padding: 6px 12px; cursor: pointer; }
+  .w-pen button.on { background: #fff; color: #14171d; } .w-pen button.gold { background: var(--w-gold); color: #14171d; border-color: var(--w-gold); }
+  .w-pc { width: 24px; height: 24px; border-radius: 50%; background: var(--c); border: 3px solid rgba(255,255,255,.25); cursor: pointer; } .w-pc.on { border-color: #fff; box-shadow: 0 0 0 2px var(--c); }
+  .w-sep { width: 1px; height: 22px; background: var(--w-line); }
+  @media (max-width: 1100px) { .w-main { grid-template-columns: 1fr; } .w-rail { flex-direction: row; overflow-x: auto; padding-bottom: 6px; } .w-rail .w-cand { min-width: 250px; } .w-rail .w-h { display: none; } .w-map { max-height: 60vh; } }
+  @media (max-width: 640px) { .w-scrub { grid-template-columns: auto 1fr; } .w-time { grid-column: 1 / -1; text-align: left; min-width: 0; display: flex; gap: 10px; align-items: baseline; } .w-top { padding: 12px 14px; } .w-main { padding: 14px; } .w-foot { padding: 8px 14px 16px; } }
+  /* phones: a tapped group opens as a bottom sheet over the map instead of a panel far below it */
+  @media (max-width: 1100px) {
+    #wSide.w-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; max-height: 42vh; overflow: auto; padding: 14px 16px calc(18px + env(safe-area-inset-bottom)); background: var(--w-bg); border-top: 1px solid var(--w-line); border-radius: 20px 20px 0 0; box-shadow: 0 -18px 50px rgba(0,0,0,.5); animation: wSheet .25s ease-out; overscroll-behavior: contain; }
+    html.sheet-open body { padding-bottom: 42vh; } html.sheet-open .w-map { max-height: 54vh; }
+    #wSide.w-sheet .w-stats { grid-template-columns: 1fr 1fr; } #wSide.w-sheet .w-stat b { font-size: 20px; } #wSide.w-sheet h3 { font-size: 22px; margin: 0 0 2px; }
+    .w-btn#wClose { min-width: 44px; min-height: 36px; }
+    .w-chip { min-height: 40px; }
+  }
+  @keyframes wSheet { from { transform: translateY(40px); opacity: 0; } }
+  @media (max-width: 640px) {
+    .w-callout { max-width: calc(100% - 24px); width: max-content; white-space: normal; text-align: center; font-size: 14px; line-height: 1.2; padding: 7px 14px; border-radius: 16px; }
+    .w-scrub.live { padding: 10px 14px; } .w-livebar { flex-wrap: wrap; gap: 6px 10px; font-size: 12px; } .w-livebar b { font-size: 18px; } .w-livebar .sp { display: none; } .w-livebar #wLiveAt { flex: 1 1 100%; order: 5; } .w-livebar #wLiveIn { order: 6; flex: 1; } .w-livebar .w-btn { order: 7; white-space: nowrap; }
+    .w-brand h1 { font-size: 26px; } .w-pen { bottom: 14px; width: calc(100vw - 20px); max-width: none; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; gap: 6px; padding: 8px 12px; border-radius: 999px; scrollbar-width: none; } .w-pen > * { flex: none; } .w-pen #wDone { position: sticky; right: 0; } html.pen-on #wSide.w-sheet { display: none; } html.pen-on body { padding-bottom: 0; }
+    .w-pc { width: 30px; height: 30px; }
+  }
+
+  /* ---- six additions: rehearsal pill, tipping point, rounds, stream ---- */
+  .w-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .w-stat { min-width: 0; } .w-stat b { overflow-wrap: anywhere; }
+  .w-live.reh { background: #d99a1e; color: #14171d; }
+  .w-tag.out { background: rgba(255,255,255,.2); color: #fff; }
+  .w-tipring { fill: none; stroke: var(--w-gold); stroke-width: 3; transform-box: fill-box; transform-origin: center; animation: wPing 2.2s ease-out infinite; } .w-tipring.r2 { animation-delay: 1.1s; }
+  @keyframes wPing { 0% { transform: scale(.55); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+  .w-rounds { display: grid; gap: 10px; } .w-rd .w-rdh { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; } .w-rd .w-rdh span { color: var(--w-dim); }
+  .w-rdbar { display: flex; height: 22px; border-radius: 7px; overflow: hidden; background: rgba(255,255,255,.08); } .w-rdbar i { display: block; height: 100%; position: relative; transition: width .4s; } .w-rdbar em { font-style: normal; position: absolute; inset: 0; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #0c1018; }
+  .w-rounds .w-seg { justify-self: start; margin-top: 4px; } .w-rounds .w-seg button { padding: 6px 12px; font-size: 12px; }
+  html[data-stream] .w-ctl { position: fixed; top: 8px; right: 10px; z-index: 80; opacity: 0; transition: opacity .25s; } html[data-stream] .w-ctl:hover, html[data-stream] .w-ctl:focus-within { opacity: 1; }
+  html[data-stream] .w-ctl > :not(#wStream) { display: none !important; }
+  html[data-stream] .w-exit, html[data-stream] .w-foot, html[data-stream] .w-legend, html[data-stream] .w-livechips, html[data-stream] #wSide > .w-panel.w-hint { display: none !important; }
+  html[data-stream] .w-brand h1 { font-size: clamp(34px, 3.4vw, 56px); }
+  html[data-stream] .w-live { font-size: 15px; }
+  @media (min-width: 1500px) { html[data-stream] .w-main { zoom: 1.12; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body class="wall">
+<div class="w-app">
+  <header class="w-top">
+    <a class="w-exit" id="wClassic" href="./?classic=1" title="The standard TSR Elects page">Classic view</a>
+    <div class="w-brand"><small>TSR Elects · Magic Wall <span class="w-live" id="wLivePill" hidden>● LIVE</span></small><h1 id="wTitle">Loading…</h1><div class="w-livechips" id="wLiveChips"></div></div>
+    <div class="w-ctl">
+      <select id="wElection" aria-label="Election"></select>
+      <select id="wRound" aria-label="Round"></select>
+      <select id="wRace" aria-label="Race" hidden></select>
+      <span class="w-seg" role="group" aria-label="Map colouring"><button id="mLead" class="on">Leader</button><button id="mCand">Candidate</button></span>
+      <button class="w-btn" id="wReset" hidden>Reset what-ifs</button>
+      <button class="w-btn" id="wPenBtn" title="Draw on the screen (P)">✎ Pen</button>
+      <button class="w-btn" id="wSave" title="Save a picture of this screen">⤓ Save</button>
+      <button class="w-btn" id="wStream" title="Hide the controls for streaming (S)">Stream</button>
+      <button class="w-btn" id="wTheme" title="Change the wall colours">Theme</button>
+    </div>
+  </header>
+
+  <div class="w-main">
+    <aside class="w-rail" id="wRail" aria-label="Candidates"></aside>
+    <section class="w-mapwrap">
+      <div class="w-callout" id="wCall" hidden></div>
+      <svg id="wMap" class="w-map" role="img" aria-label="Map of voting groups"></svg>
+      <div class="w-legend" id="wLegend"></div>
+    </section>
+    <aside class="w-side"><div id="wSide"></div><div id="wRounds"></div><div id="wOdds"></div></aside>
+  </div>
+
+  <footer class="w-foot">
+    <div class="w-scrub" id="wScrub">
+      <div class="w-livebar" id="wLiveBar"></div>
+      <button class="w-play" id="wPlay" aria-label="Play the count">▶</button>
+      <div class="w-track"><div class="w-ticks" id="wTicks"></div><input type="range" id="wRange" min="0" max="0" value="0" aria-label="Scrub through the ballots"></div>
+      <div class="w-time" id="wTime"></div>
+    </div>
+  </footer>
+</div>
+<div class="w-callbanner" id="wCallBanner" hidden></div>
+<canvas id="wInk" aria-hidden="true"></canvas>
+<div id="wPen" class="w-pen" hidden role="toolbar" aria-label="Pen tools">
+  <span class="w-pc on" data-c="#ffd84d" style="--c:#ffd84d" title="Yellow"></span><span class="w-pc" data-c="#ffffff" style="--c:#fff" title="White"></span><span class="w-pc" data-c="#ff4d5e" style="--c:#ff4d5e" title="Red"></span><span class="w-pc" data-c="#35d6ff" style="--c:#35d6ff" title="Cyan"></span><span class="w-pc" data-c="#5df08c" style="--c:#5df08c" title="Green"></span>
+  <i class="w-sep"></i>
+  <button data-w="4" title="Thin">S</button><button data-w="8" class="on" title="Medium">M</button><button data-w="15" title="Thick">L</button>
+  <i class="w-sep"></i>
+  <button id="wFade" title="Strokes fade away after a few seconds, like on air">Fade</button>
+  <button id="wUndo" title="Undo (Ctrl+Z)">↶</button>
+  <button id="wClear" title="Clear">Clear</button>
+  <button id="wDone" class="gold" title="Stop drawing (P)">Done</button>
+</div>
+
+<script src="../assets/js/election-ids.js"></script>
+<script src="../assets/js/overrides.js"></script>
+<script src="../assets/js/tsrelects.js"></script>
+<script src="../assets/js/photo-filter.js"></script>
+<script src="../assets/js/basecalc.js"></script>
+<script src="../assets/js/groupcalc.js"></script>
+<script src="../assets/js/electsim.js"></script>
+<script src="../assets/js/nightodds.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fetchJ = (f, bust) => fetch('../data/' + f + (bust ? '?t=' + Date.now() : '')).then(r => r.json()).catch(() => null);
+  let [reg, handRes, geo, tlIdx, siteCfg, btRes, metaA, metaB] = await Promise.all(['registries.json', 'tsrelects-results.json', 'groups.geojson', 'timelines/index.json', 'site-config.json', 'ballottsr/results.json', 'tsrelects-meta.json', 'ballottsr/meta.json'].map(f => fetchJ(f)));
+  let elections = [], liveIds = [];
+  const activeList = cfg => { const l = Array.isArray(cfg.activeElections) ? cfg.activeElections.filter(e => e && e.pollsId) : []; return l.length ? l : (cfg.activePollsId ? [{ pollsId: cfg.activePollsId }] : []); };
+  const electsIds = cfg => cfg.mode !== 'active' ? [] : (Array.isArray(cfg.electsIds) && cfg.electsIds.length ? cfg.electsIds : activeList(cfg).map(e => e.pollsId));
+  function buildElections() {   // same merge as TSR Elects: hand-entered results win over BallotTSR mirrors; local admin overrides apply on top
+    const hand = handRes || [], bt = (btRes && btRes.elections) || [], base = hand.concat(bt.filter(e => !hand.some(h => h.id === e.id)));
+    elections = (typeof OVR_getTsrElections === 'function' ? OVR_getTsrElections(base) : base).slice().sort((a, b) => String(b.date || b.id).localeCompare(String(a.date || a.id)));
+    const cfg = typeof OVR_getSiteConfig === 'function' ? OVR_getSiteConfig(siteCfg || {}) : (siteCfg || {});
+    liveIds = [...new Set([...electsIds(cfg).filter(id => elections.some(e => e.id === id)), ...elections.filter(e => e.live || TSR_isOpen(e)).map(e => e.id)])];
+  }
+  buildElections();
+  // ---- time: parse everything to epoch ms; show Eastern Time (same convention as TSR Elects) plus elapsed time ----
+  const clockET = ms => ms ? new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZoneName: 'short' }).format(ms) : '—';
+  const elapsed = ms => { const m = Math.max(0, Math.round(ms / 60000)), h = Math.floor(m / 60); return h ? `+${h}h ${String(m % 60).padStart(2, '0')}m` : `+${m}m`; };
+  const dur = ms => { const m = Math.max(0, Math.round(ms / 60000)), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60); return d ? `${d}d ${h}h` : h ? `${h}h ${String(m % 60).padStart(2, '0')}m` : `${m}m`; };
+  const ago = ms => { const m = Math.round((Date.now() - ms) / 60000); return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : m < 2880 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' days ago'; };
+  // when the results data was last changed: written into the data files, not the viewer's clock
+  const updatedAt = () => Math.max(0, ...[metaA && metaA.lastUpdated, metaB && metaB.electionsChangedAt].map(t => Date.parse(t) || 0));
+  const tlSet = new Set(((tlIdx && tlIdx.timelines) || []).map(t => t.id));
+  const qs = new URLSearchParams(location.search);
+  const REHEARSE = qs.has('rehearse'), svgns = 'http://www.w3.org/2000/svg';
+
+  // ---- colour helpers (dark stage) ----
+  const hsl = hex => { const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return [0, 0, .5]; const n = parseInt(m[1], 16), r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2; let h = 0, s = 0; if (mx !== mn) { const d = mx - mn; s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn); h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; } return [h, s, l]; };
+  const bright = hex => { const [h, s, l] = hsl(hex); return `hsl(${h.toFixed(0)} ${(Math.min(1, Math.max(s, .55)) * 100).toFixed(0)}% ${(Math.min(.72, Math.max(l, .58)) * 100).toFixed(0)}%)`; };
+
+  // ---- map geometry ----
+  const feats = geo.features, lon0 = Math.min(...feats.flatMap(f => flat(f.geometry.coordinates).map(p => p[0])));
+  function flat(c, out = []) { if (typeof c[0] === 'number') out.push(c); else c.forEach(x => flat(x, out)); return out; }
+  const all = feats.flatMap(f => flat(f.geometry.coordinates)), lat = all.map(p => p[1]), lon = all.map(p => p[0]);
+  const kx = Math.cos((Math.min(...lat) + Math.max(...lat)) / 2 * Math.PI / 180), S0 = 1000;
+  const minX = Math.min(...lon) * kx, maxX = Math.max(...lon) * kx, maxY = Math.max(...lat), minY = Math.min(...lat), sc = S0 / (maxX - minX), VH = (maxY - minY) * sc;
+  const P = ([x, y]) => [((x * kx) - minX) * sc, (maxY - y) * sc];
+  const polys = feats.map(f => {
+    const rings = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+    const d = rings.map(poly => poly.map(r => 'M' + r.map(p => P(p).map(v => v.toFixed(1)).join(' ')).join('L') + 'Z').join('')).join('');
+    let best = null, ba = -1; rings.forEach(poly => { const r = poly[0].map(P); let a = 0, cx = 0, cy = 0; for (let i = 0; i < r.length - 1; i++) { const k = r[i][0] * r[i + 1][1] - r[i + 1][0] * r[i][1]; a += k; cx += (r[i][0] + r[i + 1][0]) * k; cy += (r[i][1] + r[i + 1][1]) * k; } if (Math.abs(a) > ba) { ba = Math.abs(a); best = [cx / (3 * a), cy / (3 * a)]; } });
+    return { id: String(f.properties.id), d, c: best };
+  });
+  $('wMap').setAttribute('viewBox', `-10 -10 ${S0 + 20} ${VH + 20}`);
+
+  // ---- state ----
+  const S = { el: null, roundKey: 'first_round', race: null, groups: {}, ids: [], tl: null, k: 0, sel: null, focus: null, mode: 'lead', flips: {}, photos: {}, playing: false, timer: null, live: false, lastAt: 0, nextAt: 0, calls: {}, rehearse: false, rtl: null, rk: 0, rcall: null, tip: null, rcv: false, canRcv: false, rounds: [], elim: new Set() };
+  const photoOf = id => S.photos[id] || TSR_candidatePhoto(reg, id, '../');
+  const ncol = id => TSR_candidateColor(reg, id), nname = id => TSR_candidateName(reg, id);
+
+  // ---- data for a given election / round / race ----
+  function raceList(el, roundKey) { const rd = TSR_getRoundData(el, roundKey); return Object.keys(TSR_getRaces(rd)); }
+  async function loadTimeline(el) {
+    if (!tlSet.has(el.id)) return null;
+    try { const t = await fetch(`../data/timelines/${el.id}.json`).then(r => r.json()); const b = (t.ballots || []).map(x => Object.assign({}, x, { ms: Date.parse(x.t) })).filter(x => x.r && x.r.length && isFinite(x.ms)).sort((p, q) => p.ms - q.ms); return b.length >= 2 ? b : null; } catch (e) { return null; }
+  }
+  function finalGroups() {
+    if (S.rehearse && S.rtl) return tlGroups(S.rk, S.rtl);
+    const rd = TSR_getRoundData(S.el, S.roundKey), race = TSR_getRaces(rd)[S.race] || {}, out = {};
+    Object.keys(race).forEach(g => { const row = race[g] || {}; out[String(g)] = {}; Object.keys(row).forEach(c => { if (+row[c] > 0) out[String(g)][c] = +row[c]; }); });
+    return out;
+  }
+  function tlGroups(k, tl) {
+    tl = tl || S.tl; const out = {}, part = tl.slice(0, k);
+    let fin = null; if (S.rcv && tl === S.tl) { const r = irv(part.map(b => b.r)), last = r[r.length - 1]; fin = last ? new Set(Object.keys(last.counts)) : null; }
+    part.forEach(b => { const g = String(b.g), c = fin ? b.r.find(x => fin.has(x)) : b.r[0]; if (c === undefined) return; (out[g] = out[g] || {})[c] = (out[g][c] || 0) + 1; }); return out;
+  }
+  // instant-runoff on the ballots counted so far: rounds of {counts,total,elim,winner}
+  function irv(ballots) {
+    const alive = new Set(); ballots.forEach(b => b.forEach(c => alive.add(c))); const rounds = [], first = {};
+    while (alive.size) {
+      const t = {}; alive.forEach(c => { t[c] = 0; }); let tot = 0; ballots.forEach(b => { const c = b.find(x => alive.has(x)); if (c !== undefined) { t[c]++; tot++; } });
+      if (!rounds.length) Object.assign(first, t);
+      const r = { counts: Object.assign({}, t), total: tot, elim: null, winner: null }; rounds.push(r);
+      const order = [...alive].sort((a, b) => t[b] - t[a]);
+      if (t[order[0]] * 2 > tot || alive.size <= 2) { r.winner = order[0]; break; }
+      const low = Math.min(...order.map(c => t[c])), out = order.filter(c => t[c] === low).sort((a, b) => first[a] - first[b] || String(a).localeCompare(String(b)))[0];
+      r.elim = out; alive.delete(out);
+    }
+    return rounds;
+  }
+  function computeRcv() {
+    S.rounds = S.canRcv && S.tl ? irv(S.tl.slice(0, S.k).map(b => b.r)) : [];
+    S.elim = new Set(S.rounds.map(r => r.elim).filter(Boolean));
+  }
+  const current = () => (S.tl ? tlGroups(S.k) : S.groups);
+  function effective() {
+    const base = current(), out = {};
+    Object.keys(base).forEach(g => { const f = S.flips[g]; if (f) { const tot = Object.values(base[g]).reduce((a, b) => a + b, 0); out[g] = tot ? { [f]: tot } : {}; } else out[g] = base[g]; });
+    return out;
+  }
+  const sum = o => Object.values(o).reduce((a, b) => a + b, 0);
+  function totals(gv) { const t = {}; Object.values(gv).forEach(r => Object.keys(r).forEach(c => { t[c] = (t[c] || 0) + r[c]; })); return t; }
+  const rank = t => Object.entries(t).sort((a, b) => b[1] - a[1]);
+
+  // ---- rendering ----
+  const fmt = n => n.toLocaleString('en-US');
+  function tween(el, to, dec = 1) { const from = parseFloat(el.dataset.v || '0'); el.dataset.v = to; if (matchMedia('(prefers-reduced-motion: reduce)').matches || Math.abs(from - to) < 0.05) { el.firstChild.nodeValue = to.toFixed(dec); return; } const t0 = performance.now(); const step = n => { const k = Math.min(1, (n - t0) / 500), e = 1 - Math.pow(1 - k, 3); el.firstChild.nodeValue = (from + (to - from) * e).toFixed(dec); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
+
+  function renderRail() {
+    const gv = effective(), t = totals(gv), tot = sum(t), r = rank(t), host = $('wRail');
+    const lead = r[0];
+    if (!host.dataset.built || host.dataset.key !== S.el.id + S.roundKey + S.race) {
+      host.dataset.key = S.el.id + S.roundKey + S.race; host.dataset.built = 1;
+      const ids = S.ids;
+      host.innerHTML = `<div class="w-h"><span>Statewide</span><span id="wTotal"></span></div><div id="wWhat"></div>` + ids.map(id => `<button class="w-cand" data-id="${esc(id)}" style="--c:${bright(ncol(id))}"><img class="w-face" src="${esc(photoOf(id))}" alt=""><span class="w-cname">${esc(nname(id))}</span><span class="w-cpct"><span data-v="0">0.0</span><small>%</small></span><span class="w-cvotes"></span><span class="w-bar"><i style="width:0"></i></span><span class="w-tag" hidden></span></button>`).join('');
+      host.querySelectorAll('.w-cand').forEach(b => b.onclick = () => { S.focus = S.focus === b.dataset.id ? null : b.dataset.id; if (S.focus) S.mode = 'cand'; else S.mode = 'lead'; syncMode(); renderAll(); });
+    }
+    $('wTotal').textContent = tot ? fmt(tot) + ' votes' : 'no votes yet';
+    const order = S.ids.slice().sort((a, b) => (t[b] || 0) - (t[a] || 0));
+    order.forEach((id, i) => host.querySelector(`[data-id="${CSS.escape(id)}"]`).style.order = i + 1);
+    S.ids.forEach(id => {
+      const b = host.querySelector(`[data-id="${CSS.escape(id)}"]`), v = t[id] || 0, p = tot ? v / tot * 100 : 0;
+      tween(b.querySelector('.w-cpct span'), p); b.querySelector('.w-cvotes').textContent = fmt(v) + ' votes'; b.querySelector('.w-bar i').style.width = p + '%';
+      b.classList.toggle('on', S.focus === id); b.classList.toggle('dim', !!S.focus && S.focus !== id);
+      const tag = b.querySelector('.w-tag'); const isLead = lead && lead[0] === id && tot > 0, cw = callInfo().winners.includes(id); const out = S.rcv && S.elim.has(id); tag.classList.toggle('out', out); tag.hidden = !(isLead || cw || out); tag.textContent = out ? 'OUT' : cw ? (callInfo().status === 'runoff' ? 'ADVANCES' : '✓ PROJECTED WINNER') : p > 50 ? 'MAJORITY' : 'LEADING';
+    });
+    const nf = Object.keys(S.flips).length, w = $('wWhat');
+    if (nf) { const base = rank(totals(current())), a = base[0], b2 = r[0]; const flipped = a && b2 && a[0] !== b2[0]; const mar = r[1] ? ((r[0][1] - r[1][1]) / tot * 100).toFixed(1) : '100';
+      w.innerHTML = `<div class="w-whatif"><b>What-if</b> · ${nf} group${nf > 1 ? 's' : ''} flipped.<br>${b2 ? `<b>${esc(nname(b2[0]))}</b> would lead by ${mar} pts` : ''}${flipped ? ` — <b>that flips the result</b> from ${esc(nname(a[0]))}.` : ' — same winner as the real count.'}</div>`; } else w.innerHTML = '';
+    $('wReset').hidden = !nf;
+  }
+
+  function renderMap() {
+    const gv = effective(), svg = $('wMap'), t = totals(gv);
+    if (!svg.dataset.built || svg.dataset.key !== S.el.id) {
+      svg.dataset.built = 1; svg.dataset.key = S.el.id;
+      svg.innerHTML = polys.map(p => `<g class="w-grp" data-g="${p.id}"><path d="${p.d}" fill="var(--w-empty)" fill-opacity=".85"/></g>`).join('') + polys.map(p => `<text class="w-glab" x="${p.c[0].toFixed(1)}" y="${p.c[1].toFixed(1)}" data-g="${p.id}"><tspan class="n" x="${p.c[0].toFixed(1)}" dy="-2"></tspan><tspan class="m" x="${p.c[0].toFixed(1)}" dy="22"></tspan></text>`).join('');
+      svg.querySelectorAll('.w-grp').forEach(g => g.onclick = () => { S.sel = S.sel === g.dataset.g ? null : g.dataset.g; renderAll(); });
+    }
+    const maxShare = S.focus ? Math.max(.0001, ...Object.values(gv).map(r => { const s = sum(r); return s ? (r[S.focus] || 0) / s : 0; })) : 1;
+    polys.forEach(p => {
+      const r = gv[p.id] || {}, tot = sum(r), g = svg.querySelector(`.w-grp[data-g="${p.id}"]`), path = g.querySelector('path'), lab = svg.querySelector(`.w-glab[data-g="${p.id}"]`);
+      g.classList.toggle('empty', !tot); g.classList.toggle('sel', S.sel === p.id); g.classList.toggle('flip', !!S.flips[p.id]);
+      const rr = rank(r), lead = rr[0], mar = tot && rr[1] ? (rr[0][1] - rr[1][1]) / tot : tot ? 1 : 0;
+      if (!tot) { path.style.fill = ''; path.style.fillOpacity = ''; lab.children[0].textContent = 'G' + p.id; lab.children[1].textContent = '—'; return; }
+      if (S.focus) { const sh = (r[S.focus] || 0) / tot; path.style.fill = bright(ncol(S.focus)); path.style.fillOpacity = (0.1 + 0.85 * (sh / maxShare)).toFixed(2); lab.children[1].textContent = Math.round(sh * 100) + '%'; }
+      else { path.style.fill = bright(ncol(lead[0])); path.style.fillOpacity = (0.35 + 0.6 * Math.min(1, mar / .6)).toFixed(2); lab.children[1].textContent = (mar > 0 ? '+' : '') + Math.round(mar * 100); }
+      lab.children[0].textContent = 'G' + p.id;
+    });
+    $('wLegend').textContent = S.focus ? `Shaded by ${nname(S.focus)}'s share in each group. Click the candidate again to go back.` : 'Colour = who leads the group · darker = narrower lead · numbers are lead in points. Click a group to drill in.';
+    const rr = rank(t), tot = sum(t), call = $('wCall');
+    const done = !S.tl || S.k >= S.tl.length;
+    const ci = callInfo(); call.className = 'w-callout'; call.hidden = !(tot && done);
+    if (tot && done && rr[0]) {
+      if (ci.winners.length) { call.classList.add('called'); call.textContent = ci.status === 'runoff' ? `⚡ ${ci.winners.map(nname).join(' & ')} advance${ci.winners.length === 1 ? 's' : ''} to a runoff` : `✓ ${ci.winners.map(nname).join(' & ')} — projected winner`; }
+      else if (S.live) { call.classList.add('open'); call.textContent = `Race not yet called · ${nname(rr[0][0])} leads`; }
+      else call.textContent = `${nname(rr[0][0])} ${rr[0][1] / tot > .5 ? 'wins majority' : 'leads'}`;
+    }
+  }
+
+  function renderSide() {
+    const gv = effective(), host = $('wSide'), g = S.sel;
+    const wasOpen = host.classList.contains('w-sheet'); host.classList.toggle('w-sheet', !!g); document.documentElement.classList.toggle('sheet-open', !!g);
+    if (g && !wasOpen && matchMedia('(max-width: 1100px)').matches) setTimeout(() => $('wMap').parentElement.scrollIntoView({ block: 'start', behavior: 'smooth' }), 30);
+    if (!g) {
+      const t = totals(gv), tot = sum(t), r = rank(t), groupsIn = Object.values(gv).filter(x => sum(x) > 0).length, margin = r[1] ? (r[0][1] - r[1][1]) / tot * 100 : 100;
+      host.innerHTML = `<div class="w-h"><span>Overview</span></div><div class="w-panel"><h3>${esc(S.el.title)}</h3><div class="w-sub">${esc(S.race)}</div>
+        <div class="w-stats"><div class="w-stat"><b>${fmt(tot)}</b><span>votes counted</span></div><div class="w-stat"><b>${groupsIn}/${polys.length}</b><span>groups with votes</span></div>
+        <div class="w-stat"><b${r[0] && nname(r[0][0]).length > 9 ? ' style="font-size:20px"' : ''}>${r[0] ? esc(nname(r[0][0])) : '—'}</b><span>${r[0] ? 'leads' : 'no leader'}</span></div><div class="w-stat"><b>${r[1] ? margin.toFixed(1) : '—'}</b><span>point margin</span></div>${extraStats()}</div></div>
+        <div class="w-panel w-hint"><b style="color:#fff">Try it:</b> click a group on the map to see its numbers, then use <b style="color:var(--w-gold)">What if…</b> to hand that whole group to a different candidate and watch the statewide result move. Drag the bar below to replay the count.</div>`;
+      return;
+    }
+    const base = current()[g] || {}, eff = gv[g] || {}, tot = sum(base), r = rank(base), tt = sum(totals(current())) || 1, rows = r.length ? r : S.ids.map(i => [i, 0]);
+    host.innerHTML = `<div class="w-h"><span>Group ${esc(g)}</span><button class="w-btn" id="wClose" style="padding:4px 10px">✕</button></div>
+      <div class="w-panel"><h3>Group ${esc(g)}</h3><div class="w-sub">${fmt(tot)} votes · ${(tot / tt * 100).toFixed(0)}% of the electorate counted${S.flips[g] ? ' · <b style="color:var(--w-gold)">flipped in what-if</b>' : ''}</div>
+      ${rows.map(([id, v]) => `<div class="w-row" style="--c:${bright(ncol(id))}"><img src="${esc(photoOf(id))}" alt=""><span class="nm">${esc(nname(id))}</span><span class="pc">${tot ? (v / tot * 100).toFixed(1) : '0.0'}%</span><span class="bar"><i style="width:${tot ? v / tot * 100 : 0}%"></i></span></div>`).join('')}
+      <div class="w-stats"><div class="w-stat"><b>${r[1] ? ((r[0][1] - r[1][1]) / tot * 100).toFixed(1) : tot ? '100' : '—'}</b><span>point margin</span></div><div class="w-stat"><b>${r[0] ? esc(nname(r[0][0])) : '—'}</b><span>leads here</span></div></div></div>
+      <div class="w-panel"><div class="w-h" style="margin:0 0 6px"><span style="color:var(--w-gold)">What if…</span></div><div class="w-hint">…every vote in this group went to:</div>
+      <div class="w-chips">${S.ids.map(id => `<button class="w-chip${S.flips[g] === id ? ' on' : ''}" data-f="${esc(id)}" style="--c:${bright(ncol(id))}">${esc(nname(id))}</button>`).join('')}${S.flips[g] ? '<button class="w-chip" data-f="" style="--c:#fff">Undo</button>' : ''}</div></div>`;
+    $('wClose').onclick = () => { S.sel = null; renderAll(); };
+    host.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { if (b.dataset.f) S.flips[g] = b.dataset.f; else delete S.flips[g]; renderAll(); });
+  }
+
+  function renderScrub() {
+    const sc = $('wScrub'), range = $('wRange');
+    sc.classList.toggle('static', !S.tl && !S.live); sc.classList.toggle('live', S.live);
+    if (S.live) return;
+    if (!S.tl) { $('wTicks').innerHTML = ''; $('wTime').innerHTML = '<b>Final</b>official results'; $('wPlay').disabled = true; range.max = 0; return; }
+    $('wPlay').disabled = false; range.max = S.tl.length; range.value = S.k;
+    const ticks = $('wTicks'); if (ticks.childElementCount !== S.tl.length) ticks.innerHTML = S.tl.map(b => `<i style="--c:${bright(ncol(b.r[0]))}"></i>`).join('');
+    [...ticks.children].forEach((i, n) => i.classList.toggle('in', n < S.k));
+    const b = S.tl[Math.max(0, S.k - 1)], when = S.k ? `${clockET(b.ms)} · ${elapsed(b.ms - (Date.parse(S.el.opens) || S.tl[0].ms))}` : '—';
+    $('wTime').innerHTML = `<b>Ballot ${S.k} / ${S.tl.length}</b>${when}`;
+    $('wPlay').textContent = S.playing ? '❚❚' : '▶';
+  }
+  function renderAll() { computeRcv(); renderRail(); renderMap(); renderSide(); renderScrub(); renderRounds(); }
+  function syncMode() { $('mLead').classList.toggle('on', S.mode === 'lead'); $('mCand').classList.toggle('on', S.mode === 'cand'); }
+
+  // ---- loading an election ----
+  async function open(id, roundKey, race, keepFrac) {
+    const frac = keepFrac && S.tl ? S.k / S.tl.length : null;
+    stop();
+    S.el = elections.find(e => e.id === id) || elections[0];
+    const rounds = ['first_round', 'runoff_round'].filter(k => S.el[k] && raceList(S.el, k).length && TSR_roundVoteSum(S.el[k]) > 0);
+    S.roundKey = rounds.includes(roundKey) ? roundKey : (rounds.includes(TSR_defaultRoundKey(S.el)) ? TSR_defaultRoundKey(S.el) : rounds[0] || 'first_round');
+    $('wRound').innerHTML = rounds.map(k => `<option value="${k}"${k === S.roundKey ? ' selected' : ''}>${k === 'runoff_round' ? 'Runoff' : 'First round'}</option>`).join(''); $('wRound').hidden = rounds.length < 2;
+    const races = raceList(S.el, S.roundKey); S.race = races.includes(race) ? race : races[0];
+    $('wRace').innerHTML = races.map(r => `<option${r === S.race ? ' selected' : ''}>${esc(r)}</option>`).join(''); $('wRace').hidden = races.length < 2;
+    const tlOk = S.roundKey === 'first_round' && races.length === 1;
+    S.rtl = REHEARSE && tlOk ? await loadTimeline(S.el) : null; S.rehearse = !!S.rtl; S.rk = 0; S.rcall = null;
+    S.live = S.rehearse ? true : (!REHEARSE && liveIds.includes(S.el.id));
+    S.rcv = false;
+    S.groups = finalGroups(); S.flips = {}; S.sel = null; S.focus = null; S.mode = 'lead'; syncMode();
+    S.tl = !S.live && tlOk ? (S.tl && S.tl.__id === S.el.id ? S.tl : await loadTimeline(S.el)) : null; if (S.tl) S.tl.__id = S.el.id;
+    S.k = S.tl ? (frac != null ? Math.max(0, Math.min(S.tl.length, Math.round(frac * S.tl.length))) : S.tl.length) : 0;
+    const ids = new Set(Object.keys(totals(S.groups))); (S.tl || S.rtl || []).forEach(b => b.r.forEach(c => ids.add(c)));
+    S.canRcv = !!S.tl && S.tl.filter(b => b.r.length > 1).length >= 3 && new Set(S.tl.flatMap(b => b.r)).size >= 3;
+    S.ids = [...ids].sort((a, b) => (totals(S.groups)[b] || 0) - (totals(S.groups)[a] || 0));
+    await Promise.all(S.ids.map(async i => { try { S.photos[i] = await PhotoFilter_process(TSR_candidatePhoto(reg, i, '../')); } catch (e) {} }));
+    $('wTitle').textContent = S.el.title || S.el.id; document.title = (S.el.title || S.el.id) + (S.rehearse ? ' — TSR Elects Magic Wall (rehearsal)' : S.live ? ' — TSR Elects Magic Wall (live)' : ' — TSR Elects Magic Wall');
+    applyLiveUI(); snapshotCalls();
+    $('wRail').dataset.built = ''; $('wMap').dataset.built = '';
+    history.replaceState(null, '', `?election=${encodeURIComponent(S.el.id)}&round=${S.roundKey}${REHEARSE ? '&rehearse=1' : ''}${document.documentElement.dataset.stream ? '&stream=1' : ''}`); $('wClassic').href = `./?classic=1&election=${encodeURIComponent(S.el.id)}`;
+    renderAll(); renderOdds();
+  }
+
+  // ---- live election night ----
+  const rdNow = () => TSR_getRoundData(S.el, S.roundKey);
+  const callFor = (rk, race) => (S.rehearse && rk === 'first_round' && race === S.race) ? S.rcall : TSR_getRaceCall(TSR_getRoundData(S.el, rk), race);
+  const callInfo = () => { const c = callFor(S.roundKey, S.race); return { status: c && c.status, winners: c ? TSR_callWinners(c) : [] }; };
+  const callKey = (rk, race) => { const c = callFor(rk, race); return c ? (c.status || 'winner') + ':' + TSR_callWinners(c).join(',') : ''; };
+  function snapshotCalls() { S.calls = {}; ['first_round', 'runoff_round'].forEach(rk => { if (S.el[rk]) raceList(S.el, rk).forEach(r => { S.calls[rk + '|' + r] = callKey(rk, r); }); }); }
+  function extraStats() {
+    if (S.rehearse) return '';
+    const rd = rdNow() || {}, tn = rd.turnout != null ? rd.turnout : S.el.turnout, pr = rd.precincts_reporting != null ? rd.precincts_reporting : S.el.precincts_reporting, pt = rd.precincts_total != null ? rd.precincts_total : S.el.precincts_total;
+    let h = '';
+    if (tn != null && tn !== '') h += `<div class="w-stat"><b>${esc(String(tn).replace(/%$/, ''))}${/^[\d.]+$/.test(String(tn)) ? '%' : ''}</b><span>turnout</span></div>`;
+    if (pr != null && pt) h += `<div class="w-stat"><b>${esc(pr)}/${esc(pt)}</b><span>precincts reporting</span></div>`;
+    return h;
+  }
+  function applyLiveUI() {
+    $('wLivePill').hidden = !S.live; $('wLivePill').textContent = S.rehearse ? '● REHEARSAL' : '● LIVE'; $('wLivePill').classList.toggle('reh', S.rehearse); document.documentElement.dataset.live = S.live ? '1' : '';
+    $('wLiveChips').innerHTML = liveIds.length > 1 ? liveIds.map(id => { const e = elections.find(x => x.id === id); return `<button data-id="${esc(id)}" class="${id === S.el.id ? 'on' : ''}">● ${esc(e.title || e.id)}</button>`; }).join('') : '';
+    $('wLiveChips').querySelectorAll('button').forEach(b => b.onclick = () => open(b.dataset.id));
+    if (S.rehearse) { $('wLiveBar').innerHTML = '<span class="dot"></span><b>REHEARSAL</b><span id="wLiveAt"></span><span class="sp"></span><span id="wLiveIn"></span><button class="w-btn" id="wRestart">Restart</button>'; $('wRestart').onclick = restartRehearsal; tickLive(); }
+    else if (S.live) { $('wLiveBar').innerHTML = '<span class="dot"></span><b>LIVE</b><span id="wLiveAt">Connecting…</span><span id="wLiveClose"></span><span class="sp"></span><span id="wLiveIn"></span><button class="w-btn" id="wRefresh">Refresh now</button>'; $('wRefresh').onclick = () => refresh(); tickLive(); }
+  }
+  function tickLive() {
+    if (!S.live) return; const a = $('wLiveAt'), n = $('wLiveIn'); if (!a || !n) return;
+    if (S.rehearse) { const N = S.rtl.length; a.textContent = `Replaying ${S.el.title || S.el.id} as if it were live · ballot ${S.rk} of ${N}`; n.textContent = S.rk >= N ? 'Finished' : ''; return; }
+    const cl = $('wLiveClose'), cm = Date.parse(S.el.closes); if (cl) cl.textContent = isFinite(cm) ? (Date.now() < cm ? '· Polls close in ' + dur(cm - Date.now()) : '· Polls closed') : '';
+    const u = updatedAt(); a.textContent = u ? `Results updated ${clockET(u)} · ${ago(u)}` : 'Results as loaded';
+    n.textContent = 'next refresh in ' + Math.max(0, Math.ceil((S.nextAt - Date.now()) / 1000)) + 's';
+  }
+  let bannerT = 0;
+  function showCall(race, status, winners) {
+    const b = $('wCallBanner'), id = winners[0], c = bright(ncol(id));
+    b.style.setProperty('--c', c);
+    b.innerHTML = `<img src="${esc(photoOf(id))}" alt=""><div><small>${status === 'runoff' ? 'ADVANCES TO A RUNOFF' : '✓ PROJECTED WINNER'} · ${esc(race)}</small><h2>${esc(winners.map(nname).join(' & '))}</h2><p>${esc(S.el.title || S.el.id)} · called by DDTSR</p></div>`;
+    b.hidden = false; requestAnimationFrame(() => b.classList.add('show')); clearTimeout(bannerT);
+    const hide = () => { b.classList.remove('show'); setTimeout(() => { b.hidden = true; }, 500); };
+    b.onclick = hide; bannerT = setTimeout(hide, 9000);
+  }
+  async function ingest(next) {
+    const old = S.groups, oldTot = {}; Object.keys(old).forEach(g => { oldTot[g] = sum(old[g]); });
+    S.groups = next;
+    const ids = new Set(S.ids); Object.keys(totals(S.groups)).forEach(i => ids.add(i));
+    if (ids.size !== S.ids.length) { const nu = [...ids].filter(i => !S.ids.includes(i)); S.ids = S.ids.concat(nu); await Promise.all(nu.map(async i => { try { S.photos[i] = await PhotoFilter_process(TSR_candidatePhoto(reg, i, '../')); } catch (e) {} })); $('wRail').dataset.built = ''; }
+    const rs = ['first_round', 'runoff_round'].filter(k => S.el[k]), fresh = [];
+    rs.forEach(rk => raceList(S.el, rk).forEach(r => { const key = rk + '|' + r, now = callKey(rk, r); if (now && S.calls[key] !== now) fresh.push([rk, r]); S.calls[key] = now; }));
+    renderAll(); renderOdds();
+    Object.keys(S.groups).forEach(g => { if (sum(S.groups[g]) !== (oldTot[g] || 0)) { const n = $('wMap').querySelector(`.w-grp[data-g="${g}"]`); if (n) { n.classList.remove('fresh'); void n.getBoundingClientRect(); n.classList.add('fresh'); setTimeout(() => n.classList.remove('fresh'), 2000); } } });
+    if (fresh.length) { const [rk, r] = fresh[0], cl = callFor(rk, r); showCall(r, cl.status, TSR_callWinners(cl)); }
+  }
+  // rehearsal: feed the recorded ballots in as if they were arriving now; the call lands when the last one is in
+  async function rehearseTick() {
+    if (!S.rehearse) return; const N = S.rtl.length; tickLive(); if (S.rk >= N || rehearseTick.busy || Date.now() - (rehearseTick.last || 0) < 2200) return; rehearseTick.busy = true; rehearseTick.last = Date.now();
+    try {
+      S.rk = Math.min(N, S.rk + Math.max(1, Math.ceil(N / 36)));
+      if (S.rk >= N) { const r = rank(totals(finalGroups())), tot = sum(totals(finalGroups())); if (r[0]) S.rcall = r[0][1] / tot > .5 ? { status: 'winner', winners: [r[0][0]] } : { status: 'runoff', winners: r.slice(0, 2).map(x => x[0]) }; }
+      await ingest(finalGroups()); tickLive();
+    } finally { rehearseTick.busy = false; }
+  }
+  function restartRehearsal() { S.rk = 0; S.rcall = null; S.flips = {}; snapshotCalls(); ingest(finalGroups()); tickLive(); }
+  async function refresh() {
+    if (!S.live || S.rehearse || refresh.busy) return; refresh.busy = true;
+    try {
+      const [h, b, c, ma, mb] = await Promise.all([fetchJ('tsrelects-results.json', 1), fetchJ('ballottsr/results.json', 1), fetchJ('site-config.json', 1), fetchJ('tsrelects-meta.json', 1), fetchJ('ballottsr/meta.json', 1)]);
+      if (h) handRes = h; if (b) btRes = b; if (c) siteCfg = c; if (ma) metaA = ma; if (mb) metaB = mb; buildElections();
+      S.lastAt = Date.now(); S.nextAt = S.lastAt + 20000;
+      const el = elections.find(e => e.id === S.el.id); if (!el) return; S.el = el;
+      if (!liveIds.includes(el.id)) { S.live = false; applyLiveUI(); document.title = (el.title || el.id) + ' — TSR Elects Magic Wall'; }
+      await ingest(finalGroups());
+      tickLive();
+    } catch (e) { console.warn('live refresh', e); } finally { refresh.busy = false; }
+  }
+  S.nextAt = Date.now() + 20000;
+  setInterval(() => { if (S.rehearse) { rehearseTick(); return; } if (!S.live) return; tickLive(); if (Date.now() >= S.nextAt) { S.nextAt = Date.now() + 20000; if (!document.hidden) refresh(); } }, 1000);
+
+  // ---- tipping-point marker ----
+  function drawTip() {
+    const svg = $('wMap'); let g = svg.querySelector('#wTipG'); if (g) g.remove();
+    const pl = S.tip && polys.find(x => x.id === S.tip); if (!pl) return;
+    g = document.createElementNS(svgns, 'g'); g.id = 'wTipG'; g.setAttribute('pointer-events', 'none');
+    const x = pl.c[0].toFixed(1), y = pl.c[1].toFixed(1);
+    g.innerHTML = `<circle class="w-tipring" cx="${x}" cy="${y}" r="34"/><circle class="w-tipring r2" cx="${x}" cy="${y}" r="34"/><circle cx="${x}" cy="${y}" r="5" fill="#ffd84d"/><g transform="translate(${x} ${(+y - 54).toFixed(1)})"><rect x="-92" y="-20" width="184" height="38" rx="19" fill="#ffd84d"/><text y="6.5" text-anchor="middle" font-size="19" font-weight="800" letter-spacing="1.4" fill="#14171d">TIPPING POINT</text></g>`;
+    svg.appendChild(g);
+  }
+
+  // ---- ranked-choice rounds (follows the scrubber) ----
+  function renderRounds() {
+    const box = $('wRounds'); if (!S.canRcv || !S.tl || !S.k) { box.innerHTML = ''; if (S.rcv && !S.canRcv) S.rcv = false; return; }
+    const R = S.rounds, last = R[R.length - 1];
+    box.innerHTML = `<div class="w-h"><span>Ranked-choice count</span><span>${S.k} ballot${S.k === 1 ? '' : 's'}</span></div><div class="w-panel w-rounds">`
+      + R.map((r, i) => { const ids = Object.keys(r.counts).sort((a, b) => r.counts[b] - r.counts[a]);
+          return `<div class="w-rd"><div class="w-rdh"><b>Round ${i + 1}</b><span>${r.winner ? `${esc(nname(r.winner))} ${r.total && r.counts[r.winner] * 2 > r.total ? 'wins majority' : 'leads'}` : `${esc(nname(r.elim))} out`}</span></div>`
+            + `<div class="w-rdbar">${ids.filter(c => r.counts[c]).map(c => `<i style="width:${(r.counts[c] / (r.total || 1) * 100).toFixed(1)}%;background:${bright(ncol(c))}" title="${esc(nname(c))} ${r.counts[c]}"><em>${Math.round(r.counts[c] / (r.total || 1) * 100)}</em></i>`).join('')}</div></div>`; }).join('')
+      + (last && last.total < S.k ? `<div class="w-hint">${S.k - last.total} ballot${S.k - last.total === 1 ? '' : 's'} exhausted by the final round.</div>` : '')
+      + `<div class="w-seg" role="group" aria-label="What the map shows"><button id="rFirst" class="${S.rcv ? '' : 'on'}">First choices</button><button id="rFinal" class="${S.rcv ? 'on' : ''}">After transfers</button></div></div>`;
+    $('rFirst').onclick = () => { S.rcv = false; renderAll(); }; $('rFinal').onclick = () => { S.rcv = true; renderAll(); };
+  }
+
+  // ---- win probability ----
+  const ODDS_POLLS = {};
+  async function renderOdds() {
+    const box = $('wOdds'), tok = renderOdds.t = {}; box.innerHTML = ''; S.tip = null; drawTip();
+    try {
+      const e = S.el, race = S.rehearse ? S.groups : TSR_getRaces(TSR_getRoundData(e, S.roundKey))[S.race], age = (Date.now() - Date.parse(e.date)) / 864e5;
+      if (!race || !window.NO_run || !(S.live || (age >= 0 && age <= 3))) return;
+      const totalsR = TSR_raceTotals(race), keys = Object.keys(totalsR); if (!sum(totalsR)) return;
+      if (!(e.id in ODDS_POLLS)) ODDS_POLLS[e.id] = await fetch(`../data/elections/${e.id}.json`).then(r => r.json()).catch(() => null);
+      if (renderOdds.t !== tok || !ODDS_POLLS[e.id]) return;
+      const ctx = NO_prepare({ pf: ODDS_POLLS[e.id], geo, elections: elections.filter(x => x.id !== e.id && x.date < e.date), date: e.date, keys });
+      const o = NO_run(ctx, NO_counts(race, ctx), { sims: 3000, final: !S.live }), early = o.N < NO_TUNE.minN, called = callInfo().winners.length > 0;
+      const rk = ctx.ids.slice().sort((a, b) => o.lead[b] - o.lead[a]).slice(0, 4);
+      box.innerHTML = `<div class="w-h"><span>Win probability</span><span>${o.N} ballot${o.N === 1 ? '' : 's'} in${called ? ' · called' : ''}</span></div><div class="w-panel w-odds">`
+        + (early ? `<div class="w-hint">Only ${o.N} ballot${o.N === 1 ? '' : 's'} counted — odds appear from ${NO_TUNE.minN}.</div>`
+          : rk.map(k => `<div class="w-orow" style="--c:${bright(ncol(k))}"><img src="${esc(photoOf(k))}" alt=""><span class="nm">${esc(nname(k))}</span><span class="pc">${NO_pct(o.lead[k])}%</span><span class="bar"><i style="width:${(o.lead[k] * 100).toFixed(1)}%"></i></span></div>`).join('')
+            + (o.tipping ? `<button class="tip" data-g="${esc(o.tipping.group)}">Group ${esc(o.tipping.group)} decides it →</button>` : '')
+            + '<div class="w-hint" style="margin-top:8px">Chance to finish first, from the group forecast updated by the count. A model estimate, not a call.</div>') + '</div>';
+      S.tip = !early && o.tipping ? String(o.tipping.group) : null; drawTip();
+      const t = box.querySelector('.tip'); if (t) t.onclick = () => { S.sel = String(t.dataset.g); renderAll(); };
+    } catch (err) { console.warn('win probability', err); }
+  }
+
+  // ---- controls ----
+  $('wElection').innerHTML = elections.map(e => `<option value="${esc(e.id)}">${esc(e.title || e.id)}</option>`).join('');
+  $('wElection').onchange = e => open(e.target.value, null, null, true);
+  $('wRound').onchange = e => open(S.el.id, e.target.value);
+  $('wRace').onchange = e => open(S.el.id, S.roundKey, e.target.value);
+  $('mLead').onclick = () => { S.focus = null; S.mode = 'lead'; syncMode(); renderAll(); };
+  $('mCand').onclick = () => { if (!S.focus) S.focus = S.ids[0]; S.mode = 'cand'; syncMode(); renderAll(); };
+  $('wReset').onclick = () => { S.flips = {}; renderAll(); };
+  $('wRange').oninput = e => { stop(); S.k = +e.target.value; renderAll(); };
+  function stop() { S.playing = false; clearInterval(S.timer); const p = $('wPlay'); if (p) p.textContent = '▶'; }
+  $('wPlay').onclick = () => {
+    if (!S.tl) return; if (S.playing) { stop(); return; }
+    if (S.k >= S.tl.length) S.k = 0;
+    S.playing = true; $('wPlay').textContent = '❚❚';
+    S.timer = setInterval(() => { S.k++; renderAll(); if (S.k >= S.tl.length) stop(); }, Math.max(180, Math.min(900, 14000 / S.tl.length)));
+  };
+  addEventListener('keydown', e => { if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return; if (e.key === ' ') { e.preventDefault(); $('wPlay').click(); } if (e.key === 'Escape') { S.sel = null; S.focus = null; S.mode = 'lead'; syncMode(); renderAll(); } });
+
+  const startId = qs.get('election') || liveIds[0] || (elections.find(e => e.first_round && raceList(e, 'first_round').length) || elections[0]).id;
+  $('wElection').value = startId;
+  await open(startId, qs.get('round'));
+
+  // ---- theme ----
+  const THEMES = ['slate', 'graphite', 'purple'];
+  const setTheme = t => { document.documentElement.setAttribute('data-wt', t); try { localStorage.setItem('wE-wall-theme', t); } catch (e) {} };
+  let th = 'slate'; try { th = localStorage.getItem('wE-wall-theme') || 'slate'; } catch (e) {} if (!THEMES.includes(th)) th = 'slate'; setTheme(th);
+  $('wTheme').onclick = () => setTheme(THEMES[(THEMES.indexOf(document.documentElement.getAttribute('data-wt')) + 1) % THEMES.length]);
+
+  // ---- pen / telestrator ----
+  const cv = $('wInk'), cx = cv.getContext('2d'), pen = { on: false, color: '#ffd84d', w: 8, fade: false, strokes: [], cur: null };
+  function sizeInk() { const d = devicePixelRatio || 1; cv.width = innerWidth * d; cv.height = innerHeight * d; cx.setTransform(d, 0, 0, d, 0, 0); paintInk(); }
+  function paintInk(now = performance.now()) {
+    cx.clearRect(0, 0, innerWidth, innerHeight); let anim = false;
+    pen.strokes = pen.strokes.filter(st => !(st.fade && st.end && now - st.end > 5600));
+    pen.strokes.forEach(st => {
+      let a = 1; if (st.fade && st.end) { const age = now - st.end; if (age > 4000) a = 1 - (age - 4000) / 1600; anim = true; } else if (st.fade) anim = true;
+      cx.globalAlpha = Math.max(0, a); cx.strokeStyle = st.color; cx.lineWidth = st.w; cx.lineCap = cx.lineJoin = 'round'; cx.shadowColor = st.color; cx.shadowBlur = st.w * 1.2;
+      cx.beginPath(); const p = st.pts; cx.moveTo(p[0][0], p[0][1]);
+      if (p.length === 1) cx.lineTo(p[0][0] + .1, p[0][1]);
+      for (let i = 1; i < p.length - 1; i++) cx.quadraticCurveTo(p[i][0], p[i][1], (p[i][0] + p[i + 1][0]) / 2, (p[i][1] + p[i + 1][1]) / 2);
+      if (p.length > 1) cx.lineTo(p[p.length - 1][0], p[p.length - 1][1]); cx.stroke();
+    });
+    cx.globalAlpha = 1; cx.shadowBlur = 0;
+    if (anim) requestAnimationFrame(paintInk);
+  }
+  const setPen = on => { pen.on = on; document.documentElement.classList.toggle('pen-on', on); cv.classList.toggle('on', on); $('wPen').hidden = !on; $('wPenBtn').classList.toggle('gold', on); };
+  $('wPenBtn').onclick = () => setPen(!pen.on); $('wDone').onclick = () => setPen(false);
+  $('wPen').querySelectorAll('.w-pc').forEach(b => b.onclick = () => { pen.color = b.dataset.c; $('wPen').querySelectorAll('.w-pc').forEach(x => x.classList.toggle('on', x === b)); });
+  $('wPen').querySelectorAll('[data-w]').forEach(b => b.onclick = () => { pen.w = +b.dataset.w; $('wPen').querySelectorAll('[data-w]').forEach(x => x.classList.toggle('on', x === b)); });
+  $('wFade').onclick = () => { pen.fade = !pen.fade; $('wFade').classList.toggle('on', pen.fade); };
+  $('wUndo').onclick = () => { pen.strokes.pop(); paintInk(); }; $('wClear').onclick = () => { pen.strokes = []; paintInk(); };
+  cv.addEventListener('pointerdown', e => { if (!pen.on) return; cv.setPointerCapture(e.pointerId); pen.cur = { pts: [[e.clientX, e.clientY]], color: pen.color, w: pen.w, fade: pen.fade, end: 0 }; pen.strokes.push(pen.cur); paintInk(); });
+  cv.addEventListener('pointermove', e => { if (!pen.cur) return; (e.getCoalescedEvents ? e.getCoalescedEvents() : [e]).forEach(ev => pen.cur.pts.push([ev.clientX, ev.clientY])); paintInk(); });
+  const endStroke = () => { if (pen.cur) { pen.cur.end = performance.now(); pen.cur = null; paintInk(); } };
+  cv.addEventListener('pointerup', endStroke); cv.addEventListener('pointercancel', endStroke);
+  addEventListener('resize', sizeInk); sizeInk();
+  addEventListener('keydown', e => { if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return; if (e.key === 'p' || e.key === 'P') setPen(!pen.on); if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); $('wUndo').click(); } });
+
+  // ---- stream mode: only the brand, rail, map and side panels; controls fade in on hover ----
+  const setStream = on => { if (on) document.documentElement.dataset.stream = '1'; else delete document.documentElement.dataset.stream; const u = new URL(location.href); if (on) u.searchParams.set('stream', '1'); else u.searchParams.delete('stream'); history.replaceState(null, '', u); $('wStream').classList.toggle('gold', on); $('wStream').textContent = on ? 'Exit stream' : 'Stream'; };
+  if (qs.has('stream')) setStream(true);
+  $('wStream').onclick = () => setStream(!document.documentElement.dataset.stream);
+  addEventListener('keydown', e => { if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' || e.ctrlKey || e.metaKey) return; if (e.key === 's' || e.key === 'S') setStream(!document.documentElement.dataset.stream); });
+
+  // ---- save the screen as a picture: standings + map + whatever was drawn on it ----
+  async function saveImage() {
+    const W = 1280, H = 720, cv2 = document.createElement('canvas'); cv2.width = W * 2; cv2.height = H * 2; const c = cv2.getContext('2d'); c.scale(2, 2);
+    const root = getComputedStyle(document.documentElement), bg = root.getPropertyValue('--w-bg').trim() || '#14171d', fam = getComputedStyle($('wTitle')).fontFamily, body = getComputedStyle(document.body).fontFamily;
+    c.fillStyle = bg; c.fillRect(0, 0, W, H); const gl = c.createRadialGradient(W * .7, 0, 0, W * .7, 0, 700); gl.addColorStop(0, 'rgba(255,255,255,.07)'); gl.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gl; c.fillRect(0, 0, W, H);
+    const load = src => new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+    const gv = effective(), t = totals(gv), tot = sum(t), ci = callInfo(), order = S.ids.slice().sort((a, b) => (t[b] || 0) - (t[a] || 0));
+    // header
+    c.textBaseline = 'alphabetic'; c.fillStyle = '#ffd84d'; c.font = `800 14px ${body}`; c.letterSpacing = '3px'; c.fillText('TSR ELECTS · MAGIC WALL', 40, 44); c.letterSpacing = '0px';
+    c.fillStyle = '#fff'; c.font = `800 40px ${fam}`; c.fillText(S.el.title || S.el.id, 40, 90, 880);
+    c.fillStyle = 'rgba(255,255,255,.6)'; c.font = `600 17px ${body}`; c.fillText(S.race || '', 40, 116, 880);
+    const tagTxt = S.rehearse ? 'REHEARSAL' : S.live ? 'LIVE' : 'FINAL', tagCol = S.live ? (S.rehearse ? '#d99a1e' : '#e0242f') : 'rgba(255,255,255,.2)';
+    c.font = `800 14px ${body}`; const tw = c.measureText(tagTxt).width + 28; c.fillStyle = tagCol; c.beginPath(); c.roundRect(W - 40 - tw, 28, tw, 30, 15); c.fill(); c.fillStyle = '#fff'; c.fillText(tagTxt, W - 40 - tw + 14, 48);
+    c.fillStyle = 'rgba(255,255,255,.6)'; c.font = `600 14px ${body}`; c.textAlign = 'right'; c.fillText(clockET(Date.now()) + ' · ' + new Date().toLocaleDateString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric' }), W - 40, 82); c.textAlign = 'left';
+    // standings
+    const rows = order.slice(0, 5), rh = Math.min(104, 520 / Math.max(1, rows.length)), x0 = 40, y0 = 150;
+    for (let i = 0; i < rows.length; i++) {
+      const id = rows[i], y = y0 + i * rh, v = t[id] || 0, pc = tot ? v / tot * 100 : 0, col = bright(ncol(id)), won = ci.winners.includes(id);
+      c.fillStyle = 'rgba(255,255,255,.07)'; c.beginPath(); c.roundRect(x0, y, 360, rh - 10, 16); c.fill(); c.fillStyle = col; c.fillRect(x0, y + 12, 5, rh - 34);
+      const im = await load(photoOf(id)); const r = Math.min(30, (rh - 10) / 2 - 10);
+      c.save(); c.beginPath(); c.arc(x0 + 28 + r, y + (rh - 10) / 2, r, 0, 7); c.fillStyle = col; c.fill(); c.clip(); if (im) c.drawImage(im, x0 + 28, y + (rh - 10) / 2 - r, r * 2, r * 2); c.restore();
+      const tx = x0 + 28 + r * 2 + 14; c.fillStyle = '#fff'; c.font = `700 16px ${body}`; c.fillText(nname(id), tx, y + 28, won ? 120 : 200);
+      c.font = `800 34px ${fam}`; c.fillText(pc.toFixed(1) + '%', tx, y + 64);
+      c.fillStyle = 'rgba(255,255,255,.55)'; c.font = `600 13px ${body}`; c.fillText(fmt(v) + ' votes', tx + 118, y + 64);
+      c.fillStyle = 'rgba(255,255,255,.1)'; c.fillRect(tx, y + rh - 26, 300 - (tx - x0 - 40), 5); c.fillStyle = col; c.fillRect(tx, y + rh - 26, (300 - (tx - x0 - 40)) * pc / 100, 5);
+      if (won) { c.fillStyle = '#ffd84d'; c.font = `800 11px ${body}`; const lab = ci.status === 'runoff' ? 'ADVANCES' : '✓ PROJECTED WINNER'; const lw = c.measureText(lab).width + 16; c.beginPath(); c.roundRect(x0 + 360 - lw - 12, y + 10, lw, 20, 10); c.fill(); c.fillStyle = '#14171d'; c.fillText(lab, x0 + 360 - lw - 4, y + 24); }
+    }
+    // map
+    const vbW = S0 + 20, vbH = VH + 20, ax = 430, ay = 130, aw = 820, ah = 540, k = Math.min(aw / vbW, ah / vbH), mw = vbW * k, mh = vbH * k, mx = ax + (aw - mw) / 2, my = ay + (ah - mh) / 2;
+    let paths = '', labs = '';
+    polys.forEach(pl => { const g = $('wMap').querySelector(`.w-grp[data-g="${pl.id}"]`); if (!g) return; const cs = getComputedStyle(g.querySelector('path')); paths += `<path d="${pl.d}" fill="${cs.fill}" fill-opacity="${cs.fillOpacity}" stroke="${cs.stroke}" stroke-width="${cs.strokeWidth}" stroke-dasharray="${cs.strokeDasharray}" stroke-linejoin="round"/>`;
+      const lb = $('wMap').querySelector(`.w-glab[data-g="${pl.id}"]`), tt = lb ? [...lb.children].map(x => x.textContent) : []; labs += `<text x="${pl.c[0].toFixed(1)}" y="${pl.c[1].toFixed(1)}" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="27" fill="#fff" stroke="rgba(0,0,0,.65)" stroke-width="3" paint-order="stroke">${esc(tt[0] || '')}</text><text x="${pl.c[0].toFixed(1)}" y="${(pl.c[1] + 28).toFixed(1)}" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="21" fill="#fff" stroke="rgba(0,0,0,.65)" stroke-width="3" paint-order="stroke">${esc(tt[1] || '')}</text>`; });
+    let tip = ''; const tp = S.tip && polys.find(x => x.id === S.tip); if (tp) tip = `<circle cx="${tp.c[0].toFixed(1)}" cy="${tp.c[1].toFixed(1)}" r="34" fill="none" stroke="#ffd84d" stroke-width="3"/><circle cx="${tp.c[0].toFixed(1)}" cy="${tp.c[1].toFixed(1)}" r="5" fill="#ffd84d"/>`;
+    const svgStr = `<svg xmlns="${svgns}" viewBox="-10 -10 ${vbW} ${vbH}" width="${Math.round(mw * 2)}" height="${Math.round(mh * 2)}">${paths}${labs}${tip}</svg>`;
+    const mi = await load('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr)); if (mi) c.drawImage(mi, mx, my, mw, mh);
+    // pen strokes: screen coords -> the same spot on the exported map
+    const r = $('wMap').getBoundingClientRect(), sk = Math.min(r.width / vbW, r.height / vbH), iw = vbW * sk, ih = vbH * sk, ix = r.left + (r.width - iw) / 2, iy = r.top + (r.height - ih) / 2, f = mw / iw;
+    pen.strokes.forEach(st => { if (!st.pts.length) return; c.strokeStyle = st.color; c.lineWidth = st.w * f; c.lineCap = c.lineJoin = 'round'; c.shadowColor = st.color; c.shadowBlur = st.w * f; c.beginPath(); st.pts.forEach((q, i) => { const X = mx + (q[0] - ix) * f, Y = my + (q[1] - iy) * f; if (!i) c.moveTo(X, Y); else c.lineTo(X, Y); }); if (st.pts.length === 1) c.lineTo(mx + (st.pts[0][0] - ix) * f + .1, my + (st.pts[0][1] - iy) * f); c.stroke(); }); c.shadowBlur = 0;
+    // footer
+    c.fillStyle = 'rgba(255,255,255,.55)'; c.font = `600 13px ${body}`; const nf = Object.keys(S.flips).length;
+    c.fillText(`${fmt(tot)} votes counted${ci.winners.length ? ' · called by DDTSR' : ''}`, 40, H - 22);
+    if (nf) { c.fillStyle = '#ffd84d'; c.font = `800 13px ${body}`; c.textAlign = 'right'; c.fillText(`WHAT-IF: ${nf} group${nf > 1 ? 's' : ''} flipped`, W - 40, H - 22); c.textAlign = 'left'; }
+    const blob = await new Promise(res => cv2.toBlob(res, 'image/png')); if (!blob) return;
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `tsr-wall-${S.el.id}-${(S.race || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.png`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    window.__lastImage = { w: cv2.width, h: cv2.height, bytes: blob.size, url: null };
+    return blob;
+  }
+  $('wSave').onclick = () => { $('wSave').disabled = true; saveImage().catch(e => console.warn('save image', e)).finally(() => { $('wSave').disabled = false; }); };
+  window.__save = saveImage;
+  window.__wall = S; window.__pen = pen; window.__drawTip = drawTip;
+})();
+</script>
+</body>
+</html>

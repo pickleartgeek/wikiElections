@@ -13,6 +13,7 @@
 <meta property="og:description" content="An analysis piece from the Decision Desk TSR team.">
 <meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="assets/img/brand/favicon-wiki.png">
+<link rel="alternate" type="application/atom+xml" title="wikiElections articles" href="feed.xml">
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
   .article-hero { padding: 30px 0 10px; }
@@ -55,15 +56,15 @@
         <summary class="current">More</summary>
         <div class="nav-menu">
           <div class="nav-menu-h">Forecast &amp; trackers</div>
-          <a href="approval"><b>Moderator Approval</b><span>Job approval for every moderator, across all their seats</span></a>
-          <a href="party-support"><b>Party Support</b><span>Generic-ballot party ID, pooled across pollsters</span></a>
-          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+          <a href="approval"><b>Moderator Approval</b></a>
+          <a href="party-support"><b>Party Support</b></a>
+          <a href="guide"><b>Understanding ProbCalc</b></a>
           <div class="nav-menu-h">Polling</div>
-          <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <a href="pollsters"><b>Pollster Ratings</b></a>
           <div class="nav-menu-h">Tools</div>
-          <a href="elects/replay"><b>Election Replay</b><span>Watch a result come in vote by vote, or export it as video</span></a>
-          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
-          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <a href="elects/replay"><b>Election Replay</b></a>
+          <a href="elects/simulate"><b>Election Simulator</b></a>
+          <a href="elects/mapmaker"><b>Map Maker</b></a>
           <div class="nav-menu-h">Read</div>
           <a href="articles" class="current"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
         </div>
@@ -95,6 +96,7 @@
 <script src="assets/js/overrides.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/photo-filter.js"></script>
+<script src="assets/js/article-blocks.js"></script>
 <script>
 initSiteChrome();
 
@@ -103,8 +105,11 @@ async function boot() {
   const id = params.get('id');
   const base = await fetch('data/articles.json').then(r => r.json());
   const articles = OVR_getArticles(base.articles || []);
-  const article = articles.find(a => a.id === id);
+  let article = articles.find(a => a.id === id);
   const slot = document.getElementById('articleSlot');
+
+  const isAdmin = (() => { try { return sessionStorage.getItem('wikiElections_admin_ok') === '1'; } catch (e) { return false; } })();
+  if (article && !isAdmin && !OVR_isPublished(article)) article = null;
 
   if (!article) {
     slot.innerHTML = `
@@ -125,6 +130,7 @@ async function boot() {
     </section>
     <article class="article-body">${article.bodyHtml || ''}</article>
     <p style="margin-top:40px;"><a href="articles">← Back to all articles</a></p>`;
+  if (typeof AB_render === 'function') AB_render(document.querySelector('.article-body'));
   if (typeof PhotoFilter_applyAll === 'function') PhotoFilter_applyAll('.article-body .white-filter-img');
   // Arriving from an article search: highlight the matches and jump to the first one.
   const terms = (new URLSearchParams(location.search).get('q') || '').toLowerCase().split(/\s+/).filter(Boolean);

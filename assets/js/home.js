@@ -144,16 +144,23 @@ async function chResults(N, registry, pm = {}) {
     body: `<div class="rs">${blocks.join('')}</div>`, note: `<span>Share of the vote across every group · ▲▼ change ${blocks.join('').includes('since update') ? 'since the last update' : 'versus the final DDTSR polling average'}.</span><a href="elects/simulate">Run your own election night →</a>` };
 }
 
+/** A brief on-screen alert for a lead change that arrives while the page is open. */
+function oddsToast(ev) {
+  const t = document.createElement('div'); t.className = 'od-toast'; t.setAttribute('role', 'status'); t.innerHTML = `<small>Lead change · ${esc(ev.title)}</small>${esc(ev.text)}`;
+  document.body.appendChild(t); requestAnimationFrame(() => t.classList.add('in')); setTimeout(() => { t.classList.remove('in'); setTimeout(() => t.remove(), 400); }, 6500);
+}
 /** Election night, window 3: chance to lead — the DDTSR group forecast (NightOdds) updated by the ballots in. Same rows as the count, so bars, counters and the ±pt chip animate the same way.
  *  First-choice model: ranked-choice / STAR transfers are not simulated. Too early (<3 ballots) it says so instead of guessing. */
-const ODDS_CTX = {}, PREVODDS = {}; let ODDS_WIRE = [];
+const ODDS_CTX = {}, PREVODDS = {}, PREVSNAP = {}; let ODDS_WIRE = [], ODDS_EVENTS = [];
 async function chOdds(N, registry, pm = {}, geo, elections) {
   if (!window.NO_run || !geo) return null;
-  ODDS_WIRE = [];
+  ODDS_WIRE = []; ODDS_EVENTS = [];
   const blocks = N.night.flatMap(b => b.races.filter(r => r.votes > 0).map(r => {
     const pf = pm[b.id], ids = r.sorted.map(x => x[0]), ck = b.id + '|' + r.name;
     const ctx = ODDS_CTX[ck] || (ODDS_CTX[ck] = NO_prepare({ pf, geo, elections: elections.filter(e => e.id !== b.id && e.date < b.date), date: b.date, keys: ids }));
     const o = NO_run(ctx, NO_counts(r.groups, ctx), { sims: 2500, final: !b.live, reporting: b.reportingPct != null ? b.reportingPct / 100 : null }), early = o.N < NO_TUNE.minN, called = !!r.kind, prev = PREVODDS[ck]; PREVODDS[ck] = Object.assign({}, o.lead);
+    if (!called) { const msg = NO_change(PREVSNAP[ck], o, k => TSR_candidateName(registry, k)); if (msg) { ODDS_EVENTS.push({ title: b.short, text: msg }); ODDS_WIRE.push({ tag: 'Odds', kind: 'odds', href: `elects/?election=${encodeURIComponent(b.id)}`, text: `${b.short}: ${msg}`, flash: true }); } }
+    PREVSNAP[ck] = NO_snap(o);
     const rank = ctx.ids.slice().sort((x, y) => o.lead[y] - o.lead[x]), top = rank.slice(0, 4), fav = o.favorite, lab = called ? { key: 'call', text: 'Called' } : o.status, pct = NO_pct(o.lead[fav]);
     const moved = !!prev && ctx.ids.some(k => Math.abs(o.lead[k] - (prev[k] || 0)) >= 0.01);
     const rows = top.map(k => { const p = o.lead[k], pa = TSR_party(registry, TSR_candidateParty(registry, k)), dl = moved && !early ? Math.round((p - (prev[k] || 0)) * 100) : null, w = (p * 100).toFixed(1), shown = NO_pct(p);
@@ -163,7 +170,7 @@ async function chOdds(N, registry, pm = {}, geo, elections) {
     const bits = [`${o.N} ballot${o.N === 1 ? '' : 's'} ${o.final ? 'counted' : `in · ~${Math.round(o.expectedTotal)} expected`}`, o.runoff > 0.05 && ids.length > 2 ? `${Math.round(o.runoff * 100)}% chance nobody tops 50%` : '', o.tipping ? `Group ${o.tipping.group} decides it` : ''].filter(Boolean).join(' · ');
     if (!early) ODDS_WIRE.push({ tag: 'Odds', kind: 'odds', href: `elects/?election=${encodeURIComponent(b.id)}`, text: `${TSR_candidateName(registry, fav)} has a ${pct}% chance to lead ${b.short}${b.races.length > 1 ? ' · ' + r.name.replace(/ (First Round|Runoff)$/, '') : ''} — ${lab.text.toLowerCase()}${moved && prev ? ` (${Math.round((o.lead[fav] - (prev[fav] || 0)) * 100) >= 0 ? '+' : '−'}${Math.abs(Math.round((o.lead[fav] - (prev[fav] || 0)) * 100))} pts)` : ''}` });
     const meter = early ? '' : `<div class="od-meter" aria-hidden="true">${top.map(k => `<i style="width:${(o.lead[k] * 100).toFixed(1)}%;background:${esc(TSR_candidateColor(registry, k))}"></i>`).join('')}</div>`;
-    return `<div class="rs-block"><div class="rs-head"><h4>${esc(b.short)} · ${esc(b.roundLabel)}</h4><span class="od-st od-${lab.key}">${esc(lab.text)}</span></div>${early ? `<p class="od-early">Only ${o.N} ballot${o.N === 1 ? '' : 's'} counted so far — too early for a meaningful chance. Odds appear from ${NO_TUNE.minN} ballots.</p>` : meter + rows}${early ? '' : NO_groupsHTML(o, k => TSR_candidateName(registry, k), k => TSR_candidateColor(registry, k))}<div class="od-bits">${esc(bits)}</div></div>`; }));
+    return `<div class="rs-block"><div class="rs-head"><h4>${esc(b.short)} · ${esc(b.roundLabel)}</h4><span class="od-st od-${lab.key}">${esc(lab.text)}</span></div>${early ? `<p class="od-early">Only ${o.N} ballot${o.N === 1 ? '' : 's'} counted so far — too early for a meaningful chance. Odds appear from ${NO_TUNE.minN} ballots.</p>` : meter + rows}${early || called ? '' : NO_needsHTML(o, k => TSR_candidateName(registry, k), k => TSR_candidateColor(registry, k))}${early ? '' : NO_groupsHTML(o, k => TSR_candidateName(registry, k), k => TSR_candidateColor(registry, k))}<div class="od-bits">${esc(bits)}</div></div>`; }));
   if (!blocks.length) return null;
   return { id: 'odds', title: 'Win Probability', sub: 'Chance to lead', kick: 'DDTSR · Group forecast + the count', head: 'Who finishes first?', cta: { href: 'ddtsr#probcalc', label: 'How it works' },
     body: `<div class="rs od">${blocks.join('')}</div>`, note: `<span>Pre-election group forecast updated by every counted ballot. First-choice votes only; small electorates swing fast. A model estimate, not a call — calls come from the desk.</span>` };
@@ -226,7 +233,7 @@ function buildStage(chs) {
 }
 
 async function renderDeskStrip(arts) {
-  const list = OVR_getArticles(arts.articles || []).filter(a => a.published).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3); if (!list.length) return;
+  const list = OVR_getArticles(arts.articles || []).filter(a => OVR_isPublished(a)).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3); if (!list.length) return;
   document.getElementById('deskGrid').innerHTML = list.map(a => `<a class="strip-item" href="article?id=${encodeURIComponent(a.id)}"><span class="k">${esc(a.date || '')}${a.author ? ' · ' + esc(a.author) : ''}</span><h3>${esc(a.title)}</h3>${a.byline ? `<p>${esc(a.byline)}</p>` : ''}</a>`).join('');
   document.getElementById('deskStrip').hidden = false; wireAdd('Desk', list[0].title, `article?id=${encodeURIComponent(list[0].id)}`);
 }
@@ -255,6 +262,7 @@ function startNightRefresh(ctx, seconds) {
       STAGE.update(await nightPanels({ N, registry: ctx.registry, geo: ctx.geo, elections, pm: ctx.pm }));
       WIRECTL.replace(EN_wireItems(N.night, ctx.registry, ctx.pm).concat(ODDS_WIRE), fresh[0] && fresh[0].id);
       fresh.forEach(c => CA_push(c));
+      ODDS_EVENTS.forEach((ev, i) => setTimeout(() => oddsToast(ev), 900 + i * 4200));
     } catch (e) { console.warn('live refresh failed', e); } finally { busy = false; }
   }, seconds * 1000);
 }
@@ -394,7 +402,6 @@ async function renderOffCycleHub(hub, registry) {
     hub.innerHTML = `<h2 class="section-title">Moderator Approval</h2>
       <p class="hub-note">ProbCalc-weighted job approval as of today (UTC). Net approval is Approve minus Disapprove. Click a moderator for their full polling history.</p>
       <div class="tk-card" id="tkApproval"></div>
-      ${formerKeys.length ? `<details class="tk-former"><summary>Former moderators <small>${formerKeys.length} · final approval at end of term</small></summary><div class="tk-card" id="tkFormer"></div></details>` : ''}
       <h2 class="section-title" style="margin-top:34px;">Community Track Record</h2>
       <p class="hub-note">Off-cycle sentiment questions, tracked the same way as moderator approval. Click any question for its full polling history.</p>
       <div id="tkQuestions"></div>
@@ -402,26 +409,23 @@ async function renderOffCycleHub(hub, registry) {
       <p class="hub-note">Generic-ballot party ID, pooled across every tracked party. See the full breakdown on <a href="party-support">Party Support</a>.</p>
       <div class="tk-card" id="tkParties"></div>`;
     const palette = ['#e5484d', '#3b82f6', '#22b573', '#f2a900', '#a678e8', '#ec5f9a', '#14b8c4', '#8f9296'];
-    TK_renderApproval(document.getElementById('tkApproval'), {
-      asOf, registry,
-      mods: modKeys.map(k => { const e = approvalData.moderators[k]; return { key: k, name: TSR_approvalDisplayName(e), photo: photoOf(registry, e.candidateKey || k), polls: e.polls, seat: e.terms ? e.seat : '', carryOver: e.carryOver, pending: e.pending, asOf: e.frozenAsOf || undefined }; }).filter(m => m.polls.length),
-      colorFor: (k, i) => { const c = registry.candidates && registry.candidates[k] && registry.candidates[k].color; return c || palette[i % palette.length]; }
-    });
-    if (formerKeys.length) {
-      const lastOf = k => approvalData.moderators[k].polls.reduce((x, p) => p.date > x ? p.date : x, '');
-      const endOf = k => approvalData.moderators[k].termEnd || lastOf(k);
-      TK_renderApproval(document.getElementById('tkFormer'), {
-        asOf: formerKeys.map(endOf).sort().pop(), registry, frozen: true,
-        mods: formerKeys.map(k => ({ key: k, name: TSR_approvalDisplayName(approvalData.moderators[k]), photo: photoOf(registry, approvalData.moderators[k].candidateKey || k), asOf: endOf(k),
-          polls: approvalData.moderators[k].polls.filter(p => p.date <= endOf(k)) })),
-        colorFor: (k, i) => { const c = registry.candidates && registry.candidates[k] && registry.candidates[k].color; return c || palette[i % palette.length]; }
-      });
-    }
+    const colorFor = (k, i) => { const c = registry.candidates && registry.candidates[k] && registry.candidates[k].color; return c || palette[i % palette.length]; };
+    const lastOf = k => approvalData.moderators[k].polls.reduce((x, p) => p.date > x ? p.date : x, '');
+    const endOf = k => approvalData.moderators[k].termEnd || lastOf(k);
+    const curMods = modKeys.map(k => { const e = approvalData.moderators[k]; return { key: k, name: TSR_approvalDisplayName(e), photo: photoOf(registry, e.candidateKey || k), polls: e.polls, seat: e.terms ? e.seat : '', carryOver: e.carryOver, pending: e.pending, asOf: e.frozenAsOf || undefined,
+      // an office (Elections Secretary) also graphs its earlier holders' tenures, so the line has the whole history
+      earlier: e.kind === 'office' && e.allPolls ? (e.terms || []).filter(t => t.id !== e.termId && t.n).map(t => ({ label: t.label || t.seat, polls: e.allPolls.filter(p => p._t === t.id), asOf: t.last })) : [] }; }).filter(m => m.polls.length);
+    const oldMods = formerKeys.map(k => ({ key: k, name: TSR_approvalDisplayName(approvalData.moderators[k]), photo: photoOf(registry, approvalData.moderators[k].candidateKey || k), asOf: endOf(k), former: true,
+      polls: approvalData.moderators[k].polls.filter(p => p.date <= endOf(k)) }));
+    let withFormer = false; try { withFormer = localStorage.getItem('wE-apprFormer') === '1'; } catch (e) { /* private mode */ }
+    const drawAppr = () => TK_renderApproval(document.getElementById('tkApproval'), { art: true, asOf, registry, colorFor, mods: withFormer ? curMods.concat(oldMods) : curMods,
+      toggle: formerKeys.length ? { label: `Include former moderators (${formerKeys.length}) · final approval at end of term`, on: withFormer, onChange: v => { withFormer = v; try { localStorage.setItem('wE-apprFormer', v ? '1' : '0'); } catch (e) { /* ignore */ } drawAppr(); } } : null });
+    drawAppr();
     TK_renderQuestions(document.getElementById('tkQuestions'), {
-      asOf, questions: questionKeys.map(k => Object.assign({ key: k }, approvalData.questions[k]))
+      art: true, asOf, questions: questionKeys.map(k => Object.assign({ key: k }, approvalData.questions[k]))
     });
     const parties = {}; Object.keys(registry.parties || {}).forEach(pid => { parties[pid] = registry.parties[pid]; });
-    TK_renderParties(document.getElementById('tkParties'), { asOf, polls: partyPollsFile.polls, parties, href: 'party-support' });
+    TK_renderParties(document.getElementById('tkParties'), { art: true, asOf, polls: partyPollsFile.polls, parties, href: 'party-support' });
     return;
   }
 
@@ -446,6 +450,16 @@ async function renderOffCycleHub(hub, registry) {
     scroll.appendChild(card);
     RCPDonut_fromAggregate(card, agg, registry, election.title, `ddtsr?election=${entry.id}#probcalc`);
   }
+}
+
+/* Clamp a tall block to `px` with a fade and a Show more / Show less toggle (keeps the page short). */
+function foldify(el, px, more, less) {
+  if (!el || el.parentNode.classList.contains('fold')) return;
+  const w = document.createElement('div'); w.className = 'fold'; el.parentNode.insertBefore(w, el); w.appendChild(el);
+  el.classList.add('fold-body'); el.style.setProperty('--fold-h', px + 'px');
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'fold-btn'; b.setAttribute('aria-expanded', 'false'); b.textContent = more + ' ▾';
+  b.addEventListener('click', () => { const o = w.classList.toggle('open'); b.setAttribute('aria-expanded', o); b.textContent = (o ? less : more) + (o ? ' ▴' : ' ▾'); });
+  w.appendChild(b);
 }
 
 function runHub() { renderHub().catch(e => { console.warn(e); loadFail(document.getElementById('rcpHub'), 'the trackers', runHub); }); }

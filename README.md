@@ -69,6 +69,46 @@ If any poll in an election has `groups`, DDTSR's ProbCalc section switches to th
 # Frozen promo files
 `assets/js/toolkit-spot.js`, `assets/js/replay-spot.js` and `elects/*-spot.html` are the finished promo spots. Nothing else depends on them, so leave them alone. The rendered MP4s were removed from the repo to keep it small.
 
+## Article chart maker
+
+In **Admin → Articles**, the **📊 Chart** toolbar button opens a chart maker: bar, horizontal bar, line, stacked bar, stacked area, donut, plus the shapes earlier articles used — **results bars** (the site's gradient bars with lead badge), **before/after dots**, **daily-leader strip**, **timeline** (start–end), **spectrum** and **Sankey** (From / To / Value rows, paste-able; columns are laid out from the paths, per-node colours) — with an optional boxed article style (kicker/title/subtitle like the `.ac-fig` charts), and title, subtitle, source line, unit, decimals, axis range, per-series/per-bar colours, a live preview, spreadsheet paste (tab/comma/semicolon), "Fill from election results" (any race, as % or raw votes, candidate colours), and Download SVG. The chart is inserted at the cursor as a static `<figure class="art-chart" data-chart='…'>` containing inline SVG (follows light/dark mode, no script on the article page). Click a chart in the editor to edit or remove it. Code: `assets/js/graphmaker.js`; styles in `assets/css/style.css`.
+
+### Chart maker extras
+
+- **Fill from site data** (`assets/js/forecastlab.js`, `FL_sources`): moderator net approval (now, or 30 days ago vs now), party support (lines, stacked area, results bars), win probability through any ballot-by-ballot election, and real round-by-round RCV transfers from BallotTSR's official tallies as a Sankey.
+- **Presets & saved styles**: nine built-ins that match earlier articles; "Save style…" keeps your own (type, colours, kicker, source, unit) in this browser.
+- **Download PNG** (2x, white background) and, in the article toolbar, **👁 Preview** (exact article layout, light/dark) and **🖼 Share card** (1200×630 PNG with headline, byline and the first chart).
+
+## Forecast lab
+
+- **Election recap** (TSR Elects, finished elections with a ballot timeline): chance the winner finished first before any vote / a quarter / half / three quarters in, lowest point, forecast vs actual share, lead changes, and the biggest group gaps.
+- **Pre-election outlook** (TSR Elects, an election with polls and no ballots counted yet): win chances, expected share ranges, a "what it takes" swing for each trailing candidate, and the by-group outlook.
+
+## Articles: blocks, scheduling, feed
+- **Blocks** (admin toolbar): ❝ Pull quote, ¹ Footnote (collected into a numbered "Notes & sources" list), ☰ Contents (auto from H2s), 🔢 Key numbers (click one to edit it). Rendered by `assets/js/article-blocks.js`.
+- **Scheduled publishing**: set Status to *Scheduled* and pick a time. The article goes live for readers once that time passes (`OVR_isPublished` in overrides.js). It's a static site, so the JSON is still readable before then; export articles.json to make it permanent.
+- **Atom feed**: admin → *Export feed.xml* (asks for the public site URL), commit it at the site root. Or run `node tools/build-feed.js https://your.site/path/` (or set `siteUrl` in site-config.json). Pages already link to `feed.xml`.
+
+## CSV downloads
+Every data table and every article chart gets a ⬇ CSV button (`site-ux.js`). Charts export their underlying series, Sankeys their flows.
+
+## Magic Wall
+`elects/wall` (linked from TSR Elects) is a full-screen dark map for election night and streams: candidate rail, tap-a-group drill-down, a ballot-by-ballot scrubber (elections with a timeline), and **what-if** flips that hand a whole group to another candidate and show how the statewide result moves. Everything is read from the existing results, timelines and `groups.geojson`; nothing new to maintain.
+
+### Election night: the Wall replaces Elects
+While an election is live (site mode *active*, or still open on BallotTSR), `/elects` redirects to `elects/wall`, branded **TSR Elects Magic Wall** with a LIVE pill. The Wall re-fetches results every 20 s, flashes groups that changed, pops a big **projected winner** banner when a race call appears, shows turnout / precincts and a win-probability panel ("Group N decides it"); calls are credited to DDTSR, and swaps the replay scrubber for a live bar. Several live elections get chips in the header. **Classic view** (`/elects/?classic=1`) is the escape hatch. When the election ends, `/elects` is the normal page again and the Wall stays available for any past election.
+
+### Wall: rehearsal, stream mode, saving, and more
+- **Rehearse election night:** `elects/wall?rehearse=1&election=<id>` replays a past election's ballot timeline as if it were live (about 80 s): ballots arrive, group colours flash, win probability and the tipping-point marker update, and the DDTSR projected-winner banner fires when the last ballot lands. **Restart** rewinds. Only works for elections that have a single-race timeline in `data/timelines/`. Nothing on the real site is touched.
+- **Polls open/close:** give an election in `tsrelects-results.json` an `opens` and a `closes` (ISO 8601 with offset, e.g. `"2026-11-03T18:00:00-05:00"`). Between the two it is live on Elects/the Wall without touching site-config, and drops back to normal after `closes`. Both are required; one alone is ignored. When set, the live bar shows "Polls close in 2h 10m" and replay times are counted from `opens` (otherwise from the first ballot). Check: `TSR_isOpen(election)` in `assets/js/tsrelects.js`.
+- **Stream mode:** `?stream=1` (or the Stream button / `S` key) hides the controls and footer and enlarges the layout for a broadcast capture; the controls fade in when you hover the top-right corner.
+- **Save image:** the ⤓ Save button downloads a 2560×1440 PNG of the standings and map, including anything drawn with the pen and a WHAT-IF stamp if groups are flipped.
+- **Tipping point:** when the win-probability model finds a deciding group, it is ringed on the map ("Group N decides it").
+- **Ranked-choice rounds:** for elections whose replay timeline has ranked ballots, a panel shows the instant-runoff count round by round and follows the scrubber; *After transfers* recolours the map by the final round (eliminated candidates are tagged OUT).
+
+## Check my data
+Admin → *Check My Data* (`assets/js/datalint.js`) flags missing polls, unknown candidates, duplicate ids, shares that don't add up, broken charts, images without alt text and scheduling slips. `node tools/check-data.js` runs the core checks in CI.
+
 ## Win probability (election night)
 
 `assets/js/nightodds.js` turns the pre-election group forecast (GroupCalc: pooled polls, group-by-group lean, shared statewide swing) into a live "chance to lead":
@@ -83,3 +123,9 @@ It shows in the homepage **Win Probability** window, as a meter under the result
 Tuning log: raising the weight on the poll-based prior (`concMult` 10, `swingMult` 30), weighting recent turnout more (`histDecay` .7) and a mild sharpening of the final probabilities (`sharpen` 1.5, the raw model was under-confident) took the lead Brier from 0.084 to 0.045 (naive "current leader" rule: 0.114) and the by-group Brier from 0.316 to 0.305. A stress test with the poll shares deliberately reversed still lets the count rescue the real winner by about 15 ballots. Re-run `tune-live.js` whenever more timelines are added.
 
 Sharpening check (400 simulated elections + the 7 real ones): the lead score is best at `sharpen` 1.25–1.5 on simulated data and 1.5–2 on real data, and clearly worse at 3 (over-confident: 11% of 90%+ favourites lose). 1.5 stays the default. Try other values with `?sharpen=2` on the homepage (`?demo=night`), the Elects page or the simulator.
+
+Homepage approval board: the **Include former moderators** switch adds former mods (final approval at end of term, tagged Former) to the leaderboard and the net-approval graph, where their lines are faint and end with a labelled marker where the term ended. The choice is remembered per browser.
+
+**What it takes** box (NBC-style path to victory): for each trailing candidate, how many of the outstanding ballots they need to tie or pass the leader (the leader and the others split what the candidate doesn't take, in their current proportions) next to what the model expects them to get. "Can't catch up" when it exceeds everything outstanding; hidden on called races.
+
+**Actual vs forecast** (group tiles, 2+ ballots counted): the candidate leading a group's count, their share so far vs the pre-election forecast for that group (▲/▼ points). **Lead-change alerts**: when the count leader or the model's favourite changes between live updates, the homepage shows a toast and puts an Odds item on The Wire; the simulator keeps a "Lead changes" log.

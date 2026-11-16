@@ -13,6 +13,7 @@
 <meta property="og:description" content="Analysis and write-ups from the Decision Desk TSR team.">
 <meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="assets/img/brand/favicon-wiki.png">
+<link rel="alternate" type="application/atom+xml" title="wikiElections articles" href="feed.xml">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -33,15 +34,15 @@
         <summary class="current">More</summary>
         <div class="nav-menu">
           <div class="nav-menu-h">Forecast &amp; trackers</div>
-          <a href="approval"><b>Moderator Approval</b><span>Job approval for every moderator, across all their seats</span></a>
-          <a href="party-support"><b>Party Support</b><span>Generic-ballot party ID, pooled across pollsters</span></a>
-          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+          <a href="approval"><b>Moderator Approval</b></a>
+          <a href="party-support"><b>Party Support</b></a>
+          <a href="guide"><b>Understanding ProbCalc</b></a>
           <div class="nav-menu-h">Polling</div>
-          <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <a href="pollsters"><b>Pollster Ratings</b></a>
           <div class="nav-menu-h">Tools</div>
-          <a href="elects/replay"><b>Election Replay</b><span>Watch a result come in vote by vote, or export it as video</span></a>
-          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
-          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <a href="elects/replay"><b>Election Replay</b></a>
+          <a href="elects/simulate"><b>Election Simulator</b></a>
+          <a href="elects/mapmaker"><b>Map Maker</b></a>
           <div class="nav-menu-h">Read</div>
           <a href="articles" class="current"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
         </div>
@@ -54,7 +55,7 @@
 <div id="dynamicBanner"></div>
 
 <main class="wrap" id="main" tabindex="-1">
-  <section class="hero" style="text-align:left; padding-top:30px;">
+  <section class="hero page-hero">
     <div class="kicker">Articles</div>
     <h1 class="rcp-page-title">From the Desk</h1>
     <p class="lede" style="margin:4px 0 0;">Explainers, retrospectives, and write-ups from the wikiElections team.</p>
@@ -93,7 +94,7 @@ initSiteChrome();
 async function boot() {
   const base = await fetch('data/articles.json').then(r => r.json());
   const articles = OVR_getArticles(base.articles || [])
-    .filter(a => a.published)
+    .filter(a => OVR_isPublished(a))
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const grid = document.getElementById('articleGrid');

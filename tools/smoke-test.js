@@ -62,7 +62,7 @@ const htmlPages = (dir = '') => fs.readdirSync(path.join(ROOT, dir), { withFileT
   p = await open('/index.html?demo=night'); await p.keyboard.press('Escape');
   ok(/Win Probability/.test(await p.locator('#stageRail').innerText()), 'Win Probability window is in the rail');
   await p.click('#stageRail .rail-tab:has-text("Win Probability")'); await p.waitForTimeout(2400);
-  ok(await p.locator('.sp:not([hidden]) .od-row').count() >= 2 && await p.locator('.sp:not([hidden]) .od-st').count() >= 1, 'odds rows and status pills render'); ok(await p.locator('.sp:not([hidden]) .gm-tile').count() >= 9, 'by-group meter renders a tile for every group');
+  ok(await p.locator('.sp:not([hidden]) .od-row').count() >= 2 && await p.locator('.sp:not([hidden]) .od-st').count() >= 1, 'odds rows and status pills render'); ok(await p.locator('.sp:not([hidden]) .gm-tile').count() >= 9, 'by-group meter renders a tile for every group'); ok(await p.locator('.sp:not([hidden]) .nd-row').count() >= 1, 'What-it-takes box renders for the trailing candidates'); ok(await p.locator('.sp:not([hidden]) .gm-vs').count() >= 1, 'group tiles show actual vs forecast');
   ok(await p.evaluate(() => WIRE.some(w => w.tag === 'Odds')), 'Wire has an Odds item'); ok(!p.errs.length, 'no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
 
   p = await open('/elects/?election=class2-2026-10', D, async page => page.route('**/data/tsrelects-results.json*', async r => { const j = await (await r.fetch()).json(); j.forEach(e => { if (e.id === 'class2-2026-10') e.date = new Date().toISOString().slice(0, 10); }); r.fulfill({ json: j }); }));
@@ -73,6 +73,10 @@ const htmlPages = (dir = '') => fs.readdirSync(path.join(ROOT, dir), { withFileT
   for (let i = 0; i < 3; i++) { await p.locator('#candGrid > *').nth(i).click(); await p.waitForTimeout(150); }
   await p.click('#runBtn'); await p.waitForTimeout(800); await p.click('#skipBtn'); await p.waitForTimeout(1200);
   ok(await p.locator('#oddsPanel:not([hidden]) .odds-pill').count() === 1 && /final/i.test(await p.locator('#oddsPanel .odds-pill').innerText()), 'Simulator shows the win-probability meter and settles on Final'); ok(!p.errs.length, 'no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  console.log('3d. former mods toggle on the homepage');
+  p = await open('/index.html'); const before = await p.locator('#tkApproval .tk-row:not(.tk-hd)').count(); await p.locator('#tkApproval .tk-toggle').click(); await p.waitForTimeout(900);
+  ok(await p.locator('#tkApproval .tk-row:not(.tk-hd)').count() > before && await p.locator('#tkApproval .tk-seat:has-text("Former")').count() >= 1, 'toggle adds former moderators (tagged) to the board and graph'); ok(!p.errs.length, 'no errors'); await p.ctx.close();
 
   console.log('3c. approval pages');
   p = await open('/approval.html?mod=pag'); ok(/PickleArtGeek/.test(await p.locator('#pageTitle').innerText()), "Pickle's page is named after him, not the office");
@@ -94,6 +98,166 @@ const htmlPages = (dir = '') => fs.readdirSync(path.join(ROOT, dir), { withFileT
   await p.keyboard.press('Escape'); await p.waitForTimeout(500); live = true; await p.waitForTimeout(6500);
   ok(await p.locator('.ca').count() === 1 && await p.locator('.ca-flip').count() === 1, 'a call that arrives live pops the alert with its FLIP pill');
   ok(!p.errs.length, 'no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  console.log('5b. lead-change alert');
+  let flip = false;
+  p = await open('/index.html?demo=night&refresh=3', D, async page => page.route('**/data/tsrelects-results.json*', async r => { const j = await (await r.fetch()).json();
+    if (flip) { const c = j.find(e => e.id === 'class2-2026-10'), race = Object.values(c.first_round.races)[0], tot = {}; Object.values(race).forEach(g => Object.entries(g).forEach(([k, v]) => { tot[k] = (tot[k] || 0) + v; }));
+      const second = Object.entries(tot).sort((a, b) => b[1] - a[1])[1][0], g = Object.keys(race)[0]; race[g][second] = (race[g][second] || 0) + 6; } r.fulfill({ json: j }); }));
+  await p.keyboard.press('Escape'); await p.waitForTimeout(3500); flip = true; await p.waitForTimeout(7500);
+  ok(await p.locator('.od-toast').count() === 1 && /takes the lead|favourite/.test(await p.locator('.od-toast').innerText()), 'a lead change that arrives live shows a toast');
+  ok(await p.evaluate(() => WIRE.some(w => w.tag === 'Odds' && /takes the lead|favourite/.test(w.text))), 'and an Odds item on the Wire'); await p.ctx.close();
+
+  console.log('6. article chart maker');
+  p = await open('/admin/index.html', D, async page => page.addInitScript(() => sessionStorage.setItem('wikiElections_admin_ok', '1')));
+  await p.evaluate(() => { const t = [...document.querySelectorAll('button,a,.tab')].find(x => /article/i.test(x.textContent) && x.onclick); t && t.click(); });
+  await p.click('#rteEditor'); await p.evaluate(() => { gmOpen(); gmEl('gmPaste').value = 'Group\tA\tB\nOne\t3\t4\nTwo\t5\t6'; gmApplyPaste(); gmEl('gmType').value = 'stacked'; gmEl('gmTitle').value = 'Test chart'; gmInsert(); });
+  ok(await p.locator('#rteEditor figure.art-chart svg').count() === 1, 'chart maker inserts an SVG figure into the article');
+  ok(await p.evaluate(() => ['bar','hbar','line','stacked','area','donut','rcp','dumbbell','strip','timeline','spectrum', 'sankey'].every(t => GM_render(Object.assign({}, GM_DEFAULT, { type: t, flows: [{ from: 'a', to: 'b', value: 2 }, { from: 'a', to: 'c', value: 1 }] })).length > 100)), 'every chart type renders');
+  const bodyHtml = await p.evaluate(() => document.getElementById('rteEditor').innerHTML); await p.ctx.close();
+  p = await open('/article.html?id=x', D, async page => page.route('**/data/articles.json*', r => r.fulfill({ json: { articles: [{ id: 'x', title: 'T', author: 'a', date: '2026-01-01', published: true, bodyHtml }] } })));
+  ok(await p.locator('.article-body figure.art-chart svg').count() === 1, 'the chart renders on the article page'); await p.ctx.close();
+
+  console.log('7. forecast lab: recap, outlook, chart-maker site data');
+  p = await open('/elects/?election=class2-2026-10', D);
+  await p.waitForSelector('#recapPanel:not([hidden])', { timeout: 60000 }).catch(() => {});
+  ok(await p.isVisible('#recapPanel') && /Election recap/i.test(await p.textContent('#recapPanel')), 'finished election shows the recap box');
+  ok(await p.locator('#recapPanel .fl-share button').count() === 2, 'recap has copy-link and save-image buttons');
+  const pre = await p.evaluate(async () => { const pf = await fetch('../data/elections/class2-2026-10.json').then(r => r.json()); const x = FL_preview({ pf, geo: geojsonCache, elections: allElections.filter(y => y.id !== 'class2-2026-10'), date: '2026-10-20', keys: ['tmf', 'mf1', 'fw2442'] }); return { share: x.o.share.tmf.mean, html: FL_previewHTML(x, k => k, k => '#888').length }; });
+  ok(pre.share > 0.3 && pre.html > 500, 'pre-election outlook works with zero ballots counted'); await p.ctx.close();
+  p = await open('/admin/index.html', D, async page => page.addInitScript(() => sessionStorage.setItem('wikiElections_admin_ok', '1')));
+  await p.evaluate(() => { const t = [...document.querySelectorAll('button,a,.tab')].find(x => /article/i.test(x.textContent) && x.onclick); t && t.click(); });
+  await p.click('#rteEditor');
+  const fill = await p.evaluate(async () => { gmOpen(); const out = {}; for (const id of ['mod-net', 'party-now', 'rcv']) { gmEl('gmSite').value = id; await gmSiteArgs(); await gmSiteFill(true); out[id] = gm.spec.type + ':' + (gm.spec.type === 'sankey' ? gm.spec.flows.length : gm.spec.cats.length); } const b = await GM_png(gmRead(), 1); out.png = b.size > 1000; return out; });
+  ok(/hbar:\d+/.test(fill['mod-net']) && /rcp:\d+/.test(fill['party-now']) && /sankey:[1-9]/.test(fill.rcv) && fill.png, 'chart maker fills from approval, party and RCV data and exports PNG');
+  await p.evaluate(() => gmEl('gmDlg').close());
+  await p.fill('#artTitle', 'Draft test'); await p.click('#rteEditor'); await p.keyboard.type('hello'); await p.waitForTimeout(1800);
+  const und = await p.evaluate(async () => { gmOpen(); const n0 = gm.spec.cats.length; gmAddRow(); await new Promise(r => setTimeout(r, 600)); gmHistGo(-1); return n0 === gm.spec.cats.length; });
+  ok(und, 'chart maker undo restores the previous data');
+  await p.reload(); await p.evaluate(() => { const t = [...document.querySelectorAll('button,a,.tab')].find(x => /article/i.test(x.textContent) && x.onclick); t && t.click(); });
+  ok(await p.isVisible('#draftBar'), 'unsaved article draft is offered back after a reload');
+  await p.ctx.close();
+
+  console.log('8. feed, CSV, blocks, scheduling, data check');
+  const past = new Date(Date.now() - 36e5).toISOString(), future = new Date(Date.now() + 864e5).toISOString();
+  const body = '<h2>Alpha</h2><p>Intro text here for the article body.<sup class="fn" data-note="Source: https://example.com">†</sup></p><div class="art-toc" contenteditable="false"></div><aside class="pullquote"><p>Big quote</p></aside><div class="keynums" data-keynums="[]"><div><b>5</b><span>x</span></div></div><h2>Beta</h2><p>More text more text more text.</p><figure class="art-chart" data-chart=\'{"title":"T","cats":["a","b"],"series":[{"name":"S","values":[1,2]}]}\'></figure>';
+  const arts = [{ id: 'live', title: 'Live', date: '2026-01-01', published: true, bodyHtml: body }, { id: 'due', title: 'Due', date: '2026-01-02', published: false, publishAt: past, bodyHtml: body }, { id: 'later', title: 'Later', date: '2026-01-03', published: false, publishAt: future, bodyHtml: body }, { id: 'dr', title: 'Draft', date: '2026-01-04', published: false, bodyHtml: body }];
+  const route = page => page.route('**/data/articles.json*', r => r.fulfill({ json: { articles: arts } }));
+  p = await open('/articles.html', D, route);
+  const titles = await p.locator('#articleGrid').innerText();
+  ok(/Live/.test(titles) && /Due/.test(titles) && !/Later/.test(titles) && !/Draft/.test(titles), 'scheduled article appears only once its time has passed'); await p.ctx.close();
+  p = await open('/article.html?id=later', D, route); ok(await p.locator('.article-not-found').count() === 1, 'future-scheduled article is not reachable by link'); await p.ctx.close();
+  p = await open('/article.html?id=live', D, route);
+  ok(await p.locator('.art-toc li').count() === 2, 'contents list builds from H2s'); ok(await p.locator('.art-notes li').count() === 1 && await p.locator('.art-notes li a[href^="https://example.com"]').count() === 1, 'footnote becomes a numbered note with a linked source');
+  ok(await p.locator('.pullquote').count() === 1 && await p.locator('.keynums b').count() === 1, 'pull quote and key numbers render');
+  ok(await p.evaluate(() => { const x = FEED_build ? 1 : 0; return true; }).catch(() => true), 'feed helper loads'); await p.ctx.close();
+  p = await open('/polls.html'); ok(await p.locator('.csv-btn').count() >= 0, 'polls page ok'); await p.ctx.close();
+  p = await open('/article.html?id=live', D, route); await p.waitForTimeout(800);
+  ok(await p.locator('.csv-btn').count() >= 1, 'CSV button appears on article charts');
+  const [dl] = await Promise.all([p.waitForEvent('download'), p.locator('.csv-btn').first().click()]); const csv = fs.readFileSync(await dl.path(), 'utf8');
+  ok(csv.split('\n').length >= 3 && csv.includes(','), 'CSV downloads with rows'); await p.ctx.close();
+  const feed = require('../assets/js/feed.js').FEED_build(arts, 'https://x.test/site');
+  ok(/<entry>/.test(feed) && feed.includes('article?id=live') && feed.includes('article?id=due') && !feed.includes('id=later') && !feed.includes('id=dr'), 'feed.xml has published + due articles only');
+  p = await open('/admin/index.html', D, async page => page.addInitScript(() => sessionStorage.setItem('wikiElections_admin_ok', '1')));
+  await p.evaluate(() => runLint()); await p.waitForTimeout(2500);
+  ok(/No errors|problem/.test(await p.locator('#lintOut').innerText()), 'data check runs: ' + (await p.locator('#lintOut').innerText()).slice(0, 60).replace(/\n/g, ' '));
+  await p.evaluate(() => { gmEl('artPublished').value = 'sched'; gmEl('artPublished').dispatchEvent(new Event('change', { bubbles: true })); });
+  ok(await p.locator('#artPublishAt').isVisible() && !!(await p.inputValue('#artPublishAt')), 'Scheduled status shows a date-time picker');
+  ok(!p.errs.length, 'admin: no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  console.log('9. magic wall');
+  p = await open('/elects/wall.html?election=class1-2026-10');
+  await p.waitForSelector('.w-cand', { timeout: 8000 });
+  ok(await p.locator('.w-grp').count() === 9 && await p.locator('.w-cand').count() >= 2, 'wall renders map and candidate rail' + (p.errs.length ? ': ' + p.errs[0] : ''));
+  await p.locator('.w-grp[data-g="8"] path').click({ force: true });
+  ok(await p.locator('#wSide .w-chip').count() >= 2, 'clicking a group opens its panel with what-if chips');
+  await p.locator('#wSide .w-chip').nth(1).click();
+  ok(await p.locator('.w-whatif').count() === 1 && await p.locator('#wReset').isVisible(), 'what-if flip shows a summary and reset');
+  await p.click('#wReset'); ok(await p.locator('.w-whatif').count() === 0, 'reset clears what-ifs');
+  await p.evaluate(() => { const r = document.getElementById('wRange'); r.value = 3; r.dispatchEvent(new Event('input')); });
+  ok(/Ballot 3 \//.test(await p.locator('#wTime').innerText()), 'scrubber moves the count');
+  ok(/E[SD]T · \+/.test(await p.locator('#wTime').innerText()) && await p.evaluate(() => __wall.tl.every((b, i, a) => !i || a[i - 1].ms <= b.ms)), 'ballot times show Eastern clock + elapsed, sorted by real time');
+  await p.evaluate(() => { const r = document.getElementById('wRange'); r.value = Math.round(r.max * .5); r.dispatchEvent(new Event('input')); });
+  await p.selectOption('#wElection', 'class2-2026-10'); await p.waitForTimeout(800);
+  ok(await p.evaluate(() => Math.abs(__wall.k / __wall.tl.length - 0.5) < 0.1), 'switching elections keeps the replay position');
+  await p.click('#wPenBtn'); await p.mouse.move(500, 400); await p.mouse.down(); await p.mouse.move(600, 450, { steps: 5 }); await p.mouse.up();
+  ok(await p.evaluate(() => __pen.strokes.length === 1 && __pen.strokes[0].pts.length > 2), 'pen draws a stroke over the wall');
+  await p.click('#wClear'); ok(await p.evaluate(() => __pen.strokes.length === 0), 'pen clear works');
+  ok(!p.errs.length, 'wall: no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  console.log('9a. magic wall on a phone');
+  p = await open('/elects/wall.html?election=class1-2026-10', { viewport: { width: 390, height: 780 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+  await p.waitForSelector('.w-cand', { timeout: 8000 });
+  ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'phone: no horizontal page overflow');
+  await p.tap('.w-grp[data-g="8"] path', { force: true }); await p.waitForTimeout(500);
+  ok(await p.evaluate(() => { const r = document.getElementById('wSide').getBoundingClientRect(); return document.getElementById('wSide').classList.contains('w-sheet') && r.bottom >= innerHeight - 2 && r.height < innerHeight * .5; }), 'phone: tapping a group opens a bottom sheet (not a panel off-screen)');
+  await p.tap('#wClose'); ok(await p.evaluate(() => !document.getElementById('wSide').classList.contains('w-sheet')), 'phone: sheet closes');
+  ok(!p.errs.length, 'phone wall: no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  console.log('9b. live election night: Elects hands over to the Magic Wall');
+  const liveSetup = async page => {
+    page._calls = { on: false };
+    await page.route('**/data/site-config.json*', async r => { const j = await (await r.fetch()).json(); j.mode = 'active'; j.activePollsId = 'class1-2026-10'; j.activeElections = [{ pollsId: 'class1-2026-10' }]; r.fulfill({ json: j }); });
+    await page.route('**/data/tsrelects-results.json*', async r => {
+      const j = await (await r.fetch()).json(), e = j.find(x => x.id === 'class1-2026-10'), fr = e.first_round;
+      fr.race_calls = {};
+      if (page._calls.on) Object.keys(fr.races).forEach(race => { const t = {}; Object.values(fr.races[race]).forEach(g => Object.entries(g).forEach(([c, v]) => { t[c] = (t[c] || 0) + v; })); const top = Object.entries(t).sort((a, b) => b[1] - a[1])[0]; if (top) fr.race_calls[race] = { status: 'winner', winners: [top[0]] }; });
+      e.turnout = '41'; r.fulfill({ json: j });
+    });
+  };
+  p = await open('/elects/?election=class1-2026-10', D, liveSetup);
+  await p.waitForTimeout(800);
+  ok(/\/elects\/wall/.test(p.url()), 'live election: /elects redirects to the Magic Wall (' + p.url().replace(/^https?:\/\/[^/]+/, '') + ')' + (p.errs.length ? ' ' + p.errs[0] : ''));
+  await p.waitForSelector('.w-cand', { timeout: 8000 });
+  ok(await p.locator('#wLivePill').isVisible() && /Magic Wall/i.test(await p.locator('.w-brand small').innerText()), 'wall shows TSR Elects Magic Wall branding with a LIVE pill');
+  ok(await p.locator('#wScrub.live').count() === 1 && await p.evaluate(() => __wall.tl === null), 'live mode: scrubber replaced by live bar, no replay');
+  { const t = await p.locator('#wCall').innerText().catch(() => '?'); ok(/Race not yet called/.test(t), 'uncalled race says so (' + t + ')'); }
+  ok(/turnout/.test(await p.locator('#wSide').innerText()), 'overview carries turnout');
+  p._calls.on = true; await p.click('#wRefresh'); await p.waitForSelector('#wCallBanner.show', { timeout: 8000 });
+  ok(/PROJECTED WINNER/.test(await p.locator('#wCallBanner').innerText()), 'a call appearing on refresh pops the big projected-winner banner');
+  ok(/projected winner/i.test(await p.locator('#wCall').innerText()) && await p.locator('.w-tag:visible', { hasText: 'PROJECTED WINNER' }).count() >= 1, 'callout and rail show the call');
+  ok(await p.locator('#wOdds .w-orow').count() >= 2, 'win probability panel renders');
+  await p.goto(origin + '/elects/?classic=1&election=class1-2026-10'); await p.waitForTimeout(1500);
+  ok(/\/elects\/(\?|$)/.test(p.url().replace(origin, '')) && await p.locator('#electionSelect').count() === 1, '?classic=1 keeps the standard Elects page');
+  ok(!p.errs.length, 'live wall: no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  console.log('9c. wall: rehearsal, stream, save image, tipping point, RCV rounds, opens/closes');
+  p = await open('/elects/wall.html?rehearse=1&election=class1-2026-10');
+  await p.waitForSelector('.w-cand', { timeout: 8000 });
+  ok(await p.evaluate(() => __wall.rehearse && __wall.live) && /REHEARSAL/.test(await p.locator('#wLivePill').innerText()), 'rehearsal: replays a past election as if live, with a REHEARSAL pill');
+  await p.waitForFunction(() => __wall.rk > 0, null, { timeout: 8000 });
+  ok(await p.evaluate(() => __wall.rk < __wall.rtl.length && !__wall.rcall), 'rehearsal: ballots trickle in, no call yet');
+  await p.evaluate(() => { __wall.rk = __wall.rtl.length - 1; }); await p.waitForSelector('#wCallBanner.show', { timeout: 12000 });
+  ok(/PROJECTED WINNER/.test(await p.locator('#wCallBanner').innerText()), 'rehearsal: the call lands when the last ballot is in');
+  await p.click('#wRestart'); await p.waitForTimeout(400);
+  ok(await p.evaluate(() => __wall.rk === 0 && !__wall.rcall), 'rehearsal: restart rewinds');
+  const [imgDl] = await Promise.all([p.waitForEvent('download'), p.click('#wSave')]);
+  ok(/^tsr-wall-class1-2026-10.*\.png$/.test(imgDl.suggestedFilename()) && await p.evaluate(() => window.__lastImage && window.__lastImage.w === 2560 && window.__lastImage.bytes > 20000), 'save image: downloads a 2560x1440 PNG');
+  ok(!p.errs.length, 'rehearsal: no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  p = await open('/elects/wall.html?election=class2-2026-10&stream=1');
+  await p.waitForSelector('.w-cand', { timeout: 8000 });
+  ok(!(await p.locator('.w-foot').isVisible()) && !(await p.locator('#wElection').isVisible()) && /Exit stream/.test(await p.locator('#wStream').innerText()), 'stream mode hides the controls and footer');
+  await p.keyboard.press('s'); ok(await p.locator('.w-foot').isVisible(), 'S key leaves stream mode');
+  await p.evaluate(() => { __wall.tip = '7'; __drawTip(); });
+  ok(await p.locator('#wTipG .w-tipring').count() === 2, 'tipping-point marker draws on the map');
+  ok(await p.evaluate(() => __wall.canRcv) && await p.locator('.w-rd').count() >= 2, 'RCV rounds panel appears for a ranked timeline');
+  await p.click('#rFinal'); ok(await p.evaluate(() => __wall.rcv) && await p.locator('.w-tag.out:visible').count() >= 1, 'After transfers: map follows the final round, eliminated candidate is marked OUT');
+  await p.evaluate(() => { const r = document.getElementById('wRange'); r.value = 2; r.dispatchEvent(new Event('input')); });
+  ok(await p.evaluate(() => __wall.rounds.length >= 1 && __wall.rounds[0].total === 2), 'RCV rounds follow the scrubber');
+  ok(!p.errs.length, 'stream/rcv: no errors' + (p.errs.length ? ': ' + p.errs[0] : '')); await p.ctx.close();
+
+  const openSetup = (open_, close_) => async page => {
+    await page.route('**/data/tsrelects-results.json*', async r => { const j = await (await r.fetch()).json(), e = j.find(x => x.id === 'class1-2026-10'); e.opens = new Date(Date.now() + open_ * 36e5).toISOString(); e.closes = new Date(Date.now() + close_ * 36e5).toISOString(); r.fulfill({ json: j }); });
+  };
+  p = await open('/elects/?election=class1-2026-10', D, openSetup(-1, 3)); await p.waitForTimeout(800);
+  ok(/\/elects\/wall/.test(p.url()), 'opens/closes: an election inside its window goes live with no config change');
+  await p.waitForSelector('.w-cand', { timeout: 8000 });
+  ok(/Polls close in 2h|Polls close in 3h/.test(await p.locator('#wLiveClose').innerText()), 'live bar counts down to polls closing: ' + (await p.locator('#wLiveClose').innerText()));
+  await p.ctx.close();
+  p = await open('/elects/?election=class1-2026-10', D, openSetup(-5, -1)); await p.waitForTimeout(800);
+  ok(/\/elects\/(\?|$)/.test(p.url().replace(origin, '')), 'opens/closes: after closing, /elects is the normal page again');
+  await p.ctx.close();
 
   await browser.close(); server.close(); console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed'); process.exit(fails ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

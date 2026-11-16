@@ -37,6 +37,18 @@
     padding: 14px; font-size: 14px; line-height: 1.6; font-family: var(--font-body);
   }
   .rte-editor:focus { outline: 2px solid #2e6fdb33; }
+  .rte-editor figure.art-chart { margin: 14px 0; padding: 10px; border: 1px dashed var(--line); border-radius: 8px; cursor: pointer; } .rte-editor figure.art-chart:hover { border-color: var(--ink); }
+  #gmDlg { width: min(1040px, 96vw); max-height: 94vh; border: 1px solid var(--line); border-radius: 12px; padding: 0; background: var(--paper); color: var(--ink); }
+  #gmDlg::backdrop { background: rgba(0,0,0,.5); }
+  .gm-wrap { display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 18px; padding: 18px; } @media (max-width: 820px) { .gm-wrap { grid-template-columns: 1fr; } }
+  .gm-wrap h3 { margin: 0 0 8px; font-size: 15px; } .gm-wrap .field-row { margin-bottom: 8px; } .gm-wrap label { font-size: 12px; font-weight: 700; display: block; margin-bottom: 3px; }
+  .gm-wrap input[type=text], .gm-wrap input[type=number], .gm-wrap select, .gm-wrap textarea { width: 100%; box-sizing: border-box; }
+  .gm-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .gm-chk { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; margin: 4px 0; }
+  .gm-table { border-collapse: collapse; width: 100%; font-size: 12px; } .gm-table th, .gm-table td { padding: 2px; } .gm-table input[type=text], .gm-table input[type=number] { padding: 4px 5px; min-width: 62px; }
+  .gm-table input[type=color] { width: 26px; height: 22px; padding: 0; border: 1px solid var(--line); background: none; cursor: pointer; } .gm-table .x { cursor: pointer; border: 0; background: none; font-size: 15px; color: #b3261e; }
+  .gm-scroll { overflow: auto; max-height: 250px; border: 1px solid var(--line); border-radius: 6px; padding: 4px; }
+  .gm-prev { border: 1px solid var(--line); border-radius: 10px; padding: 14px; background: var(--surface); position: sticky; top: 0; align-self: start; }
+  .gm-bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; padding: 0 18px 16px; }
   .rte-editor h2 { font-size: 20px; margin: 14px 0 6px; }
   .rte-editor h3 { font-size: 16px; margin: 12px 0 6px; }
   .rte-editor blockquote { border-left: 3px solid var(--ink); padding-left: 10px; color: var(--muted); font-style: italic; margin: 10px 0; }
@@ -79,6 +91,13 @@
     </div>
 
     <div id="statusMsg" class="status-msg ok"></div>
+
+    <h2 class="section-title">Check My Data</h2>
+    <div class="calc-panel">
+      <p class="desc" style="margin:0 0 10px;">Scans the published data (plus your local article edits) for missing polls, unknown candidates, duplicate ids, shares that don't add up, broken charts and scheduling slips.</p>
+      <button class="btn" type="button" onclick="runLint()">Check my data</button>
+      <div id="lintOut" class="desc" style="margin-top:12px;" aria-live="polite"></div>
+    </div>
 
     <h2 class="section-title">Site Mode</h2>
     <div class="calc-panel">
@@ -206,6 +225,7 @@
         </div>
       </div>
       <button class="btn secondary" onclick="newArticle()">+ New article</button>
+      <div id="draftBar" class="desc" hidden style="margin:10px 0;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);display:flex;gap:10px;align-items:center;flex-wrap:wrap;"><span id="draftMsg" style="flex:1;"></span><button class="btn secondary" type="button" onclick="draftRestore()">Restore draft</button><button class="btn secondary" type="button" onclick="draftDiscard()">Discard</button></div>
 
       <div class="field-grid" style="margin-top:16px;">
         <div class="field-row"><label>Title</label><input id="artTitle" placeholder="How BaseCalc actually weighs a poll"></div>
@@ -214,7 +234,8 @@
         <div class="field-row"><label>Thumbnail color</label><input id="artColor" type="color" value="#111214"></div>
         <div class="field-row">
           <label>Published</label>
-          <select id="artPublished"><option value="true">Published</option><option value="false">Draft</option></select>
+          <select id="artPublished"><option value="true">Published</option><option value="false">Draft</option><option value="sched">Scheduled</option></select>
+          <input type="datetime-local" id="artPublishAt" style="display:none;margin-top:6px" title="Goes live at this time (your local time)">
         </div>
       </div>
       <div class="field-row"><label>Byline / dek</label><input id="artByline" placeholder="One-line summary shown on the article card"></div>
@@ -232,14 +253,23 @@
           <button type="button" onclick="rteCmd('insertUnorderedList')">• List</button>
           <button type="button" onclick="rteCmd('insertOrderedList')">1. List</button>
           <button type="button" onclick="rteLink()">🔗 Link</button>
+          <button type="button" onmousedown="event.preventDefault(); gmOpen()" title="Build a bar, line, stacked or donut chart and drop it into the article">📊 Chart</button>
+          <button type="button" onmousedown="event.preventDefault(); rtePull()" title="Big highlighted quote">❝ Pull quote</button>
+          <button type="button" onmousedown="event.preventDefault(); rteFoot()" title="Footnote at the cursor; collected into a numbered Notes &amp; sources list">¹ Footnote</button>
+          <button type="button" onmousedown="event.preventDefault(); rteToc()" title="Auto contents list from your H2 headings">☰ Contents</button>
+          <button type="button" onmousedown="event.preventDefault(); rteKeys()" title="Row of big numbers with labels">🔢 Key numbers</button>
           <button type="button" onclick="rteCmd('removeFormat')">Clear formatting</button>
+          <button type="button" onclick="artPreview()" title="See the article exactly as readers will">👁 Preview</button>
+          <button type="button" onclick="artShareCard()" title="Make a 1200×630 share image from the headline and the first chart">🖼 Share card</button>
         </div>
         <div id="rteEditor" class="rte-editor" contenteditable="true"></div>
+        <p class="desc" style="margin:6px 0 0;">Charts: use <strong>📊 Chart</strong> to insert one at the cursor. Click a chart in the text to edit or remove it.</p>
       </div>
 
       <button class="btn" onclick="saveArticle()">Save article</button>
       <button class="btn danger" onclick="deleteArticle()">Delete article</button>
       <button class="btn secondary" onclick="downloadArticles()">Export articles.json</button>
+      <button class="btn secondary" onclick="downloadFeed()" title="Atom feed of published articles; commit it next to index.html">Export feed.xml</button>
     </div>
 
     <h2 class="section-title">Moderator &amp; Track-Record Approval — Add a Poll</h2>
@@ -321,11 +351,96 @@
 </div>
 
 <script>window.SITE_BASE = '../';</script>
+
+<dialog id="prevDlg" style="width:min(940px,96vw);height:90vh;border:1px solid var(--line);border-radius:12px;padding:0;background:var(--paper);">
+  <div style="display:flex;flex-direction:column;height:100%;"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);"><b style="flex:1;">Article preview</b><label class="gm-chk" style="margin:0;"><input id="prevDark" type="checkbox" onchange="artPreviewTheme()"> Dark mode</label><button type="button" class="btn secondary" onclick="document.getElementById('prevDlg').close()">Close</button></div>
+  <iframe id="prevFrame" title="Article preview" style="flex:1;border:0;width:100%;background:#fff;"></iframe></div>
+</dialog>
+<dialog id="shareDlg" style="width:min(900px,96vw);border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--paper);color:var(--ink);">
+  <h3 style="margin:0 0 8px;font-size:15px;">Share card</h3><img id="shareImg" alt="Share card preview" style="width:100%;border:1px solid var(--line);border-radius:8px;display:block;">
+  <div class="gm-bar" style="padding:12px 0 0;"><span class="desc" id="shareMsg" style="margin-right:auto;"></span><button type="button" class="btn secondary" onclick="document.getElementById('shareDlg').close()">Close</button><a class="btn" id="shareDl" download="share-card.png">Download PNG</a></div>
+</dialog>
+<dialog id="gmDlg" aria-labelledby="gmH">
+  <div class="gm-wrap">
+    <div>
+      <h3 id="gmH">Chart maker</h3>
+      <div class="gm-two">
+        <div class="field-row"><label for="gmType">Type</label><select id="gmType"><option value="bar">Bar (vertical)</option><option value="hbar">Bar (horizontal)</option><option value="line">Line</option><option value="stacked">Stacked bar</option><option value="area">Stacked area</option><option value="donut">Donut</option><option value="rcp">Results bars (site style)</option><option value="dumbbell">Before / after dots</option><option value="strip">Daily leader strip</option><option value="timeline">Timeline (start–end)</option><option value="spectrum">Spectrum</option><option value="sankey">Sankey (flows)</option></select></div>
+        <div class="field-row"><label for="gmUnit">Unit suffix</label><input id="gmUnit" type="text" placeholder="% or pts or empty"></div>
+      </div>
+      <div class="gm-two" style="align-items:end;margin-bottom:8px;">
+        <div class="field-row" style="margin:0;"><label for="gmPreset">Preset / saved style</label><select id="gmPreset"></select></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;"><button type="button" class="btn secondary" onclick="gmPresetApply()">Apply</button><button type="button" class="btn secondary" onclick="gmPresetSave()" title="Save this chart's look (type, colours, kicker, source, unit…) for reuse">Save style…</button><button type="button" class="btn secondary" id="gmPresetDel" onclick="gmPresetDelete()" hidden>Delete</button></div>
+      </div>
+      <p class="desc" id="gmHint" style="margin:0 0 8px;"></p>
+      <div class="gm-two"><div class="field-row"><label for="gmKicker">Kicker (boxed style)</label><input id="gmKicker" type="text" placeholder="e.g. Mod elections · first round"></div>
+        <label class="gm-chk" style="align-self:end;"><input id="gmBoxed" type="checkbox"> Boxed article style</label></div>
+      <div class="field-row"><label for="gmTitle">Title</label><input id="gmTitle" type="text"></div>
+      <div class="field-row"><label for="gmSub">Subtitle</label><input id="gmSub" type="text" placeholder="Optional"></div>
+      <div class="gm-two">
+        <div class="field-row"><label for="gmSource">Source line</label><input id="gmSource" type="text" placeholder="e.g. Spinner Insights"></div>
+        <div class="field-row"><label for="gmCaption">Caption under chart</label><input id="gmCaption" type="text" placeholder="Optional"></div>
+      </div>
+      <div class="gm-two" id="gmAxisRow" hidden>
+        <div class="field-row"><label for="gmAxisL">Left end label</label><input id="gmAxisL" type="text" placeholder="e.g. Fluid"></div>
+        <div class="field-row"><label for="gmAxisR">Right end label</label><input id="gmAxisR" type="text" placeholder="e.g. Rigid"></div>
+      </div>
+      <div class="gm-two">
+        <div class="field-row"><label for="gmMin">Axis min (blank = auto)</label><input id="gmMin" type="number" step="any"></div>
+        <div class="field-row"><label for="gmMax">Axis max (blank = auto)</label><input id="gmMax" type="number" step="any"></div>
+      </div>
+      <div class="gm-two">
+        <div class="field-row"><label for="gmDec">Decimals</label><input id="gmDec" type="number" min="0" max="4" value="0"></div>
+        <label class="gm-chk" style="align-self:end;"><input id="gmVals" type="checkbox" checked> Show values</label>
+      </div>
+      <h3 style="margin-top:12px;">Data</h3>
+      <div id="gmFlowBox" hidden>
+        <div class="gm-scroll"><table class="gm-table" id="gmFlowTable"></table></div>
+        <div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap;"><button type="button" class="btn secondary" onclick="gmAddFlow()">+ Flow</button>
+          <button type="button" class="btn secondary" onclick="gmMatchColors()" title="Colour nodes named after a candidate with their registry colour">Match candidate colours</button></div>
+        <label style="margin-top:6px;">Node colours</label><div id="gmNodes" style="display:flex;flex-wrap:wrap;gap:6px 12px;"></div>
+      </div>
+      <div id="gmCatsBox">
+      <div class="gm-scroll"><table class="gm-table" id="gmTable"></table></div>
+      <div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap;">
+        <button type="button" class="btn secondary" onclick="gmAddRow()">+ Row</button>
+        <button type="button" class="btn secondary" onclick="gmAddSeries()">+ Series</button>
+        <button type="button" class="btn secondary" onclick="gmMatchColors()" title="Colour rows / series that are named after a candidate with their registry colour">Match candidate colours</button>
+      </div>
+      </div>
+      <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;font-weight:700;">Paste from a spreadsheet</summary>
+        <textarea id="gmPaste" rows="4" placeholder="First row = series names, first column = categories. Tab, comma or semicolon separated. For a Sankey: From, To, Value on each line."></textarea>
+        <button type="button" class="btn secondary" style="margin-top:4px;" onclick="gmApplyPaste()">Use pasted data</button></details>
+      <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;font-weight:700;">Fill from site data (approval, party support, win probability, RCV)</summary>
+        <div class="gm-two"><select id="gmSite" onchange="gmSiteArgs()"></select><select id="gmSiteArg"></select></div>
+        <button type="button" class="btn secondary" style="margin-top:4px;" onclick="gmSiteFill()">Fill chart</button> <span class="desc" id="gmSiteMsg"></span></details>
+      <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;font-weight:700;">Fill from election results</summary>
+        <div class="gm-two"><select id="gmElection" onchange="gmFillRaces()"></select><select id="gmRace"></select></div>
+        <label class="gm-chk"><input id="gmPct" type="checkbox" checked> As % of votes</label>
+        <button type="button" class="btn secondary" onclick="gmFromResults()">Fill chart</button></details>
+    </div>
+    <div class="gm-prev"><div id="gmPrev"></div><p class="desc" style="margin:8px 0 0;">Inserted as a picture-perfect SVG that follows light / dark mode. No script needed on the article page.</p></div>
+  </div>
+  <div class="gm-bar">
+    <button type="button" class="btn danger" id="gmDel" onclick="gmDelete()" hidden>Remove chart</button>
+    <button type="button" class="btn secondary" id="gmUndo" onclick="gmHistGo(-1)" title="Undo (Ctrl+Z outside a text box)" disabled>↶ Undo</button>
+    <button type="button" class="btn secondary" id="gmRedo" onclick="gmHistGo(1)" disabled>↷ Redo</button>
+    <button type="button" class="btn secondary" onclick="gmDownload()">Download SVG</button>
+    <button type="button" class="btn secondary" onclick="gmDownloadPng()">Download PNG</button>
+    <button type="button" class="btn secondary" onclick="document.getElementById('gmDlg').close()">Cancel</button>
+    <button type="button" class="btn" id="gmOk" onclick="gmInsert()">Insert chart</button>
+  </div>
+</dialog>
+
 <script src="../assets/js/election-ids.js"></script>
 <script src="../assets/js/overrides.js"></script>
 <script src="../assets/js/main.js"></script>
 <script src="../assets/js/tsrelects.js"></script>
 <script src="../assets/js/callgraphic.js"></script>
+<script src="../assets/js/feed.js"></script>
+<script src="../assets/js/datalint.js"></script>
+<script src="../assets/js/graphmaker.js"></script>
+<script src="../assets/js/forecastlab.js"></script>
 <script src="../assets/js/basecalc.js"></script>
 <script src="../assets/js/groupcalc.js"></script>
 <script src="../assets/js/electsim.js"></script>
@@ -709,7 +824,8 @@ function onArticleSelectChange() {
   document.getElementById('artDate').value = a.date || '';
   document.getElementById('artColor').value = a.thumbColor || '#111214';
   document.getElementById('artByline').value = a.byline || '';
-  document.getElementById('artPublished').value = a.published ? 'true' : 'false';
+  document.getElementById('artPublished').value = a.published ? 'true' : (a.publishAt ? 'sched' : 'false');
+  document.getElementById('artPublishAt').value = a.publishAt ? a.publishAt.slice(0, 16) : ''; syncPubAt();
   document.getElementById('rteEditor').innerHTML = a.bodyHtml || '';
 }
 
@@ -722,8 +838,17 @@ function newArticle() {
   document.getElementById('artColor').value = '#111214';
   document.getElementById('artByline').value = '';
   document.getElementById('artPublished').value = 'true';
+  document.getElementById('artPublishAt').value = ''; syncPubAt();
   document.getElementById('rteEditor').innerHTML = '';
 }
+
+function syncPubAt() {
+  const sel = document.getElementById('artPublished'), at = document.getElementById('artPublishAt');
+  if (!sel || !at) return;
+  at.style.display = sel.value === 'sched' ? '' : 'none';
+  if (sel.value === 'sched' && !at.value) { const d = new Date(Date.now() + 864e5); d.setMinutes(0, 0, 0); at.value = new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 16); }
+}
+document.addEventListener('change', e => { if (e.target && e.target.id === 'artPublished') syncPubAt(); });
 
 function slugify(s) {
   return (s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'article';
@@ -737,12 +862,255 @@ function rteBlock(tag) {
   document.getElementById('rteEditor').focus();
   document.execCommand('formatBlock', false, tag);
 }
+function rteInsert(html) { gmEl('rteEditor').focus(); document.execCommand('insertHTML', false, html + '<p><br></p>'); }
+const rteEsc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function rtePull() {
+  const sel = String(getSelection()).trim(); const q = sel || prompt('Pull quote text:'); if (!q) return;
+  const who = prompt('Attribution (optional):') || '';
+  rteInsert(`<aside class="pullquote" contenteditable="false"><p>${rteEsc(q)}</p>${who ? `<cite>— ${rteEsc(who)}</cite>` : ''}</aside>`);
+}
+function rteFoot() {
+  const t = prompt('Footnote / source text (URLs become links):'); if (!t) return;
+  gmEl('rteEditor').focus(); document.execCommand('insertHTML', false, `<sup class="fn" data-note="${rteEsc(t)}">†</sup>&nbsp;`);
+}
+function rteToc() {
+  if (gmEl('rteEditor').querySelector('.art-toc')) { alert('This article already has a contents list.'); return; }
+  rteInsert('<div class="art-toc" contenteditable="false">☰ Contents list — fills in automatically from your H2 headings</div>');
+}
+function rteKeys(fig) {
+  const cur = fig ? JSON.parse(fig.getAttribute('data-keynums') || '[]').map(k => k.v + ' | ' + k.l).join('\n') : '';
+  const t = prompt('One per line: value | label   (e.g.  54% | Won first round)', cur || '54% | Won the first round\n3 | Elections contested\n+6 | Net swing'); if (t == null) return;
+  const items = t.split('\n').map(l => l.split('|')).map(a => ({ v: (a[0] || '').trim(), l: (a[1] || '').trim() })).filter(k => k.v);
+  if (!items.length) { if (fig) fig.remove(); return; }
+  const html = `<div class="keynums" contenteditable="false" data-keynums="${rteEsc(JSON.stringify(items))}">${items.map(k => `<div><b>${rteEsc(k.v)}</b><span>${rteEsc(k.l)}</span></div>`).join('')}</div>`;
+  if (fig) { fig.outerHTML = html; draftQueue(); } else rteInsert(html);
+}
+document.getElementById('rteEditor').addEventListener('click', e => { const k = e.target.closest && e.target.closest('.keynums'); if (k) rteKeys(k); const f = e.target.closest && e.target.closest('sup.fn'); if (f) { const t = prompt('Edit footnote (empty = remove):', f.getAttribute('data-note')); if (t === null) return; if (t) f.setAttribute('data-note', t); else f.remove(); draftQueue(); } });
+
 function rteLink() {
   const url = prompt('Link URL (include https://):');
   if (!url) return;
   document.getElementById('rteEditor').focus();
   document.execCommand('createLink', false, url);
 }
+
+
+/* ---------- Chart maker (article editor) ---------- */
+let gm = { spec: null, fig: null, range: null };
+const gmEl = id => document.getElementById(id), gmClone = o => JSON.parse(JSON.stringify(o));
+function gmOpen(fig) {
+  const ed = gmEl('rteEditor'), sel = getSelection();
+  gm.range = sel.rangeCount && ed.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null;
+  gm.fig = fig || null; gm.spec = fig ? Object.assign(gmClone(GM_DEFAULT), GM_fromFigure(fig)) : gmClone(GM_DEFAULT);
+  gmEl('gmH').textContent = fig ? 'Edit chart' : 'Chart maker'; gmEl('gmOk').textContent = fig ? 'Update chart' : 'Insert chart'; gmEl('gmDel').hidden = !fig;
+  const s = gm.spec; gmEl('gmType').value = s.type; gmEl('gmUnit').value = s.unit || ''; gmEl('gmTitle').value = s.title || ''; gmEl('gmSub').value = s.sub || ''; gmEl('gmSource').value = s.source || ''; gmEl('gmCaption').value = s.caption || '';
+  gmEl('gmKicker').value = s.kicker || ''; gmEl('gmBoxed').checked = !!s.boxed; gmEl('gmAxisL').value = s.axisL || ''; gmEl('gmAxisR').value = s.axisR || ''; gmEl('gmMin').value = s.min; gmEl('gmMax').value = s.max; gmEl('gmDec').value = s.decimals || 0; gmEl('gmVals').checked = s.showValues !== false;
+  gmFillElections(); if (!gmEl('gmPreset').options.length) { gmPresetList(); gmSiteInit(); } gmTable(); gmFlowTable(); gmPreview(); gmHistReset(); gmEl('gmDlg').showModal();
+}
+function gmRead() {   // controls -> spec (data table edits write straight into gm.spec)
+  const s = gm.spec; s.type = gmEl('gmType').value; s.unit = gmEl('gmUnit').value; s.title = gmEl('gmTitle').value; s.sub = gmEl('gmSub').value; s.source = gmEl('gmSource').value; s.caption = gmEl('gmCaption').value;
+  s.kicker = gmEl('gmKicker').value; s.boxed = gmEl('gmBoxed').checked; s.axisL = gmEl('gmAxisL').value; s.axisR = gmEl('gmAxisR').value; s.min = gmEl('gmMin').value; s.max = gmEl('gmMax').value; s.decimals = +gmEl('gmDec').value || 0; s.showValues = gmEl('gmVals').checked; return s;
+}
+const GM_HINTS = { rcp: 'One series. Bars are sorted high → low in the same look as the results on the site; boxed style is always on.', area: 'Each series is a band stacked on the others — good for shares over time.', dumbbell: 'Two series (e.g. before / after). One row per category with a dot for each series.', strip: 'One cell per row. With several series, each cell takes the colour of whichever series is highest in that row (daily leader).', timeline: 'Two series: start and end (e.g. years). One bar per row.', sankey: 'Each flow is From → To with a value. Columns are worked out from the paths (sources on the left). Nodes can be reused across columns, e.g. first choice → transfer → winner.', spectrum: 'One series of positions on a scale (default 0–100, use axis min/max to change). Set the end labels below.' };
+function gmPreview() {
+  const s = gmRead(), box = GM_isBoxed(s); gmEl('gmHint').textContent = GM_HINTS[s.type] || ''; gmEl('gmHint').hidden = !GM_HINTS[s.type]; gmEl('gmAxisRow').hidden = s.type !== 'spectrum'; gmEl('gmBoxed').disabled = s.type === 'rcp';
+  gmEl('gmFlowBox').hidden = s.type !== 'sankey'; gmEl('gmCatsBox').hidden = s.type === 'sankey';
+  gmEl('gmPrev').innerHTML = box ? `<div class="ac-fig" style="margin:0;">${GM_render(s)}</div>` : GM_render(s);
+}
+function gmTable() {
+  const s = gm.spec, one = s.series.length === 1;
+  gmEl('gmTable').innerHTML = `<tr><th></th>${s.series.map((se, i) => `<th><input type="text" value="${GM_esc(se.name)}" data-sn="${i}" aria-label="Series ${i + 1} name"> <input type="color" value="${se.color || GM_PALETTE[i % 8]}" data-sc="${i}" aria-label="Series ${i + 1} colour">${s.series.length > 1 ? ` <button type="button" class="x" data-sx="${i}" title="Remove series">×</button>` : ''}</th>`).join('')}<th></th></tr>`
+    + s.cats.map((c, j) => `<tr><td><input type="text" value="${GM_esc(c)}" data-c="${j}" aria-label="Category ${j + 1}"></td>${s.series.map((se, i) => `<td><input type="number" step="any" value="${se.values[j] ?? ''}" data-v="${i},${j}" aria-label="${GM_esc(se.name)} for ${GM_esc(c)}"></td>`).join('')}<td>${one ? `<input type="color" value="${(s.catColors && s.catColors[j]) || s.series[0].color || GM_PALETTE[0]}" data-cc="${j}" title="Colour of this bar / slice" aria-label="Colour for ${GM_esc(c)}">` : ''}<button type="button" class="x" data-rx="${j}" title="Remove row">×</button></td></tr>`).join('');
+}
+gmEl('gmTable').addEventListener('input', e => {
+  const t = e.target, s = gm.spec;
+  if (t.dataset.sn != null) s.series[+t.dataset.sn].name = t.value; else if (t.dataset.sc != null) { s.series[+t.dataset.sc].color = t.value; if (s.series.length === 1) s.catColors = []; }
+  else if (t.dataset.c != null) s.cats[+t.dataset.c] = t.value; else if (t.dataset.v != null) { const [i, j] = t.dataset.v.split(',').map(Number); s.series[i].values[j] = t.value === '' ? 0 : +t.value; }
+  else if (t.dataset.cc != null) { s.catColors = s.catColors || []; for (let k = 0; k < s.cats.length; k++) s.catColors[k] = s.catColors[k] || s.series[0].color || GM_PALETTE[0]; s.catColors[+t.dataset.cc] = t.value; }
+  gmPreview();
+});
+gmEl('gmTable').addEventListener('click', e => {
+  const t = e.target.closest('button.x'); if (!t) return; const s = gm.spec;
+  if (t.dataset.rx != null) { const j = +t.dataset.rx; if (s.cats.length > 1) { s.cats.splice(j, 1); s.series.forEach(se => se.values.splice(j, 1)); if (s.catColors) s.catColors.splice(j, 1); } }
+  else if (t.dataset.sx != null) s.series.splice(+t.dataset.sx, 1);
+  gmTable(); gmPreview();
+});
+['gmKicker', 'gmBoxed', 'gmAxisL', 'gmAxisR', 'gmType', 'gmUnit', 'gmTitle', 'gmSub', 'gmSource', 'gmCaption', 'gmMin', 'gmMax', 'gmDec', 'gmVals'].forEach(id => gmEl(id).addEventListener('input', gmPreview));
+gmEl('gmType').addEventListener('change', () => { if (gmEl('gmType').value === 'sankey' && !(gm.spec.flows || []).length) gm.spec.flows = [{ from: 'A (1st choice)', to: 'A', value: 40 }, { from: 'B (1st choice)', to: 'B', value: 35 }, { from: 'C (1st choice)', to: 'A', value: 15 }, { from: 'C (1st choice)', to: 'B', value: 10 }]; gmFlowTable(); gmTable(); gmPreview(); });
+function gmAddRow() { const s = gm.spec; s.cats.push('New row'); s.series.forEach(se => se.values.push(0)); if (s.catColors && s.catColors.length) s.catColors.push(s.series[0].color || GM_PALETTE[0]); gmTable(); gmPreview(); }
+function gmAddSeries() { const s = gm.spec, i = s.series.length; s.catColors = []; s.series.push({ name: 'Series ' + (i + 1), color: GM_PALETTE[i % GM_PALETTE.length], values: s.cats.map(() => 0) }); gmTable(); gmPreview(); }
+function gmFlowTable() {
+  const s = gm.spec; s.flows = s.flows || [];
+  gmEl('gmFlowTable').innerHTML = '<tr><th>From</th><th>To</th><th>Value</th><th></th></tr>' + s.flows.map((f, i) => `<tr><td><input type="text" value="${GM_esc(f.from)}" data-ff="${i}" aria-label="Flow ${i + 1} from"></td><td><input type="text" value="${GM_esc(f.to)}" data-ft="${i}" aria-label="Flow ${i + 1} to"></td><td><input type="number" step="any" value="${f.value ?? ''}" data-fv="${i}" aria-label="Flow ${i + 1} value"></td><td><button type="button" class="x" data-fx="${i}" title="Remove flow">×</button></td></tr>`).join('');
+  gmNodeList();
+}
+function gmNodeList() {
+  const s = gm.spec; s.nodeColors = s.nodeColors || {};
+  gmEl('gmNodes').innerHTML = GM_nodes(s.flows).map((n, i) => `<label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;margin:0;"><input type="color" value="${s.nodeColors[n] || GM_PALETTE[i % GM_PALETTE.length]}" data-nc="${GM_esc(n)}" style="width:26px;height:22px;padding:0;border:1px solid var(--line);background:none;"> ${GM_esc(n)}</label>`).join('');
+}
+function gmAddFlow() { gm.spec.flows.push({ from: '', to: '', value: 1 }); gmFlowTable(); gmPreview(); }
+gmEl('gmFlowTable').addEventListener('input', e => { const t = e.target, f = gm.spec.flows; const d = t.dataset;
+  if (d.ff != null) f[+d.ff].from = t.value; else if (d.ft != null) f[+d.ft].to = t.value; else if (d.fv != null) f[+d.fv].value = t.value === '' ? 0 : +t.value; gmPreview(); });
+gmEl('gmFlowTable').addEventListener('change', gmNodeList);
+gmEl('gmFlowTable').addEventListener('click', e => { const t = e.target.closest('button.x'); if (t) { gm.spec.flows.splice(+t.dataset.fx, 1); gmFlowTable(); gmPreview(); } });
+gmEl('gmNodes').addEventListener('input', e => { const n = e.target.dataset.nc; if (n != null) { gm.spec.nodeColors[n] = e.target.value; gmPreview(); } });
+function gmApplyPaste() {
+  if (gmEl('gmType').value === 'sankey') { const fl = GM_parseFlows(gmEl('gmPaste').value); if (fl.length) { gm.spec.flows = fl; gmFlowTable(); gmPreview(); } return; }
+  const d = GM_parsePaste(gmEl('gmPaste').value); if (!d || !d.cats.length) return; const s = gm.spec;
+  s.cats = d.cats; s.catColors = []; s.series = d.series.map((x, i) => Object.assign(x, { color: (s.series[i] && s.series[i].color) || GM_PALETTE[i % GM_PALETTE.length] })); gmTable(); gmPreview();
+}
+function gmCandColor(name) {
+  const n = String(name || '').trim().toLowerCase(); if (!n || typeof registry === 'undefined' || !registry || !registry.candidates) return null;
+  const hit = Object.entries(registry.candidates).find(([k, c]) => k.toLowerCase() === n || String(c.name || '').toLowerCase() === n); return hit ? (hit[1].color || null) : null;
+}
+function gmMatchColors() {
+  const s = gm.spec; if (s.type === 'sankey') { GM_nodes(s.flows).forEach(n => { const c = gmCandColor(n); if (c) s.nodeColors[n] = c; }); gmNodeList(); gmPreview(); return; } if (s.series.length === 1) { s.catColors = s.cats.map((c, j) => gmCandColor(c) || (s.catColors && s.catColors[j]) || s.series[0].color || GM_PALETTE[0]); }
+  else s.series.forEach(se => { const c = gmCandColor(se.name); if (c) se.color = c; });
+  gmTable(); gmPreview();
+}
+function gmFillElections() {
+  const el = gmEl('gmElection'); if (el.options.length) return;
+  el.innerHTML = getMergedElections().filter(e => { try { return Object.keys(TSR_getRaces(TSR_getRoundData(e, TSR_defaultRoundKey(e)))).length; } catch (x) { return false; } }).sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(e => `<option value="${GM_esc(e.id)}">${GM_esc(e.title || e.id)}</option>`).join(''); gmFillRaces();
+}
+function gmFillRaces() {
+  const e = getMergedElections().find(x => x.id === gmEl('gmElection').value); if (!e) return;
+  gmEl('gmRace').innerHTML = Object.keys(TSR_getRaces(TSR_getRoundData(e, TSR_defaultRoundKey(e)))).map(n => `<option>${GM_esc(n)}</option>`).join('');
+}
+function gmFromResults() {
+  const e = getMergedElections().find(x => x.id === gmEl('gmElection').value); if (!e) return; const rk = TSR_defaultRoundKey(e), race = TSR_getRaces(TSR_getRoundData(e, rk))[gmEl('gmRace').value]; if (!race) return;
+  const tot = Object.entries(TSR_raceTotals(race)).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]), sum = tot.reduce((a, x) => a + x[1], 0) || 1, pct = gmEl('gmPct').checked, s = gm.spec;
+  if (!['bar', 'hbar', 'rcp', 'donut'].includes(s.type)) s.type = 'rcp'; gmEl('gmType').value = s.type; s.cats = tot.map(x => TSR_candidateName(registry, x[0])); s.catColors = tot.map(x => TSR_candidateColor(registry, x[0]));
+  s.series = [{ name: pct ? 'Share of votes' : 'Votes', color: GM_PALETTE[0], values: tot.map(x => pct ? Math.round(x[1] / sum * 1000) / 10 : x[1]) }];
+  s.unit = pct ? '%' : ''; s.decimals = pct ? 1 : 0; gmEl('gmUnit').value = s.unit; gmEl('gmDec').value = s.decimals; if (!gmEl('gmTitle').value || gmEl('gmTitle').value === 'Chart title') { gmEl('gmTitle').value = gmEl('gmRace').value; gmEl('gmSub').value = e.title || e.id; }
+  gmEl('gmSource').value = gmEl('gmSource').value || 'TSR Elects'; gmTable(); gmPreview();
+}
+function gmInsert() {
+  const s = gmRead(), ed = gmEl('rteEditor'), fig = GM_figure(s);
+  if (gm.fig && ed.contains(gm.fig)) gm.fig.replaceWith(fig);
+  else if (gm.range && ed.contains(gm.range.startContainer)) { let r = gm.range, n = r.startContainer; while (n && n.parentNode !== ed) n = n.parentNode; r.collapse(false); if (n && n !== ed) n.after(fig); else r.insertNode(fig); }
+  else ed.appendChild(fig);
+  if (!fig.nextSibling) fig.after(document.createElement('p')); gmEl('gmDlg').close();
+}
+function gmDelete() { if (gm.fig) gm.fig.remove(); gmEl('gmDlg').close(); }
+function gmDownload() { const sp = gmRead(); if (sp.type === 'rcp') { alert('Results bars are HTML, not SVG — pick another type to download an SVG.'); return; } const blob = new Blob([GM_svg(Object.assign({}, sp, { boxed: false }))], { type: 'image/svg+xml' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = (slugify(gm.spec.title) || 'chart') + '.svg'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+
+/* ---------- Chart maker: presets, saved styles, site data, PNG ---------- */
+const GM_STYLE_KEYS = ['type', 'boxed', 'kicker', 'source', 'unit', 'decimals', 'showValues', 'min', 'max', 'axisL', 'axisR'];
+const GM_PRESETS = [
+  { name: 'Mod election results (bars)', style: { type: 'rcp', kicker: 'Mod elections · first round', unit: '%', decimals: 1, source: 'Decision Desk TSR', showValues: true } },
+  { name: 'Census party ID over time (area)', style: { type: 'area', boxed: true, kicker: 'Spinroom Census', unit: '%', decimals: 0, source: 'Spinner Insights · Census', min: '', max: '', showValues: true }, fill: 'party-area' },
+  { name: 'Party support lines', style: { type: 'line', boxed: true, kicker: 'Party support', unit: '%', decimals: 0, source: 'Spinner Insights · Census', min: 0, max: '', showValues: false }, fill: 'party-time' },
+  { name: 'Approval before / after (dots)', style: { type: 'dumbbell', boxed: true, kicker: 'Moderator approval', unit: '', decimals: 0, source: 'Spinner Insights · Census', showValues: true }, fill: 'mod-change' },
+  { name: 'Net approval now (bars)', style: { type: 'hbar', boxed: true, kicker: 'Moderator approval', unit: '', decimals: 0, source: 'Spinner Insights · Census', showValues: true }, fill: 'mod-net' },
+  { name: 'Party lifespans (timeline)', style: { type: 'timeline', boxed: true, kicker: 'Party history', unit: '', decimals: 1, source: 'wikiElections', min: '', max: '', showValues: true } },
+  { name: 'Win probability over the count', style: { type: 'line', boxed: true, kicker: 'Win probability', unit: '%', decimals: 0, min: 0, max: 100, source: 'Decision Desk TSR', showValues: false } },
+  { name: 'How the ballots moved (Sankey)', style: { type: 'sankey', boxed: true, kicker: 'Ranked-choice', unit: '', decimals: 0, source: 'BallotTSR official tally', showValues: true } },
+  { name: 'Fluid–rigid spectrum', style: { type: 'spectrum', boxed: true, kicker: 'Party systems', unit: '', decimals: 0, min: 0, max: 100, source: 'wikiElections', showValues: false } }
+];
+function gmSaved() { try { return JSON.parse(localStorage.getItem('wE-chart-styles') || '[]'); } catch (e) { return []; } }
+function gmPresetList() {
+  const sv = gmSaved(), sel = gmEl('gmPreset'), cur = sel.value;
+  sel.innerHTML = '<optgroup label="Built-in">' + GM_PRESETS.map((p, i) => `<option value="b${i}">${GM_esc(p.name)}</option>`).join('') + '</optgroup>' + (sv.length ? '<optgroup label="Saved by you">' + sv.map((p, i) => `<option value="s${i}">${GM_esc(p.name)}</option>`).join('') + '</optgroup>' : '');
+  if (cur && sel.querySelector(`option[value="${cur}"]`)) sel.value = cur; gmEl('gmPresetDel').hidden = !sel.value.startsWith('s');
+}
+gmEl('gmPreset').addEventListener('change', () => { gmEl('gmPresetDel').hidden = !gmEl('gmPreset').value.startsWith('s'); });
+function gmApplyStyle(st) {
+  const s = gm.spec; GM_STYLE_KEYS.forEach(k => { if (k in st) s[k] = st[k]; }); if (st.seriesColors) s.series.forEach((x, i) => { if (st.seriesColors[i]) x.color = st.seriesColors[i]; });
+  gmEl('gmType').value = s.type; gmEl('gmUnit').value = s.unit || ''; gmEl('gmKicker').value = s.kicker || ''; gmEl('gmBoxed').checked = !!s.boxed; gmEl('gmSource').value = s.source || ''; gmEl('gmDec').value = s.decimals || 0; gmEl('gmVals').checked = s.showValues !== false; gmEl('gmMin').value = s.min; gmEl('gmMax').value = s.max; gmEl('gmAxisL').value = s.axisL || ''; gmEl('gmAxisR').value = s.axisR || '';
+  gmTable(); gmFlowTable(); gmPreview();
+}
+async function gmPresetApply() {
+  const v = gmEl('gmPreset').value, p = v[0] === 'b' ? GM_PRESETS[+v.slice(1)] : gmSaved()[+v.slice(1)]; if (!p) return;
+  if (gmEl('gmType').value === 'sankey' && p.style.type !== 'sankey') gm.spec.flows = gm.spec.flows || [];
+  gmApplyStyle(p.style);
+  if (p.fill && !FL_sources.find(x => x.id === p.fill).needs) { gmEl('gmSite').value = p.fill; gmSiteArgs(); await gmSiteFill(true); }
+  else if (p.fill) { gmEl('gmSite').value = p.fill; gmSiteArgs(); }
+}
+function gmPresetSave() {
+  const name = (prompt('Name this style (type, colours, kicker, source, unit… — not the data):', gmEl('gmTitle').value || '') || '').trim(); if (!name) return;
+  const s = gmRead(), st = {}; GM_STYLE_KEYS.forEach(k => { st[k] = s[k]; }); st.seriesColors = s.series.map(x => x.color);
+  const sv = gmSaved().filter(x => x.name !== name); sv.push({ name, style: st }); try { localStorage.setItem('wE-chart-styles', JSON.stringify(sv)); } catch (e) { alert('Could not save in this browser.'); return; }
+  gmPresetList(); gmEl('gmPreset').value = 's' + (sv.length - 1); gmEl('gmPresetDel').hidden = false;
+}
+function gmPresetDelete() { const v = gmEl('gmPreset').value; if (v[0] !== 's') return; const sv = gmSaved(); sv.splice(+v.slice(1), 1); try { localStorage.setItem('wE-chart-styles', JSON.stringify(sv)); } catch (e) {} gmPresetList(); }
+
+let gmD = null;
+async function gmLoadD() { return gmD || (gmD = await FL_load('../', { elections: getMergedElections() })); }
+function gmSiteInit() { gmEl('gmSite').innerHTML = FL_sources.map(x => `<option value="${x.id}">${GM_esc(x.label)}</option>`).join(''); gmSiteArgs(); }
+async function gmSiteArgs() {
+  const src = FL_sources.find(x => x.id === gmEl('gmSite').value), sel = gmEl('gmSiteArg'); sel.hidden = !src.needs; if (!src.needs) { sel.innerHTML = ''; return; }
+  const D = await gmLoadD(), list = await FL_sourceArgs(D, src.needs); sel.innerHTML = list.map(a => `<option value="${GM_esc(a.id)}">${GM_esc(a.label)}</option>`).join('') || '<option value="">(none available)</option>';
+}
+async function gmSiteFill(quiet) {
+  const src = FL_sources.find(x => x.id === gmEl('gmSite').value), msg = gmEl('gmSiteMsg'); msg.textContent = 'Working…';
+  try {
+    const D = await gmLoadD(), env = { candName: k => TSR_candidateName(registry, k), candColor: k => TSR_candidateColor(registry, k), partyName: k => (registry.parties && registry.parties[k] && (registry.parties[k].shortName || registry.parties[k].name)) || String(k).toUpperCase(), partyColor: k => (registry.parties && registry.parties[k] && registry.parties[k].color) || '#8a8f9c' };
+    const patch = await src.build(D, gmEl('gmSiteArg').value, env); if (!patch) { msg.textContent = 'No data for that source.'; return; }
+    const keep = {}; ['kicker', 'boxed', 'source', 'caption'].forEach(k => { keep[k] = gm.spec[k]; });
+    Object.assign(gm.spec, patch); if (patch.showValues == null) gm.spec.showValues = true; if (!('min' in patch)) gm.spec.min = ''; if (!('max' in patch)) gm.spec.max = ''; if (!patch.kicker && keep.kicker) gm.spec.kicker = keep.kicker; if (patch.boxed == null && keep.boxed) gm.spec.boxed = keep.boxed; if (!patch.series) gm.spec.series = gm.spec.series;
+    const s = gm.spec; gmEl('gmType').value = s.type; gmEl('gmTitle').value = s.title || ''; gmEl('gmSub').value = s.sub || ''; gmEl('gmSource').value = s.source || ''; gmEl('gmUnit').value = s.unit || ''; gmEl('gmDec').value = s.decimals || 0; gmEl('gmMin').value = s.min == null ? '' : s.min; gmEl('gmMax').value = s.max == null ? '' : s.max; gmEl('gmKicker').value = s.kicker || ''; gmEl('gmBoxed').checked = !!s.boxed; gmEl('gmVals').checked = s.showValues !== false;
+    if (!s.flows) s.flows = []; if (!s.nodeColors) s.nodeColors = {}; if (!s.catColors) s.catColors = [];
+    gmTable(); gmFlowTable(); gmPreview(); msg.textContent = quiet ? '' : 'Filled.';
+  } catch (err) { console.warn(err); msg.textContent = 'Could not build that chart: ' + err.message; }
+}
+async function gmDownloadPng() { const b = await GM_png(gmRead(), 2), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (slugify(gm.spec.title) || 'chart') + '.png'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1500); }
+
+/* ---------- Article: live preview + share card ---------- */
+let prevCss = null;
+async function artPreview() {
+  if (prevCss == null) { try { const t = await (await fetch('../article.html')).text(); prevCss = (t.match(/<style>[\s\S]*?<\/style>/) || [''])[0]; } catch (e) { prevCss = ''; } }
+  const f = id => document.getElementById(id).value, esc = GM_esc, by = f('artByline'), au = f('artAuthor');
+  window._prevHtml = `<!doctype html><html data-theme="${gmEl('prevDark').checked ? 'dark' : 'light'}"><head><meta charset="utf-8"><base href="../"><link rel="stylesheet" href="assets/css/style.css">${prevCss}</head><body><main class="wrap" style="max-width:820px;margin:0 auto;padding:24px 16px;"><section class="article-hero"><div class="kicker">${esc(f('artDate'))}</div><h1>${esc(f('artTitle') || 'Untitled')}</h1><div class="article-byline">${esc(by)}${au ? (by ? ' · ' : '') + 'by ' + esc(au) : ''}</div><div class="article-thumb-bar" style="background:${esc(f('artColor') || '#111214')};"></div></section><article class="article-body">${gmEl('rteEditor').innerHTML.replace(/ contenteditable="[^"]*"/g, '')}</article></main><script src="assets/js/article-blocks.js"><\/script><script>AB_render(document.querySelector(".article-body"))<\/script></body></html>`;
+  gmEl('prevFrame').srcdoc = window._prevHtml; gmEl('prevDlg').showModal();
+}
+function artPreviewTheme() { if (window._prevHtml) gmEl('prevFrame').srcdoc = window._prevHtml.replace(/data-theme="\w+"/, `data-theme="${gmEl('prevDark').checked ? 'dark' : 'light'}"`); }
+async function artShareCard() {
+  const fig = gmEl('rteEditor').querySelector('figure.art-chart'), spec = fig && GM_fromFigure(fig), msg = gmEl('shareMsg'); let url;
+  try {
+    const blob = await GM_shareCard({ title: gmEl('artTitle').value, author: gmEl('artAuthor').value, date: gmEl('artDate').value, accent: gmEl('artColor').value && gmEl('artColor').value !== '#111214' ? gmEl('artColor').value : '#ca1957', spec });
+    url = URL.createObjectURL(blob); gmEl('shareImg').src = url; gmEl('shareDl').href = url; gmEl('shareDl').download = (slugify(gmEl('artTitle').value) || 'share-card') + '-card.png'; msg.textContent = spec ? 'Uses the first chart in the article.' : 'No chart in the article yet — headline only.'; gmEl('shareDlg').showModal();
+  } catch (err) { alert('Could not make the share card: ' + err.message); }
+}
+
+
+/* ---------- Article autosave (browser draft) ---------- */
+const DRAFT_KEY = 'wE-article-draft', DRAFT_IDS = ['artTitle', 'artAuthor', 'artDate', 'artColor', 'artByline', 'artPublished', 'artPublishAt'];
+let draftTimer = null;
+function draftRead() { try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { return null; } }
+function draftSave() {
+  const f = {}; DRAFT_IDS.forEach(id => { f[id] = document.getElementById(id).value; }); const html = document.getElementById('rteEditor').innerHTML;
+  if (!f.artTitle.trim() && !html.replace(/<[^>]*>|\s|&nbsp;/g, '')) return;
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ t: Date.now(), id: currentArticleId, f, html })); } catch (e) {}
+}
+function draftQueue() { clearTimeout(draftTimer); draftTimer = setTimeout(draftSave, 1500); }
+function draftCheck() {
+  const d = draftRead(), bar = document.getElementById('draftBar'); if (!d) { bar.hidden = true; return; }
+  document.getElementById('draftMsg').textContent = 'Unsaved draft' + (d.f.artTitle ? ' “' + d.f.artTitle + '”' : '') + ' from ' + new Date(d.t).toLocaleString() + '.'; bar.hidden = false;
+}
+function draftRestore() {
+  const d = draftRead(); if (!d) return; currentArticleId = d.id || null; document.getElementById('articleSelect').value = d.id || '';
+  DRAFT_IDS.forEach(id => { if (d.f[id] !== undefined) document.getElementById(id).value = d.f[id]; }); syncPubAt(); document.getElementById('rteEditor').innerHTML = d.html; document.getElementById('draftBar').hidden = true;
+}
+function draftDiscard() { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} document.getElementById('draftBar').hidden = true; }
+DRAFT_IDS.concat(['rteEditor']).forEach(id => document.getElementById(id).addEventListener('input', draftQueue));
+window.addEventListener('beforeunload', () => { clearTimeout(draftTimer); draftSave(); });
+draftCheck();
+
+/* ---------- Chart maker: undo / redo ---------- */
+let gmHist = { stack: [], i: -1, t: null };
+function gmSnap() { return JSON.stringify(gm.spec); }
+function gmHistReset() { gmHist = { stack: [gmSnap()], i: 0, t: null }; gmHistBtns(); }
+function gmHistPush() { clearTimeout(gmHist.t); gmHist.t = setTimeout(() => { const j = gmSnap(); if (j === gmHist.stack[gmHist.i]) return; gmHist.stack = gmHist.stack.slice(0, gmHist.i + 1); gmHist.stack.push(j); if (gmHist.stack.length > 60) gmHist.stack.shift(); gmHist.i = gmHist.stack.length - 1; gmHistBtns(); }, 400); }
+function gmHistBtns() { gmEl('gmUndo').disabled = gmHist.i <= 0; gmEl('gmRedo').disabled = gmHist.i >= gmHist.stack.length - 1; }
+function gmHistGo(d) {
+  clearTimeout(gmHist.t); const j = gmSnap(); if (j !== gmHist.stack[gmHist.i]) { gmHist.stack = gmHist.stack.slice(0, gmHist.i + 1); gmHist.stack.push(j); gmHist.i++; }
+  const n = gmHist.i + d; if (n < 0 || n >= gmHist.stack.length) return; gmHist.i = n; gm.spec = JSON.parse(gmHist.stack[n]); gmApplyStyle({}); const s = gm.spec;
+  gmEl('gmTitle').value = s.title || ''; gmEl('gmSub').value = s.sub || ''; gmEl('gmCaption').value = s.caption || ''; gmHistBtns();
+}
+gmEl('gmDlg').addEventListener('input', gmHistPush); gmEl('gmDlg').addEventListener('click', e => { if (e.target.closest('.x, button')) gmHistPush(); });
+gmEl('gmDlg').addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.key === 'z' || e.key === 'y') && !/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) { e.preventDefault(); gmHistGo(e.key === 'y' || e.shiftKey ? 1 : -1); } });
+
+gmEl('rteEditor').addEventListener('click', e => { const f = e.target.closest && e.target.closest('figure.art-chart'); if (f && gmEl('rteEditor').contains(f)) { e.preventDefault(); gmOpen(f); } });
 
 function saveArticle() {
   const title = document.getElementById('artTitle').value.trim();
@@ -763,11 +1131,13 @@ function saveArticle() {
     thumbColor: document.getElementById('artColor').value,
     byline: document.getElementById('artByline').value.trim(),
     bodyHtml: document.getElementById('rteEditor').innerHTML,
-    published: document.getElementById('artPublished').value === 'true'
+    published: document.getElementById('artPublished').value === 'true',
+    publishAt: document.getElementById('artPublished').value === 'sched' ? (document.getElementById('artPublishAt').value ? new Date(document.getElementById('artPublishAt').value).toISOString() : '') : ''
   };
   OVR_setArticle(id, articleObj);
   currentArticleId = id;
   refreshArticleSelect(id);
+  draftDiscard();
   flashStatus('Article saved locally.');
 }
 
@@ -777,6 +1147,25 @@ function deleteArticle() {
   OVR_deleteArticle(currentArticleId);
   refreshArticleSelect();
   flashStatus('Article deleted locally.');
+}
+
+async function runLint() {
+  const out = gmEl('lintOut'); out.textContent = 'Checking…';
+  try {
+    const r = await DL_run(p => fetch('../' + p).then(x => { if (!x.ok) throw new Error(x.status); return x.json(); }), getMergedArticles());
+    const li = (a, c) => a.map(m => `<li style="color:${c}">${rteEsc(m)}</li>`).join('');
+    out.innerHTML = (r.errs.length ? `<b style="color:var(--red)">${r.errs.length} problem${r.errs.length > 1 ? 's' : ''} to fix</b><ul>${li(r.errs, 'var(--red)')}</ul>` : '<b style="color:var(--ok,#1f9d63)">No errors.</b>')
+      + (r.warns.length ? `<details ${r.errs.length ? '' : 'open'}><summary><b>${r.warns.length} thing${r.warns.length > 1 ? 's' : ''} worth a look</b></summary><ul>${li(r.warns, 'var(--muted)')}</ul></details>` : '');
+  } catch (e) { out.textContent = 'Could not run the check: ' + e.message; }
+}
+
+function downloadFeed() {
+  const guess = location.href.replace(/admin\/.*$/, '');
+  const base = prompt('Public site URL (where index.html lives):', localStorage.getItem('wE-site-url') || guess); if (!base) return;
+  try { localStorage.setItem('wE-site-url', base); } catch (e) {}
+  const xml = FEED_build(getMergedArticles(), base), a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([xml], { type: 'application/atom+xml' })); a.download = 'feed.xml'; a.click();
+  flashStatus('feed.xml exported — commit it to the site root.');
 }
 
 function downloadArticles() {

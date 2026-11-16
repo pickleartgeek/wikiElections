@@ -102,7 +102,7 @@ function NO_run(ctx, counts, opts = {}) {
     NO_G.forEach(g => { const d = alpha[g].map((a, j) => ES_gamma(a + nGc[g][j], r)), z = d.reduce((a, b) => a + b, 0) || 1; p[g] = d.map(x => x / z); });
     // total ballots: history says ~H.mean; when the % reporting is known, only the unreported share of that is still to come (100% reporting = the count is final)
     let Tf = N; if (!opts.final) { const rep = opts.reporting > 0 ? Math.min(1, opts.reporting) : null, m = rep == null ? H.mean : N + (1 - rep) * H.mean, sd = rep == null ? H.sd : H.sd * (1 - rep);
-      Tf = 0; for (let tries = 0; tries < 8 && Tf < N; tries++) Tf = Math.round(m + sd * ES_norm(r)); if (Tf < N) Tf = N + (rep != null && rep >= 1 ? 0 : r() < 0.5 ? 0 : 1); }
+      Tf = 0; for (let tries = 0; tries < 8 && (Tf < N || Tf < 1); tries++) Tf = Math.round(m + sd * ES_norm(r)); if (Tf < 1) Tf = Math.max(1, Math.round(m)); if (Tf < N) Tf = N + (rep != null && rep >= 1 ? 0 : r() < 0.5 ? 0 : 1); }
     const R = Tf - N, rem = NO_G.map(g => Math.max(0.3, Tf * wv[g] - nG[g])), remZ = rem.reduce((a, b) => a + b, 0), tot = nTot.slice(), addG = {};
     const gTot = {}; NO_G.forEach(g => { addG[g] = 0; gTot[g] = nGc[g].slice(); });
     for (let v = 0; v < R; v++) {
@@ -116,16 +116,17 @@ function NO_run(ctx, counts, opts = {}) {
     NO_G.forEach(g => { let gb = 0, gv = -1; gTot[g].forEach((v, j) => { const tb = v + r() * 0.01; if (tb > gv) { gv = tb; gb = j; } }); gLeadW[g][gb] += w; gMajW[g] += w * (gTot[g][gb] / (gTot[g].reduce((a, b) => a + b, 0) || 1) > 0.5 ? 1 : 0); });
     NO_G.forEach(g => { remG[g] += w * addG[g]; if (k > 1 && addG[g]) { const o = lead[s] === 0 ? 1 : 0, tr = second >= 0 ? second : o; tipG[g] += w * addG[g] * (p[g][tr] - p[g][best]); } });
   }
-  const out = { ids, N, final: !!opts.final, expectedTotal: opts.final || opts.reporting >= 1 ? N : opts.reporting > 0 ? N + (1 - opts.reporting) * H.mean : H.mean, ess, sims: S, lead: {}, majority: {}, top2: {}, share: {}, runoff: runoffW.v / sw, remaining: {}, tipping: null, cState: M.cState };
+  const out = { ids, N, counts: Object.fromEntries(ids.map((id, j) => [id, nTot[j]])), final: !!opts.final, expectedTotal: opts.final || opts.reporting >= 1 ? N : opts.reporting > 0 ? N + (1 - opts.reporting) * H.mean : H.mean, ess, sims: S, lead: {}, majority: {}, top2: {}, share: {}, runoff: runoffW.v / sw, remaining: {}, tipping: null, cState: M.cState };
   ids.forEach((id, j) => { out.lead[id] = leadW[j] / sw; out.majority[id] = majW[j] / sw; out.top2[id] = Math.min(1, top2W[j] / sw);
     out.share[id] = { mean: shares[j].reduce((a, v, s) => a + v * ws[s], 0) / sw, lo: NO_wquant(Array.from(shares[j]), Array.from(ws), .1), hi: NO_wquant(Array.from(shares[j]), Array.from(ws), .9) }; });
   NO_G.forEach(g => { out.remaining[g] = remG[g] / sw; });
   const fav = ids.reduce((b, id) => out.lead[id] > out.lead[b] ? id : b, ids[0]);
   const tp = NO_G.map(g => [g, tipG[g] / sw]).sort((a, b) => b[1] - a[1])[0]; if (tp && tp[1] > 0.05) out.tipping = { group: tp[0], expectedVotes: out.remaining[tp[0]], gain: tp[1] };
   out.groups = {}; NO_G.forEach(g => { const lead = {}; ids.forEach((id, j) => { lead[id] = gLeadW[g][j] / sw; }); const top = ids.reduce((b, id) => lead[id] > lead[b] ? id : b, ids[0]);
-    out.groups[g] = { counted: nG[g], expected: remG[g] / sw + nG[g], lead, top, p: lead[top], counts: ids.map((id, j) => nGc[g][j]), none: nG[g] === 0 }; });
+    out.groups[g] = { counted: nG[g], expected: remG[g] / sw + nG[g], lead, top, p: lead[top], counts: ids.map((id, j) => nGc[g][j]), prior: Object.fromEntries(ids.map(id => [id, M.mu[g][id] || 0])), none: nG[g] === 0 }; });
   const sharp = (o, ks) => { const g = T.sharpen; if (!g || g === 1) return; const z = ks.reduce((a, k) => a + Math.pow(o[k], g), 0) || 1; ks.forEach(k => { o[k] = Math.pow(o[k], g) / z; }); };
   sharp(out.lead, ids); NO_G.forEach(g => sharp(out.groups[g].lead, ids)); NO_G.forEach(g => { const gg = out.groups[g]; gg.top = ids.reduce((b, id) => gg.lead[id] > gg.lead[b] ? id : b, ids[0]); gg.p = gg.lead[gg.top]; });
+  out.outstanding = out.final ? 0 : Math.max(0, Math.round(out.expectedTotal - N));
   out.favorite = fav; out.status = NO_label(out.lead[fav], N); return out;
 }
 
@@ -162,7 +163,48 @@ function NO_groupsHTML(o, nameOf, colorOf) {
     const rank = o.ids.slice().sort((a, b) => x.lead[b] - x.lead[a]).slice(0, 4);
     return `<div class="gm-tile${x.none ? ' gm-none' : ''}" title="Group ${x.g}: ${x.counted} counted, ~${Math.round(x.expected)} expected${x.none ? ' (no ballots yet: forecast only)' : ''}"><div class="gm-h"><b>Group ${x.g}</b><span>${x.none ? 'forecast' : x.counted + ' in'}</span></div>`
       + `<div class="gm-who" style="--c:${e(colorOf(x.top))}"><i></i><span>${e(nameOf(x.top))}</span><b>${NO_pct(x.p)}%</b></div>`
-      + `<div class="gm-bar" aria-hidden="true">${rank.map(id => `<i style="width:${(x.lead[id] * 100).toFixed(1)}%;background:${e(colorOf(id))}"></i>`).join('')}</div></div>`; }).join('')}</div></div>`;
+      + `<div class="gm-bar" aria-hidden="true">${rank.map(id => `<i style="width:${(x.lead[id] * 100).toFixed(1)}%;background:${e(colorOf(id))}"></i>`).join('')}</div>${NO_vsHTML(x, o.ids, nameOf)}</div>`; }).join('')}</div></div>`;
+}
+/** NBC-style "path to victory": what share of the outstanding vote each trailing candidate needs to tie / pass the leader, next to what the model expects them to get.
+ *  The leader and the others split whatever the candidate doesn't take in their current proportions. Returns [] when there is no count or nothing outstanding. */
+function NO_needs(o) {
+  const R = o.outstanding, ids = o.ids; if (!(o.N > 0)) return { R: 0, rows: [] };
+  const rank = ids.slice().sort((a, b) => o.counts[b] - o.counts[a] || o.lead[b] - o.lead[a]), L = rank[0], Lc = o.counts[L];
+  const rows = rank.slice(1, 4).filter(id => o.lead[id] > 0.0005 || R > 0).map(id => {
+    const c = o.counts[id], rest = ids.filter(i => i !== id).reduce((a, i) => a + o.counts[i], 0) || 1, f = Lc / rest;
+    if (R <= 0) return { id, c, behind: Lc - c, done: true };
+    const kt = (Lc - c + R * f) / (1 + f), tie = Math.ceil(kt - 1e-9), pass = Math.floor(kt + 1e-9) + 1, proj = Math.max(0, Math.min(R, o.share[id].mean * (o.N + R) - c));
+    return { id, c, behind: Lc - c, tie, pass, tiePct: tie / R, passPct: pass / R, proj, projPct: proj / R, reach: tie <= R, passReach: pass <= R };
+  });
+  return { R, leader: L, rows };
+}
+function NO_needsHTML(o, nameOf, colorOf) {
+  const e = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])), n = NO_needs(o); if (!n.rows.length) return '';
+  const pc = x => Math.round(x * 100) + '%';
+  return `<div class="nd"><div class="nd-h"><b>What it takes</b><span>${n.R > 0 ? `~${n.R} ballot${n.R === 1 ? '' : 's'} outstanding` : 'count complete'} · vs ${e(nameOf(n.leader))}</span></div>${n.rows.map(r => r.done
+    ? `<div class="nd-row"><i style="background:${e(colorOf(r.id))}"></i><span class="nd-nm">${e(nameOf(r.id))}</span><span class="nd-tx">${r.behind} behind · no votes left</span></div>`
+    : `<div class="nd-row${r.reach ? '' : ' nd-out'}"><i style="background:${e(colorOf(r.id))}"></i><span class="nd-nm">${e(nameOf(r.id))}</span>`
+      + `<span class="nd-tx">${r.reach ? `needs <b>${r.tie} of ${n.R}</b> (${pc(r.tiePct)}) to ${r.pass === r.tie ? 'tie or pass' : 'tie'}${r.pass !== r.tie && r.passReach ? `, <b>${r.pass}</b> (${pc(r.passPct)}) to pass` : ''}` : `can't catch up · ${r.behind} behind, ${n.R} left`} · model: <b>~${r.proj.toFixed(r.proj < 10 ? 1 : 0)}</b> (${pc(r.projPct)})</span>`
+      + `<span class="nd-bar" aria-hidden="true"><u style="width:${(Math.min(1, r.projPct) * 100).toFixed(0)}%;background:${e(colorOf(r.id))}"></u>${r.reach ? `<s style="left:${(Math.min(1, r.tiePct) * 100).toFixed(0)}%"></s>` : ''}</span></div>`).join('')}</div>`;
+}
+/** Expected vs actual for one group: how the candidate leading the group's count is doing against the pre-election forecast for that group. Needs 2+ ballots, no tie for the lead. */
+function NO_vsHTML(x, ids, nameOf) {
+  if (x.counted < 2) return '';
+  const order = ids.map((id, j) => [id, x.counts[j]]).sort((a, b) => b[1] - a[1]); if (order[1] && order[0][1] === order[1][1]) return '';
+  const id = order[0][0], act = order[0][1] / x.counted, fc = x.prior[id] || 0, d = Math.round((act - fc) * 100), cls = d > 2 ? 'up' : d < -2 ? 'dn' : 'eq';
+  const nm = String(nameOf(id)).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  return `<div class="gm-vs ${cls}" title="${nm} has ${Math.round(act * 100)}% of the ballots counted in this group; the forecast had ${Math.round(fc * 100)}%"><span>${nm} ${Math.round(act * 100)}% <em>vs ${Math.round(fc * 100)}% fcst</em></span><b>${d > 2 ? '▲ +' + d : d < -2 ? '▼ −' + Math.abs(d) : '≈'}</b></div>`;
+}
+
+/** Lead-change alerts. NO_snap keeps what matters from one update; NO_change compares with the next one and returns a sentence (or '') for a change of the count leader and/or the model's favourite. */
+function NO_snap(o) { const order = o.ids.slice().sort((a, b) => o.counts[b] - o.counts[a]), tied = order[1] != null && o.counts[order[0]] === o.counts[order[1]]; return { N: o.N, leader: tied ? null : order[0], fav: o.favorite, p: o.lead[o.favorite] }; }
+function NO_change(prev, o, nameOf) {
+  if (!prev || prev.N < NO_TUNE.minN || o.N < NO_TUNE.minN) return '';
+  const now = NO_snap(o), lead = now.leader && prev.leader && now.leader !== prev.leader, fav = now.fav !== prev.fav && Math.abs(now.p - (o.lead[prev.fav] || 0)) > 0.02;
+  if (lead && fav && now.leader === now.fav) return `${nameOf(now.leader)} takes the lead and is now the favourite (${NO_pct(now.p)}%)`;
+  if (lead) return `${nameOf(now.leader)} takes the lead in the count`;
+  if (fav) return `${nameOf(now.fav)} is now the favourite to finish first (${NO_pct(now.p)}%)`;
+  return '';
 }
 const NO_pct = p => p >= 0.995 ? '>99' : p > 0 && p < 0.005 ? '<1' : String(Math.round(p * 100));
 
@@ -177,4 +219,4 @@ function NO_historyFromTimeline(ctx, timeline, sims = 800) {
 // ?sharpen=2 on any page overrides the sharpening for testing (1 = raw model, 1.5 = tuned default; >2 is over-confident on past data)
 try { const q = new URLSearchParams(location.search).get('sharpen'); if (q != null && +q > 0 && +q <= 6) NO_TUNE.sharpen = +q; } catch (e) { /* not in a browser */ }
 
-if (typeof window !== 'undefined') Object.assign(window, { NO_groupsHTML, NO_groupList, NO_prepareFrom, NO_prepareSim, NO_prepare, NO_counts, NO_run, NO_label, NO_pct, NO_historyFromTimeline, NO_TUNE });
+if (typeof window !== 'undefined') Object.assign(window, { NO_snap, NO_change, NO_vsHTML, NO_needs, NO_needsHTML, NO_groupsHTML, NO_groupList, NO_prepareFrom, NO_prepareSim, NO_prepare, NO_counts, NO_run, NO_label, NO_pct, NO_historyFromTimeline, NO_TUNE });

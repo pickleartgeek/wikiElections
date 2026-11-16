@@ -250,6 +250,15 @@ function OVR_deleteArticle(id) {
 }
 
 /** Merge base articles.json with local admin edits/additions/deletions. */
+/* Published = marked published, OR scheduled (publishAt) and that time has passed.
+   Note: static site, so scheduling is client-side — the JSON is still readable before the time. */
+function OVR_isPublished(a, now) {
+  if (!a) return false;
+  if (a.published === true || a.published === 'true') return true;
+  if (a.publishAt) { const t = Date.parse(a.publishAt); if (!isNaN(t) && t <= (now || Date.now())) return true; }
+  return false;
+}
+
 function OVR_getArticles(baseArticles) {
   const ovr = OVR_load();
   const edits = ovr.articles || {};

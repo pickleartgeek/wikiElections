@@ -36,7 +36,7 @@
     if (built) return; built = true;
     const add = (g, t, s, u, k) => items.push({ g, t, s: s || '', u, k: k || '' });
     const tasks = [
-      J('data/articles.json').then(d => (d.articles || []).filter(a => a.published !== false && a.published !== 'False')
+      J('data/articles.json').then(d => (d.articles || []).filter(a => typeof OVR_isPublished === 'function' ? OVR_isPublished(a) : (a.published !== false && a.published !== 'False'))
         .forEach(a => add('Articles', a.title, a.author ? 'by ' + a.author : '', 'article?id=' + encodeURIComponent(a.id), a.byline))),
       J('data/approval-polls.json').then(d => {
         Object.entries(d.moderators || {}).forEach(([k, m]) => add('Approval', (m.role ? m.role + ' · ' : '') + m.name, 'Moderator approval' + ((m.terms || []).length > 1 ? ' · ' + m.terms.length + ' seats' : ''), 'approval?mod=' + k, m.name + ' ' + (m.role || '') + ' ' + (m.terms || []).map(t => t.seat).join(' ')));
@@ -165,7 +165,7 @@
         party: ((pp.polls || pp.party || []) || []).length,
         elections: (idx.elections || []).length,
         results: (Array.isArray(res) ? res : []).length,
-        articles: (art.articles || []).filter(a => a.published !== false && a.published !== 'False').length
+        articles: (art.articles || []).filter(a => typeof OVR_isPublished === 'function' ? OVR_isPublished(a) : (a.published !== false && a.published !== 'False')).length
       };
       const prev = (() => { try { return JSON.parse(store.get('wE-seen')); } catch (e) { return null; } })();
       const save = () => store.set('wE-seen', JSON.stringify(cur));
@@ -183,5 +183,47 @@
   }
 
   function init() { injectButtons(); since(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+/* ---- CSV download on every data table and article chart ---- */
+(function () {
+  const cell = s => { s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const save = (name, rows) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['﻿' + rows.map(r => r.map(cell).join(',')).join('\n')], { type: 'text/csv' }));
+    a.download = (name || 'data').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.csv';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  };
+  const tableRows = t => [...t.rows].map(r => [...r.cells].map(c => c.innerText || c.textContent));
+  const specRows = sp => {
+    if (sp.flows && sp.flows.length) return [['From', 'To', 'Value']].concat(sp.flows.map(f => [f.from || f[0], f.to || f[1], f.value != null ? f.value : f[2]]));
+    const cats = sp.cats || [], ser = sp.series || [];
+    return [[sp.catHeader || 'Category'].concat(ser.map(s => s.name || 'Value'))].concat(cats.map((c, i) => [c].concat(ser.map(s => (s.values || [])[i]))));
+  };
+  function btn(label, fn) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'csv-btn'; b.textContent = label;
+    b.title = 'Download the data behind this as a spreadsheet (CSV)'; b.addEventListener('click', fn); return b;
+  }
+  function scan() {
+    document.querySelectorAll('table:not([data-csv])').forEach(t => {
+      if (t.closest('.csv-skip, [hidden]') || t.rows.length < 3 || t.rows[0].cells.length < 2) return;
+      t.setAttribute('data-csv', '1');
+      const host = t.closest('.rcp-table-wrap, .pg-scroll, .cd-scroll') || t;
+      const h = host.previousElementSibling, name = (h && /^H[1-4]$/.test(h.tagName) ? h.textContent : document.title.split('—')[0]);
+      const row = document.createElement('div'); row.className = 'csv-row'; row.appendChild(btn('⬇ CSV', () => save(name, tableRows(t))));
+      host.insertAdjacentElement('afterend', row);
+    });
+    document.querySelectorAll('figure.art-chart[data-chart]:not([data-csv])').forEach(f => {
+      let sp; try { sp = JSON.parse(f.getAttribute('data-chart')); } catch (e) { return; }
+      f.setAttribute('data-csv', '1');
+      const row = document.createElement('div'); row.className = 'csv-row'; row.appendChild(btn('⬇ CSV', () => save(sp.title || 'chart', specRows(sp))));
+      f.insertAdjacentElement('afterend', row);
+    });
+  }
+  window.UX_csvScan = scan;
+  if (/\/admin\//.test(location.pathname)) return;
+  let t; const later = () => { clearTimeout(t); t = setTimeout(scan, 250); };
+  const init = () => { scan(); new MutationObserver(later).observe(document.body, { childList: true, subtree: true }); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

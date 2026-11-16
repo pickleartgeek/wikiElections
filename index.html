@@ -13,6 +13,7 @@
 <meta property="og:description" content="The place for all things TSR Elections: forecasts, polls, results and tools.">
 <meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="assets/img/brand/favicon-wiki.png">
+<link rel="alternate" type="application/atom+xml" title="wikiElections articles" href="feed.xml">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/home.css">
 </head>
@@ -35,17 +36,17 @@
         <summary class="">More</summary>
         <div class="nav-menu">
           <div class="nav-menu-h">Forecast &amp; trackers</div>
-          <a href="approval"><b>Moderator Approval</b><span>Job approval for every moderator, across all their seats</span></a>
-          <a href="party-support"><b>Party Support</b><span>Generic-ballot party ID, pooled across pollsters</span></a>
-          <a href="guide"><b>Understanding ProbCalc</b><span>How the win probabilities work</span></a>
+          <a href="approval"><b>Moderator Approval</b></a>
+          <a href="party-support"><b>Party Support</b></a>
+          <a href="guide"><b>Understanding ProbCalc</b></a>
           <div class="nav-menu-h">Polling</div>
-          <a href="pollsters"><b>Pollster Ratings</b><span>Grades for every outlet, plus CENSUS and ELECTION</span></a>
+          <a href="pollsters"><b>Pollster Ratings</b></a>
           <div class="nav-menu-h">Tools</div>
-          <a href="elects/replay"><b>Election Replay</b><span>Watch a result come in vote by vote, or export it as video</span></a>
-          <a href="elects/simulate"><b>Election Simulator</b><span>Pick a field and run your own election night</span></a>
-          <a href="elects/mapmaker"><b>Map Maker</b><span>Download clean election maps as SVG or PNG</span></a>
+          <a href="elects/replay"><b>Election Replay</b></a>
+          <a href="elects/simulate"><b>Election Simulator</b></a>
+          <a href="elects/mapmaker"><b>Map Maker</b></a>
           <div class="nav-menu-h">Read</div>
-          <a href="articles"><b>Articles</b><span>Analysis and write-ups from the desk</span></a>
+          <a href="articles"><b>Articles</b></a>
         </div>
       </details>
     </nav>
@@ -60,9 +61,7 @@
 <main class="wrap" id="main" tabindex="-1">
   <section class="hero">
     <h1>The place for all things TSR Elections</h1>
-    <p class="lede">Welcome to the official wikiElections website! We feature both razor-sharp
-      polls from <strong>Spinner Insights</strong> and cutting-edge electoral calculus from
-      <strong>Decision Desk TSR</strong>.</p>
+    <p class="lede">Polls from <strong>Spinner Insights</strong>, electoral calculus from <strong>Decision Desk TSR</strong>.</p>
     <div id="heroLiveSlot"></div>
   </section>
 
@@ -77,46 +76,19 @@
   <section class="strip" id="deskStrip" hidden aria-labelledby="stripTitle">
     <div class="strip-head"><h2 id="stripTitle">From the Desk</h2><a href="articles">All articles →</a></div>
     <div class="strip-grid" id="deskGrid"></div>
-    <nav class="tools-line" aria-label="Tools">
-      <span>Tools</span>
-      <a href="elects/simulate">Election Simulator</a>
-      <a href="elects/mapmaker">Map Maker</a>
-      <a href="guide">Understanding ProbCalc</a>
-      <a href="pollsters">Pollster Ratings</a>
-    </nav>
   </section>
 
 
 <div id="rcpHub"><div class="skel skel-tracker" aria-hidden="true"></div></div>
 
 
-  <h2 class="section-title">Must-see pages in and out</h2>
-  <div class="card-grid">
-    <a class="article-card" href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">
-      <div class="thumb thumb-banner thumb-reddit"></div>
-      <div class="body">
-        <div class="eyebrow">Community</div>
-        <div class="title">r/thespinroom</div>
-        <div class="byline">The place to talk about what you're thinking—and where all the lore is made</div>
-      </div>
-    </a>
-    <a class="article-card" href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">
-      <div class="thumb"><i>Wiki</i></div>
-      <div class="body">
-        <div class="eyebrow">Community</div>
-        <div class="title">TSR Wiki</div>
-        <div class="byline">The public archive of all things elections in TSR. Check it out and see if you can contribute anything!</div>
-      </div>
-    </a>
-    <a class="article-card" href="guide">
-      <div class="thumb yellow">%</div>
-      <div class="body">
-        <div class="eyebrow">Guide</div>
-        <div class="title">Understanding ProbCalc</div>
-        <div class="byline">article by: PickleArtGeek</div>
-      </div>
-    </a>
-  </div>
+  <nav class="more-links" aria-label="Elsewhere">
+    <span>Elsewhere</span>
+    <a href="https://www.reddit.com/r/thespinroom" target="_blank" rel="noopener">r/thespinroom ↗</a>
+    <a href="https://thespinroom.miraheze.org" target="_blank" rel="noopener">TSR Wiki ↗</a>
+    <a href="guide">Understanding ProbCalc</a>
+    <a href="pollsters">Pollster Ratings</a>
+  </nav>
 </main>
 
 <footer class="site-footer">
@@ -144,6 +116,7 @@
 <script src="assets/js/electsim.js"></script>
 <script src="assets/js/nightodds.js"></script>
 <script src="assets/js/rcp-donut.js"></script>
+<script src="assets/js/photo-filter.js"></script>
 <script src="assets/js/tracker.js"></script>
 <script src="assets/js/pollsters.js"></script>
 <script src="assets/js/home.js"></script>
